@@ -1,0 +1,867 @@
+﻿Kā <[r,0,m],'kā','veida apstāklis','būtu'>
+būtu <[v,m,n,c,0,i,i,0,0,a,n],'būt','',''>
+, <[z,c],',','',''>
+ja <[c,s,s],'ja','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','tiešais papildinātājs','sauktu'>
+sauktu <[v,m,n,c,0,t,1,0,0,a,n],'saukt','',''>
+kāda <[p,i,0,m,s,l,_,[0]],'kāda','',''>
+citā <[p,i,0,m,s,l,_,[0]],'cits','apzīmētājs','vārdā'>
+vārdā <[n,c,m,s,l,1],'vārds','',''>
+? <[z,s],'?','',''>
+Piemēram <[r,0,m],'piemēram','',''>
+, <[z,c],',','',''>
+prievārdeklis <[n,p,m,s,a,1],'','',''>
+par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+Annu <[n,p,f,s,a,4],'anna','apzīmētājs','Knutsenu'>
+Knutsenu <[n,p,f,s,a,4],'knutsena','','prievārdeklis'>
+. <[z,s],'.','',''>
+Vai <[q,s],'vai','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','izteicējs','?'>
+tādā <[p,d,0,m,s,l,_,[a]],'tāds','vietas apstāklis','būtu'>
+gadījumā <[n,c,m,s,l,1],'gadījums','laika apstāklis','būtu'>
+cita <[p,i,0,f,s,n,_,[0]],'cita','teikuma priekšmets','būtu'>
+? <[z,s],'?','',''>
+Pēkšņi <[r,0,m],'pēkšņi','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+ienāca <[v,m,n,i,s,i,1,3,0,a,n],'ienākt','',''>
+prātā <[n,c,m,s,l,1],'prāts','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+tētis <[n,c,m,s,n,2],'tētis','',''>
+sākumā <[n,c,m,s,l,1],'sākums','',''>
+esot <[v,c,n,r,p,i,i,0,0,a,n],'būt','',''>
+vēlējies <[v,m,y,p,d,m,s,n,a,s,n],'vēlēties','',''>
+, <[z,c],',','',''>
+lai <[c,s,s],'lai','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+sauktu <[v,m,n,c,0,t,1,0,0,a,n],'saukt','',''>
+par <[s,p,s,a,[n]],'par','',''>
+Sinēvi <[n,p,m,s,a,5],'sinēve','',''>
+. <[z,s],'.','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+iztēloties <[v,m,y,n,0,t,2,0,0,0,n],'iztēloties','',''>
+, <[z,c],',','',''>
+kā <[r,0,m],'kā','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pastiepj <[v,m,n,i,p,t,1,3,0,a,n],'pastiept','',''>
+sveicienam <[n,c,m,s,d,1],'sveiciens','',''>
+roku <[n,c,f,s,a,4],'roka','',''>
+un <[c,c,s],'un','',''>
+nosauc <[v,m,n,i,p,t,1,3,0,a,n],'nosaukt','',''>
+savu <[p,s,0,m,s,a,_,[0]],'savs','',''>
+vārdu <[n,c,m,s,a,1],'vārds','',''>
+— <[z,d],'—','',''>
+Sinēve <[n,p,m,s,n,5],'sinēve','',''>
+Amundsena <[n,p,f,s,n,4],'amundsena','',''>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+nē <[q,s],'nē','',''>
+, <[z,c],',','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+grūti <[r,_,_],'grūti','',''>
+iedomāties <[v,m,y,n,0,t,2,0,0,0,n],'iedomāties','',''>
+. <[z,s],'.','',''>
+Šķita <[v,m,n,i,s,i,1,3,0,a,n],'šķist','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+tā <[p,d,3,f,s,n,_,[s]],'tā','veida apstāklis','ir'>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+pavisam <[r,0,m],'pavisam','veida apstāklis','ir'>
+cita <[p,i,0,f,s,n,_,[0]],'cita','apzīmētājs','meitene'>
+meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','ir'>
+, <[z,c],',','',''>
+kas <[p,r,0,0,0,n,_,[0]],'kas','teikuma priekšmets','stādījās'>
+stādījās <[v,m,y,i,s,i,3,3,0,a,n],'stādīties','izteicējs','.'>
+priekšā <[r,0,p],'priekšā','laika apstāklis','stādījās'>
+. <[z,s],'.','',''>
+Tad <[r,0,t],'tad','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pielēca <[v,m,n,i,s,i,1,3,0,a,n],'pielēkt','',''>
+kājās <[n,c,f,p,l,4],'kāja','',''>
+un <[c,c,s],'un','',''>
+iegāja <[v,m,n,i,s,i,i,3,0,a,n],'ieiet','',''>
+vannas <[n,c,f,s,g,4],'vanna','',''>
+istabā <[n,c,f,s,l,4],'istaba','',''>
+ar <[s,p,s,a,[n]],'ar','',''>
+dīvaino <[a,f,f,s,a,y,p],'dīvaina','',''>
+vēstuli <[n,c,f,s,a,5],'vēstule','',''>
+rokā <[n,c,f,s,l,4],'roka','',''>
+. <[z,s],'.','',''>
+Viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nostājās'>
+nostājās <[v,m,y,i,s,i,1,3,0,a,n],'nostāties','',''>
+spoguļa <[n,c,m,s,g,2],'spogulis','apzīmētājs','priekšā'>
+priekšā <[n,c,f,s,l,4],'priekša','laika apstāklis','nostājās'>
+un <[c,c,s],'un','',''>
+skatījās <[v,m,y,i,s,t,3,3,0,a,n],'skatīties','izteicējs','.'>
+sev <[p,x,0,0,0,d,_,[0]],'sevis','netiešais papildinātājs','skatījās'>
+acīs <[n,c,f,p,l,6],'acs','laika apstāklis','skatījās'>
+. <[z,s],'.','',''>
+„Es <[x],'','',''>
+izteicējs <[v,m,_,i,p,0,0,1,s,a,n],'','',''>
+esmu <[v,c,n,i,p,i,i,1,s,a,n],'būt','','izteicējs'>
+Sofija <[n,p,f,s,n,4],'sofija','','izteicējs'>
+Amundsena <[n,p,f,s,n,4],'amundsena','teikuma priekšmets','izteicējs'>
+, <[z,c],',','',''>
+” <[x],'','',''>
+— <[z,d],'—','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','teica'>
+teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','izteicējs','.'>
+. <[z,s],'.','',''>
+Meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','neatbildēja'>
+spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','neatbildēja'>
+neatbildēja <[v,m,n,i,s,t,3,3,0,a,y],'neatbildēt','',''>
+neko <[p,i,0,m,s,a,y,[0]],'nekas','tiešais papildinātājs','neatbildēja'>
+, <[z,c],',','',''>
+pat <[q,s],'pat','',''>
+ne <[q,s],'ne','',''>
+ar <[s,p,s,a,[n]],'ar','izteicējs','.'>
+mazāko <[a,f,m,s,a,y,c],'mazs','apzīmētājs','vaibstu'>
+vaibstu <[n,c,m,s,a,1],'vaibsts','tiešais papildinātājs','ar'>
+. <[z,s],'.','',''>
+Lai <[c,s,s],'lai','',''>
+ko <[p,i,0,0,0,a,_,[_]],'','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+nedarītu <[v,m,n,c,0,t,3,0,0,a,y],'nedarīt','',''>
+, <[z,c],',','',''>
+meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','darīja'>
+spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','darīja'>
+darīja <[v,m,n,i,s,t,3,3,0,a,n],'darīt','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','darīja'>
+pašu <[n,c,m,s,a,1],'pase','',''>
+. <[z,s],'.','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+apsteigt <[v,m,n,n,0,t,1,0,0,0,n],'apsteigt','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+ar <[s,p,s,a,[n]],'ar','',''>
+kādu <[p,i,0,f,s,a,_,[0]],'kāda','',''>
+zibenīgi <[r,_,_],'zibenīgi','',''>
+strauju <[a,f,f,s,a,n,p],'strauja','',''>
+kustību <[n,c,f,s,a,4],'kustība','',''>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+tā <[p,d,3,f,s,n,_,[s]],'tā','',''>
+otra <[m,c,s,f,s,n,[_]],'otra','',''>
+tur <[r,0,p],'tur','',''>
+spogulī <[n,c,m,s,l,2],'spogulis','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tikpat <[r,0,q],'tikpat','',''>
+veikla <[a,f,f,s,n,n,p],'veikla','',''>
+. <[z,s],'.','',''>
+„Kas <[x],'','',''>
+tu <[p,p,2,0,s,n,_,[0]],'tu','teikuma priekšmets','esi'>
+esi <[v,m,n,i,p,i,i,2,s,a,n],'būt','izteicējs','?'>
+? <[z,s],'?','',''>
+” <[x],'','',''>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','vaicāja'>
+vaicāja <[v,m,n,i,s,t,2,3,0,a,n],'vaicāt','izteicējs','.'>
+. <[z,s],'.','',''>
+Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nesaņēma <[v,m,n,i,s,t,1,3,0,a,y],'nesaņemt','',''>
+atbildi <[n,c,f,s,a,5],'atbilde','',''>
+arī <[q,s],'arī','',''>
+tagad <[r,0,t],'tagad','',''>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+uz <[s,p,s,a,[y]],'uz','',''>
+kādu <[p,i,0,m,s,a,_,[0]],'kāds','',''>
+pavisam <[r,0,m],'pavisam','',''>
+īsu <[a,f,m,s,a,n,p],'īss','',''>
+mirkli <[n,c,m,s,a,2],'mirklis','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+pārņēma <[v,m,n,i,s,t,1,3,0,a,n],'pārņemt','',''>
+šaubas <[n,c,f,p,n,4],'šaubas','',''>
+par <[s,p,s,a,[n]],'par','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+, <[z,c],',','',''>
+vai <[c,c,s],'vai','',''>
+jautātāja <[n,c,f,s,n,4],'jautātāja','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pati <[p,g,0,f,s,n,_,[0]],'pati','',''>
+vai <[c,c,s],'vai','',''>
+varbūt <[q,s],'varbūt','',''>
+meitene <[n,c,f,s,n,5],'meitene','',''>
+spogulī <[n,c,m,s,l,2],'spogulis','',''>
+. <[z,s],'.','',''>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','piespieda'>
+piespieda <[v,m,n,i,s,t,1,3,0,a,n],'piespiest','',''>
+rādītājpirkstu <[n,c,m,s,a,1],'rādītājpirksts','tiešais papildinātājs','piespieda'>
+prievārdeklis <[n,c,m,s,g,1],'','vietas apstāklis','piespieda'>
+pie <[s,p,s,g,[y]],'pie','','prievārdeklis'>
+degungala <[n,c,m,s,g,1],'degungals','','prievārdeklis'>
+spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','piespieda'>
+un <[c,c,s],'un','',''>
+sacīja <[v,m,n,i,s,t,3,3,0,a,n],'sacīt','',''>
+: <[z,o],':','',''>
+„Tu <[x],'','',''>
+izteicējs <[v,m,_,i,p,0,0,2,s,a,n],'','izteicējs','.'>
+esi <[v,c,n,i,p,i,i,2,s,a,n],'būt','','izteicējs'>
+es <[p,p,1,0,s,n,_,[0]],'es','','izteicējs'>
+. <[z,s],'.','',''>
+” <[x],'','',''>
+Tā <[c,s,c],'tā','',''>
+kā <[c,s,c],'kā','',''>
+arī <[q,s],'arī','',''>
+tagad <[r,0,t],'tagad','',''>
+nebija <[v,g,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+nekādas <[p,i,0,f,s,g,y,[0]],'nekāda','',''>
+atbildes <[n,c,f,s,g,5],'atbilde','',''>
+, <[z,c],',','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+apgrieza <[v,m,n,i,s,t,1,3,0,a,n],'apgriezt','',''>
+teikto <[v,m,n,p,d,m,s,a,p,s,y],'teikt','',''>
+otrādi <[r,0,m],'otrādi','',''>
+un <[c,c,s],'un','',''>
+sacīja <[v,m,n,i,s,t,3,3,0,a,n],'sacīt','',''>
+: <[z,o],':','',''>
+„Es <[x],'','',''>
+izteicējs <[v,m,_,i,p,0,0,1,s,a,n],'','izteicējs','.'>
+esmu <[v,c,n,i,p,i,i,1,s,a,n],'būt','','izteicējs'>
+tu <[p,p,2,0,s,n,_,[0]],'tu','','izteicējs'>
+. <[z,s],'.','',''>
+” <[x],'','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+Amundsena <[n,p,f,s,n,4],'amundsena','',''>
+nevarēja <[v,o,n,i,s,t,3,3,0,a,y],'nevarēt','',''>
+teikt <[v,m,n,n,0,t,1,0,0,0,n],'teikt','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+vienmēr <[r,0,t],'vienmēr','',''>
+būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','',''>
+apmierināta <[v,m,n,p,d,f,s,n,p,s,n],'apmierināt','',''>
+ar <[s,p,s,a,[n]],'ar','',''>
+savu <[p,s,0,m,s,a,_,[0]],'savs','',''>
+izskatu <[n,c,m,s,a,1],'izskats','',''>
+. <[z,s],'.','',''>
+Sofijai <[n,p,f,s,d,4],'sofija','',''>
+bieži <[r,0,q],'bieži','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+nācies <[v,m,y,p,d,m,s,n,a,s,n],'nākties','',''>
+dzirdēt <[v,m,n,n,0,t,3,0,0,0,n],'dzirdēt','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+esot <[v,m,n,r,p,i,i,0,0,a,n],'būt','',''>
+skaistas <[a,f,f,p,n,n,p],'skaista','',''>
+mandeļu <[n,c,f,p,g,5],'mandele','',''>
+acis <[n,c,f,p,n,6],'acs','',''>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+droši <[r,0,m],'droši','',''>
+vien <[q,s],'vien','',''>
+teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','',''>
+tikai <[q,s],'tikai','',''>
+tādēļ <[r,0,c],'tādēļ','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+deguns <[n,c,m,s,n,1],'deguns','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+par <[s,p,s,a,[n]],'par','',''>
+mazu <[a,f,m,s,a,n,p],'mazs','',''>
+un <[c,c,s],'un','',''>
+mute <[n,c,f,s,n,5],'mute','',''>
+par <[s,p,s,a,[n]],'par','',''>
+lielu <[a,f,m,s,a,n,p],'liels','',''>
+. <[z,s],'.','',''>
+Visļaunāk <[r,s,_],'ļauni','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+ar <[s,p,p,d,[n]],'ar','',''>
+matiem <[n,c,m,p,d,1],'mats','',''>
+— <[z,d],'—','',''>
+tie <[p,d,3,m,p,n,_,[s]],'tas','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tik <[r,0,q],'tik','',''>
+taisni <[a,f,m,p,n,n,p],'taisns','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+tos <[p,d,3,m,p,a,_,[s]],'tas','',''>
+nekādi <[r,0,m],'nekādi','',''>
+nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+iespējams <[a,r,m,s,n,n,p],'iespējams','',''>
+sakārtot <[v,m,n,n,0,t,2,0,0,0,n],'sakārtot','',''>
+. <[z,s],'.','',''>
+Dažreiz <[r,0,t],'dažreiz','',''>
+tētis <[n,c,m,s,n,2],'tētis','',''>
+noglāstīja <[v,m,n,i,s,t,3,3,0,a,n],'noglāstīt','',''>
+viņas <[p,p,3,f,s,g,_,[0]],'viņa','',''>
+matus <[n,c,m,p,a,1],'mats','',''>
+un <[c,c,s],'un','',''>
+sauca <[v,m,n,i,s,t,1,3,0,a,n],'saukt','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+par <[s,p,s,a,[n]],'par','',''>
+savu <[p,s,0,f,s,a,_,[0]],'sava','',''>
+«meiteni <[x],'','',''>
+ar <[s,p,p,d,[n]],'ar','',''>
+linukrāsas <[n,c,f,s,g,4],'linukrāsa','',''>
+matiem» <[x],'','',''>
+kā <[q,s],'kā','',''>
+Kloda <[n,p,m,s,g,1],'klods','',''>
+Debisī <[n,p,_,_,_,0],'debisī','',''>
+klaviergabalu <[n,c,m,s,a,1],'klaviergabals','',''>
+. <[z,s],'.','',''>
+To <[p,d,3,m,s,a,_,[s]],'tas','',''>
+viņš <[p,p,3,m,s,n,_,[0]],'viņš','',''>
+varēja <[v,o,n,i,s,t,3,3,0,a,n],'varēt','',''>
+gan <[q,s],'gan','',''>
+darīt <[v,m,n,n,0,t,3,0,0,0,n],'darīt','',''>
+, <[z,c],',','',''>
+jo <[c,s,s],'jo','',''>
+viņam <[p,p,3,m,s,d,_,[0]],'viņš','',''>
+vis <[q,s],'vis','',''>
+nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+lemts <[v,m,n,p,d,m,s,n,p,s,n],'lemt','',''>
+savus <[p,s,0,m,p,a,_,[0]],'savs','',''>
+melnos <[a,f,m,p,a,y,p],'melns','',''>
+matus <[n,c,m,p,a,1],'mats','',''>
+uz <[s,p,s,a,[y]],'uz','',''>
+visu <[p,g,0,m,s,a,_,[0]],'viss','',''>
+mūžu <[n,c,m,s,a,1],'mūžs','',''>
+paturēt <[v,m,n,n,0,t,3,0,0,0,n],'paturēt','',''>
+kaut <[q,s],'kaut','',''>
+vai <[q,s],'vai','',''>
+taisni <[r,_,_],'taisni','',''>
+karājamies <[v,m,y,p,u,0,0,0,0,0,0],'karāties','',''>
+uz <[s,p,s,a,[y]],'uz','',''>
+leju <[n,c,f,s,a,4],'leja','',''>
+. <[z,s],'.','',''>
+Sofijas <[n,p,f,s,g,4],'sofija','',''>
+matiem <[n,c,m,p,d,1],'mats','apzīmētājs','Sofijas'>
+nelīdzēja <[v,m,n,i,s,t,3,3,0,a,y],'nelīdzēt','izteicējs','.'>
+apvienojums <[n,_,_,_,n,_],'','teikuma priekšmets','nelīdzēja'>
+nedz <[c,c,r],'nedz','','apvienojums'>
+laka <[n,c,f,s,n,4],'laka','','apvienojums'>
+, <[z,c],',','','apvienojums'>
+nedz <[c,c,r],'nedz','','apvienojums'>
+matu <[n,c,m,p,g,1],'mats','apzīmētājs','želeja'>
+želeja <[n,c,f,s,n,4],'želeja','','apvienojums'>
+. <[z,s],'.','',''>
+Dažreiz <[r,0,t],'dažreiz','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+pašas <[p,g,0,f,s,g,_,[0]],'pati','',''>
+izskats <[n,c,m,s,n,1],'izskats','',''>
+šķita <[v,t,n,i,s,i,1,3,0,a,n],'šķist','',''>
+tik <[r,0,q],'tik','',''>
+dīvains <[a,f,m,s,n,n,p],'dīvains','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+radās <[v,m,y,i,s,i,1,3,0,a,n],'rasties','',''>
+šaubas <[n,c,f,p,n,4],'šaubas','',''>
+, <[z,c],',','',''>
+vai <[c,c,s],'vai','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+maz <[r,0,q],'maz','',''>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+normāla <[a,r,m,s,g,n,p],'normāls','',''>
+. <[z,s],'.','',''>
+Māte <[n,c,f,s,n,5],'māte','',''>
+kaut <[p,i,0,0,0,a,_,[_]],'kaut','',''>
+ko <[p,i,0,0,0,a,_,[_]],'','tiešais papildinātājs','izteicējs'>
+izteicējs <[v,m,n,i,s,0,0,3,s,a,n],'','izteicējs','.'>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+minējusi <[v,m,n,p,d,f,s,n,a,s,n],'minēt','','izteicējs'>
+prievārdeklis <[n,c,f,p,d,4],'','nolūka apstāklis','izteicējs'>
+par <[s,p,p,d,[n]],'par','','prievārdeklis'>
+īpaši <[r,_,q],'īpaši','mēra apstāklis','smagām'>
+smagām <[a,f,f,p,d,n,p],'smaga','apzīmētājs','dzemdībām'>
+dzemdībām <[n,c,f,p,d,4],'dzemdības','','prievārdeklis'>
+. <[z,s],'.','',''>
+Bet <[c,c,s],'bet','',''>
+vai <[q,s],'vai','',''>
+tiešām <[q,s],'tiešām','',''>
+dzimšanas <[n,c,f,s,g,4],'dzimšana','',''>
+norise <[n,c,f,s,n,5],'norise','teikuma priekšmets','izteicējs'>
+izteicējs <[v,m,n,i,p,t,0,3,0,a,n],'','izteicējs','?'>
+spēj <[v,o,n,i,p,t,1,3,0,a,n],'spēt','','izteicējs'>
+tik <[r,0,q],'tik','mēra apstāklis','ļoti'>
+ļoti <[r,0,q],'ļoti','mēra apstāklis','ietekmēt'>
+ietekmēt <[v,m,n,n,0,t,2,0,0,0,n],'ietekmēt','','izteicējs'>
+cilvēka <[n,c,m,s,g,1],'cilvēks','apzīmētājs','izskatu'>
+izskatu <[n,c,m,s,a,1],'izskats','tiešais papildinātājs','izteicējs'>
+? <[z,s],'?','',''>
+Vai <[q,s],'vai','',''>
+izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+jocīgi <[a,f,m,p,n,n,p],'jocīgs','','izteicējs'>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nezina'>
+nezina <[v,m,n,i,p,t,3,3,0,a,y],'nezināt','',''>
+, <[z,c],',','',''>
+kas <[p,q,0,0,0,n,_,[0]],'kas','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','ir'>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','izteicējs','?'>
+? <[z,s],'?','',''>
+Vai <[q,s],'vai','',''>
+izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+muļķīgi <[a,f,m,p,n,n,p],'muļķīgs','','izteicējs'>
+arī <[q,s],'arī','',''>
+tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','',''>
+noteicēja <[n,c,f,s,n,4],'noteicējs','teikuma priekšmets','nav'>
+pati <[p,g,0,f,s,n,_,[0]],'pati','',''>
+par <[s,p,s,a,[y]],'pār','',''>
+savu <[p,s,0,m,s,a,_,[0]],'savs','tiešais papildinātājs','izskatu'>
+izskatu <[n,c,m,s,a,1],'izskats','izteicējs','?'>
+? <[z,s],'?','',''>
+Tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+nāca <[v,m,n,i,s,i,1,3,0,a,n],'nākt','',''>
+kā <[q,s],'kā','veida apstāklis','nāca'>
+kaut <[p,i,0,0,0,n,_,[_]],'','spk','nāca'>
+kas <[p,i,0,0,0,n,_,[_]],'','teikuma priekšmets','nāca'>
+iepriekš <[r,0,t],'iepriekš','laika apstāklis','nāca'>
+dots <[v,m,n,p,d,m,s,n,p,s,n],'dot','izteicējs','.'>
+. <[z,s],'.','',''>
+Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+varbūt <[q,s],'varbūt','',''>
+izteicējs <[v,m,y,i,s,i,0,3,0,a,n],'','',''>
+varēja <[v,o,n,i,s,t,3,3,0,a,n],'varēt','','izteicējs'>
+izvēlēties <[v,m,y,n,0,i,3,0,0,0,n],'izvēlēties','','izteicējs'>
+sev <[p,x,0,0,0,d,_,[0]],'sevis','netiešais papildinātājs','izteicējs'>
+draugus <[n,c,m,p,a,1],'draugs','',''>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+izteicējs <[v,m,y,i,s,0,0,3,s,a,y],'','izteicējs','.'>
+nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','','izteicējs'>
+izvēlējusies <[v,m,y,p,d,f,s,n,a,s,n],'izvēlēties','','izteicējs'>
+pati <[p,g,0,f,s,n,_,[0]],'pati','teikuma priekšmets','izteicējs'>
+sevi <[p,x,0,0,0,a,_,[0]],'sevis','tiešais papildinātājs','izteicējs'>
+. <[z,s],'.','',''>
+Viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','izteicējs'>
+vispār <[r,0,m],'vispār','veida apstāklis','izteicējs'>
+izteicējs <[v,m,y,i,s,0,0,3,s,a,y],'','',''>
+nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','','izteicējs'>
+izvēlējusies <[v,m,y,p,d,f,s,n,a,s,n],'izvēlēties','','izteicējs'>
+kļūt <[v,m,n,n,0,i,1,0,0,0,n],'kļūt','izteicējs','.'>
+prievārdeklis <[n,c,m,s,a,1],'','nolūka apstāklis','kļūt'>
+par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+cilvēku <[n,c,m,s,a,1],'cilvēks','','prievārdeklis'>
+. <[z,s],'.','',''>
+Kas <[p,q,0,0,0,n,_,[0]],'kas','teikuma priekšmets','izteicējs'>
+izteicējs <[v,m,_,i,p,0,0,3,0,a,n],'','izteicējs','?'>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','','izteicējs'>
+cilvēks <[n,c,m,s,n,1],'cilvēks','','izteicējs'>
+? <[z,s],'?','',''>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','pavērās'>
+atkal <[r,0,t],'atkal','laika apstāklis','pavērās'>
+pavērās <[v,m,y,i,s,i,1,3,0,a,n],'pavērties','izteicējs','.'>
+prievārdeklis <[n,c,f,s,a,5],'','nolūka apstāklis','pavērās'>
+uz <[s,p,s,a,[y]],'uz','','prievārdeklis'>
+meiteni <[n,c,f,s,a,5],'meitene','','prievārdeklis'>
+spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','pavērās'>
+. <[z,s],'.','',''>
+„Es <[x],'','',''>
+domāju <[v,m,n,i,p,t,2,1,s,a,n],'domāt','',''>
+, <[z,c],',','',''>
+būs <[v,c,n,i,f,i,i,3,0,a,n],'būt','',''>
+jākāpj <[v,m,n,d,0,t,1,0,0,a,n],'kāpt','',''>
+augšā <[r,0,p],'augšā','',''>
+un <[c,c,s],'un','',''>
+jāsāk <[v,m,n,d,0,t,1,0,0,a,n],'sākt','',''>
+gatavot <[v,m,n,n,0,t,2,0,0,0,n],'gatavot','',''>
+mājasdarbu <[n,c,m,s,a,1],'mājasdarbs','',''>
+dabasmācībā <[n,c,f,s,l,4],'dabasmācība','',''>
+, <[z,c],',','',''>
+” <[x],'','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','',''>
+kā <[q,s],'kā','',''>
+atvainodamās <[v,m,y,p,u,f,_,_,a,_,_],'atvainoties','',''>
+. <[z,s],'.','',''>
+Taču <[c,c,s],'taču','',''>
+nākamajā <[v,m,n,p,d,m,s,l,p,p,y],'nākt','apzīmētājs','mirklī'>
+mirklī <[n,c,m,s,l,2],'mirklis','laika apstāklis','bija'>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','bija'>
+jau <[r,0,t],'jau','laika apstāklis','bija'>
+bija <[v,m,n,i,s,i,i,3,0,a,n],'būt','',''>
+ārā <[n,c,m,s,l,1],'ārā','laika apstāklis','bija'>
+, <[z,c],',','',''>
+prievārdeklis <[n,c,f,s,g,4],'','',''>
+uz <[s,p,s,g,[y]],'uz','','prievārdeklis'>
+taciņas <[n,c,f,s,g,4],'taciņa','','prievārdeklis'>
+. <[z,s],'.','',''>
+„Es <[x],'','',''>
+labāk <[r,c,t],'labi','laika apstāklis','iešu'>
+iešu <[v,m,n,i,f,i,i,1,s,a,n],'iet','',''>
+dārzā <[n,c,m,s,l,1],'dārzs','laika apstāklis','iešu'>
+, <[z,c],',','',''>
+” <[x],'','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nodomāja'>
+nodomāja <[v,m,n,i,s,t,2,3,0,a,n],'nodomāt','izteicējs','.'>
+. <[z,s],'.','',''>
+„Minci <[x],'','',''>
+, <[z,c],',','',''>
+apvienojums <[n,_,_,_,a,_],'','',''>
+minci <[n,c,m,s,v,2],'mincis','','apvienojums'>
+, <[z,c],',','','apvienojums'>
+minci <[n,c,m,s,v,2],'mincis','','apvienojums'>
+! <[z,s],'!','',''>
+” <[x],'”','',''>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','izšķūrēja'>
+izšķūrēja <[v,m,n,i,s,t,2,3,0,a,n],'izšķūrēt','',''>
+runci <[n,c,m,s,a,2],'runcis','tiešais papildinātājs','izšķūrēja'>
+ārā <[n,c,m,s,l,1],'ārs','laika apstāklis','izšķūrēja'>
+prievārdeklis <[n,c,f,p,d,5],'','nolūka apstāklis','izšķūrēja'>
+uz <[s,p,p,d,[y]],'uz','','prievārdeklis'>
+trepēm <[n,c,f,p,d,5],'trepes','','prievārdeklis'>
+un <[c,c,s],'un','',''>
+aizvēra <[v,m,n,i,s,t,1,3,0,a,n],'aizvērt','izteicējs','.'>
+durvis <[n,c,f,p,a,6],'durvis','tiešais papildinātājs','aizvēra'>
+prievārdeklis <[n,c,f,s,g,5],'','cēloņa apstāklis','aizvēra'>
+no <[s,p,s,g,[y]],'no','','prievārdeklis'>
+ārpuses <[n,c,f,s,g,5],'ārpuse','','prievārdeklis'>
+. <[z,s],'.','',''>
+Kad <[r,0,t],'kad','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+tā <[r,0,m],'tā','',''>
+stāvēja <[v,m,n,i,s,t,3,3,0,a,n],'stāvēt','',''>
+ārā <[n,_,m,s,l,1],'ārs','',''>
+uz <[s,p,s,g,[y]],'uz','',''>
+grantēta <[v,m,n,p,d,m,s,g,p,s,n],'grantēt','',''>
+celiņa <[n,c,m,s,g,1],'celiņš','',''>
+ar <[s,p,s,a,[n]],'ar','',''>
+noslēpumaino <[a,f,f,s,a,y,p],'noslēpumaina','',''>
+vēstuli <[n,c,f,s,a,5],'vēstule','',''>
+rokā <[n,c,f,s,l,4],'roka','',''>
+, <[z,c],',','',''>
+viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+pēkšņi <[r,0,m],'pēkšņi','',''>
+pārņēma <[v,m,n,i,s,t,1,3,0,a,n],'pārņemt','',''>
+brīnumaina <[a,f,f,s,n,n,p],'brīnumaina','',''>
+nojausma <[n,c,f,s,n,4],'nojausma','',''>
+. <[z,s],'.','',''>
+Sajūta <[n,c,f,s,n,4],'sajūta','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tāda <[p,d,0,f,s,n,_,[a]],'tāda','',''>
+, <[z,c],',','',''>
+it <[c,s,c],'it','',''>
+kā <[c,s,s],'kā','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','',''>
+kāda <[p,i,0,f,s,n,_,[0]],'kāda','',''>
+lelle <[n,c,f,s,n,5],'lelle','',''>
+, <[z,c],',','',''>
+kas <[p,r,0,0,0,n,_,[0]],'kas','',''>
+gulējusi <[v,m,n,p,d,f,s,n,a,s,n],'gulēt','',''>
+ratiņos <[n,c,m,p,l,1],'ratiņš','',''>
+un <[c,c,s],'un','',''>
+pēkšņi <[r,0,m],'pēkšņi','',''>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+atdzīvojusies <[v,m,y,p,d,f,s,n,a,s,n],'atdzīvoties','',''>
+. <[z,s],'.','',''>
+Vai <[q,s],'vai','',''>
+nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','',''>
+dīvaini <[r,_,_],'dīvaini','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+vispār <[r,0,m],'vispār','',''>
+ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+pasaulē <[n,c,f,s,l,5],'pasaule','',''>
+tieši <[q,s],'tieši','',''>
+tagad <[r,0,t],'tagad','',''>
+un <[c,c,s],'un','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+var <[v,o,n,i,p,t,3,3,0,a,n],'varēt','',''>
+klīst <[v,m,n,n,0,i,1,0,0,0,n],'klīst','',''>
+pa <[s,p,s,a,[y]],'pa','',''>
+to <[p,d,3,f,s,a,_,[s]],'tā','',''>
+kā <[q,s],'kā','',''>
+brīnumu <[n,c,m,s,a,1],'brīnums','',''>
+pasakā <[n,c,f,s,l,4],'pasaka','',''>
+? <[z,s],'?','',''>
+Šerekāns <[n,p,m,s,n,1],'šerekāns','teikuma priekšmets','pārlēca'>
+viegli <[r,0,c],'viegli','cēloņa apstāklis','pārlēca'>
+pārlēca <[v,m,n,i,s,i,1,3,0,a,n],'pārlēkt','',''>
+nožogojumam <[n,c,m,s,d,1],'nožogojums','netiešais papildinātājs','pārlēca'>
+un <[c,c,s],'un','',''>
+veikli <[r,0,m],'veikls','',''>
+noslēpās <[v,m,y,i,s,i,1,3,0,a,n],'','',''>
+prievārdeklis <[n,c,m,p,d,1],'','',''>
+starp <[s,p,p,d,[y]],'starp','','prievārdeklis'>
+jāņogu <[n,c,f,p,g,4],'jāņoga','apzīmētājs','krūmiem'>
+krūmiem <[n,c,m,p,d,1],'krūms','','prievārdeklis'>
+. <[z,s],'.','',''>
+Dzīvs <[a,f,m,s,n,n,p],'dzīvs','apzīmētājs','kaķis'>
+kaķis <[n,c,m,s,n,2],'kaķis','',''>
+, <[z,c],',','',''>
+dzīvs <[a,f,m,s,n,n,p],'dzīvs','',''>
+, <[z,c],',','',''>
+redukcija <[v,m,n,r,p,t,0,0,0,a,n],'','',''>
+sākot <[v,p,n,r,p,t,1,0,0,a,n],'sākt','','redukcija'>
+prievārdeklis <[n,c,f,p,d,4],'','cēloņa apstāklis','līdz'>
+no <[s,p,p,d,[y]],'no','','prievārdeklis'>
+apvienojums <[a,r,f,p,d,y,p],'','apzīmētājs','spalviņām'>
+smalkajām <[a,f,f,p,d,y,p],'smalka','','apvienojums'>
+, <[z,c],',','','apvienojums'>
+gaišajām <[a,f,f,p,d,y,p],'gaiša','','apvienojums'>
+spalviņām <[n,c,f,p,d,4],'spalviņa','','prievārdeklis'>
+ausu <[n,c,f,p,g,6],'auss','apzīmētājs','galos'>
+galos <[n,c,m,p,l,1],'gals','laika apstāklis','līdz'>
+līdz <[s,p,p,d,[y]],'līdz','',''>
+pat <[q,s],'pat','',''>
+gludā <[a,f,m,s,g,y,p],'gluds','apzīmētājs','ķermeņa'>
+ķermeņa <[n,c,m,s,g,2],'ķermenis','apzīmētājs','astes'>
+astes <[n,c,f,s,g,5],'aste','apzīmētājs','galiņam'>
+galiņam <[n,c,m,s,d,1],'galiņš','',''>
+. <[z,s],'.','',''>
+Arī <[q,s],'arī','',''>
+viņš <[p,p,3,m,s,n,_,[0]],'viņš','teikuma priekšmets','ir'>
+ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+dārzā <[n,c,m,s,l,1],'dārzs','laika apstāklis','ir'>
+, <[z,c],',','',''>
+bet <[c,c,s],'bet','',''>
+diez <[q,s],'diez','',''>
+vai <[q,s],'vai','',''>
+viņš <[p,p,3,m,s,n,_,[0]],'viņš','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','apzinās'>
+tik <[r,0,q],'tik','mēra apstāklis','skaidri'>
+skaidri <[r,0,c],'skaidri','cēloņa apstāklis','apzinās'>
+apzinās <[v,m,y,i,p,t,3,3,0,a,n],'apzināties','izteicējs','.'>
+kā <[q,s],'kā','veida apstāklis','apzinās'>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','apzinās'>
+. <[z,s],'.','',''>
+Pēc <[s,p,s,g,[y]],'pēc','',''>
+brītiņa <[n,c,m,s,g,1],'brītiņš','',''>
+, <[z,c],',','',''>
+kad <[r,0,t],'kad','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+pārdomājusi <[v,m,n,p,d,f,s,n,a,s,n],'pārdomāt','',''>
+savu <[p,s,0,f,s,a,_,[0]],'sava','',''>
+esmi <[n,c,f,s,a,5],'esme','',''>
+, <[z,c],',','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+ienāca <[v,m,n,i,s,i,1,3,0,a,n],'ienākt','',''>
+prātā <[n,c,m,s,l,1],'prāts','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+šai <[p,d,3,f,s,d,_,[s]],'šī','',''>
+pasaulē <[n,c,f,s,l,5],'pasaule','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nebūs <[v,m,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+mūžīgi <[r,_,_],'mūžīgi','',''>
+. <[z,s],'.','',''>
+„Es <[x],'','',''>
+esmu <[v,m,n,i,p,i,i,1,s,a,n],'būt','',''>
+pasaulē <[n,c,f,s,l,5],'pasaule','laika apstāklis','esmu'>
+tagad <[r,0,t],'tagad','laika apstāklis','esmu'>
+, <[z,c],',','',''>
+” <[x],'','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','domāja'>
+domāja <[v,m,n,i,s,t,2,3,0,a,n],'domāt','izteicējs','.'>
+. <[z,s],'.','',''>
+„Bet <[x],'','',''>
+nāks <[v,m,n,i,f,i,1,3,0,a,n],'nākt','',''>
+diena <[n,c,f,s,n,4],'diena','teikuma priekšmets','nāks'>
+, <[z,c],',','',''>
+kad <[r,0,t],'kad','',''>
+manis <[p,p,1,0,s,g,_,[0]],'es','',''>
+vairs <[r,0,t],'vairs','laika apstāklis','nebūs'>
+nebūs <[v,g,n,i,f,i,i,3,0,a,y],'nebūt','izteicējs','.'>
+. <[z,s],'.','',''>
+” <[x],'','',''>
+Vai <[q,s],'vai','',''>
+pastāv <[v,m,n,i,p,t,3,3,0,a,n],'pastāvēt','izteicējs','?'>
+dzīve <[n,c,f,s,n,5],'dzīve','teikuma priekšmets','pastāv'>
+prievārdeklis <[n,c,f,s,g,5],'','laika apstāklis','pastāv'>
+pēc <[s,p,s,g,[y]],'pēc','','prievārdeklis'>
+nāves <[n,c,f,s,g,5],'nāve','','prievārdeklis'>
+? <[z,s],'?','',''>
+Arī <[q,s],'arī','',''>
+prievārdeklis <[n,c,m,s,a,1],'','nolūka apstāklis','nebija'>
+par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+šo <[p,d,3,m,s,a,_,[s]],'šis','apzīmētājs','jautājumu'>
+jautājumu <[n,c,m,s,a,1],'jautājums','','prievārdeklis'>
+kaķim <[n,c,m,s,d,2],'kaķis','netiešais papildinātājs','nebija'>
+nebija <[v,g,n,i,s,i,i,3,0,a,y],'nebūt','izteicējs','.'>
+nekādas <[p,i,0,f,s,g,y,[0]],'nekāda','',''>
+daļas <[n,c,f,s,g,4],'daļa','teikuma priekšmets','nebija'>
+. <[z,s],'.','',''>
+Ne <[q,s],'ne','',''>
+tik <[r,0,q],'tik','mēra apstāklis','sen'>
+sen <[r,0,t],'sen','laika apstāklis','izteicējs'>
+Sofijai <[n,p,f,s,d,4],'sofija','netiešais papildinātājs','izteicējs'>
+izteicējs <[v,m,n,i,s,0,0,3,s,a,n],'','izteicējs','.'>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+nomirusi <[v,m,n,p,d,f,s,n,a,s,n],'nomirt','','izteicējs'>
+vecmāmiņa <[n,c,f,s,n,4],'vecmāmiņa','teikuma priekšmets','izteicējs'>
+. <[z,s],'.','',''>
+Vairāk <[r,c,q],'vairāk','',''>
+nekā <[q,s],'nekā','',''>
+pusgadu <[n,c,m,s,a,1],'pusgads','',''>
+Sofija <[n,p,f,s,n,4],'sofija','',''>
+vai <[q,s],'vai','',''>
+ik <[q,s],'ik','',''>
+dienu <[n,c,f,s,a,4],'diena','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+jutusi <[v,m,n,p,d,f,s,n,a,s,n],'just','',''>
+, <[z,c],',','',''>
+cik <[c,s,s],'cik','',''>
+ļoti <[r,0,q],'ļoti','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+vecmāmiņas <[n,c,f,s,g,4],'vecmāmiņa','',''>
+trūkst <[v,g,n,i,p,i,1,3,0,a,n],'trūkt','',''>
+. <[z,s],'.','',''>
+Vai <[q,s],'vai','',''>
+izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+briesmīgi <[r,_,_],'briesmīgi','','izteicējs'>
+netaisni <[r,0,c],'netaisni','cēloņa apstāklis','izteicējs'>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+dzīvei <[n,c,f,s,d,5],'dzīve','teikuma priekšmets','jābeidzas'>
+reiz <[r,0,t],'reiz','laika apstāklis','jābeidzas'>
+jābeidzas <[v,m,y,d,0,i,1,0,0,a,n],'beigties','izteicējs','?'>
+? <[z,s],'?','',''>
+Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','palika'>
+palika <[v,m,n,i,s,i,1,3,0,a,n],'palikt','',''>
+stāvam <[v,m,n,p,u,0,0,0,0,0,0],'stāvēt','',''>
+prievārdeklis <[n,c,m,s,g,1],'','vietas apstāklis','stāvam'>
+uz <[s,p,s,g,[y]],'uz','','prievārdeklis'>
+celiņa <[n,c,m,s,g,1],'celiņš','','prievārdeklis'>
+un <[c,c,s],'un','',''>
+domājam <[v,m,n,p,u,0,0,0,0,0,0],'domāt','izteicējs','.'>
+. <[z,s],'.','',''>
+Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+visiem <[n,c,m,p,d,1],'viss','',''>
+spēkiem <[n,c,m,p,d,1],'spēks','',''>
+mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+domāt <[v,m,n,n,0,t,2,0,0,0,n],'domāt','',''>
+par <[s,p,s,a,[n]],'par','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pašlaik <[r,0,t],'pašlaik','',''>
+ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+, <[z,c],',','',''>
+lai <[c,s,s],'lai','',''>
+tādā <[p,d,0,m,s,l,_,[a]],'tāds','',''>
+veidā <[n,c,m,s,l,1],'veids','',''>
+aizmirstu <[v,m,n,c,0,t,1,0,0,a,n],'aizmirst','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+vienmēr <[r,0,t],'vienmēr','',''>
+tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+tā <[r,0,m],'tā','',''>
+nebūs <[v,m,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+. <[z,s],'.','',''>
+Bet <[c,c,s],'bet','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','izteicējs','.'>
+gandrīz <[r,0,q],'gandrīz','mēra apstāklis','neiespējami'>
+neiespējami <[a,r,m,p,n,n,p],'neiespējams','cēloņa apstāklis','bija'>
+to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','izdarīt'>
+izdarīt <[v,m,n,n,0,t,3,0,0,0,n],'izdarīt','spk','bija'>
+. <[z,s],'.','',''>
+Tiklīdz <[c,s,s],'tiklīdz','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+sakopoja <[v,m,n,i,s,t,2,3,0,a,n],'sakopot','',''>
+visas <[p,g,0,f,p,a,_,[0]],'visa','',''>
+domas <[n,c,f,p,a,4],'doma','',''>
+par <[s,p,s,a,[n]],'par','',''>
+to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+eksistē <[v,m,n,i,p,i,2,3,0,a,n],'eksistēt','',''>
+, <[z,c],',','',''>
+tūlīt <[r,0,t],'tūlīt','',''>
+klāt <[v,m,n,n,0,t,1,0,0,0,n],'klāt','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+arī <[q,s],'arī','',''>
+doma <[n,c,f,s,n,4],'doma','',''>
+par <[s,p,s,a,[n]],'par','',''>
+dzīves <[n,c,f,s,g,5],'dzīve','',''>
+galu <[n,c,m,s,a,1],'gals','',''>
+. <[z,s],'.','',''>
+Tāpat <[q,s],'tāpat','',''>
+notika <[v,m,n,i,s,i,1,3,0,a,n],'notikt','',''>
+arī <[q,s],'arī','',''>
+pretējā <[a,r,m,s,l,n,p],'pretējs','apzīmētājs','virzienā'>
+virzienā <[n,c,m,s,l,1],'virziens','',''>
+: <[z,o],':','',''>
+tiklīdz <[c,s,s],'tiklīdz','',''>
+viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+spēja <[v,o,n,i,s,t,1,3,0,a,n],'spēt','',''>
+iejusties <[v,m,y,n,0,t,1,0,0,0,n],'iejusties','',''>
+stāvoklī <[n,c,m,s,l,2],'stāvoklis','',''>
+, <[z,c],',','',''>
+ka <[c,s,s],'ka','',''>
+kādu <[p,i,0,f,s,a,_,[0]],'kāda','',''>
+dienu <[n,c,f,s,a,4],'diena','',''>
+viņas <[p,d,3,f,s,g,_,[_]],'','',''>
+vairs <[r,0,t],'vairs','',''>
+nemaz <[r,0,q],'nemaz','',''>
+nebūs <[v,g,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+, <[z,c],',','',''>
+tā <[r,0,m],'tā','',''>
+viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+tūlīt <[r,0,t],'tūlīt','',''>
+kļuva <[v,t,n,i,s,i,1,3,0,a,n],'kļūt','',''>
+arī <[q,s],'arī','',''>
+skaidrs <[a,f,m,s,n,n,p],'skaidrs','',''>
+, <[z,c],',','',''>
+cik <[c,s,s],'cik','',''>
+bezgala <[n,c,f,s,n,4],'bezgala','',''>
+vērtīga <[a,f,f,s,n,n,p],'vērtīga','',''>
+ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+dzīvība <[n,c,f,s,n,4],'dzīvība','',''>
+. <[z,s],'.','',''>
+Tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+gluži <[r,0,q],'gluži','mēra apstāklis','bija'>
+kā <[q,s],'kā','veida apstāklis','bija'>
+monētas <[n,c,f,s,g,4],'monēta','teikuma priekšmets','bija'>
+divas <[m,c,s,f,p,n,[v]],'divas','apzīmētājs','puses'>
+puses <[n,c,f,p,n,5],'puse','',''>
+, <[z,c],',','',''>
+ko <[p,r,0,0,0,a,_,[0]],'kas','',''>
+nepārtraukti <[v,m,n,p,d,m,p,n,p,s,n],'nepārtraukt','izteicējs','.'>
+groza <[v,m,n,i,p,t,3,3,0,a,n],'grozīt','apzīmētājs','pirkstos'>
+pirkstos <[n,c,m,p,l,1],'pirksts','laika apstāklis','nepārtraukti'>
+. <[z,s],'.','',''>
+Jo <[c,c,r],'jo','',''>
+apvienojums <[a,_,m,s,g,n,c],'','',''>
+lielāka <[a,f,f,s,n,n,c],'liela','','apvienojums'>
+un <[c,c,s],'un','','apvienojums'>
+nozīmīgāka <[a,f,f,s,n,n,c],'nozīmīga','','apvienojums'>
+izteicējs <[v,m,_,i,s,0,0,3,0,a,n],'','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+viena <[m,c,s,f,s,n,[v]],'viena','apzīmētājs','puse'>
+puse <[n,c,f,s,n,5],'puse','','izteicējs'>
+, <[z,c],',','',''>
+jo <[c,c,r],'jo','',''>
+apvienojums <[a,_,m,s,g,n,c],'','',''>
+lielāka <[a,f,f,s,n,n,c],'liela','','apvienojums'>
+un <[c,c,s],'un','','apvienojums'>
+nozīmīgāka <[a,f,f,s,n,n,c],'nozīmīga','','apvienojums'>
+kļuva <[v,t,n,i,s,i,1,3,0,a,n],'kļūt','',''>
+arī <[q,s],'arī','',''>
+otra <[m,c,s,f,s,n,[_]],'otra','apzīmētājs','puse'>
+puse <[n,c,f,s,n,5],'puse','',''>
+. <[z,s],'.','',''>
+apvienojums <[n,_,_,_,n,_],'','teikuma priekšmets','izteicējs'>
+Dzīvība <[n,c,f,s,n,4],'dzīvība','','apvienojums'>
+un <[c,c,s],'un','','apvienojums'>
+nāve <[n,c,f,s,n,5],'nāve','','apvienojums'>
+izteicējs <[v,m,_,i,s,0,0,3,0,a,n],'','',''>
+bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+xyz <[n,c,f,p,n,5],'','','izteicējs'>
+vienas <[m,c,s,f,s,g,[v]],'viena','','xyz'>
+lietas <[n,c,f,s,g,4],'lieta','','xyz'>
+divas <[m,c,s,f,p,n,[v]],'divas','apzīmētājs','puses'>
+puses <[n,c,f,p,n,5],'puse','','xyz'>
+. <[z,s],'.','',''>
+
