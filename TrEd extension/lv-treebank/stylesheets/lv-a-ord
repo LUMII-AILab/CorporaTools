@@ -1,4 +1,4 @@
-context: LV.*_A.*
+context: LV_A_(View|Edit)
 rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
 text:<? $${m/w/token}eq$${m/form} ? 
   '#{'.CustomColor('sentence').'}${m/w/token}' : 

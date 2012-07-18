@@ -1,4 +1,4 @@
-context: LV.*_A.*View.*
+context: LV_A_View
 rootstyle: #{NodeLabel-skipempty:1}#{balance:spread}#{skipHiddenLevels}
 text:<? $${m/w/token}eq$${m/form} ? 
   '#{'.CustomColor('sentence').'}${m/w/token}' : 

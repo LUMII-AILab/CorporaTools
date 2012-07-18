@@ -17,7 +17,7 @@ sub enable_edit_node_hook { 'stop' };
 
 # set correct stylesheet when entering this annotation mode
 sub switch_context_hook {
-  SetCurrentStylesheet('lv-a-compact-ord');
+  SetCurrentStylesheet('lv-a-dep-ord');
   disable_node_menu_items() if GUI();
   Redraw() if GUI();
 }
@@ -32,10 +32,8 @@ sub pre_switch_context_hook {
 #bind GotoTree to Alt+g menu Goto Tree
 
 #bind Redraw_All to Alt+r menu Redraw
-#bind swich_styles_vert to Alt+v menu Switch On/Off Vertical Layout
 #bind swich_styles_full to Alt+f menu Switch On/Off Full-info Layout
 #bind swich_styles_ord to Alt+o menu Switch On/Off Ordered Layout
-#bind switch_styles_compact to Alt+c menu Switch On/Off Compact Layout
 
 1;
 
