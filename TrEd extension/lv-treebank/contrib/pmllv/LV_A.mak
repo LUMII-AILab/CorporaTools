@@ -84,7 +84,7 @@ sub swich_styles_ord
 }
 
 
-# determine wether the given node has 'N/A' values in any field
+# Determine wether the given node has 'N/A' values in any field.
 sub is_unfinished
 {
   my $node = shift;
@@ -101,8 +101,8 @@ sub is_unfinished
   ) ? 1 : 0;
 }
 
-# determine wether the given node is logicaly apropriate for it's parent
-# N/A values gives positive answer
+# Determine wether the given node is logicaly apropriate for it's parent
+# N/A values gives positive answer.
 sub is_allowed_for_parent
 {
   my $node = shift;
@@ -231,8 +231,8 @@ sub is_allowed_for_parent
   return 1;
 }
 
-# determine wether the given node (xinfo or pmcinfo) is apropriate for it's
-# children hiding - for dependency-only stylesheet
+# Determine wether the given node (xinfo or pmcinfo) is apropriate for it's
+# children hiding - for dependency-only stylesheet.
 sub hidable_type
  {
   my $node = shift;
@@ -254,7 +254,7 @@ sub hidable_type
   return 0;
 }
 
-# finds, if node has x-node or pmc-node or coord-node as children
+# Finds, if node has x-node or pmc-node or coord-node as children.
 sub has_nondep_child
 {
   my $node = shift;
@@ -270,7 +270,7 @@ sub has_nondep_child
   return '';
 }
 
-# Status line mesidge
+# Status line mesidge.
 sub get_status_line_hook
 {
   # get_status_line_hook may either return a string
@@ -319,21 +319,18 @@ sub get_status_line_hook
 	 ];
 }
 
-# finds, if given node contains x-node or apropriate pmc-node as children - for
-# dependency-only stylesheet
-#sub can_compact {
-#  my $node = shift;
-#  my $ch = has_nondep_child($node);
-#  return '' unless $ch;
-#  return $ch if hidable_type($ch);
-#  return '';
-#}
-
-# check if this annotation mode applies to the current file
+# Check if the current file is standard Latvian Treebank file.
 sub is_lva_file
 {
   return (((PML::SchemaName()||'') eq 'lvadata') ? 1 : 0);
 }
+
+# Check if the current file is Latvian Treebank dependency-only file.
+sub is_lvadep_file
+{
+  return (((PML::SchemaName()||'') eq 'lvadepdata') ? 1 : 0);
+}
+
 
 push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 {
@@ -345,6 +342,11 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
     SetCurrentStylesheet('lv-a') if $resuming;
     return 'LV_A_View';
   }
+  if (&is_lvadep_file())
+  {
+    SetCurrentStylesheet('lv-a') if $resuming;
+    return 'LV_A_PureDependency';
+  }
   return;
 };
 
@@ -353,7 +355,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 # do not use this annotation mode for other files
 sub allow_switch_context_hook
 {
-  return 'stop' if not &is_lva_file();
+  return 'stop' if (not &is_lva_file() and not &is_lvadep_file());
 }
 #endif LV_A
 

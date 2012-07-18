@@ -3,7 +3,7 @@
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
   <revision>1.0</revision>
-  <description>AILab experimental schema for morphology layer.</description>
+  <description>Schema for Latvian Treebank morphology layer.</description>
   <reference name="wdata" readas="pml"/>
   
   <import schema="lvwschema.xml" type="w-node.type"/>

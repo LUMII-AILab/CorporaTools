@@ -3,7 +3,7 @@
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
   <revision>1.0</revision>
-  <description>AILab experimental schema for word/token layer.</description>
+  <description>Schema for Latvian Treebank word/token layer.</description>
   <root name="lvwdata" type="w-wdata.type"/>
   
   <type name="w-wdata.type">
