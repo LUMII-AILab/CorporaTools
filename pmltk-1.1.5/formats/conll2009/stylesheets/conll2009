@@ -1,0 +1,60 @@
+context: Conll2009
+rootstyle:#{NodeLabel-skipempty:1}#{skipHiddenLevels:1}#{skipHiddenParents:1}
+
+style:<? $this==$root ? '#{Node-hide:1}' : '' ?>
+style:#{CurrentOval-width:2}#{CurrentOval-outline:red}
+  <? if (length($this->{pred})) { ($this->{fillpred} eq 'Y' ? '#{CurrentOval-fill:blue}#{Oval-fill:blue}' : '#{CurrentOval-fill:green}#{Oval-fill:green}') }
+     else { ($this->{fillpred} eq 'Y' ? '#{CurrentOval-fill:darkred}#{Oval-fill:darkred}' : '#{CurrentOval-fill:yellow}#{Oval-fill:yellow}') } 
+   ?>
+node:${form}<? $${pred} ? ' (#{purple(}${pred}#{)})' : ''?>
+node:#{darkblue}${deprel}<? $${pos} ? ' ' : '' ?>#{gray}${pos}
+node:<? 
+  join' ',map {'#{'.($Conll2009::fillcolors{$_->{label}} || 'gray').'}'. 
+               $_->{label} } ListV($this->{apreds}); 
+?>
+xxnode:#{brown}${lemma}<? $${pos} ? ' ' : '' ?>
+node:
+
+text:${form}
+
+style: <? $this == $Conll2009::markedNode ? '#{Node-addwidth:7}#{Node-addheight:7}#{Oval-fill:orange}' : '' ?>
+style: <?
+  my ($coords,$fill,$main_fill,$hint,$arr,$smth,$dash,$ashape,$tag);
+  my $i=0;
+  my %i;
+  foreach my $apred (ListV($this->{apreds})) {
+    my ($ref,$label) = ($apred->{'target.rf'}, $apred->{'label'});
+    $i++;
+    $i{$ref}++;
+    my $color = $Conll2009::fillcolors{$label} || 'gray';
+    if (!$main_fill and $ref eq $this->parent->{'xml:id'}) {
+       $main_fill=$color;
+       $hint=$label.$hint;
+       $arr='first'.$arr;
+       $ashape='10,16,4'.$ashape;
+       $tag="apreds:$i:$ref+$this->{'xml:id'}".$tag;
+       next;
+    }
+    my $T = qq{[! PML::GetNodeByID('$ref') !]};
+    my $X="(x$T-xn)";
+    my $Y="(y$T-yn)";
+    my $D="sqrt($X**2+$Y**2)";
+
+    $coords .=  ($ref eq $${xml:id})
+                   ?  qq[&n,n,(n+x$T)/2-55-5*$i{$ref},(n+y$T)/2-25-5*$i{$ref},(n+x$T)/2-55-5*$i{$ref},(n+y$T)/2+25+5*$i{$ref},x$T,y$T]
+                   : qq[&xn,yn,(x$T+xn)/2 - $Y*(35/$D+0.12*$i{$ref}),(y$T+yn)/2 + $X*(35/$D+0.12*$i{$ref}),x$T,y$T];
+    $fill .= '&'.$color;
+    $hint.='&'.$label;
+    $arr .= '&first';
+    $ashape .= '&10,16,4';
+    $smth .= '&1';
+    $dash .= '&5,3';
+    $tag .= "&apreds:$i:$ref+$this->{'xml:id'}";
+  }
+  $main_fill||='black';
+  "#{Line-coords:n,n,p,p$coords}#{Line-tag:$tag}#{Line-fill:$main_fill$fill}#{Line-arrowshape:$ashape}#{Line-arrow:$arr}#{Line-smooth:$smth}#{Line-dash:$dash}#{Line-hint:$hint}"
+?>
+
+
+
+hint:<? join "\n",grep /\S/,split /\|/,$${feat} ?>

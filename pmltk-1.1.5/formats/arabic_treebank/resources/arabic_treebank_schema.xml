@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<pml_schema xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/" version="1.1">
+  <description>Converted MRG PTB Data</description>
+
+  <root name="arabic_treebank">
+    <structure>
+      <member name="meta" required="1" type="meta.type"/>
+      <member name="trees" role="#TREES" required="1">
+        <list ordered="1" type="root.type"/>
+      </member>
+    </structure>
+  </root>
+
+  <type name="meta.type">
+    <structure>
+       <member name="annotation_info">
+	 <structure>
+	   <member name="desc"><cdata format="any"/></member>
+	 </structure>
+       </member>
+    </structure>
+  </type>
+
+  <type name="root.type">
+    <structure role="#NODE">
+      <member as_attribute="1" name="id" role="#ID" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="para">
+        <cdata format="nonNegativeInteger"/>
+      </member>
+      <member name="para_id">
+        <cdata format="ID"/>
+      </member>
+      <member name="sent_no"> <!-- number of the sentence in the current paragraph -->
+        <cdata format="nonNegativeInteger"/>
+      </member>
+      <member name="comment"><cdata format="any"/></member>
+      <member name="children" role="#CHILDNODES">
+	<sequence>
+	  <element name="nonterminal" type="nonterminal.type"/>
+	</sequence>
+      </member>
+    </structure>
+  </type>
+
+  <type name="nonterminal_children.type">
+    <sequence>
+      <element name="nonterminal" type="nonterminal.type"/>
+      <element name="trace" type="trace.type"/>
+      <element name="terminal" type="terminal.type"/>
+    </sequence>
+  </type>
+
+  <type name="nonterminal.type">
+    <structure role="#NODE" name="nonterminal">
+      <member name="id" role="#ID" as_attribute="1" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="cat" type="cat.type"/>
+      <member name="functions"> <!-- syntactic category -->
+	<list type="function.type" ordered="0"/>
+      </member>
+      <member name="coref.rf"><cdata format="PMLREF"/></member>
+      <member name="gapping.rf"><cdata format="PMLREF"/></member>
+      <member name="children" role="#CHILDNODES" type="nonterminal_children.type"/>
+   </structure>
+  </type>
+
+  <type name="trace.type">
+    <structure role="#NODE" name="trace">
+      <member name="id" role="#ID" as_attribute="1" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="type"><cdata format="any"/></member>
+      <member name="target"><cdata format="nonNegativeInteger"/></member>
+    </structure>
+  </type>
+
+  <type name="terminal.type">
+    <structure role="#NODE" name="terminal">
+      <member name="id" role="#ID" as_attribute="1" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="order"><cdata format="nonNegativeInteger"/></member>
+      <member name="token"><cdata format="any"/></member>
+      <member name="lookup_word"><cdata format="any"/></member>
+      <member name="comment"><cdata format="any"/></member>
+      <member name="gloss"><cdata format="any"/></member>
+      <member name="translit"><cdata format="any"/></member>
+      <member name="lemma"><cdata format="any"/></member>
+      <member name="morph"><cdata format="any"/></member>
+      <member name="form"><cdata format="any"/></member>
+     </structure>
+  </type>
+
+  <type name="cat.type">
+    <choice>
+      <value>ADJP</value>
+      <value>ADVP</value>
+      <value>CONJP</value>
+      <value>FRAG</value>
+      <value>INTJ</value>
+      <value>LST</value>
+      <value>NAC</value>
+      <value>NP</value>
+      <value>PP</value>
+      <value>PRN</value>
+      <value>PRT</value>
+      <value>QP</value>
+      <value>SBAR</value>
+      <value>SBARQ</value>
+      <value>S</value>
+      <value>SQ</value>
+      <value>UCP</value>
+      <value>VP</value>
+      <value>WHADVP</value>
+      <value>WHNP</value>
+      <value>WHPP</value>
+      <value>X</value>
+    </choice>
+  </type>
+  <type name="function.type">
+    <choice>
+      <value>ADV</value>
+      <value>BNF</value>
+      <value>CLF</value>
+      <value>CLR</value>
+      <value>DIR</value>
+      <value>DTV</value>
+      <value>EXT</value>
+      <value>HLN</value>
+      <value>LGS</value>
+      <value>LOC</value>
+      <value>MNR</value>
+      <value>NOM</value>
+      <value>OBJ</value>
+      <value>PRD</value>
+      <value>PRP</value>
+      <value>SBJ</value>
+      <value>TMP</value>
+      <value>TPC</value>
+      <value>TTL</value>
+      <value>VOC</value>
+    </choice>
+  </type>
+
+</pml_schema>

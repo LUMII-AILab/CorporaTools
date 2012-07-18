@@ -1,0 +1,53 @@
+context: LV.*_A.*
+rootstyle: #{NodeLabel-skipempty:1} #{balance:spread}
+text:<? $${m/w/token}eq$${m/form} ? 
+  '#{'.CustomColor('sentence').'}${m/w/token}' : 
+  '#{-over:1}#{'.CustomColor('spell').'}['.
+     join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
+  ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
+node: <? '#{black}${comment}' if $${comment}?>
+node:<? LV_A::is_unfinished($this) ? '#{red}!!!' : ''?>
+node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}???' ?>
+node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
+node:${m/form}<?
+  ' ' if $${ord} and $${m/form} ?><?
+  '#{darkred}(${ord})' if $${ord} ?>
+node:#{darkgreen}${m/tag}${tag}
+node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
+node:<? '#{darkviolet}reduction:' if $${reduction}?>
+node:<? '#{darkviolet}${reduction}' if $${reduction}?>
+style: #{Node-shape:oval}
+       #{Oval-fill:Yellow}
+       #{CurrentOval-width:2}
+       #{Line-width:3}
+       #{Node-width:8}
+       #{Node-height:8}
+       #{Node-currentwidth:13}
+       #{Node-currentheight:13}
+<? if ($${#name} eq 'xinfo') {
+    '#{Node-shape:rectangle}
+     #{Oval-fill:DarkGreen}
+     #{Line-width:1}'
+  } elsif  ($${#name} eq 'coordinfo') {
+    '#{Node-shape:rectangle}
+     #{Oval-fill:blue3}
+     #{Line-width:1}'
+  } elsif  ($${#name} eq 'pmcinfo') {
+    '#{Node-shape:rectangle}
+     #{Oval-fill:DarkOrchid4}
+     #{Line-width:1}'
+  } elsif ((($this->parent)->attr('#name') eq 'xinfo' )
+        or (($this->parent)->attr('#name') eq 'pmcinfo')
+		or (($this->parent)->attr('#name') eq 'coordinfo')) {
+    '#{Oval-fill:Orange}
+     #{Line-dash:10,3,}
+	 #{Line-arrow:first}'
+  } else {
+     '#{Line-fill:SaddleBrown}
+	  #{Line-arrow:first}'
+  } ?>
+
+hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
+  $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
+  $${tag} ? 'x/tag: ${tag}' : '' ?><? 
+  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?>

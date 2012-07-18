@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tred_extension xmlns="http://ufal.mff.cuni.cz/pdt/pml/" install_size="48009">
+  <head>
+    <schema href="tred_extension_schema.xml"/>
+  </head>
+  <pkgname>ptb</pkgname>
+  <repository href="http://ufal.mff.cuni.cz/~pajas/tred/extensions/"/>
+  <title>Penn Treebank</title>
+  <version>1.26</version>
+  <copyright year="2009">Petr Pajas</copyright>
+
+  <description>This package contains 
+    a conversion script for Penn Treebank merged data format to PML
+    and a stylesheets for visualization of the resulting PML in TrEd.
+  </description>
+  <icon>icons/ptb.png</icon>
+</tred_extension>

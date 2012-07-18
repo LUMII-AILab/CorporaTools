@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<pml_schema
+  xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
+  version="1.1">
+    <revision>0.0.1</revision>
+    <description>A generic schema for trees</description>
+    <import schema="../tree_schema.xml"/>
+
+    <root name="latin_treebank" type="treedata.type"/>
+
+    <derive type="tree-meta.type">
+      <structure>
+	<member name="document_id" type="string.type"/>
+	<member name="subdoc" type="string.type"/>
+      </structure>
+    </derive>
+    
+    <derive type="tree-root.type">
+      <structure>
+	<member as_attribute="1" name="id" role="#ID" type="id.type" required="1"/>
+	<member name="order" role="#ORDER">
+	  <constant>0</constant>
+	</member>
+	<member name="afun">
+	  <constant>AuxS</constant>
+	</member>
+	<member as_attribute="1" name="document_id" type="string.type"/>
+	<member as_attribute="1" name="subdoc" type="string.type"/>
+	<member as_attribute="1" name="span" type="string.type"/>
+      </structure>
+    </derive>
+    
+    <derive type="tree-node.type">
+      <structure>
+	<member as_attribute="1" name="id" required="1" role="#ID" type="id.type"/>
+	<member name="order" required="1" role="#ORDER" type="order.type"/>
+	<member name="form" type="string.type" required="1"/>
+	<member name="lemma" type="string.type" required="1"/>
+	<member name="tag" type="string.type" required="1"/>
+	<member name="afun" type="string.type" required="1"/>
+      </structure>
+    </derive>
+
+    <type name="id.type">
+      <cdata format="ID"/>
+    </type>
+    <type name="order.type">
+      <cdata format="nonNegativeInteger"/>
+    </type>
+    <type name="string.type">
+      <cdata format="any"/>
+    </type>
+</pml_schema>

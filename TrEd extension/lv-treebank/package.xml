@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tred_extension xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+  <head>
+    <schema href="tred_extension_schema.xml"/>
+  </head>
+  <pkgname>lv-treebank</pkgname>
+  <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
+  <title>LU IMCS experimental Dependency Treebank Annotation</title>
+  <version>2.11</version>
+  <copyright year="2011">Lauma Pretkalniņa</copyright>
+  <description>Provides experimental support for viewing
+    and editing annotations of Latvian TreeBank.
+  </description>
+  <icon>icons/ailab.gif</icon>
+  <require>
+  </require>
+</tred_extension>

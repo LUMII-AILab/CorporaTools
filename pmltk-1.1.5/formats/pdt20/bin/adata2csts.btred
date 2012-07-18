@@ -1,0 +1,179 @@
+#!btred -t PML_A -e adata2csts()
+# -*- mode: cperl; coding: utf-8; -*-
+#encoding utf-8
+
+=head1 adata2csts.btred
+
+A simple convertor for adata PML instances to CSTS.
+
+=head1 SYNOPSIS
+
+  btred -m adata2csts.btred files ...
+or
+  ntred -i files ...
+  ntred -m adata2csts.btred
+
+=head1 OUTPUT
+
+The output files are named as the originals with .csts appended. The
+original filenames may be adjusted using C<btred>'s renaming options.
+
+=head1 DESCRIPTION
+
+This scripts load an adata PML instance and dumps a corresponding
+CSTS instance with the following simplifications:
+
+- no csts header is created
+
+- only one of each of C<doc>,C<c>,C<p> elements is created
+
+- only a dummy header is created for C<doc>
+
+- tokens in the wdata not-referenced from mdata are ignored
+
+- C<D> elements are created as correctly as possible (based on wdata)
+
+- morphological annotation other than that referenced from adata is ignored
+
+- morphological annotation is dumped as C<l> and C<t> regardless
+of its true source
+
+The following btred/ntred flags can be used:
+
+C<-a|-r|-s|-p> - affect filenames of the output files
+
+=head1 AUTHOR
+
+Petr Pajas <pajas@matfyz.cz>
+
+Copyright 2005 Petr Pajas, All rights reserved.
+
+=cut
+
+#ifndef NTRED
+#include <tred.mac>
+#endif
+
+package PML_A;
+
+sub csts_scape {
+  my ($str)=@_;
+  $str =~ s/[&]/&amp;/g;
+  $str =~ s/[{]/&lcub;/g;
+  $str =~ s/[}]/&rcub;/g;
+  $str =~ s/[à]/&agrave;/g;
+  $str =~ s/[<]/&lt;/g;
+  $str =~ s/[]]/&rsqb;/g;
+  $str =~ s/\\/&bsol;/g;
+  $str =~ s/\^/&circ;/g;
+  $str =~ s/[[]/&lsqb;/g;
+  $str =~ s/[_]/&lowbar;/g;
+  $str =~ s/[\$]/&dollar;/g;
+  $str =~ s/[>]/&gt;/g;
+  $str =~ s/[\@]/&commat;/g;
+  $str =~ s/[|]/&verbar;/g;
+  $str =~ s/[ˇ]/&macron;/g;
+  $str =~ s/[`]/&grave;/g;
+  $str =~ s/[#]/&num;/g;
+  $str =~ s/[*]/&ast;/g;
+  $str =~ s/[%]/&percnt;/g;
+  return $str;
+}
+
+sub sgml_scape {
+  my ($str)=@_;
+  $str =~ s/[&]/&amp;/g;
+  $str =~ s/[<]/&lt;/g;
+  $str =~ s/[%]/&percnt;/g;
+  return $str;
+}
+
+sub suffix {
+  my ($node)=@_;
+  if ($node->{is_member}) {
+    my $p=$node->parent;
+    $p=$p->parent while $p and $p->{afun}=~/^Aux[CP]$/;
+    return($p and $p->{afun}=~/^(Ap)os|(Co)ord/ ? "_$1$2" : "") #error
+  } elsif ($node->{is_parenthesis_root}) {
+    return "_Pa";
+  }
+  return "";
+}
+
+my %kinds = qw(
+	       ctcd ctcd
+	       spell spell
+	       insert ins
+	       num_normalization num.orig
+	      );
+
+sub adata2csts {
+  my $filename = main::save_transform_filename(FileName());
+  $filename =~ s/\.gz$//;
+  open my $out, ">:encoding(iso-8859-2)", $filename.".csts";
+  print "writing $filename.csts\n";
+  print $out <<"EOF";
+<csts lang=cs>
+<doc file="$filename" id=000>
+<a>
+<mod>x
+<txtype>x
+<genre>x
+<med>x
+<temp>1992
+<authname>x
+<opus>x
+<id>x
+</a>
+<c>
+<p n=0>
+EOF
+  do {{
+    my $id = $root->{id}; $id=~s/^a-//;
+    print $out "<s id=".$id.">\n";
+    foreach my $node (sort { $a->{ord} <=> $b->{ord} } $root->descendants) {
+      my @w = ListV($node->attr('m/w'));
+      my $form = $node->attr('m/form');
+      my $formtype = '';
+      my $IsNum = 0;
+      if ($form =~ /^[\-\+]?[\.\,]?[\d ]+$/ || $form =~ /^[\-\+]?[\d ]+[\.\,][\d ]*$/) {
+        $formtype=' num';
+        $IsNum = 1;
+      }
+      if (@w==0) {
+	print "<w ins>\n";
+      } elsif (@w>1 or  ($w[0]->{token} ne $form)) {
+	$formtype= ($formtype ne '') ? $formtype.'.gen' : ' gen';
+	foreach my $w (@w) {
+	  my $kind = $kinds{$node->{'m'}{form_change}};
+	  print $out "<w".($kind ne "" ? " $kind" : "").">",csts_scape($w->{token}),"\n";
+	  if ($w != $w[$#w] and $w->{no_space_after}) {
+	    print $out "<D>\n";
+	  }
+	}
+      }
+      print $out "<";
+      if ($form=~/^[^[:alnum:]]/ && $IsNum == 0) {
+	print $out "d$formtype";
+      } else {
+	print $out "f$formtype";
+      }
+      $id = $node->{id}; $id=~s/^a-//;
+      print $out " id=",$id,">",csts_scape($form);
+      print $out "<l>",($node->{'m'}{lemma}=~/^_|^[^[:alnum:]]/ ? csts_scape($node->{'m'}{lemma}) :sgml_scape($node->{'m'}{lemma}));
+      print $out "<t>",sgml_scape($node->{'m'}{tag});
+      print $out "<r>",$node->{ord};
+      print $out "<g>",$node->parent->{ord};
+      print $out "<A>",$node->{afun},suffix($node);
+      print $out "\n";
+      if (@w and $w[$#w]->{no_space_after}) {
+	print $out "<D>\n";
+      }
+    }
+  }} while NextTree();
+  print $out <<'END';
+</c>
+</doc>
+</csts>
+END
+}

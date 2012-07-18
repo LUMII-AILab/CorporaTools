@@ -1,0 +1,47 @@
+context: Penn_Treebank
+
+node: #{black}${form}
+node: #{darkblue}${cat}<? join('',map "-$_",ListV($this->{functions})) ?>
+node: #{darkgreen}<? $${pos} eq '-NONE-' ? '-' : '${pos}' ?>
+node: #{red}<? $${coindex.rf} =~ /^unknown/ ? '${coindex.rf}' : '' ?>
+
+text: <?
+  ($${#name} eq 'terminal' and $${form} !~ '^\*|^0$') ? 
+    "#{-tag:".(join(",",map { "$_,#$_->{id}" } $this,grep {$_->{'#name'} eq 'nonterminal'} $this->ancestors))."}"
+    .($${form}=~/^'./ ? "#{-nospace}".$${form} : $${form})
+  : () ?>
+
+rootstyle: #{balance:spread}
+  #{Line-coords:n,n,p,p}
+  #{nodeYSkip:5}
+  #{skipHiddenLevels:1}
+  #{NodeLabel-skipempty:1}
+  #{NodeLabel-halign:center}#{Node-textalign:center}
+
+style:
+<? 
+  if (!$this->parent) {
+    '#{Node-hide:1}'
+  } elsif ($${#name} eq 'nonterminal') {
+    "#{Node-surroundtext:1}#{Node-shape:rectangle}#{Oval-fill:lightyellow}"
+   ."#{CurrentOval-fill:lightyellow}#{CurrentOval-width:2}#{CurrentOval-outline:red}"
+   ."#{NodeLabel-valign:center}"
+  } elsif ($${pos} eq '-NONE-') {
+    "#{CurrentOval-fill:red}#{Oval-fill:gray}"
+  }
+?>
+
+style:
+<?
+  if (length $${coindex.rf}) {
+    my $t='[? $node->{id} eq "'.$${coindex.rf}.'" ?]';
+    my ($X,$Y)=("(x$t-xn)","(y$t-yn)");
+    my $D=qq{sqrt($X**2+$Y**2)};
+    my $d=qq{(25/$D+0.12)};
+    my $coords .= qq{xn,yn,(x$t+xn)/2 - $Y*$d,(y$t+yn)/2 + $X*$d,x$t,y$t};
+    qq(#{Line-coords:n,n,n,p,p,p&$coords}#{Line-arrow:&last}#{Line-fill:&orange}#{Line-smooth:1&1}#{Line-width:&1})
+  }
+?>
+
+style: <? "#{Node-hide:1}" if FileUserData('hide')->{$this}; ?>
+style:<? "#{Oval-fill:lightgray}" if ($this->{'#name'} eq 'nonterminal' and FileUserData('fold')->{$this}) ?>

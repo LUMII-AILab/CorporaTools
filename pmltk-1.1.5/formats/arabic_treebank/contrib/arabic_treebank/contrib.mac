@@ -1,0 +1,47 @@
+# -*- cperl -*-
+
+#ifndef arabic_treebank
+#define arabic_treebank
+
+{
+package Arabic_Treebank;
+
+BEGIN { import TredMacro; }
+use strict;
+
+#binding-context Arabic_Treebank
+
+#include <contrib/support/fold_subtree.inc>
+
+#bind fold_subtree_toggle to space menu Fold/unfold current subtree (toggle)
+#bind fold_subtree_unfold_all to Ctrl+space menu Unfold all in the current subtree
+
+sub detect {
+  return (((PML::SchemaName()||'') eq 'arabic_treebank') ? 1 : 0);
+}
+
+push @TredMacro::AUTO_CONTEXT_GUESSING, sub {
+  my ($hook)=@_;
+  my $resuming = ($hook eq 'file_resumed_hook');
+  my $current = CurrentContext();
+  if (detect()) {
+    return __PACKAGE__;
+  }
+  return;
+};
+
+sub allow_switch_context_hook {
+  return 'stop' unless detect();
+}
+sub switch_context_hook {
+  SetCurrentStylesheet('Arabic_Treebank');
+  Redraw() if GUI();
+}
+
+RemoveBackend('AG2FS'); # obsolete
+AddBackend(Fslib::ImportBackends('AG2PML'),'PMLBackend')
+
+}
+1;
+
+#endif arabic_treebank

@@ -1,0 +1,458 @@
+#!/usr/bin/perl
+# conll2pml     pajas@ufal.ms.mff.cuni.cz     2006/10/11 08:28:50
+
+use warnings;
+use strict;
+$|=1;
+use Data::Dumper;
+use File::Basename qw(basename dirname);
+use File::Path qw(mkpath);
+use XML::Writer;
+use IO::File;
+use Pod::Usage;
+use Getopt::Long;
+
+use open qw(IO :utf8 :std);
+
+Getopt::Long::Configure ("bundling");
+my %opts = (
+  'feat-columns' => 'FEATS',
+);
+GetOptions(\%opts,
+	'quiet|q',
+	'max-sentences|m=i',
+	'out-prefix|o=s',
+	'id-prefix|I=s',
+	'root-tag|R=s',
+	'node-ids|i',
+	'columns|c=s',
+	'schema-only|s',
+	'head-from|h=s',
+	'order-attribute|O=s',
+	'feat-columns|f=s',
+	'struct-feats|F',
+	'technical-root|r',
+	'help',
+	'usage',
+	'man',
+       ) or $opts{usage}=1;
+
+if ($opts{usage}) {
+  pod2usage(-msg => 'validate_pml');
+}
+if ($opts{help}) {
+  pod2usage(-exitstatus => 0, -verbose => 1);
+}
+if ($opts{man}) {
+  pod2usage(-exitstatus => 0, -verbose => 2);
+}
+
+use constant PMLNS => 'http://ufal.mff.cuni.cz/pdt/pml/';
+use constant PML_SCHEMA_NS => 'http://ufal.mff.cuni.cz/pdt/pml/schema/';
+
+my @columns = $opts{columns} 
+  ? (split /,/,$opts{columns})
+  : qw(ID FORM LEMMA CPOSTAG POSTAG FEATS HEAD DEPREL PHEAD PDEPREL);
+my $ID = $columns[0];
+my $HEAD = $opts{'head-from'} || 'HEAD';
+my $ORDER = $opts{'order-attribute'} || 'order';
+
+my $max_sentences = $opts{'max-sentences'} || 100;
+my $prefix = $opts{'out-prefix'} || 'out';
+my $id_prefix = $opts{'id-prefix'} || 's';
+
+my $prefix_dir = dirname($prefix);
+if ( length($prefix_dir) and ! -d $prefix_dir ) {
+  mkpath($prefix_dir);
+}
+
+my $root_tag = $opts{'root-tag'} || 'conll';
+
+my $tech_root = $opts{'technical-root'};
+
+my $fileno = 0;
+my ($sentences, $trees)=(0,0); # counts
+my @trees;
+my @sent;
+my %feat;
+
+while (@ARGV) {
+  my $f = shift;
+  my $fh;
+  if ($f eq '-') {
+    $fh = \*STDIN
+  } else {
+    open($fh, '<', $f) or die "Cannot open $f for reading: $!\n";
+  }
+  while (<$fh>) {
+    chomp;
+    if (/./) {
+      my @tok = map { $_ eq '_' ? undef : $_ } split /\t/, $_;
+      my %tok;
+      @tok{ @columns } = @tok;
+      for my $colname (split ',',$opts{'feat-columns'}) {
+	my $feat = delete $tok{$colname};
+	if ($feat) {
+	  if ($opts{'struct-feats'}) {
+	    for my $f (split /\|/, $feat) {
+	      my ($n,$v)=split /=/,$f,2;
+	      if (defined($v)) {
+		$tok{$colname}{$n}=$v;
+	      } else {
+		warn "Invalid name=value feature: $f\n";
+	      }
+	      $feat{$n}=1;
+	    }
+	  } else {
+	    $tok{$colname} = [split /\|/, $feat];
+	  }
+	}
+      }
+      push @sent, \%tok;
+    } else {
+      next_sentence();
+      dump_file() if @trees >= $max_sentences;
+    }
+  }
+  next_sentence();
+  dump_file();
+}
+dump_schema();
+exit 0;
+
+######################
+
+sub dump_schema {
+  open(my $output, '>', $prefix.'_schema.xml') or die "Cannot open ${prefix}_schema.xml for writing: $!";
+  print STDERR "\nsaving PML schema to: ",$prefix.'_schema.xml',"\n" unless $opts{quiet};
+  my $writer = new XML::Writer(OUTPUT => $output,
+			       DATA_MODE => 1,
+			       DATA_INDENT => 1);
+
+  $writer->startTag('s:pml_schema', version => '1.1', 'xmlns:s' => PML_SCHEMA_NS);
+  $writer->emptyTag('s:root', name => $root_tag, type =>'conll.type');
+
+  # conll.type
+  $writer->startTag('s:type', name => 'conll.type');
+  $writer->startTag('s:structure');
+  $writer->emptyTag('s:member', name=>'body', required=>1, type=>'body.type');
+  $writer->endTag('s:structure');
+  $writer->endTag('s:type');
+
+  # body.type
+  $writer->startTag('s:type', name => 'body.type');
+  $writer->emptyTag('s:list', ordered => 1, role=>'#TREES', type => 
+		      $tech_root ? 'root.type' : 'node.type'
+		     );
+  $writer->endTag('s:type');
+
+  # root.type
+  if ($tech_root) {
+    $writer->startTag('s:type', name => 'root.type');
+    $writer->startTag('s:structure', role=>'#NODE');
+    $writer->startTag('s:member', as_attribute=>1, name => 'xml:id', required=>'1', role=>'#ID');
+    $writer->emptyTag('s:cdata', format => 'ID');
+    $writer->endTag('s:member');
+    $writer->startTag('s:member', as_attribute=>1,name => $ORDER, required=>'0', role=>'#ORDER');
+    $writer->startTag('s:constant');
+    $writer->characters('0');
+    $writer->endTag('s:constant');
+    $writer->endTag('s:member');
+    $writer->startTag('s:member',name => 'childnodes', required=>'0', role=>'#CHILDNODES');
+    $writer->emptyTag('s:list', ordered => 1, type => 'node.type');
+    $writer->endTag('s:member');
+    $writer->endTag('s:structure');
+    $writer->endTag('s:type');    
+  }
+
+  # node.type
+  $writer->startTag('s:type', name => 'node.type');
+  $writer->startTag('s:structure', role => '#NODE');
+  if ($opts{'node-ids'}) {
+    $writer->startTag('s:member', as_attribute=>1,
+		      name => 'xml:id', required => '0', role=>'#ID');
+    $writer->emptyTag('s:cdata', format => 'ID');
+    $writer->endTag('s:member');
+  }
+
+  {
+    my %is_feat = map { $_=>1 } split(',', $opts{'feat-columns'});
+    for my $name (@columns) {
+      next if $name eq $HEAD;
+      if ($is_feat{$name}) {
+	$writer->emptyTag('s:member', name => lc($name), type => 'feats.type');
+      } elsif ($name eq $ID) {
+	$writer->startTag('s:member', name => $ORDER, as_attribute=>'1', role=> '#ORDER');
+	$writer->emptyTag('s:cdata', format => 'positiveInteger');
+	$writer->endTag('s:member');
+      } else {
+	$writer->startTag('s:member', name => lc($name));
+	$writer->emptyTag('s:cdata', format => 'any');
+	$writer->endTag('s:member');
+      }
+    }
+  }
+  $writer->startTag('s:member', name => 'childnodes', role => '#CHILDNODES');
+  $writer->emptyTag('s:list', ordered => 1, type => 'node.type');
+  $writer->endTag('s:member');
+  $writer->endTag('s:structure');
+  $writer->endTag('s:type');
+
+  # feats.type
+  $writer->startTag('s:type', name => 'feats.type');
+  if ($opts{'struct-feats'}) {
+    $writer->startTag('s:structure');
+    for my $name (sort keys %feat) {
+      $writer->startTag('s:member', name => $name, as_attribute => 1);
+      $writer->emptyTag('s:cdata', format => 'any');
+      $writer->endTag('s:member');
+    }
+    $writer->endTag('s:structure');
+  } else {
+    $writer->startTag('s:list',  ordered => 0);
+    $writer->emptyTag('s:cdata', format => 'any');
+    $writer->endTag('s:list');
+  }
+  $writer->endTag('s:type');
+
+  $writer->endTag('s:pml_schema');
+
+  $writer->end();
+  $output->close();
+}
+
+sub dump_file {
+  return unless @trees;
+  my $filename = $prefix.sprintf('_%04d.pml',$fileno++);
+  open(my $output, '>', $filename) or die "Cannot open $filename for writing: $!";
+  my $writer = new XML::Writer(OUTPUT => $output,
+			       DATA_MODE => 1,
+			       DATA_INDENT => 1);
+  print  STDERR "\n" unless $opts{quiet};
+  $writer->startTag($root_tag, xmlns => PMLNS);
+  
+  # PML HEADER
+  $writer->startTag('head');
+  # PML SCHEMA REF
+  $writer->emptyTag('schema',href => basename($prefix).'_schema.xml');
+  $writer->endTag('head');
+  
+  # BODY
+  $writer->startTag('body');
+  for my $root (@trees) {
+    print STDERR "writing tree: ",$trees," to file $filename\r" unless $opts{quiet};
+    $trees++;
+    if ($tech_root) {
+      dump_root($writer,$root);
+    } else {
+      dump_node($writer,$root,$id_prefix.'-'.$trees);
+    }
+  }
+  $writer->endTag('body');
+  $writer->endTag($root_tag);
+  $writer->end();
+  $output->close();
+  print  STDERR "\n" unless $opts{quiet};
+  @trees = ();
+}
+
+sub dump_root {
+  my ($writer, $root)=@_;
+  my ($id,@kids) = @$root;
+  $writer->startTag('LM', 'xml:id' => $id_prefix.'-'.$id);
+  if (@kids) {
+    $writer->startTag('childnodes');
+    dump_node($writer,$_,$id) for @kids;
+    $writer->endTag('childnodes');
+  }
+  $writer->endTag('LM');  
+}
+
+sub dump_node {
+  my $writer = shift;
+  my $node = shift;
+  my $root_id = shift;
+  $writer->startTag('LM',
+		    $ORDER => $node->{$ID},
+		    $opts{'node-ids'} ? ('xml:id' => $id_prefix.'-'.$root_id.'-'.$node->{$ID}) : ()
+		   );
+  for my $name (@columns) {
+    next if $name eq $HEAD or $name eq $ID;
+    my $val = $node->{$name};
+    next if !defined($val) or $val eq '';
+    my $tag = lc($name);
+    if (ref($val)) {
+      if ($opts{'struct-feats'}) {
+	$writer->emptyTag($tag,%$val) if $val;
+      } else {
+	$writer->startTag($tag);
+	for my $f (@$val) {
+	  $writer->startTag('LM');
+	  $writer->characters($f);
+	  $writer->endTag('LM');
+	}
+	$writer->endTag($tag);
+      }
+    } else {
+      $writer->startTag($tag);
+      $writer->characters($val);
+      $writer->endTag($tag);
+    }
+  }
+  my $kids = $node->{CHILDNODES};
+  if ($kids and @$kids) {
+    $writer->startTag('childnodes');
+    dump_node($writer,$_,$root_id) for @$kids;
+    $writer->endTag('childnodes');
+  }
+  $writer->endTag('LM');
+}
+
+sub next_sentence {
+  print STDERR "parsing sentence: ",$sentences,"\r" unless $opts{quiet};
+  $sentences++;
+  if (!$opts{'schema-only'} and @sent) {
+    # (should not be necessary, but just for sure)
+    my %sent = map { $_->{$ID} => $_ } @sent;
+    if (keys(%sent) != @sent) {
+       warn "\nWARNING: duplicated $ID in sentence $sentences!\n";
+    }
+    my @root;
+    for my $t (@sent) {
+      if (($t->{$HEAD}||0) == 0) {
+	push @root, $t;
+      } else {
+	push @{$sent{ $t->{$HEAD} }{CHILDNODES}}, $t;
+      }
+    }
+    unless ($opts{quiet}) {
+      if (!$tech_root and @root>1) {
+	warn "\nWARNING: sentence $sentences has ",0+@root," root nodes!\n";
+      } elsif (@root==0) {
+	warn "\nWARNING: sentence $sentences no root node (skipping)!\n";
+      }
+    }
+    if ($tech_root) {
+      push @trees,[$sentences,@root];
+    } else {
+      push @trees,@root;
+    }
+  }
+  @sent = ();
+}
+
+
+__END__
+
+=head1 NAME
+
+conll2pml
+
+=head1 SYNOPSIS
+
+  conll2pml [<options>] <input-file(s)>
+  conll2pml --help for help
+  conll2pml --man  for manual page
+
+=head1 DESCRIPTION
+
+Converts data from ConLL-X format to PML. The output is split
+according to --max-sentences (defaults to 100) into files named
+C<basename_XXXX.pml> where C<basename> is a filename prefix specified
+with --out-prefix (defaults to 'out') and XXXX is a four digit
+0-padded integer starting from 0000. 
+
+PML schema is saved into a file C<basename_schema.xml>.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--quiet|-q>
+
+Suppress all messages.
+
+=item B<--out-prefix|-o> C<basename>
+
+Output filename prefix.
+
+=item B<--max-sentences|-m> C<N>
+
+Try to create output with maximum C<N> sentences per file. (If some of
+the sentences produce more than one tree, then the real number of
+trees in the file may be sightly higher).
+
+=item B<--technical-root|-r>
+
+Create a technical root for each sentence. This eliminates the problem
+of generating multiple trees for some sentences. Technical roots only
+bear the attribute xml:id, whose form is 's-N', where N is the number
+of the sentence in the input file.
+
+=item B<--root-tag|-R> C<name>
+
+Use given name for the document root element of the resulting PML
+instance (default is 'conll', i.e. <conll>). Since there are different
+CoNLL formats, it is advisible to select a suitable name
+(e.g. conll2009 for the data from the CoNLL 2009 shared task).
+
+=item B<--id-prefix|-I> C<prefix>
+
+Use a given prefix instead of 's' for technical root ID's. 
+
+=item B<--node-ids|-i>
+
+Generate a unique ID for every node. The IDs have the form s-N-M,
+where 's-N' is the ID of the technical root and M is the value of the
+ordering attribute.
+
+=item B<--schema-only|-s>
+
+Do not ouptut PML data files. That is, read the input file only in
+order to collect the information required for generating the
+corresponding PML schema and dump this schema.
+
+=item B<--columns|-c> C<col1,col2,col3,...>
+
+Specify names and order of columns in the input ConLL-X file. Defaults
+to C<ID,FORM,LEMMA,CPOSTAG,POSTAG,FEATS,HEAD,DEPREL,PHEAD,PDEPREL>.
+
+=item B<--feat-columns|-f> C<col1,col2,col3,...>
+
+Comma-separated list of names of columns containing features. Defaults to C<FEATS>.
+
+=item B<--struct-feats|-F>
+
+If a feature column (see B<--feat-columns>) has the form
+name=value|name=value|..., then this flag may be used to build a
+structure out of these features. (By default, all features are stored
+in a list).
+
+=item B<--head-from|-h> C<col>
+
+Use column C<col> as the pointer to the head (defaults to C<HEAD>).
+
+=item B<--order-attribute|-O> C<name>
+
+Use C<name> as the name for the ordering attribute (whose value is
+taken from the column C<ID>). Defaults to C<order>.
+
+=back
+
+=head1 AUTHOR
+
+Petr Pajas, E<lt>pajas@ant.ms.mff.cuni.czE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006 by Petr Pajas
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.2 or,
+at your option, any later version of Perl 5 you may have available.
+
+=head1 BUGS
+
+None reported... yet.
+
+=cut

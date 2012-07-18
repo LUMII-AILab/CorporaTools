@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:s="http://ufal.mff.cuni.cz/pdt/pml/schema/"
+        xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+        xmlns:sch="http://www.ascc.net/xml/schematron"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <sch:ns prefix="s" uri="http://ufal.mff.cuni.cz/pdt/pml/schema/"/>
+  <a:documentation>RelaxNG schema for a PML schema located in arbitrary XML document</a:documentation>
+  <start>
+    <ref name="any.element"/>
+  </start>
+  <define name="any.element">
+    <choice>
+      <externalRef href="pml_schema.rng"/>
+      <element>
+	<anyName>
+	  <except>
+	    <nsName ns="http://ufal.mff.cuni.cz/pdt/pml/schema/"/>
+	  </except>
+	</anyName>
+	<ref name="any.content"/>
+      </element>
+    </choice>
+  </define>
+  <define name="any.content">
+    <zeroOrMore>
+      <choice>
+	<ref name="any.element"/>
+	<attribute>
+	  <anyName/>
+	  <text/>
+	</attribute>
+	<text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+</grammar>

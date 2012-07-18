@@ -1,0 +1,196 @@
+#!btred -e pml2conll()
+#-*- cperl -*-
+
+use strict;
+use Pod::Usage;
+use Getopt::Long;
+
+Getopt::Long::Configure ("bundling");
+my %opts;
+GetOptions(\%opts,
+	'node-ids|i',
+	'columns|c=s',
+	'head-to|h=s',
+	'order-attribute|O=s',
+	'technical-root|r',
+        'APREDS|A=s',
+	'compute-fillpred|F',
+	'help',
+	'usage',
+	'man',
+       ) or $opts{usage}=1;
+
+if ($opts{usage}) {
+  pod2usage(-msg => 'validate_pml');
+}
+if ($opts{help}) {
+  pod2usage(-exitstatus => 0, -verbose => 1);
+}
+if ($opts{man}) {
+  pod2usage(-exitstatus => 0, -verbose => 2);
+}
+
+$opts{columns} ||= 'order,form,lemma,plemma,pos,ppos,feat,pfeat,HEAD,phead,deprel,pdeprel,fillpred,pred,APREDS';
+$opts{'head-to'} ||= 'HEAD';
+$opts{'APREDS'} ||= 'APREDS';
+
+my @attr = split /,/,$opts{columns};
+
+sub pml2conll {
+  my $order = $root->get_ordering_member_name || 'order';
+  my @sch_attr = Attributes();
+  my ($apreds) = grep { $_ eq $opts{'APREDS'} } @attr;
+  if ($apreds) {
+    if (!(grep { m{^apreds/} } @sch_attr)) {
+      die "Nodes in the input file do not contain 'apreds' attribute: cannot generate $opts{'APREDS'} columns!\n";
+    }
+  }
+  foreach my $attr (@attr){
+    die "Attribute $attr not found in schema.\n"
+      unless grep $_ eq $attr, (@sch_attr,$opts{'head-to'},$apreds);
+  }
+
+  do {{
+    my $nodes = SortByOrd([$root->descendants]);
+    unshift @$nodes,$root if $opts{'technical-root'};
+
+    # correct PRED if needed:
+    if ($apreds) {
+      my %is_target;
+      # find nodes being pointed to
+      for my $node (@$nodes) {
+	$is_target{ $_->{'target.rf'} } = 1 for ListV($node->{apreds});
+      }
+
+      for my $node (@$nodes) {
+	# check that nodes pointed to by apreds have pred
+	if ($is_target{ $node->{'xml:id'} }) {
+	  unless (defined($node->{pred}) and length($node->{pred})) {
+	    warn("ERROR: Missing 'pred' on node $node->{'xml:id'}!\n");
+	    $node->{pred}='pml:-NO-PRED-';
+	  }
+	}
+      }
+    }
+
+    my @preds = grep { defined($_->{pred}) and length($_->{pred}) } @$nodes if $apreds;
+
+    foreach my $node (@$nodes){
+      my $line ='';
+      if ($opts{'compute-fillpred'}) {
+	if ($node->{pred}) {
+	   $node->{fillpred} = 'Y';
+	} else {
+	   delete $node->{fillpred};
+	}
+      }
+      foreach my $attr(@attr){
+
+        if ($attr eq $opts{'head-to'}) {
+          my $p = $node->parent;
+          $line .= $p ? $p->{$order} : '0';
+        } elsif (defined($apreds) and $attr eq $apreds) {
+	  my @p;
+          foreach my $pred (@preds) {
+            # Assumption: each ID can be listed just once in the apreds list
+            my ($apred) = grep $_->{'target.rf'} eq $pred->{'xml:id'}, ListV($node->{apreds});
+            if (ref $apred) {
+	      push @p, $apred->{label};
+            } else {
+              push @p, '_';
+            }
+          }
+	  $line .=  join("\t",@p);
+        } else { # normal string value
+          my $value = $node->attr($attr);
+	  if (ref($value)) {
+	    if (UNIVERSAL::isa($value,'ARRAY')) {
+	      $value = join('|',@$value);
+	    } elsif (UNIVERSAL::isa($value,'HASH')) {
+	      $value = join('|',map {$_.'='.$value->{$_}}  %$value);
+	    }
+	  }
+	  if(defined $value){
+            $line .= $value unless ref $value;
+          }else{
+            $line .= '_';
+          }
+        }
+        $line .=  "\t" unless $attr eq $attr[-1];
+      }
+      $line =~ s/\t+$//;
+      print $line,"\n";
+    }
+    print "\n";
+  }} while TredMacro::NextTree();
+
+}
+
+__END__
+
+=head1 NAME
+
+pml2conll
+
+=head1 SYNOPSIS
+
+  btred -I pml2conll -o [<options>] -- <input-file(s)>
+  perldoc pml2conll
+
+=head1 DESCRIPTION
+
+Converts CoNLL data from PML back to ConLL-X format.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--technical-root|-r>
+
+A technical root was created for each sentence.
+
+
+=item B<--columns|-c> C<col1,col2,col3,...>
+
+Specify names and order of attributes to be converted to columns the
+output ConLL-X file. Defaults to
+C<order,form,lemma,plemma,pos,ppos,feat,pfeat,HEAD,phead,deprel,pdeprel,fillpred,pred,APREDS>.
+
+=item B<--head-to|-h> C<col>
+
+Use column C<col> as the pointer to the head (defaults to C<HEAD>).
+
+=item B<--order-attribute|-O> C<name>
+
+Use C<name> as the name for the ordering attribute (whose value is
+stored to the column C<ID>). Defaults to C<order>.
+
+=item B<--APREDS|-A> C<name>
+
+Use C<name> as the name for the final set of columns representing
+predicate arguments (used in CoNLL ST 2008 and 2009).
+
+=item B<--compute-fillpred|-F>
+
+If this flag is used, the column named FILLPRED is set to Y if the
+column PRED is nonempty and set to '_' (null) otherwise.
+
+=back
+
+=head1 AUTHOR
+
+Jan Stepanek, jan_stepanek[at]matfyz_cz
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006 by Jan Stepanek
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.2 or,
+at your option, any later version of Perl 5 you may have available.
+
+=head1 BUGS
+
+None reported... yet.
+
+=cut

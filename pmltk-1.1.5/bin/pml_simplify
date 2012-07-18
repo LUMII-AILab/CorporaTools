@@ -1,0 +1,817 @@
+#!/usr/bin/perl
+# $Id: pml_simplify 455 2010-03-14 09:12:15Z pajas $
+# pml_simplify                   pajas@ufal.ms.mff.cuni.cz
+
+use strict;
+use Carp;
+
+$|=1;   # flush on write
+use FindBin;
+use lib (map "$FindBin::RealBin/../libs/$_", qw(fslib pml-base));
+
+use File::Spec;
+use Pod::Usage;
+
+use constant {
+  PML_SCHEMA_NS => "http://ufal.mff.cuni.cz/pdt/pml/schema/",
+  EMPTY => q(),
+};
+
+my $old_args = "@ARGV";
+$old_args =~ s/--/__/g;
+use Getopt::Long;
+Getopt::Long::Configure ("bundling");
+my %opts = (implementation=>'libxml');
+GetOptions(\%opts,
+	'implementation=s',
+	'path|p=s@',
+        'validate|v',
+        'validate-as=s',
+	'no-format|f',
+	'no-comments|c',
+	'no-import|i',
+	'no-derive|d',
+	'no-copy|c',
+	'preserve-templates|t',
+	'no-template-derive|D',
+	'no-template-import|I',
+	'debug|D',
+	'help|h',
+	'usage|u',
+        'version|V',
+	'man',
+       ) or $opts{usage}=1;
+
+my $VERSION = '1.1';
+my $DEBUG = $opts{debug};
+sub _DEBUG { print STDERR @_,"\n" if $DEBUG }
+
+$opts{validate}=1 if $opts{'validate-as'};
+
+if ($opts{usage}) {
+  pod2usage(-msg => 'pml_simplify');
+}
+if ($opts{help}) {
+  pod2usage(-exitstatus => 0, -verbose => 1);
+}
+if ($opts{man}) {
+  pod2usage(-exitstatus => 0, -verbose => 2);
+}
+if ($opts{version}) {
+  print "pml_simplify version: $VERSION\n";
+  exit 0;
+}
+@{$opts{path}} = map { split /:/,$_ } @{$opts{path}};
+my $pml_schema = shift || '-';
+my $output = shift || '-';
+
+if (lc($opts{'implementation'}) eq 'treex') {
+  via_api();
+} elsif (lc($opts{'implementation'}) eq 'libxml') {
+  via_libxml();
+} elsif (lc($opts{'implementation'}) eq 'xslt2') {
+  via_xslt2();
+} else {
+  die "$0: --implementation must be one of {Treex,LibXML,XSLT2}\n";
+}
+
+exit 0;
+
+############################################################
+
+sub via_xslt2 {
+  my @p; # parameters
+  my $xsl = "$FindBin::RealBin/../tools/pml_simplify.xsl";
+  push @p, 'format=0' if $opts{'no-format'};
+  push @p, 'comments=0' if $opts{'no-comments'};
+  push @p, 'preserve_templates=1' if $opts{'preserve-templates'};
+  if (grep { $opts{$_} } qw(no-import no-derive no-copy no-template-derive no-template-import)) {
+    die "$0: incompatible comand-line arguments!\nThe following options are not supported by the XSLT implementation:\n --no-import\n --no-derive\n".
+      " --no-copy\n --no-template-derive\n --no-template-import\n"
+  }
+  my @saxon;
+  if ($ENV{SAXON}) {
+    @saxon=(split ' ',$ENV{SAXON});
+  } else {
+    if (-f 'saxon9.jar') {
+      @saxon=qw(java -jar saxon9.jar);
+    } elsif ($ENV{CLASSPATH}=~/saxon/i) {
+      @saxon=qw(java net.sf.saxon.Transform);
+    } else {
+      die <<EOF;
+$0: XSLT2 implementation requires saxon (http://saxon.sf.net).
+Please setup CLASSPATH or SAXON environment variables, e.g.
+  SAXON="java -jar <path_to_saxon>/saxon9.jar"
+or
+  CLASSPATH=<path_to_saxon>/saxon9.jar
+EOF
+    }
+  }
+  exit system(@saxon, "-xsl:$xsl",
+	      ($output eq '-' ? () : '-o:'.$output),
+	      $pml_schema, 
+	      @p,
+	      'search_paths='.join(',',@{$opts{path}}));
+}
+
+sub via_api {
+  require Fslib;
+  require PMLSchema;
+  Fslib::AddResourcePath(@{$opts{path}},"$FindBin::RealBin/../rng");
+
+  my $schema = PMLSchema->new({
+    ($pml_schema eq '-' ? (fh=>\*STDIN) : (filename=>$pml_schema)),
+    validate=>$opts{validate},
+    relaxng_schema=>get_rng_schema(),
+    no_import => $opts{'no-import'},
+    no_derive => $opts{'no-derive'},
+    no_copy => $opts{'no-copy'},
+    preserve_templates => $opts{'preserve-templates'},
+    no_template_derive => $opts{'no-template-derive'},
+    no_template_import => $opts{'no-template-import'},
+   });
+
+  $schema->write({
+    ($output eq '-' ? (fh => \*STDOUT) : (filename => $output)),
+    no_indent=>$opts{'no-format'},
+  });
+}
+
+my ($XPATH,$PARSER,$RNG);
+sub via_libxml {
+  require XML::LibXML;
+  $PARSER = XML::LibXML->new();
+  $PARSER->keep_blanks($opts{'no-format'} ? 1 : 0);
+  $PARSER->line_numbers(1);
+  $PARSER->clean_namespaces(1);
+
+  $XPATH = XML::LibXML::XPathContext->new();
+  $XPATH->registerNs(p => PML_SCHEMA_NS);
+
+  if ($opts{validate}) {
+    $RNG = XML::LibXML::RelaxNG->new( location => get_rng_schema() );
+  }
+
+  my $dom = read_schema($pml_schema,{});
+
+  unless ($opts{'no-comments'}) {
+    my $from = $pml_schema eq '-' ? "<STDIN>" : $pml_schema;
+    my $comment1 = $dom->createComment("\n  Created by pml_simplify on ".localtime().
+					 "\n  Command-line: pml_simlify $old_args\n");
+    $dom->insertBefore($comment1,$dom->documentElement);
+  }
+  unless ($opts{'preserve-templates'}) {
+    foreach my $template ( $dom->documentElement->getChildrenByTagNameNS(PML_SCHEMA_NS,'template') ) {
+      $template->unbindNode();
+    }
+  }
+
+  # reparse (for formatting and namespace cleanup) and dump
+  unless ($opts{'no-format'}) {
+    _DEBUG("Reformatting result");
+    $dom = $PARSER->parse_string( $dom->toString(1) );
+  }
+  _DEBUG("Saving to $output");
+  $dom->toFile($output, $opts{'no-format'} ? 0 : 1);
+}
+
+sub get_rng_schema {
+  if ($opts{'validate-as'} =~ /^(\d+)\.(\d+)$/) {
+    return "$FindBin::RealBin/../rng/pml_schema_$1_$2.rng"
+  } else {
+    return "$FindBin::RealBin/../rng/pml_schema_inline.rng"
+  }
+}
+
+############################################################
+# the LibXML implementation
+############################################################
+
+
+# return 1 if a given argument looks like an URL (something://)
+sub _is_url {
+  return ($_[0] =~ m(^\s*[[:alnum:]]+://)) ? 1 : 0;
+}
+
+# distinguish relative filename from absolute paths and URLs
+sub _is_absolute {
+  my ($path) = @_;
+  return (_is_url($path) or File::Spec->file_name_is_absolute($path));
+}
+
+# lookup a file in a given list of paths
+sub FindIn {
+  my ($filename,$paths)=@_;
+  if (ref $paths and !_is_absolute($filename)) {
+    for my $dir (@$paths) {
+      my $f = File::Spec->catfile($dir,$filename);
+      return $f if -f $f;
+    }
+  }
+  return $filename;
+}
+
+# resolve relative file-names and URLs
+sub ResolvePath {
+  my ($orig, $href,$paths)=@_;
+  return $href if _is_absolute($href);
+  if (_is_url($orig)) {
+    my $res = FindIn($href,$paths);
+    if ($res ne $href) {
+      return $res;
+    } else {
+      $orig =~ s{/[^/]*$}{};
+      return $orig.'/'.$href;
+    }
+  } else {
+    my ($vol,$dir) = File::Spec->splitpath(File::Spec->rel2abs($orig));
+    my $rel = File::Spec->rel2abs($href,File::Spec->catfile($vol,$dir));
+    if ( -f $rel ) {
+      return $rel;
+    } else {
+      return FindIn($href,$paths);
+    }
+  }
+}
+
+# find pml_schema element
+sub pml_schema_root {
+  my ($dom)=@_;
+  my ($pml) = $XPATH->findnodes('(//p:*)[1]', $dom);
+  return $pml;
+}
+
+# check if schema revision matches <import> revision flags
+sub check_revision {
+  my ($schema,$param)=@_;
+    
+  my $error = $param->{revision_error} || 'Error: wrong schema revision of %f: %e';
+  my $pml = pml_schema_root($schema);
+  my ($revision) = $pml->getChildrenByTagNameNS(PML_SCHEMA_NS,'revision');
+  my $revision_no = $revision ? $revision->textContent : 0;
+  
+  if (defined($param->{revision}) and  $param->{revision} ne EMPTY and
+	_cmp_revisions($revision_no,$param->{revision})!=0) {
+    die $error."required $param->{revision}, got $revision_no";
+  } else {
+    if (defined($param->{minimal_revision}) and $param->{minimal_revision} ne EMPTY and
+	  _cmp_revisions($revision_no,$param->{minimal_revision})<0) {
+      die $error."required at least $param->{minimal_revision}, got $revision_no";
+    }
+    if (defined($param->{maximal_revision}) and $param->{maximal_revision} ne EMPTY and
+	  _cmp_revisions($revision_no,$param->{maximal_revision})>0) {
+      die $error."required at most $param->{maximal_revision}, got $revision_no";
+    }
+  }
+}
+
+# compare schema revision numbers
+sub _cmp_revisions {
+  my ($revision1,$revision2)=@_;
+  
+  my @revision1 = split(/\./,$revision1);
+  my @revision2 = split(/\./,$revision2);
+  my $cmp=0;
+  while ($cmp==0 and (@revision1 or @revision2)) {
+    $cmp = (shift(@revision1) <=> shift(@revision2));
+  }
+  return $cmp;
+}
+
+# hash subelements by a given attribute or by content
+sub _hash_by {
+  my ($pml,$what,$by)=@_;
+  my %hash;
+  croak("PML undefined") if !defined($pml);
+  foreach my $type ($pml->getChildrenByTagNameNS(PML_SCHEMA_NS,$what)) {
+    my $name = defined($by) ? $type->getAttribute($by) : $type->textContent;
+    $hash{$name} = $type;
+  }
+  return \%hash;
+}
+
+# traverse a type declaration and collect types referred to by
+# type="type-name" declarations
+sub _get_referred_types {
+  my ($type,$named_types,$referred_types) = @_;
+  if (ref($type)) {
+    foreach my $ref ($XPATH->findnodes(q(./descendant-or-self::p:*
+					  [ self::p:list
+                                          | self::p:alt
+                                          | self::p:structure
+                                          | self::p:sequence
+                                          | self::p:element
+                                          | self::p:attribute
+                                          | self::p:member ]/@type),$type)
+		    ) {
+      my $ref_type = $ref->getValue;
+      if ($ref_type ne EMPTY and !exists( $referred_types->{ $ref_type } )) {
+	my $the_type = $named_types->{ $ref_type }; 
+	if ( $the_type ) {
+	  _DEBUG("Found type reference from ".$type->getAttribute('name')." to: $ref_type");
+	  $referred_types->{ $ref_type } = $the_type;
+	  _get_referred_types( $the_type, $named_types, $referred_types );
+	} else {
+	  warn "Cannot find declaration for type '$ref_type' in ".$type->ownerDocument->URI;
+	}
+      }
+    }
+  }
+}
+
+# copy each given named typee into $target_pml
+# after $import_element unless a type with the
+# same name already exists in the $existing hash
+sub import_types {
+  my ($target_pml,$import_element, $types, $existing) = @_;
+  my $target = $target_pml->ownerDocument;
+  my $after_element;
+
+  my $comment;
+  if (!$opts{'no-comments'}) {
+    my $schema = $import_element->hasAttribute('schema') ? $import_element->getAttributeNode("schema")->toString : EMPTY;
+    my $type   = $import_element->hasAttribute('type') ? $import_element->getAttributeNode("type")->toString : EMPTY;
+    $comment = $target->createComment("  ".("=" x 12)." import$schema $type".("=" x 12)."  ");
+    $import_element->replaceNode($comment);
+    $after_element = $comment;
+  } else {
+    $after_element = $import_element;
+  }
+
+  foreach my $ref_type (@$types) {
+    my $name = $ref_type->getAttribute('name');
+    if (exists $existing->{ $name }) {
+      _DEBUG("skipping type $name - already defined...");
+      next;
+    } 
+    _DEBUG("copying type $name...");
+
+    my $copy = $target->importNode($ref_type);
+    $existing->{ $name } = $copy;
+
+    $target_pml->insertAfter($copy, $after_element);
+    $after_element = $copy;
+  }
+  if (!$opts{'no-comments'}) {
+    $comment = $target->createComment("  ".("=" x (length($comment->nodeValue)-4))."  ");
+    $target_pml->insertAfter($comment, $after_element);
+  } else {
+    $import_element->unbindNode;
+  }
+}
+
+# process a derive instruction
+# $named_type is a hash of type declarations indexed by name
+sub process_derive {
+  my ($pml,$derive, $named_type) = @_;
+  my $URL = $pml->ownerDocument->URI;
+
+    my $name = $derive->getAttribute('name');
+    my $source = $derive->getAttribute('type');
+    my $type;
+    if (!defined $source or $source eq EMPTY) {
+      die "<derive> instruction must specify source type in the attribute 'type' in $URL, line ".$derive->line_number."\n";
+    }
+    if (!exists $named_type->{ $source }) {
+      die "Can't find source type '$source' for <derive> in $URL, line ".$derive->line_number."\n";
+    }
+    if (defined $name and $name ne EMPTY) {
+      if (exists ($named_type->{ $name })) {
+	die "Refusing to derive existing type '$name' from '$source' in $URL, line ".$derive->line_number."\n";
+      }
+      $type = $named_type->{ $name } = $named_type->{ $source }->cloneNode(1);
+      $pml->appendChild( $type );
+      $type->setAttribute('name', $name);
+    } else {
+      $name = $source;
+      $type = $named_type->{ $source };
+    }
+    _DEBUG("applying derive instructions to type $source, target type name $name...");
+    unless ($opts{'no-comments'}) {
+      $pml->insertBefore($pml->ownerDocument->createComment("  ".("=" x 12)." derived from $source ".("=" x 12)."  "), $type);
+    }
+    # deriving possible for structures, sequences and choices
+    my ($inst) = $XPATH->findnodes(
+      q(p:structure|p:sequence|p:container|p:choice),
+      $derive
+     );
+    my ($target) = $XPATH->findnodes(
+      q(p:structure|p:sequence|p:container|p:choice),
+      $type
+     );
+    my %type_map = (
+      structure => ['member', 'name'],
+      sequence => ['element', 'name'],
+      container => ['attribute', 'name'],
+      choice => ['value', undef ], # index by content
+     );
+    
+    if (!$inst) {
+      die("<derive> must contain a <structure>, <sequence>, <container>, or <choice> in $URL, line ".$derive->line_number."\n");
+    } elsif (!$target or $target->localname ne $inst->localname) {
+      die("<derive> and its source '$source' differ in type in $URL, line ".$derive->line_number."\n");
+    } else {
+      my $tag = $inst->localname;
+      my ( $item_tag, $index_by ) = @{ $type_map{ $tag } };
+      _DEBUG("will derive a $tag ($item_tag)");
+
+      foreach my $attr (grep { $_->nodeType == XML::LibXML::XML_ATTRIBUTE_NODE() } $inst->attributes) {
+	my $name = $attr->nodeName;
+	my $value = $attr->getValue;
+	if (not(defined($value) and length($value))) {
+	  _DEBUG("removing attribute".$attr->toString. " from <$tag>");
+	  $target->removeAttribute($name) if $target->hasAttribute($name);
+	} else {
+	  _DEBUG("copying attribute $name='$value' to <$tag>");
+	  $target->setAttribute($name,$value);
+	}
+	if ($tag eq 'container' and $name eq 'type') {
+	  for my $content ($XPATH->findnodes(q(p:*[local-name()!='attribute'
+                                               and local-name()!='delete']),$target)) {
+	    $content->unbindNode;
+	  }
+	}
+      }
+      my $items = _hash_by( $target, $item_tag, $index_by );
+      my ($before) = $XPATH->findnodes('p:*[@role="#CHILDNODES"]',$target);
+
+      foreach my $item ($inst->getChildrenByTagNameNS(PML_SCHEMA_NS,$item_tag)) {
+	my $iname = defined($index_by) ? $item->getAttribute($index_by) : $item->textContent;
+	if ($tag eq 'container' and
+	      $item->localname !~ /^(attribute|delete)$/) {
+	  if ($target->hasAttribute('type')) {
+	    $target->removeAttribute('type');
+	  }
+	  for my $content ($XPATH->findnodes(q(p:*[local-name()!='attribute'
+                                               and local-name()!='delete']),$target)) {
+	    $content->unbindNode;
+	  }
+	}
+	$item->unbindNode;
+	if (exists( $items->{$iname} )) {
+	  _DEBUG("replacing $item_tag name=$iname");
+	  if (ref($before) and $items->{$iname}->isSameNode($before)) {
+	    $before = $item;
+	  }
+	  $items->{$iname}->replaceNode( $item );
+	} else {
+	  _DEBUG("adding $item_tag '$iname'");
+	  # <attribute> should precede content declaration in a <container>
+	  if ($item_tag eq 'attribute' and $target->firstChild) {
+	    $target->insertBefore($item,$target->firstChild);
+	  } elsif (ref $before) {
+	    $target->insertBefore($item,$before);
+	  } else {
+	    $target->appendChild($item);
+	  }
+	}
+      }
+      foreach my $delete ($inst->getChildrenByTagNameNS(PML_SCHEMA_NS,'delete')) {
+	my $dname = $delete->textContent;
+	if (exists $items->{ $dname }) {
+	  _DEBUG("deleting $item_tag '$dname'");
+	  $items->{ $dname }->unbindNode;
+	} else {
+	  warn("No such $item_tag '$dname' in <$tag> '$source' in $URL, line ".$delete->line_number."\n");
+	}
+      }
+    }
+    $derive->unbindNode;
+}
+
+# move <root> declaration before any <type>
+sub fix_root {
+  my ($pml) = @_;
+  my ($root) = $pml->getChildrenByTagNameNS(PML_SCHEMA_NS,'root');
+  if (ref($root) and 
+      (my @before = $XPATH->findnodes('preceding-sibling::p:type',$root))) {
+    $root->unbindNode;
+    $pml->insertBefore($root,$before[0]);
+  }
+
+}
+
+{
+  my %cached;
+  my %processing;
+
+  # 1. resolve path $in relative to base_url
+  # 2. try to locate an already processed schema in cache,
+  # 3. otherwise, read schema from file and process it
+  sub read_schema {
+    my ($in, $options)=@_;
+    my $base_url = $options->{base_url} || EMPTY;
+    
+    _DEBUG("read_schema: $in (base url: $base_url)");
+    if ($base_url ne EMPTY) {
+      $in = ResolvePath($base_url,$in,$opts{path});
+    } elsif ( ! -f $in ) {
+      $in = FindIn($in,$opts{path});
+    }
+    _DEBUG("resolved to: $in");
+    
+    if ($processing{$in}) {
+      die "Fatal error: Cyclic imports detected when processing <import> instructions in schema $in\n";
+    }
+    
+    my $dom;
+    unless (exists($cached{ $in })) {
+      _DEBUG("parsing...");
+      $dom = $cached{ $in } = $PARSER->parse_file($in);
+      if ($RNG and $RNG->validate($dom)!=0) {
+	  die "Failed to validate!";
+      }
+      _DEBUG("done.");
+      $processing{ $in } = 1;
+      process_schema( $dom, $options );
+      delete $processing{ $in };
+    } else {
+      _DEBUG("cached (no need to parse and process).");
+      $dom = $cached{ $in };
+    }
+
+    return $dom;
+  }
+}
+
+# process all <import> and <derive> instructions
+sub process_schema {
+  my ($dom, $options)=@_;
+
+  my $URL = $dom->URI;
+  my $pml = pml_schema_root($dom);
+  if (!$pml) {
+    die "Didn't find PML schema in ".substr($dom->toString(1),0,512)."...\n";
+  }
+  my $named_type = _hash_by($pml,'type', 'name');
+
+  _DEBUG("Processing $URL");
+  my $templates = _hash_by( pml_schema_root($pml), 'template', 'name' );
+
+
+  _DEBUG("Processing templates in $URL...");
+  foreach my $instruction ( $XPATH->findnodes('p:template|p:import|p:derive|p:copy',$pml) ) {
+    my $which = $instruction->localName;
+    if ($which eq 'import') {
+      unless ($opts{'no-import'}) {
+	_DEBUG("Processing imports in $URL...");
+	process_import($pml,$instruction,$named_type,$options);
+	fix_root( $pml );
+	_DEBUG("Importing to $URL finished.");
+      }
+    } elsif ($which eq 'template') {
+      my $template = $instruction;
+      my $hashed = {
+	%$named_type,
+	%{ _hash_by( $template, 'type', 'name' ) },
+	%{ _hash_by( $template, 'param', 'name' ) },
+      };
+      foreach my $ti ( $XPATH->findnodes('p:import|p:derive',$template) ) {
+	if ($ti->localName eq 'import') {
+	  process_import($template,$ti,$hashed ,$options) unless ($opts{'no-template-import'});
+	} else {
+	  process_derive($template,$ti,$hashed) unless ($opts{'no-template-derive'});
+	}
+      }
+    } elsif ($which eq 'derive') {
+      unless ($opts{'no-derive'}) {
+	_DEBUG("Deriving type in $URL ...");
+	process_derive($pml, $instruction, $named_type);
+	_DEBUG("Deriving finished.");
+      }
+    } elsif ($which eq 'copy') {
+      unless ($opts{'no-copy'}) {
+	_DEBUG("Processing template copy in $URL ...");
+	process_copy($pml, $instruction, $templates);
+	_DEBUG("Processing template copy finished.");
+	$named_type = _hash_by($pml,'type', 'name');
+      }
+    }
+  }
+}
+
+sub process_copy {
+  my ($pml,$copy,$templates)=@_;
+  my $URL = $pml->ownerDocument->URI;
+  my $ref = $copy->getAttribute('template');
+  my $template = $templates->{$ref}
+    or die "Template $ref not found at ".$URL.":".$copy->line_number."\n";
+  my $prefix = $copy->getAttribute('prefix')
+    or die "Required attribute prefix not found at ".$URL.":".$copy->line_number."\n";
+  my $params = _hash_by($template,'param','name');
+  my $let = _hash_by($copy,'let','param');
+  my $doc_frag = $pml->ownerDocument->createDocumentFragment;
+  for my $type ($template->getChildrenByTagNameNS(PML_SCHEMA_NS,'type')) {
+    my $new = $type->cloneNode(1);
+    my $name = $type->getAttribute('name');
+    unless ($opts{'no-comments'}) {
+      $doc_frag->appendChild(
+	$pml->ownerDocument->createComment(
+	  "  ".("=" x 12)." copied from type $name in template $ref ".("=" x 12)."  "));
+    }
+    $doc_frag->appendChild($new);
+    $new->setAttribute('name',$prefix.$name);
+    for my $attr ($XPATH->findnodes('descendant::p:*/@type',$new)) {
+      my $v= $attr->getValue;
+      if (exists $params->{$v}) {
+	if (exists $let->{$v}) {
+	  my $lv = $let->{$v};
+	  _DEBUG("Transforming type $v to a type defined using <let>:\n".$lv->toString(1));
+	  if ($lv->hasAttribute('type')) {
+	    $attr->setValue($lv->getAttribute('type'));
+	  } else {
+	    my $el = $attr->getOwnerElement;
+	    for my $copy ($XPATH->findnodes('p:*[not(self::p:attribute)]',$lv)) {
+	      $el->appendChild($copy->cloneNode(1));
+	    }
+	    $attr->unbindNode;
+	  }
+	} else {
+	  die "Parameter $v not bound to a type in template $ref at $URL:".
+	    $attr->getOwnerElement->line_number;
+	}
+      } else {
+	$attr->setValue($prefix.$v);
+      }
+    }
+    _DEBUG("***".$new->toString);
+  }
+  $copy->replaceNode($doc_frag);
+}
+
+sub process_import {
+  my ($pml, $import, $named_type,$options)=@_;
+  my $URL = $pml->getOwnerDocument->URI;
+  my $ref = $import->getAttribute('type');
+  my $schema_url = $import->getAttribute('schema');
+  if ($ref) {
+    _DEBUG("Import type $ref from $schema_url");
+  } else {
+    _DEBUG("Import all types from $schema_url");
+  }
+  my $ref_schema = read_schema( $schema_url,
+				{ %$options,
+				  base_url => $URL
+				 });
+  check_revision($ref_schema,{
+    revision         => $import->getAttribute('revision'),
+    minimal_revision => $import->getAttribute('minimal_revision'),
+    maximal_revision => $import->getAttribute('maximal_revision'),
+    revision_error => "Error importing from schema $schema_url to $URL - revision mismatch: ",
+  });
+  my @types_to_import=();
+  if ( defined $ref and $ref ne EMPTY ) {
+    my $schema_types = _hash_by( pml_schema_root($ref_schema), 'type', 'name' );
+    my $ref_type = $schema_types->{ $ref };
+    if ($ref_type) {
+      my %referred_type = ($ref => $ref_type);
+      _get_referred_types($ref_type, $schema_types, \%referred_type);
+      @types_to_import = values %referred_type;
+    } else {
+      warn "Cannot import type '$ref' from ".$ref_schema->URI." to $URL: type declaration not found.";
+    }
+  } else {
+    my $ref_pml = pml_schema_root($ref_schema);
+    @types_to_import = $ref_pml->getChildrenByTagNameNS(PML_SCHEMA_NS,'type');
+    unless ($pml->getChildrenByTagNameNS(PML_SCHEMA_NS,'root')) {
+      _DEBUG("will try to import <root> to $URL");
+      unshift @types_to_import, $ref_pml->getChildrenByTagNameNS(PML_SCHEMA_NS,'root');
+    }
+  }
+  _DEBUG("ready to copy types to $URL");
+  import_types( $pml, $import, \@types_to_import, $named_type );
+}
+
+############################################################
+
+__END__
+
+=head1 pml_simplify
+
+pml_simplify - convert a modular PML schema to a simplified PML schema
+
+=head1 SYNOPSIS
+
+
+pml_simplify [options] < input_schema.xml > output_schema.xml   
+
+pml_simplify [options] input_schema.xml output_schema.xml   
+
+Get help:
+
+  pml_simplify  -u|--usage          for usage (synopsis)
+  pml_simplify  -h|--help           for help
+  pml_simplify  --man               for the manual page
+
+=head1 DESCRIPTION
+
+Read a (modular) PML schema file and all its dependencies and output a
+semantically equivalent simplified PML schema which does not contain
+C<E<lt>includeE<gt>> or C<E<lt>deriveE<gt>> instructions.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--path|-p> dir
+
+Try to locate missing schemas and schemas with network URLs in a given
+directory. This option may be repeated.
+
+=item B<--implementation> 'Treex|LibXML|XSLT2'
+
+Choose implementation (the values are case-insensitive):
+
+=over 10
+
+=item LibXML
+
+this  implementation requires only XML::LibXML
+
+=item Treex
+
+this implementation requires Treex::PML modules
+
+=item XSLT2
+
+this implementation requires a XSLT2-processor (saxon9 from http://saxon.sf.net).
+To use it, setup either the CLASSPATH or the SAXON environment variable, e.g.
+
+    CLASSPATH=<path_to_saxon>/saxon9.jar
+
+or
+
+    SAXON="java -jar <path_to_saxon>/saxon9.jar"
+
+=back
+
+=item B<--no-derive|-d>
+
+Do not process C<E<lt>deriveE<gt>> instructions.
+
+=item B<--no-import|-i>
+
+Do not process C<E<lt>importE<gt>> instructions.
+
+=item B<--no-comments|-c>
+
+Do not insert informative comment nodes.
+
+=item B<--no-format|-f>
+
+Do not reformat the output (the result may look ugly and some elements
+may contain redundant namespace declarations).
+
+=item B<--no-copy|-c>
+
+Do not process copy instructions (copying types from templates).
+
+=item B<--no-template-derive|-D>
+
+Do not process derive instructions within templates.
+
+=item B<--no-template-import|-I>
+
+Do not process import instructions within templates.
+
+=item B<--validate|-v>
+
+Use RelaxNG to validate the input PML schema
+(rng/pml_schema_inline.rng).  Note that the Fslib implementation may
+report validation errors for schemas using PML version 1.2 and later,
+due to a bug in the streaming implementation of the validating
+parser. In such cases, use e.g. C<--validate-as 1.2> instead.
+
+=item B<--validate-as> pml_version
+
+Validate the input PML schema using a RelaxNG schema for a particular
+version, e.g. C<--validate-as 1.2> uses the schema
+C<rng/pml_schema_inline_1_2.rng>.
+
+=item B<--debug|-D>
+
+Print lots of debugging messages on the standard error output.
+
+=item B<--version|-V>
+
+Print this program's version number and quit.
+
+=back
+
+=head1 AUTHOR
+
+Petr Pajas, E<lt>pajas@ufal.ms.mff.cuni.czE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006 by Petr Pajas
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.2 or,
+at your option, any later version of Perl 5 you may have available.
+
+=head1 BUGS
+
+None reported... yet.
+
+=cut

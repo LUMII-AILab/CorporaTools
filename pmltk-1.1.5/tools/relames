@@ -1,0 +1,14 @@
+#!/bin/bash
+
+RNG="$1"
+JAR=/home/pajas/java/relames-20060319/relames.jar
+
+shift
+
+for s in "$@"; do
+  cat=cat
+  if [ "${s%.gz}" != "$s" ]; then
+     cat=zcat
+  fi
+  $cat "$s" | java -jar "$JAR" "$RNG" /dev/fd/0 |grep -Ev '^relmes verifier|^parsing|^validating|^\s*$|^valid$' | sed "s!line:\([0-9]*\), column:\([0-9]*\) of file:///dev/fd/0!$s:\1:\2!g" |sed "s,file:///dev/fd/0,$s,g"
+done

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<pml_schema xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/" version="1.1">
+ <revision>1.1</revision>
+ <root name="conll2009" type="conll.type"/>
+ <type name="conll.type">
+  <structure>
+   <member name="body" required="1" type="body.type"/>
+  </structure>
+ </type>
+ <type name="body.type">
+  <list ordered="1" role="#TREES" type="root.type"/>
+ </type>
+ <type name="root.type">
+  <structure role="#NODE">
+   <member as_attribute="1" name="xml:id" required="1" role="#ID">
+    <cdata format="ID"/>
+   </member>
+   <member as_attribute="1" name="order" required="0" role="#ORDER">
+    <constant>0</constant>
+   </member>
+   <member name="childnodes" required="0" role="#CHILDNODES">
+    <list ordered="1" type="node.type"/>
+   </member>
+  </structure>
+ </type>
+ <type name="node.type">
+  <structure role="#NODE">
+   <member as_attribute="1" name="xml:id" required="1" role="#ID">
+    <cdata format="ID"/>
+   </member>     
+   <member name="order" as_attribute="1" role="#ORDER">
+    <cdata format="positiveInteger"/>
+   </member>
+   <member name="form">
+    <cdata format="any"/>
+   </member>
+   <member name="lemma">
+    <cdata format="any"/>
+   </member>
+   <member name="plemma">
+    <cdata format="any"/>
+   </member>
+   <member name="pos">
+    <cdata format="any"/>
+   </member>
+   <member name="ppos">
+    <cdata format="any"/>
+   </member>
+   <member name="feat" type="feats.type"/>
+   <member name="pfeat" type="feats.type"/>
+   <member name="phead">
+    <cdata format="any"/>
+   </member>
+   <member name="deprel">
+    <cdata format="any"/>
+   </member>
+   <member name="pdeprel">
+    <cdata format="any"/>
+   </member>
+   <member name="fillpred">
+    <cdata format="any"/>
+   </member>
+   <member name="pred">
+    <cdata format="any"/>
+   </member>
+   <member name="apreds" type="apreds.type"/>
+   <member name="childnodes" role="#CHILDNODES">
+    <list ordered="1" type="node.type"/>
+   </member>
+  </structure>
+ </type>
+ <type name="feats.type">
+  <list ordered="0">
+   <cdata format="any" />
+  </list>
+ </type>
+ <type name="apreds.type">
+  <list ordered="0">
+    <structure>
+      <member name="target.rf"><cdata format="PMLREF"/></member>
+      <member name="label"><cdata format="any"/></member>
+    </structure>
+  </list>
+ </type>
+</pml_schema>

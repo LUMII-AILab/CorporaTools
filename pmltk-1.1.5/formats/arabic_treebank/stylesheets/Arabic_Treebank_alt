@@ -1,0 +1,96 @@
+context: Arabic_Treebank
+rtl: 1
+node: #{black}${form}${type}
+node: #{black}${token}
+node: #{black}${translit}
+node: #{darkblue}${cat}#{black}<? join('',map "-$_",ListV($this->{functions})) ?>
+node: <? 
+ if ($${#name} eq 'terminal') {
+   my $g=$${gloss};
+   $g=~s{/.*}{}g;
+   $g=~s{\s*\+\s*}{ }g; $g=~s{\[[^\]]*\]}{}g; $g=~s{\s+$}{};
+   $g=~s{^the }{}g;
+   $g
+ }
+?>
+
+text: <?
+  $${#name} eq 'terminal' ? 
+    "#{-tag:".(join(",",map { "$_,#$_->{id}" } $this,grep {$_->{'#name'} eq 'nonterminal'} $this->ancestors))."}"
+    .$${token}
+  : () ?>
+
+rootstyle: #{balance:spread}
+  #{skipHiddenLevels:1}
+  #{CurrentTextBox-fill:red}
+  #{nodeXSkip:4}
+  #{nodeYSkip:-3}
+  #{NodeLabel-skipempty:1}
+  #{NodeLabel-halign:center}#{Node-textalign:center}
+  <? # compute maximal tree depth and level for each node (efficiently)
+    my $max; my %d = ( $this => 0 );
+    my $hidden = FileUserData('hide');
+    foreach my $n ($this->descendants) {
+      my $lvl = $d{ $n } = $d{ $n->parent } + 1;
+      $max = $lvl if $max < $lvl && !$hidden->{$n};
+    }
+    $Arabic_Treebank::max_level = $max;
+    $Arabic_Treebank::levels=\%d;
+  ?>
+
+style: <?
+      if ( ! $this->parent ) {
+	'#{Node-hide:1}'
+      } else {
+	my $is_nonterminal = $this->{'#name'} eq 'nonterminal' ? 1 : 0;
+	  my %s;
+	  if ($is_nonterminal) {
+	    %s = (
+	      'Line-smooth' => '0',
+	      'Line-width' => '2',
+	      'Line-coords' => 'n,n,p,p',
+	      'Node-shape' =>  'rectangle',
+	      'CurrentOval-outline' =>  'red',
+	      'CurrentOval-width' =>  '3',
+	      'Oval-fill' =>  'lightyellow',
+	      'Node-surroundtext' =>  1,
+	      'NodeLabel-valign' =>  'center',
+	   );
+	    for my $attr (qw(coref.rf gapping.rf)) {
+                    my $val = $this->{$attr};
+                    next unless defined($val) and length($val);
+	      my $t='[? $node->{id} eq "'.$val.'" ?]';
+	      my ($X,$Y)=("(x$t-xn)","(y$t-yn)");
+	      my $D=qq{sqrt($X**2+$Y**2)};
+	      my $d=qq{(25/$D+0.12)};
+	      $s{'Line-coords'} .= qq{&xn,yn,(x$t+xn)/2 - $Y*$d,(y$t+yn)/2 + $X*$d,x$t,y$t};
+	      $s{'Line-arrow'}  .= '&both';
+	      $s{'Line-smooth'}  .= '&1';
+	      $s{'Line-fill'}   .= $attr eq 'coref.rf' ? '&orange' : '&darkred';
+	      $s{'Line-width'}  .= '&1';
+	    }
+	  } else {
+	    my $level = ($Arabic_Treebank::max_level - $Arabic_Treebank::levels->{$this});
+                  my $y='y[! do { my $t=$this->parent->firstson; $t=$t->rbrother while ($t and $t->{q(#name)} ne q(nonterminal)); $t||=$this} !]';
+	   %s = (
+	      'Line-smooth' => '0',
+	      'Line-width' => '1',
+	      'Line-coords' => "n,n,n,$y-((yp-yn)/2)*(sgn(abs(yn-$y))-1),p,p",
+	      'Node-rellevel' => $level,
+	      'CurrentOval-fill' => 'red',
+	      'Line-dash' => '.',
+	      'NodeLabel-yadj' => 4,
+	      'Oval-fill' => ($this->{'#name'} eq 'trace' ? "gray" : "yellow"),
+	     )
+	  }
+	  join "\n", map "#{$_:$s{$_}}", keys %s;
+       }
+?>
+
+style: <? "#{Node-hide:1}" if FileUserData('hide')->{$this}; ?>
+style:<? "#{Oval-fill:lightgray}" if ($this->{'#name'} eq 'nonterminal' and FileUserData('fold')->{$this}) ?>
+
+hint:<?
+$${#name} eq 'terminal' ?
+  join("\n", map "$_: \${$_}", qw(token gloss lemma lookup-word morph translit)) : ( "id: \${id}" )
+?>

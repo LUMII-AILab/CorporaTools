@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		
+	<xsd:complexType name="sentenceType">
+		<xsd:sequence>
+			<xsd:element name="word" type="wordType" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+		<xsd:attribute name="document_id" type="xsd:string" use="optional"/>
+		<xsd:attribute name="subdoc" type="xsd:string" use="optional"/>
+		<xsd:attribute name="span" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="wordType">
+		<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+		<xsd:attribute name="form" type="xsd:string" use="required"/>
+		<xsd:attribute name="lemma" type="xsd:string" use="required"/>
+		<xsd:attribute name="postag" type="xsd:string" use="required"/>
+		<xsd:attribute name="head" type="xsd:nonNegativeInteger" use="required"/>
+		<xsd:attribute name="relation" type="xsd:string" use="required"/>
+	</xsd:complexType>
+
+	<xsd:element name="treebank">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="sentence" type="sentenceType" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="version" type="xsd:decimal" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>

@@ -1,0 +1,12 @@
+context: Sinica
+rootstyle:#{NodeLabel-skipempty:1}
+node: ${form}
+node: #{darkgray}${wxform}
+node: #{darkgreen}${deprel}
+node: <? $this->parent ? '#{darkcyan}${cpostag} #{darkblue}${postag}' : '${xml:id}' ?>
+text: ${form}
+
+hint:<?
+   my $f = $this->{feats};
+   join("\n", map "$_: $f->{$_}", keys(%$f));
+?>

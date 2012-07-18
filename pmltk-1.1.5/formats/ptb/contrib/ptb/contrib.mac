@@ -1,0 +1,55 @@
+# -*- cperl -*-
+
+
+#ifndef ptb
+#define ptb
+
+{
+package Penn_Treebank;
+
+#binding-context Penn_Treebank
+
+#include <contrib/support/fold_subtree.inc>
+
+#bind fold_subtree_toggle to space menu Fold/unfold current subtree (toggle)
+#bind fold_subtree_unfold_all to Ctrl+space menu Unfold all in the current subtree
+
+BEGIN { import TredMacro; }
+use strict;
+
+sub detect {
+  return (((PML::SchemaName()||'') eq 'pennmrg') ? 1 : 0);
+}
+
+push @TredMacro::AUTO_CONTEXT_GUESSING, sub {
+  my ($hook)=@_;
+  my $resuming = ($hook eq 'file_resumed_hook');
+  my $current = CurrentContext();
+  if (detect()) {
+#    SetCurrentStylesheet('Penn_Treebank') if $resuming;
+    return __PACKAGE__;
+  }
+  return;
+};
+
+sub allow_switch_context_hook {
+  return 'stop' unless detect();
+}
+sub switch_context_hook {
+  SetCurrentStylesheet('Penn_Treebank');
+  Redraw() if GUI();
+}
+
+# prevent re-ordering by the order attribute (nonterminals are not ordered)
+sub get_nodelist_hook {
+  my ($fsfile,$tree_no,$current,$showHidden)=@_;
+  my $tree = $fsfile && $fsfile->tree($tree_no)
+    or return;
+  return [[ $tree->descendants ], $current];
+}
+
+
+}
+1;
+
+#endif ptb

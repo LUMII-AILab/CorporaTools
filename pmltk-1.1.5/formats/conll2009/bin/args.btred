@@ -1,0 +1,34 @@
+#!btred -T -e args()
+# -*- cperl -*-
+
+## Takes all APRED_X attributes and folds them into a list.
+## Author: Jan Stepanek
+
+{
+use strict;
+use warnings;
+
+sub args {
+  my @nodes = $root->descendants;
+  for my $node (@nodes) {
+    $node->{'xml:id'}='w-'.$node->{order}.'-'.$root->{'xml:id'};
+  }
+  my @preds = sort { $a->{order} <=> $b->{order} } grep { defined($_->{pred}) and length($_->{pred}) } @nodes;
+  foreach my $node (@nodes){
+    $node->{pred}='' if (($node->{pred}||'') eq 'pml:-NO-PRED-'); # special value used for encoding bogus input
+    foreach my $arg (grep /^apred_[0-9]+/,keys %$node){
+      $arg =~ s/^apred_//;
+      AddToList($node,'apreds',
+		Fslib::Struct->new({
+		  'target.rf' => $preds[$arg-1]->{'xml:id'},
+		  'label'     => $node->{"apred_$arg"},
+		}));
+      delete $node->{"apred_$arg"};
+    }
+  }
+} # args
+
+sub file_save_hook {
+  FileMetaData('schema-url','conll2009_schema.xml');
+}
+}

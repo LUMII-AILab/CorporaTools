@@ -1,0 +1,10 @@
+#ifndef cac
+#define cac
+
+#binding-context PML_CAC_A_Edit
+#include "PML_CAC_A_Edit.mak"
+
+#binding-context AcademicTreebank
+#include "cac_treebank.mak"
+
+#endif cac

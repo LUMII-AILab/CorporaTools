@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lvadata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+  <head>
+    <schema href="lvaschema.xml" />
+    <references>
+      <reffile id="m" name="mdata" href="2_dalja_1_iekavas.m" />
+      <reffile id="w" name="wdata" href="2_dalja_1_iekavas.w" />
+    </references>
+  </head>
+  <meta>
+    <annotation_info>
+      <desc>Čankera sagatave manuālai korekcijai.</desc>
+    </annotation_info>
+  </meta>
+  <trees>
+    <LM id="a-2_dalja_1_iekavas-p1s1">
+      <s.rf>m#m-2_dalja_1_iekavas-p1s1</s.rf>
+      <comment>partikulas</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_1_iekavas-p1s1x7">
+              <role>basElem</role>
+              <children>
+                <coordinfo>
+                  <coordtype>crdClauses</coordtype>
+                  <children>
+                    <node id="a-2_dalja_1_iekavas-p1s1x9">
+                      <role>crdPart</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>mainCl</pmctype>
+                          <children>
+                            <node id="a-2_dalja_1_iekavas-p1s1x10">
+                              <role>no</role>
+                              <children>
+                                <pmcinfo>
+                                  <pmctype>insPmc</pmctype>
+                                  <children>
+                                    <node id="a-2_dalja_1_iekavas-p1s1x11">
+                                      <role>basElem</role>
+                                      <children>
+                                        <coordinfo>
+                                          <coordtype>crdClauses</coordtype>
+                                          <children>
+                                            <node id="a-2_dalja_1_iekavas-p1s1x14">
+                                              <role>crdPart</role>
+                                              <children>
+                                                <pmcinfo>
+                                                  <pmctype>mainCl</pmctype>
+                                                  <children>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1x15">
+                                                      <role>no</role>
+                                                      <children>
+                                                        <pmcinfo>
+                                                          <pmctype>insPmc</pmctype>
+                                                          <children>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w36">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w36</m.rf>
+                                                              <role>punct</role>
+                                                              <ord>36</ord>
+                                                            </node>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w37">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w37</m.rf>
+                                                              <role>basElem</role>
+                                                              <ord>37</ord>
+                                                            </node>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w38">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w38</m.rf>
+                                                              <role>punct</role>
+                                                              <ord>38</ord>
+                                                            </node>
+                                                          </children>
+                                                        </pmcinfo>
+                                                      </children>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w31">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w31</m.rf>
+                                                      <role>no</role>
+                                                      <ord>31</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w32">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w32</m.rf>
+                                                      <role>no</role>
+                                                      <ord>32</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w33">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w33</m.rf>
+                                                      <role>no</role>
+                                                      <ord>33</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w40">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w40</m.rf>
+                                                      <role>pred</role>
+                                                      <ord>40</ord>
+                                                      <children>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w35">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w35</m.rf>
+                                                          <role>subj</role>
+                                                          <ord>35</ord>
+                                                          <children>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w34">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w34</m.rf>
+                                                              <role>attr</role>
+                                                              <ord>34</ord>
+                                                            </node>
+                                                          </children>
+                                                        </node>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w39">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w39</m.rf>
+                                                          <role>adv</role>
+                                                          <ord>39</ord>
+                                                        </node>
+                                                      </children>
+                                                    </node>
+                                                  </children>
+                                                </pmcinfo>
+                                              </children>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1x13">
+                                              <role>crdPart</role>
+                                              <children>
+                                                <pmcinfo>
+                                                  <pmctype>mainCl</pmctype>
+                                                  <children>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w43">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w43</m.rf>
+                                                      <role>pred</role>
+                                                      <ord>43</ord>
+                                                    </node>
+                                                  </children>
+                                                </pmcinfo>
+                                              </children>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1x12">
+                                              <role>crdPart</role>
+                                              <children>
+                                                <pmcinfo>
+                                                  <pmctype>mainCl</pmctype>
+                                                  <children>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w45">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w45</m.rf>
+                                                      <role>no</role>
+                                                      <ord>45</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w49">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w49</m.rf>
+                                                      <role>pred</role>
+                                                      <ord>49</ord>
+                                                      <children>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w46">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w46</m.rf>
+                                                          <role>subj</role>
+                                                          <ord>46</ord>
+                                                        </node>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w47">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w47</m.rf>
+                                                          <role>obj</role>
+                                                          <ord>47</ord>
+                                                        </node>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w48">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w48</m.rf>
+                                                          <role>adv</role>
+                                                          <ord>48</ord>
+                                                        </node>
+                                                      </children>
+                                                    </node>
+                                                  </children>
+                                                </pmcinfo>
+                                              </children>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w41">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w41</m.rf>
+                                              <role>punct</role>
+                                              <ord>41</ord>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w42">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w42</m.rf>
+                                              <role>conj</role>
+                                              <ord>42</ord>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w44">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w44</m.rf>
+                                              <role>punct</role>
+                                              <ord>44</ord>
+                                            </node>
+                                          </children>
+                                        </coordinfo>
+                                      </children>
+                                    </node>
+                                    <node id="a-2_dalja_1_iekavas-p1s1w30">
+                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w30</m.rf>
+                                      <role>punct</role>
+                                      <ord>30</ord>
+                                    </node>
+                                    <node id="a-2_dalja_1_iekavas-p1s1w50">
+                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w50</m.rf>
+                                      <role>punct</role>
+                                      <ord>50</ord>
+                                    </node>
+                                  </children>
+                                </pmcinfo>
+                              </children>
+                            </node>
+                            <node id="a-2_dalja_1_iekavas-p1s1w29">
+                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w29</m.rf>
+                              <role>pred</role>
+                              <ord>29</ord>
+                              <children>
+                                <node id="a-2_dalja_1_iekavas-p1s1x6">
+                                  <role>adv</role>
+                                  <children>
+                                    <xinfo>
+                                      <xtype>xPrep</xtype>
+                                      <tag>ncfsa0[prey]</tag>
+                                      <children>
+                                        <node id="a-2_dalja_1_iekavas-p1s1w26">
+                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w26</m.rf>
+                                          <role>prep</role>
+                                          <ord>26</ord>
+                                        </node>
+                                        <node id="a-2_dalja_1_iekavas-p1s1w28">
+                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w28</m.rf>
+                                          <role>basElem</role>
+                                          <ord>28</ord>
+                                          <children>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w27">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w27</m.rf>
+                                              <role>attr</role>
+                                              <ord>27</ord>
+                                            </node>
+                                          </children>
+                                        </node>
+                                      </children>
+                                    </xinfo>
+                                  </children>
+                                </node>
+                                <node id="a-2_dalja_1_iekavas-p1s1w21">
+                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w21</m.rf>
+                                  <role>subj</role>
+                                  <ord>21</ord>
+                                  <children>
+                                    <node id="a-2_dalja_1_iekavas-p1s1x5">
+                                      <role>spc</role>
+                                      <children>
+                                        <pmcinfo>
+                                          <pmctype>spcPmc</pmctype>
+                                          <children>
+                                            <node id="a-2_dalja_1_iekavas-p1s1x18">
+                                              <role>basElem</role>
+                                              <children>
+                                                <xinfo>
+                                                  <xtype>wGrAnal</xtype>
+                                                  <tag>N/A</tag>
+                                                  <children>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w23">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w23</m.rf>
+                                                      <role>basElem</role>
+                                                      <ord>23</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w24">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w24</m.rf>
+                                                      <role>basElem</role>
+                                                      <ord>24</ord>
+                                                    </node>
+                                                  </children>
+                                                </xinfo>
+                                              </children>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w22">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w22</m.rf>
+                                              <role>punct</role>
+                                              <ord>22</ord>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w25">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w25</m.rf>
+                                              <role>punct</role>
+                                              <ord>25</ord>
+                                            </node>
+                                          </children>
+                                        </pmcinfo>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_1_iekavas-p1s1x8">
+                      <role>crdPart</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>mainCl</pmctype>
+                          <children>
+                            <node id="a-2_dalja_1_iekavas-p1s1w10">
+                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w10</m.rf>
+                              <role>pred</role>
+                              <ord>10</ord>
+                              <children>
+                                <node id="a-2_dalja_1_iekavas-p1s1x2">
+                                  <role>adv</role>
+                                  <children>
+                                    <xinfo>
+                                      <xtype>xPrep</xtype>
+                                      <tag>ncmsg0[prey]</tag>
+                                      <children>
+                                        <node id="a-2_dalja_1_iekavas-p1s1w2">
+                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w2</m.rf>
+                                          <role>prep</role>
+                                          <ord>2</ord>
+                                        </node>
+                                        <node id="a-2_dalja_1_iekavas-p1s1w4">
+                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w4</m.rf>
+                                          <role>basElem</role>
+                                          <ord>4</ord>
+                                          <children>
+                                            <node id="a-2_dalja_1_iekavas-p1s1x1">
+                                              <role>spc</role>
+                                              <children>
+                                                <xinfo>
+                                                  <xtype>xSimile</xtype>
+                                                  <tag>ncfsg0[spksd]</tag>
+                                                  <children>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1x3">
+                                                      <role>basElem</role>
+                                                      <children>
+                                                        <xinfo>
+                                                          <xtype>xPrep</xtype>
+                                                          <tag>ncfsg0[prey]</tag>
+                                                          <children>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w8">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w8</m.rf>
+                                                              <role>prep</role>
+                                                              <ord>8</ord>
+                                                            </node>
+                                                            <node id="a-2_dalja_1_iekavas-p1s1w9">
+                                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w9</m.rf>
+                                                              <role>basElem</role>
+                                                              <ord>9</ord>
+                                                            </node>
+                                                          </children>
+                                                        </xinfo>
+                                                      </children>
+                                                    </node>
+                                                    <node id="a-2_dalja_1_iekavas-p1s1w7">
+                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w7</m.rf>
+                                                      <role>conj</role>
+                                                      <ord>7</ord>
+                                                    </node>
+                                                  </children>
+                                                </xinfo>
+                                              </children>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w3">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w3</m.rf>
+                                              <role>attr</role>
+                                              <ord>3</ord>
+                                            </node>
+                                          </children>
+                                        </node>
+                                      </children>
+                                    </xinfo>
+                                  </children>
+                                </node>
+                                <node id="a-2_dalja_1_iekavas-p1s1w6">
+                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w6</m.rf>
+                                  <role>subj</role>
+                                  <ord>6</ord>
+                                  <children>
+                                    <node id="a-2_dalja_1_iekavas-p1s1x17">
+                                      <role>spc</role>
+                                      <children>
+                                        <pmcinfo>
+                                          <pmctype>spcPmc</pmctype>
+                                          <children>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w11">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w11</m.rf>
+                                              <role>punct</role>
+                                              <ord>11</ord>
+                                            </node>
+                                            <node id="a-2_dalja_1_iekavas-p1s1w14">
+                                              <m.rf>m#m-2_dalja_1_iekavas-p1s1w14</m.rf>
+                                              <role>basElem</role>
+                                              <ord>14</ord>
+                                              <children>
+                                                <node id="a-2_dalja_1_iekavas-p1s1x16">
+                                                  <role>spc</role>
+                                                  <children>
+                                                    <pmcinfo>
+                                                      <pmctype>spcPmc</pmctype>
+                                                      <children>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1x4">
+                                                          <role>basElem</role>
+                                                          <children>
+                                                            <xinfo>
+                                                              <xtype>xSimile</xtype>
+                                                              <tag>ncmsn0[spksd]</tag>
+                                                              <children>
+                                                                <node id="a-2_dalja_1_iekavas-p1s1w16">
+                                                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w16</m.rf>
+                                                                  <role>conj</role>
+                                                                  <ord>16</ord>
+                                                                </node>
+                                                                <node id="a-2_dalja_1_iekavas-p1s1w18">
+                                                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w18</m.rf>
+                                                                  <role>basElem</role>
+                                                                  <ord>18</ord>
+                                                                  <children>
+                                                                    <node id="a-2_dalja_1_iekavas-p1s1w17">
+                                                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w17</m.rf>
+                                                                      <role>attr</role>
+                                                                      <ord>17</ord>
+                                                                    </node>
+                                                                  </children>
+                                                                </node>
+                                                              </children>
+                                                            </xinfo>
+                                                          </children>
+                                                        </node>
+                                                        <node id="a-2_dalja_1_iekavas-p1s1w15">
+                                                          <m.rf>m#m-2_dalja_1_iekavas-p1s1w15</m.rf>
+                                                          <role>punct</role>
+                                                          <ord>15</ord>
+                                                        </node>
+                                                      </children>
+                                                    </pmcinfo>
+                                                  </children>
+                                                </node>
+                                                <node id="a-2_dalja_1_iekavas-p1s1w12">
+                                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w12</m.rf>
+                                                  <role>attr</role>
+                                                  <ord>12</ord>
+                                                </node>
+                                                <node id="a-2_dalja_1_iekavas-p1s1w13">
+                                                  <m.rf>m#m-2_dalja_1_iekavas-p1s1w13</m.rf>
+                                                  <role>attr</role>
+                                                  <ord>13</ord>
+                                                </node>
+                                              </children>
+                                            </node>
+                                          </children>
+                                        </pmcinfo>
+                                      </children>
+                                    </node>
+                                    <node id="a-2_dalja_1_iekavas-p1s1w5">
+                                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w5</m.rf>
+                                      <role>attr</role>
+                                      <ord>5</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_1_iekavas-p1s1w19">
+                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w19</m.rf>
+                      <role>punct</role>
+                      <ord>19</ord>
+                    </node>
+                    <node id="a-2_dalja_1_iekavas-p1s1w20">
+                      <m.rf>m#m-2_dalja_1_iekavas-p1s1w20</m.rf>
+                      <role>conj</role>
+                      <ord>20</ord>
+                    </node>
+                  </children>
+                </coordinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_1_iekavas-p1s1w1">
+              <m.rf>m#m-2_dalja_1_iekavas-p1s1w1</m.rf>
+              <role>conj</role>
+              <ord>1</ord>
+            </node>
+            <node id="a-2_dalja_1_iekavas-p1s1w51">
+              <m.rf>m#m-2_dalja_1_iekavas-p1s1w51</m.rf>
+              <role>punct</role>
+              <ord>51</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+  </trees>
+</lvadata>

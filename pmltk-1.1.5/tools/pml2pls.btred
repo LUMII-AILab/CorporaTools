@@ -1,0 +1,163 @@
+#!btred -t PML2PLS -e pml_pls
+# -*- cperl -*-
+
+=head1 pml2pls.btred
+
+Converts PML data to the Storable C<.pls.gz> format and back. The Storable format is suitable for fast access using the TrEd toolkit.
+
+=head1 SYNOPSIS
+
+  btred -Y -I pml2pls.btred files ...
+or
+  ntred -Y -i files ...
+  ntred -I pml2pls.btred
+
+=head1 OUTPUT
+
+When converting from PML to Storable, the output files are named as
+the originals with C<.pls.gz> extension appended (with possible
+extension C<.gz> stripped previously). When converting from Storable
+to PML, the output files are named as the originals with C<.pls>
+stripped and C<.pls.gz> replaced by C<.gz>.
+
+The original filenames may be adjusted using C<btred>'s renaming
+options.
+
+=head1 DESCRIPTION
+
+If the input is a PML instance, the script dumps its in-memory
+representation using the Storable perl module. The output is a binary
+format which allows C<tred>/C<btred>/C<ntred> to load the data back
+into memory with extreme speed.
+
+If the input is already in the Storable format, the script saves the
+data back in the PML format.
+
+In order to achieve internal reference consistency, references to
+other tree-data files (i.e. references declared in the PML schema with
+<refffile readas="trees">) are also renamed accordingly, so it is
+assumed that they will also be converted to the Storable format using
+this script.
+
+References to non-tree PML files (i.e. references declared in the PML
+schema with <refffile readas="pml">) are stored together with the
+referring file. When the referring file is converted from Storable to
+PML, the references are converted from the in-memory image to separate
+PML files under their original base filename in the directory of
+the referring output file.
+
+For example, in case of PDT 2.0 files, a reference to the 'adata' file
+C<foo.a.gz> in a 'tdata' file processed with this script is changed to
+refer to C<foo.a.pls.gz>. Hence, it is required to apply this script
+both on C<foo.t.gz> and C<foo.a.gz>. The 'mdata' and 'wdata' files
+(C<foo.m.gz> and C<foo.w.gz>) referred from C<foo.a.gz>, are
+automatically embedded into the C<foo.a.pls.gz> file. The conversion
+of C<foo.a.pls.gz> back to PML thus results in three output files:
+C<foo.a.gz>, C<foo.m.gz>, and C<foo.w.gz>.
+
+The following btred/ntred flags can be useful:
+
+C<-a|-r|-s|-p> - affect filenames of the output files
+
+=head1 KNOWN ISSUES
+
+Duplicated references to non-tree PML files may have several in-memory
+images and therefore get embedded more than one time in the Storable
+file. Upon conversion from Storable to PML, the reference file is
+created and overwritten for each extra embedded copy. This is not
+considered a bug, since it can only occur in case of wrong PML schema
+design.
+
+=head1 AUTHOR
+
+Petr Pajas <pajas@matfyz.cz>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2005,2010 by Petr Pajas
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.2 or,
+at your option, any later version of Perl 5 you may have available.
+
+=cut
+
+### in the case somebody used -m
+#include <tred.mac>
+
+package PML2PLS;
+use URI;
+BEGIN { import TredMacro };
+
+sub pml_pls {
+  if ($grp->{FSFile}->backend eq 'StorableBackend') {
+    print "PLS input detected: converting to back to PML.\n";
+    pls2pml();
+  } else {
+    pml2pls();
+  }
+}
+
+sub pml2pls {
+  my $req=FileMetaData("fs-require");
+  if (ref($req) and @$req) {
+    print (map { "@$_," } @$req);
+    print "\n";
+    for (@$req)	{
+      $_->[1]=~s{^.*/}{};
+      unless ($_->[1]=~/\.pls\.gz$/) {
+	$_->[1]=~s{\.gz$}{};
+	$_->[1].=".pls.gz";
+      }
+      $_->[1]=main::save_transform_filename($_->[1]);
+    }
+    print map { "@$_," } @$req;
+    print "\n";
+    FileMetaData("fs-require",$req);
+  } else {
+    print "no fs-require\n";
+  }
+
+  my $fn = FileName();
+  $fn=~s{\.gz$}{};
+  $grp->{FSFile}->changeFilename($fn.".pls.gz");
+  $grp->{FSFile}->changeBackend('StorableBackend');
+
+  ChangingFile(1);
+}
+
+sub pls2pml {
+  my $req=FileMetaData("fs-require");
+  if (ref($req) and @$req) {
+    print (map { "@$_," } @$req);
+    print "\n";
+    for (@$req)	{
+      $_->[1]=~s{^.*/}{};
+      $_->[1]=~s{\.pls(\.gz)?$}{$1};
+      $_->[1]=main::save_transform_filename($_->[1]);
+    }
+    print(join(",",map { "@$_" } @$req),"\n");
+    FileMetaData("fs-require",$req);
+  } else {
+    print "no fs-require\n";
+  }
+  $grp->{FSFile}->changeBackend('PMLBackend');
+  my $fn = FileName();
+  $fn=~s{\.pls(\.gz)?$}{$1};
+  $grp->{FSFile}->changeFilename($fn);
+
+  my $references = FileAppData('ref');
+  if (ref($references)) {
+    for my $ref_id (keys %$references) {
+      my $ref_doc = $references->{$ref_id};
+      if (UNIVERSAL::isa($ref_doc,'PMLInstance')) {
+	my $path = $ref_doc->get_url->path;
+	$path=~s{.*/}{}g;
+	$ref_doc->set_filename(URI->new_abs($path,$grp->{FSFile}->URL));
+	print "Saving $ref_id => ",$ref_doc->get_filename,"\n";
+	$ref_doc->save();
+      }
+    }
+  }
+  ChangingFile(1);
+}

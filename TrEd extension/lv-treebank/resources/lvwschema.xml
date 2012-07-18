@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pml_schema
+  xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
+  version="1.1">
+  <revision>1.0</revision>
+  <description>AILab experimental schema for word/token layer.</description>
+  <root name="lvwdata" type="w-wdata.type"/>
+  
+  <type name="w-wdata.type">
+    <structure>
+      <member name="meta" type="w-meta.type"/> <!-- Šitais meta ir, lai ierakstītu kaut kādu info par faila izveidotāju, datumu, utt.-->
+      <member name="doc" type="w-doc.type"/>
+    </structure>
+  </type>
+  
+  <type name="w-meta.type">
+    <cdata format="any"/>
+  </type>
+  
+  <type name="w-doc.type">
+    <container>
+      <attribute name="id" required="1" role="#ID"><cdata format="ID"/></attribute>
+      <attribute name="source_id"><cdata format="any"/></attribute>
+      <sequence content_pattern="docmeta, para+">
+        <element name="docmeta" type="w-meta.type"/> <!-- Šitais meta ir, lai ierakstītu info par dokumentu no kura ir tālāk sekojošie teikumi.-->
+        <element name="para" type="w-para.type"/>
+      </sequence>
+    </container>
+  </type>
+  
+  <type name="w-para.type">
+    <sequence>
+      <element name="othermarkup" type="w-meta.type"/> <!-- Atkal meta...-->
+      <element name="w" type="w-node.type"/>
+    </sequence>
+  </type>
+  
+  <type name="w-node.type">
+    <structure name="w-node">
+      <member as_attribute="1" name="id" role="#ID" required="1"><cdata format="ID"/></member>
+      <member name="token" required="1"><cdata format="any"/></member>
+      <member name="no_space_after" type="bool.type"/>
+    </structure>
+  </type>
+  
+  <type name="bool.type">
+    <choice>
+      <value>0</value>
+      <value>1</value>
+    </choice>
+  </type>
+</pml_schema>

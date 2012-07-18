@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<pml_schema xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/" version="1.1">
+  <description>Converted MRG PTB Data</description>
+
+  <derive name="root_content.type" type="nonterminal_children.type">
+    <sequence role="#CHILDNODES"/>
+  </derive>
+
+  <root name="pennmrg">
+    <structure>
+      <member name="meta" required="1" type="meta.type"/>
+      <member name="trees" role="#TREES" required="1">
+        <list ordered="1" type="root.type"/>
+      </member>
+    </structure>
+  </root>
+
+  <type name="meta.type">
+    <structure>
+       <member name="annotation_info">
+	 <structure>
+	   <member name="desc"><cdata format="any"/></member>
+	 </structure>
+       </member>
+    </structure>
+  </type>
+
+  <type name="root.type">
+    <container role="#NODE" type="root_content.type">
+      <attribute name="id" role="#ID" required="1">
+        <cdata format="ID"/>
+      </attribute>
+    </container>
+  </type>
+
+  <type name="nonterminal_children.type">
+    <sequence>
+      <element name="nonterminal" type="nonterminal.type"/>
+      <element name="terminal" type="terminal.type"/>
+    </sequence>
+  </type>
+
+  <type name="nonterminal.type">
+    <structure role="#NODE" name="nonterminal">
+      <member name="id" role="#ID" as_attribute="1" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="cat" required="1"> <!-- syntactic category -->
+	<alt type="cat.type"/>
+      </member>
+      <member name="functions">
+        <list ordered="1" type="function.type"/>
+      </member>
+      <member name="coindex.rf"><cdata format="PMLREF"/></member>
+      <member name="children" required="1" role="#CHILDNODES" type="nonterminal_children.type"/>
+   </structure>
+  </type>
+
+  <type name="terminal.type">
+    <structure role="#NODE" name="terminal">
+      <member name="id" role="#ID" as_attribute="1" required="1">
+        <cdata format="ID"/>
+      </member>
+      <member name="coindex.rf"><cdata format="PMLREF"/></member>
+      <member name="form" required="1"><cdata format="any"/></member>
+      <member name="pos" type="postag.type"/> <!-- Penn Treebank part of speech tag -->
+      <member name="order" role="#ORDER"><cdata format="nonNegativeInteger"/></member>
+     </structure>
+  </type>
+
+  <type name="postag.type">
+    <choice>
+      <value>CC</value>
+      <value>CD</value>
+      <value>DT</value>
+      <value>EX</value>
+      <value>FW</value>
+      <value>IN</value>
+      <value>JJ</value>
+      <value>JJR</value>
+      <value>JJS</value>
+      <value>LS</value>
+      <value>MD</value>
+      <value>NN</value>
+      <value>NNS</value>
+      <value>NNP</value>
+      <value>NNPS</value>
+      <value>PDT</value>
+      <value>POS</value>
+      <value>PRP</value>
+      <value>PRP$</value>
+      <value>RB</value>
+      <value>RBR</value>
+      <value>RBS</value>
+      <value>RP</value>
+      <value>SYM</value>
+      <value>TO</value>
+      <value>UH</value>
+      <value>VB</value>
+      <value>VBD</value>
+      <value>VBG</value>
+      <value>VBN</value>
+      <value>VBP</value>
+      <value>VBZ</value>
+      <value>WDT</value>
+      <value>WP</value>
+      <value>WP$</value>
+      <value>WPS</value>
+      <value>WRB</value>
+      <value>-NONE-</value>
+      <value>-LRB-</value>
+      <value>-RRB-</value>
+      <value>-LSB-</value>
+      <value>-RSB-</value>
+      <value>-LCB-</value>
+      <value>-RCB-</value>
+      <value>,</value>
+      <value>.</value>
+      <value>:</value>
+      <value>$</value>
+      <value>``</value>
+      <value>''</value>
+      <value>#</value>
+    </choice>
+  </type>
+
+
+  <type name="cat.type">
+    <choice>
+      <value>S</value>
+      <value>SBAR</value>
+      <value>SBARQ</value>
+      <value>SINV</value>
+      <value>SQ</value>
+      <value>ADJP</value>
+      <value>ADVP</value>
+      <value>CONJP</value>
+      <value>FRAG</value>
+      <value>INTJ</value>
+      <value>LST</value>
+      <value>NAC</value>
+      <value>NP</value>
+      <value>NX</value>
+      <value>PP</value>
+      <value>PRN</value>
+      <value>PRT</value>
+      <value>QP</value>
+      <value>RRC</value>
+      <value>UCP</value>
+      <value>VP</value>
+      <value>WHADJP</value>
+      <value>WHADVP</value>
+      <value>WHNP</value>
+      <value>WHPP</value>
+      <value>X</value>
+<!--       <value>TOP</value> <\!-\- added because of the collins parser -\-> -->
+<!--       <value>NPB</value> <\!-\- added because of the collins parser -\-> -->
+    </choice>
+  </type>
+
+  <type name="function.type">
+    <choice>
+      <value>ADV</value>
+      <value>NOM</value>
+      <value>DTV</value>
+      <value>LGS</value>
+      <value>PRD</value>
+      <value>PUT</value>
+      <value>SBJ</value>
+      <value>TPC</value>
+      <value>VOC</value>
+      <value>BNF</value>
+      <value>DIR</value>
+      <value>EXT</value>
+      <value>LOC</value>
+      <value>MNR</value>
+      <value>PRP</value>
+      <value>TMP</value>
+      <value>CLR</value>
+      <value>CLF</value>
+      <value>HLN</value>
+      <value>TTL</value>
+    </choice>
+  </type>
+
+</pml_schema>

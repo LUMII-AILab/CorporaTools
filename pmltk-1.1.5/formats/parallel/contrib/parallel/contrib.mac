@@ -1,0 +1,8 @@
+# -*- cperl -*-
+
+#ifndef parallel
+#define parallel
+
+#include parallel.mak
+
+#endif parallel

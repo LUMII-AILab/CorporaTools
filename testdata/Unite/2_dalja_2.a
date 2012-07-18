@@ -1,0 +1,918 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lvadata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+  <head>
+    <schema href="lvaschema.xml" />
+    <references>
+      <reffile id="m" name="mdata" href="2_dalja_2.m" />
+      <reffile id="w" name="wdata" href="2_dalja_2.w" />
+    </references>
+  </head>
+  <meta>
+    <annotation_info>
+      <desc>Čankera sagatave manuālai korekcijai.</desc>
+    </annotation_info>
+  </meta>
+  <trees>
+    <LM id="a-2_dalja_2-p1s1">
+      <s.rf>m#m-2_dalja_2-p1s1</s.rf>
+      <comment>vai komats pie uzrunas vai pie reporta?</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p1s1x2">
+              <role>basElem</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>dirSp</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p1s1x3">
+                      <role>no</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>address</pmctype>
+                          <children>
+                            <node id="a-2_dalja_2-p1s1w2">
+                              <m.rf>m#m-2_dalja_2-p1s1w2</m.rf>
+                              <role>basElem</role>
+                              <ord>2</ord>
+                            </node>
+                            <node id="a-2_dalja_2-p1s1w6">
+                              <m.rf>m#m-2_dalja_2-p1s1w6</m.rf>
+                              <role>punct</role>
+                              <ord>6</ord>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w1">
+                      <m.rf>m#m-2_dalja_2-p1s1w1</m.rf>
+                      <role>punct</role>
+                      <ord>1</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w4">
+                      <m.rf>m#m-2_dalja_2-p1s1w4</m.rf>
+                      <role>punct</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w7">
+                      <m.rf>m#m-2_dalja_2-p1s1w7</m.rf>
+                      <role>punct</role>
+                      <ord>7</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w8">
+                      <m.rf>m#m-2_dalja_2-p1s1w8</m.rf>
+                      <role>pred</role>
+                      <ord>8</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w9">
+                      <m.rf>m#m-2_dalja_2-p1s1w9</m.rf>
+                      <role>punct</role>
+                      <ord>9</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p1s1x1">
+              <role>basElem</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>report</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p1s1w3">
+                      <m.rf>m#m-2_dalja_2-p1s1w3</m.rf>
+                      <role>punct</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s1w5">
+                      <m.rf>m#m-2_dalja_2-p1s1w5</m.rf>
+                      <role>pred</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p1s2">
+      <s.rf>m#m-2_dalja_2-p1s2</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p1s2x5">
+              <role>basElem</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>dirSp</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p1s2x7">
+                      <role>basElem</role>
+                      <children>
+                        <coordinfo>
+                          <coordtype>crdClauses</coordtype>
+                          <children>
+                            <node id="a-2_dalja_2-p1s2x9">
+                              <role>crdPart</role>
+                              <children>
+                                <pmcinfo>
+                                  <pmctype>mainCl</pmctype>
+                                  <children>
+                                    <node id="a-2_dalja_2-p1s2w11">
+                                      <m.rf>m#m-2_dalja_2-p1s2w11</m.rf>
+                                      <role>pred</role>
+                                      <ord>11</ord>
+                                      <children>
+                                        <node id="a-2_dalja_2-p1s2x6">
+                                          <role>timeCl</role>
+                                          <children>
+                                            <pmcinfo>
+                                              <pmctype>subrCl</pmctype>
+                                              <children>
+                                                <node id="a-2_dalja_2-p1s2w12">
+                                                  <m.rf>m#m-2_dalja_2-p1s2w12</m.rf>
+                                                  <role>punct</role>
+                                                  <ord>12</ord>
+                                                </node>
+                                                <node id="a-2_dalja_2-p1s2w13">
+                                                  <m.rf>m#m-2_dalja_2-p1s2w13</m.rf>
+                                                  <role>conj</role>
+                                                  <ord>13</ord>
+                                                </node>
+                                                <node id="a-2_dalja_2-p1s2w19">
+                                                  <m.rf>m#m-2_dalja_2-p1s2w19</m.rf>
+                                                  <role>pred</role>
+                                                  <ord>19</ord>
+                                                  <children>
+                                                    <node id="a-2_dalja_2-p1s2x1">
+                                                      <role>adv</role>
+                                                      <children>
+                                                        <xinfo>
+                                                          <xtype>xPrep</xtype>
+                                                          <tag>ncfsg0[prey]</tag>
+                                                          <children>
+                                                            <node id="a-2_dalja_2-p1s2w15">
+                                                              <m.rf>m#m-2_dalja_2-p1s2w15</m.rf>
+                                                              <role>prep</role>
+                                                              <ord>15</ord>
+                                                            </node>
+                                                            <node id="a-2_dalja_2-p1s2w16">
+                                                              <m.rf>m#m-2_dalja_2-p1s2w16</m.rf>
+                                                              <role>basElem</role>
+                                                              <ord>16</ord>
+                                                            </node>
+                                                          </children>
+                                                        </xinfo>
+                                                      </children>
+                                                    </node>
+                                                    <node id="a-2_dalja_2-p1s2x2">
+                                                      <role>adv</role>
+                                                      <children>
+                                                        <xinfo>
+                                                          <xtype>xPrep</xtype>
+                                                          <tag>ncfsg0[prey]</tag>
+                                                          <children>
+                                                            <node id="a-2_dalja_2-p1s2w17">
+                                                              <m.rf>m#m-2_dalja_2-p1s2w17</m.rf>
+                                                              <role>prep</role>
+                                                              <ord>17</ord>
+                                                            </node>
+                                                            <node id="a-2_dalja_2-p1s2w18">
+                                                              <m.rf>m#m-2_dalja_2-p1s2w18</m.rf>
+                                                              <role>basElem</role>
+                                                              <ord>18</ord>
+                                                            </node>
+                                                          </children>
+                                                        </xinfo>
+                                                      </children>
+                                                    </node>
+                                                    <node id="a-2_dalja_2-p1s2w14">
+                                                      <m.rf>m#m-2_dalja_2-p1s2w14</m.rf>
+                                                      <role>subj</role>
+                                                      <ord>14</ord>
+                                                    </node>
+                                                  </children>
+                                                </node>
+                                              </children>
+                                            </pmcinfo>
+                                          </children>
+                                        </node>
+                                        <node id="a-2_dalja_2-p1s2w10">
+                                          <m.rf>m#m-2_dalja_2-p1s2w10</m.rf>
+                                          <role>subj</role>
+                                          <ord>10</ord>
+                                          <children>
+                                            <node id="a-2_dalja_2-p1s2x3">
+                                              <role>attr</role>
+                                              <children>
+                                                <xinfo>
+                                                  <xtype>wGrAnal</xtype>
+                                                  <tag>ncmpg0</tag>
+                                                  <children>
+                                                    <node id="a-2_dalja_2-p1s2w8">
+                                                      <m.rf>m#m-2_dalja_2-p1s2w8</m.rf>
+                                                      <role>basElem</role>
+                                                      <ord>8</ord>
+                                                    </node>
+                                                    <node id="a-2_dalja_2-p1s2w9">
+                                                      <m.rf>m#m-2_dalja_2-p1s2w9</m.rf>
+                                                      <role>basElem</role>
+                                                      <ord>9</ord>
+                                                    </node>
+                                                  </children>
+                                                </xinfo>
+                                              </children>
+                                            </node>
+                                          </children>
+                                        </node>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </pmcinfo>
+                                <node id="a-2_dalja_2-p1s2w2">
+                                  <m.rf>m#m-2_dalja_2-p1s2w2</m.rf>
+                                  <role>sit</role>
+                                  <ord>2</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-2_dalja_2-p1s2x8">
+                              <role>crdPart</role>
+                              <children>
+                                <pmcinfo>
+                                  <pmctype>mainCl</pmctype>
+                                  <children>
+                                    <node id="a-2_dalja_2-p1s2w23">
+                                      <m.rf>m#m-2_dalja_2-p1s2w23</m.rf>
+                                      <role>pred</role>
+                                      <ord>23</ord>
+                                      <children>
+                                        <node id="a-2_dalja_2-p1s2w24">
+                                          <m.rf>m#m-2_dalja_2-p1s2w24</m.rf>
+                                          <role>subj</role>
+                                          <ord>24</ord>
+                                          <children>
+                                            <node id="a-2_dalja_2-p1s2w25">
+                                              <m.rf>m#m-2_dalja_2-p1s2w25</m.rf>
+                                              <role>spc</role>
+                                              <ord>25</ord>
+                                              <children>
+                                                <node id="a-2_dalja_2-p1s2w27">
+                                                  <m.rf>m#m-2_dalja_2-p1s2w27</m.rf>
+                                                  <role>obj</role>
+                                                  <ord>27</ord>
+                                                  <children>
+                                                    <node id="a-2_dalja_2-p1s2w26">
+                                                      <m.rf>m#m-2_dalja_2-p1s2w26</m.rf>
+                                                      <role>attr</role>
+                                                      <ord>26</ord>
+                                                    </node>
+                                                  </children>
+                                                </node>
+                                                <node id="a-2_dalja_2-p1s2w28">
+                                                  <m.rf>m#m-2_dalja_2-p1s2w28</m.rf>
+                                                  <role>adv</role>
+                                                  <ord>28</ord>
+                                                </node>
+                                              </children>
+                                            </node>
+                                          </children>
+                                        </node>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </pmcinfo>
+                                <node id="a-2_dalja_2-p1s2w22">
+                                  <m.rf>m#m-2_dalja_2-p1s2w22</m.rf>
+                                  <role>det</role>
+                                  <ord>22</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-2_dalja_2-p1s2w20">
+                              <m.rf>m#m-2_dalja_2-p1s2w20</m.rf>
+                              <role>punct</role>
+                              <ord>20</ord>
+                            </node>
+                            <node id="a-2_dalja_2-p1s2w21">
+                              <m.rf>m#m-2_dalja_2-p1s2w21</m.rf>
+                              <role>conj</role>
+                              <ord>21</ord>
+                            </node>
+                          </children>
+                        </coordinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w1">
+                      <m.rf>m#m-2_dalja_2-p1s2w1</m.rf>
+                      <role>punct</role>
+                      <ord>1</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w4">
+                      <m.rf>m#m-2_dalja_2-p1s2w4</m.rf>
+                      <role>punct</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w7">
+                      <m.rf>m#m-2_dalja_2-p1s2w7</m.rf>
+                      <role>punct</role>
+                      <ord>7</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w29">
+                      <m.rf>m#m-2_dalja_2-p1s2w29</m.rf>
+                      <role>punct</role>
+                      <ord>29</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p1s2x4">
+              <role>basElem</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>report</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p1s2w3">
+                      <m.rf>m#m-2_dalja_2-p1s2w3</m.rf>
+                      <role>punct</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w5">
+                      <m.rf>m#m-2_dalja_2-p1s2w5</m.rf>
+                      <role>pred</role>
+                      <ord>5</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p1s2w6">
+                      <m.rf>m#m-2_dalja_2-p1s2w6</m.rf>
+                      <role>punct</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p2s1">
+      <s.rf>m#m-2_dalja_2-p2s1</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p2s1x1">
+              <reduction>vmnipii30an(ir)</reduction>
+              <role>pred</role>
+              <children>
+                <node id="a-2_dalja_2-p2s1x2">
+                  <reduction>ncfsn4(iespēja)</reduction>
+                  <role>subj</role>
+                </node>
+                <node id="a-2_dalja_2-p2s1w1">
+                  <m.rf>m#m-2_dalja_2-p2s1w1</m.rf>
+                  <role>adv</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p2s1w3">
+              <m.rf>m#m-2_dalja_2-p2s1w3</m.rf>
+              <role>punct</role>
+              <ord>3</ord>
+            </node>
+            <node id="a-2_dalja_2-p2s1w2">
+              <m.rf>m#m-2_dalja_2-p2s1w2</m.rf>
+              <role>punct</role>
+              <ord>2</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p3s1">
+      <s.rf>m#m-2_dalja_2-p3s1</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p3s1w2">
+              <m.rf>m#m-2_dalja_2-p3s1w2</m.rf>
+              <role>punct</role>
+              <ord>2</ord>
+            </node>
+            <node id="a-2_dalja_2-p3s1w1">
+              <m.rf>m#m-2_dalja_2-p3s1w1</m.rf>
+              <role>pred</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p3s2">
+      <s.rf>m#m-2_dalja_2-p3s2</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p3s2w2">
+              <m.rf>m#m-2_dalja_2-p3s2w2</m.rf>
+              <role>punct</role>
+              <ord>2</ord>
+            </node>
+            <node id="a-2_dalja_2-p3s2w1">
+              <m.rf>m#m-2_dalja_2-p3s2w1</m.rf>
+              <role>pred</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p4s1">
+      <s.rf>m#m-2_dalja_2-p4s1</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p4s1x4">
+              <role>ins</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>insPmc</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p4s1w2">
+                      <m.rf>m#m-2_dalja_2-p4s1w2</m.rf>
+                      <role>pred</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-2_dalja_2-p4s1w1">
+                          <m.rf>m#m-2_dalja_2-p4s1w1</m.rf>
+                          <role>adv</role>
+                          <ord>1</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p4s1w3">
+                      <m.rf>m#m-2_dalja_2-p4s1w3</m.rf>
+                      <role>punct</role>
+                      <ord>3</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p4s1x3">
+              <role>pred</role>
+              <children>
+                <coordinfo>
+                  <coordtype>crdParts</coordtype>
+                  <children>
+                    <node id="a-2_dalja_2-p4s1w7">
+                      <m.rf>m#m-2_dalja_2-p4s1w7</m.rf>
+                      <role>crdPart</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-2_dalja_2-p4s1x1">
+                          <role>adv</role>
+                          <children>
+                            <xinfo>
+                              <xtype>xPrep</xtype>
+                              <tag>ncfsa0[pren]</tag>
+                              <children>
+                                <node id="a-2_dalja_2-p4s1w4">
+                                  <m.rf>m#m-2_dalja_2-p4s1w4</m.rf>
+                                  <role>prep</role>
+                                  <ord>4</ord>
+                                </node>
+                                <node id="a-2_dalja_2-p4s1w6">
+                                  <m.rf>m#m-2_dalja_2-p4s1w6</m.rf>
+                                  <role>basElem</role>
+                                  <ord>6</ord>
+                                  <children>
+                                    <node id="a-2_dalja_2-p4s1w5">
+                                      <m.rf>m#m-2_dalja_2-p4s1w5</m.rf>
+                                      <role>attr</role>
+                                      <ord>5</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </xinfo>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p4s1w8">
+                      <m.rf>m#m-2_dalja_2-p4s1w8</m.rf>
+                      <role>punct</role>
+                      <ord>8</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p4s1w12">
+                      <m.rf>m#m-2_dalja_2-p4s1w12</m.rf>
+                      <role>crdPart</role>
+                      <ord>12</ord>
+                      <children>
+                        <node id="a-2_dalja_2-p4s1x2">
+                          <role>adv</role>
+                          <children>
+                            <xinfo>
+                              <xtype>xPrep</xtype>
+                              <tag>ncfsa0[pren]</tag>
+                              <children>
+                                <node id="a-2_dalja_2-p4s1w9">
+                                  <m.rf>m#m-2_dalja_2-p4s1w9</m.rf>
+                                  <role>prep</role>
+                                  <ord>9</ord>
+                                </node>
+                                <node id="a-2_dalja_2-p4s1w11">
+                                  <m.rf>m#m-2_dalja_2-p4s1w11</m.rf>
+                                  <reduction>nelaimi</reduction>
+                                  <role>basElem</role>
+                                  <ord>11</ord>
+                                  <children>
+                                    <node id="a-2_dalja_2-p4s1w10">
+                                      <m.rf>m#m-2_dalja_2-p4s1w10</m.rf>
+                                      <role>attr</role>
+                                      <ord>10</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </xinfo>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </coordinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p4s1w13">
+              <m.rf>m#m-2_dalja_2-p4s1w13</m.rf>
+              <role>punct</role>
+              <ord>13</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p5s1">
+      <s.rf>m#m-2_dalja_2-p5s1</s.rf>
+      <comment>adv pie mājā - spc vai attr?</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p5s1x4">
+              <role>no</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>interj</pmctype>
+                  <children>
+                    <node id="a-2_dalja_2-p5s1w1">
+                      <m.rf>m#m-2_dalja_2-p5s1w1</m.rf>
+                      <role>basElem</role>
+                      <ord>1</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p5s1w2">
+                      <m.rf>m#m-2_dalja_2-p5s1w2</m.rf>
+                      <role>punct</role>
+                      <ord>2</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p5s1x3">
+              <role>pred</role>
+              <children>
+                <node id="a-2_dalja_2-p5s1x5">
+                  <role>spc</role>
+                  <children>
+                    <pmcinfo>
+                      <pmctype>spcPmc</pmctype>
+                      <children>
+                        <node id="a-2_dalja_2-p5s1w8">
+                          <m.rf>m#m-2_dalja_2-p5s1w8</m.rf>
+                          <role>punct</role>
+                          <ord>8</ord>
+                        </node>
+                        <node id="a-2_dalja_2-p5s1w9">
+                          <m.rf>m#m-2_dalja_2-p5s1w9</m.rf>
+                          <role>basElem</role>
+                          <ord>9</ord>
+                          <children>
+                            <node id="a-2_dalja_2-p5s1x6">
+                              <role>spc</role>
+                              <children>
+                                <coordinfo>
+                                  <coordtype>crdParts</coordtype>
+                                  <children>
+                                    <node id="a-2_dalja_2-p5s1x2">
+                                      <role>crdPart</role>
+                                      <children>
+                                        <xinfo>
+                                          <xtype>xPrep</xtype>
+                                          <tag>ncmpd0[prey]</tag>
+                                          <children>
+                                            <node id="a-2_dalja_2-p5s1w13">
+                                              <m.rf>m#m-2_dalja_2-p5s1w13</m.rf>
+                                              <role>prep</role>
+                                              <ord>13</ord>
+                                            </node>
+                                            <node id="a-2_dalja_2-p5s1w14">
+                                              <m.rf>m#m-2_dalja_2-p5s1w14</m.rf>
+                                              <role>basElem</role>
+                                              <ord>14</ord>
+                                            </node>
+                                          </children>
+                                        </xinfo>
+                                      </children>
+                                    </node>
+                                    <node id="a-2_dalja_2-p5s1w11">
+                                      <m.rf>m#m-2_dalja_2-p5s1w11</m.rf>
+                                      <role>crdPart</role>
+                                      <ord>11</ord>
+                                      <children>
+                                        <node id="a-2_dalja_2-p5s1w10">
+                                          <m.rf>m#m-2_dalja_2-p5s1w10</m.rf>
+                                          <role>attr</role>
+                                          <ord>10</ord>
+                                        </node>
+                                      </children>
+                                    </node>
+                                    <node id="a-2_dalja_2-p5s1w12">
+                                      <m.rf>m#m-2_dalja_2-p5s1w12</m.rf>
+                                      <role>punct</role>
+                                      <ord>12</ord>
+                                    </node>
+                                  </children>
+                                </coordinfo>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </pmcinfo>
+                  </children>
+                </node>
+                <coordinfo>
+                  <coordtype>crdParts</coordtype>
+                  <children>
+                    <node id="a-2_dalja_2-p5s1w5">
+                      <m.rf>m#m-2_dalja_2-p5s1w5</m.rf>
+                      <role>crdPart</role>
+                      <ord>5</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p5s1w6">
+                      <m.rf>m#m-2_dalja_2-p5s1w6</m.rf>
+                      <role>punct</role>
+                      <ord>6</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p5s1w7">
+                      <m.rf>m#m-2_dalja_2-p5s1w7</m.rf>
+                      <role>crdPart</role>
+                      <ord>7</ord>
+                    </node>
+                  </children>
+                </coordinfo>
+                <node id="a-2_dalja_2-p5s1w3">
+                  <m.rf>m#m-2_dalja_2-p5s1w3</m.rf>
+                  <role>subj</role>
+                  <ord>3</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p5s1w4">
+              <m.rf>m#m-2_dalja_2-p5s1w4</m.rf>
+              <role>no</role>
+              <ord>4</ord>
+            </node>
+            <node id="a-2_dalja_2-p5s1w15">
+              <m.rf>m#m-2_dalja_2-p5s1w15</m.rf>
+              <role>punct</role>
+              <ord>15</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p5s2">
+      <s.rf>m#m-2_dalja_2-p5s2</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p5s2x1">
+              <role>basElem</role>
+              <children>
+                <coordinfo>
+                  <coordtype>crdClauses</coordtype>
+                  <children>
+                    <node id="a-2_dalja_2-p5s2x6">
+                      <role>crdPart</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>mainCl</pmctype>
+                          <children>
+                            <node id="a-2_dalja_2-p5s2x3">
+                              <role>pred</role>
+                              <children>
+                                <xinfo>
+                                  <xtype>xPred</xtype>
+                                  <tag>vm0ip003san[adjsmn]</tag>
+                                  <children>
+                                    <node id="a-2_dalja_2-p5s2x7">
+                                      <reduction>vcnipii30an(ir)</reduction>
+                                      <role>auxVerb</role>
+                                    </node>
+                                    <node id="a-2_dalja_2-p5s2w2">
+                                      <m.rf>m#m-2_dalja_2-p5s2w2</m.rf>
+                                      <role>basElem</role>
+                                      <ord>2</ord>
+                                    </node>
+                                  </children>
+                                </xinfo>
+                                <node id="a-2_dalja_2-p5s2w1">
+                                  <m.rf>m#m-2_dalja_2-p5s2w1</m.rf>
+                                  <role>subj</role>
+                                  <ord>1</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p5s2x5">
+                      <role>crdPart</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>mainCl</pmctype>
+                          <children>
+                            <node id="a-2_dalja_2-p5s2x8">
+                              <reduction>vm0ipii3san</reduction>
+                              <role>pred</role>
+                              <children>
+                                <node id="a-2_dalja_2-p5s2x2">
+                                  <role>adv</role>
+                                  <children>
+                                    <xinfo>
+                                      <xtype>xPrep</xtype>
+                                      <tag>ncmsa0[prey]</tag>
+                                      <children>
+                                        <node id="a-2_dalja_2-p5s2w5">
+                                          <m.rf>m#m-2_dalja_2-p5s2w5</m.rf>
+                                          <role>prep</role>
+                                          <ord>5</ord>
+                                        </node>
+                                        <node id="a-2_dalja_2-p5s2w7">
+                                          <m.rf>m#m-2_dalja_2-p5s2w7</m.rf>
+                                          <role>basElem</role>
+                                          <ord>7</ord>
+                                          <children>
+                                            <node id="a-2_dalja_2-p5s2w6">
+                                              <m.rf>m#m-2_dalja_2-p5s2w6</m.rf>
+                                              <role>attr</role>
+                                              <ord>6</ord>
+                                            </node>
+                                          </children>
+                                        </node>
+                                      </children>
+                                    </xinfo>
+                                  </children>
+                                </node>
+                                <node id="a-2_dalja_2-p5s2w4">
+                                  <m.rf>m#m-2_dalja_2-p5s2w4</m.rf>
+                                  <role>subj</role>
+                                  <ord>4</ord>
+                                </node>
+                                <node id="a-2_dalja_2-p5s2w9">
+                                  <m.rf>m#m-2_dalja_2-p5s2w9</m.rf>
+                                  <role>adv</role>
+                                  <ord>9</ord>
+                                  <children>
+                                    <node id="a-2_dalja_2-p5s2w8">
+                                      <m.rf>m#m-2_dalja_2-p5s2w8</m.rf>
+                                      <role>adv</role>
+                                      <ord>8</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p5s2x4">
+                      <role>crdPart</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>mainCl</pmctype>
+                          <children>
+                            <node id="a-2_dalja_2-p5s2x9">
+                              <reduction>vm0ipii3san</reduction>
+                              <role>pred</role>
+                              <children>
+                                <node id="a-2_dalja_2-p5s2x10">
+                                  <reduction>ncmsn1(nedēļā)</reduction>
+                                  <role>adv</role>
+                                  <children>
+                                    <node id="a-2_dalja_2-p5s2w12">
+                                      <m.rf>m#m-2_dalja_2-p5s2w12</m.rf>
+                                      <role>adv</role>
+                                      <ord>12</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                                <node id="a-2_dalja_2-p5s2w11">
+                                  <m.rf>m#m-2_dalja_2-p5s2w11</m.rf>
+                                  <role>subj</role>
+                                  <ord>11</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                    <node id="a-2_dalja_2-p5s2w3">
+                      <m.rf>m#m-2_dalja_2-p5s2w3</m.rf>
+                      <role>punct</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-2_dalja_2-p5s2w10">
+                      <m.rf>m#m-2_dalja_2-p5s2w10</m.rf>
+                      <role>punct</role>
+                      <ord>10</ord>
+                    </node>
+                  </children>
+                </coordinfo>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p5s2w13">
+              <m.rf>m#m-2_dalja_2-p5s2w13</m.rf>
+              <role>punct</role>
+              <ord>13</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-2_dalja_2-p5s3">
+      <s.rf>m#m-2_dalja_2-p5s3</s.rf>
+      <comment>vai ari parcelats, neatjaunot reducētos?</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-2_dalja_2-p5s3x1">
+              <reduction>vmnipii3san</reduction>
+              <role>pred</role>
+              <children>
+                <node id="a-2_dalja_2-p5s3x3">
+                  <reduction>ncmsn1(autobuss)</reduction>
+                  <role>subj</role>
+                </node>
+                <node id="a-2_dalja_2-p5s3x2">
+                  <role>condCl</role>
+                  <children>
+                    <pmcinfo>
+                      <pmctype>subrCl</pmctype>
+                      <children>
+                        <node id="a-2_dalja_2-p5s3w1">
+                          <m.rf>m#m-2_dalja_2-p5s3w1</m.rf>
+                          <role>conj</role>
+                          <ord>1</ord>
+                        </node>
+                        <node id="a-2_dalja_2-p5s3w2">
+                          <m.rf>m#m-2_dalja_2-p5s3w2</m.rf>
+                          <role>pred</role>
+                          <ord>2</ord>
+                        </node>
+                      </children>
+                    </pmcinfo>
+                  </children>
+                </node>
+              </children>
+            </node>
+            <node id="a-2_dalja_2-p5s3w3">
+              <m.rf>m#m-2_dalja_2-p5s3w3</m.rf>
+              <role>punct</role>
+              <ord>3</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+  </trees>
+</lvadata>

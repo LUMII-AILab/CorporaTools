@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pml_schema
+  xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/" 
+  version="1.1">
+  <revision>1.0.0</revision>
+  <description>PML schema for PML representation of arbitrary XML document</description>
+
+  <root name="xdata">
+    <structure>
+      <member name="root" role="#TREES" type="root.type" required="1"/>
+    </structure>
+  </root>
+
+  <type name="root.type">
+    <list type="x-node.type" ordered="1"/>
+  </type>
+
+  <type name="x-node.type">
+    <structure name="xml" role="#NODE">
+      <member as_attribute="1" name="type" type="types.type" required="1"/>
+      <member as_attribute="1" name="name"><cdata format="any"/></member>
+      <member as_attribute="1" name="ns"><cdata format="any"/></member>
+      <member name="hide" type="bool.type" role="#HIDE"/>
+      <member name="content"><cdata format="any"/></member>
+      <member name="attributes">
+        <list type="attr.type" ordered="0"/>
+      </member>
+      <member name="children" role="#CHILDNODES">
+        <list type="x-node.type" ordered="1"/>
+      </member>
+    </structure>
+  </type>
+  
+  <type name="types.type">
+    <choice>
+      <value>root-element</value>
+      <value>element</value>
+      <value>text</value>
+      <value>processing-instruction</value>
+      <value>comment</value>
+    </choice>
+  </type>
+
+  <type name="attr.type">
+    <structure>
+      <member as_attribute="1" name="name" required="1"><cdata format="any"/></member>
+      <member as_attribute="1" name="ns"><cdata format="any"/></member>
+      <member name="content" required="1"><cdata format="any"/></member>
+    </structure>
+  </type>
+
+  <type name="bool.type">
+    <choice>
+      <value>0</value>
+      <value>1</value>
+    </choice>
+  </type>
+
+</pml_schema>

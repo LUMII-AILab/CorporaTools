@@ -1,0 +1,15 @@
+This directory contains PML support for various formats and treebanks.
+Some of the subdirectories are TrEd extensions.
+
+Most subdirectories in this directory are organized as follows (of
+course, some subdirectories may be missing):
+
+  bin/        - conversion and support scripts
+  resources/  - PML schemata and XSLT stylesheets
+  package.xml - TrEd extension description file
+  contrib/    - TrEd extension code
+  libs/       - Perl libraries
+  doc/        - basic documentation
+
+All conversion scripts are self-documenting via the --usage, --help
+and sometimes --man command-line option.

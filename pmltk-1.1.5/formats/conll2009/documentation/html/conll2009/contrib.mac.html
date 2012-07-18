@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>Generated documentation for conll2009/contrib.mac</title>
+	<meta name="description" content="Pod documentation for Conll2009"></meta>
+	<meta name="inputfile" content="/export/home/pajas/projects/tred-extensions/conll2009/documentation/.pod/conll2009/contrib.mac.pod"></meta>
+	<meta name="outputfile" content="&lt;standard output&gt;"></meta>
+	<meta name="created" content="Mon Nov  2 17:28:51 2009"></meta>
+	<meta name="generator" content="Pod::Xhtml 1.59"></meta>
+<link rel="stylesheet" href="../css/blue.css"></link></head>
+<body><h1>Generated documentation for conll2009/contrib.mac</h1>
+<div class="pod">
+<h1 id="NAME">NAME</h1><p><a href="../../index.html" class="toplink">back</a></p>
+<div id="NAME_CONTENT">
+<p>Conll2009 - annotation context for Conll2009 ST data</p>
+
+</div>
+<h1 id="DESCRIPTION">DESCRIPTION</h1><p><a href="../../index.html" class="toplink">back</a></p>
+<div id="DESCRIPTION_CONTENT">
+<p>This file provides the basic annotation context for for
+predicate-argument annotation on files with conll2009 PML schema.</p>
+
+</div>
+<h1 id="USAGE">USAGE</h1><p><a href="../../index.html" class="toplink">back</a></p>
+<div id="USAGE_CONTENT">
+<p>The stylesheet visualizes predicate-argument pairs as arcs from the
+predicate to the argument; in the data representation, the arc is a
+structure with attributes 'label' and 'target.rf' stored in the
+'apreds' attribute of the argument node (the 'apreds' attribute is of
+the list type).</p>
+<dl>
+	<dt>Annotation with mouse</dt>
+	<dd>
+		<p>Shift+click to mark a node as a predicate, then Ctrl+click on argument nodes and assign their labels.</p>
+		<p>The procedure of removing an argument is the same as adding one: to
+remove an argument (arc), mark the predicate and Ctrl+click on the
+argument.</p>
+		<p>Ctrl+double-click on arc to edit its label.</p>
+		<p>Note: if there is no mark, the argument and predicate are assumed to be the same node</p>
+	</dd>
+	<dt>Annotation with keyboard</dt>
+	<dd>
+		<p>Press space to mark a node.</p>
+		<p>Press f to make a new arc <strong>from</strong> the marked node (predicate) to the current node (argument).</p>
+		<p>Press t to make a new arc from the current node (predicate) <strong>to</strong> the marked node (argument).</p>
+		<p>Press r to (select and) remove arcs leading to the current node (argument).</p>
+	</dd>
+</dl>
+
+</div>
+<h1 id="COPYRIGHT">COPYRIGHT</h1><p><a href="../../index.html" class="toplink">back</a></p>
+<div id="COPYRIGHT_CONTENT">
+<p>Copyright (c) 2009,2010 by Petr Pajas and Jan Stepanek</p>
+
+</div>
+</div></body>
+</html>

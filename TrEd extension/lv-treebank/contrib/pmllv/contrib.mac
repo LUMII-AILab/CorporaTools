@@ -1,0 +1,12 @@
+#ifndef lv-treebank
+#define lv-treebank
+
+package LVPML;
+
+#binding-context LV_A_View
+#include "LV_A_View.mak"
+
+#binding-context LV_A_Edit
+#include "LV_A_Edit.mak"
+
+#endif lv-treebank

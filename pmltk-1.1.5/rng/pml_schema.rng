@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:s="http://ufal.mff.cuni.cz/pdt/pml/schema/"
+        xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+        xmlns:sch="http://www.ascc.net/xml/schematron"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <sch:ns prefix="s" uri="http://ufal.mff.cuni.cz/pdt/pml/schema/"/>
+  <a:documentation>Grammar for PML Schema (version 1.1 or 1.2)</a:documentation>
+  <start>
+    <ref name="pml_schema.root_element"/>
+  </start>
+  <define name="pml_schema.root_element">
+    <choice>
+      <ref name="pml1.2"/>
+      <ref name="pml1.1"/>
+    </choice>
+  </define>
+  <define name="pml1.2">
+    <externalRef href="pml_schema_1_2.rng"/>
+  </define>
+  <define name="pml1.1">
+    <externalRef href="pml_schema_1_1.rng"/>
+  </define>
+</grammar>

@@ -1,0 +1,77 @@
+#!btred -t PML_A -e adata2pdt10()
+# -*- cperl -*-
+
+
+package PML_A;
+
+#binding-context PML_A
+#bind adata2pdt10 to G
+
+sub adata2pdt10 {
+  die "Can't operate on non adata file\n" unless SchemaName() eq 'adata';
+  my $filename = FileName();
+  $filename =~ s/\.pls(\.gz)?//;
+  $filename .= ".fs";
+
+  my $defs = FS()->defs;
+  my $new_defs = {};
+  my $type_defs = {};
+  my %attrs_cache;
+  my $schema = Schema();
+  my $tree_no = 0;
+  foreach my $tree (GetTrees()) {
+    $tree_no++;
+    foreach my $node ($tree,$tree->descendants) {
+      my $new_node = {};
+      $new_node->{afun} = $node->{afun};
+      if ($node->{is_member}) {
+	my $p=$node->parent;
+	$p=$p->parent while $p and $p->{afun}=~/^Aux[CP]$/;
+	if ($p and $p->{afun}=~/^(Ap)os|(Co)ord/) {
+	  $new_node->{afun}.="_$1$2";
+	}
+      } elsif ($node->{is_parenthesis_root}) {
+	$new_node->{afun}.="_Pa"
+      }
+      $new_node->{ord} = $node->{ord};
+      $new_node->{sentord} = $node->{ord};
+      if ($node->parent) { # a non-root node
+	$new_node->{AID} = $node->{id};
+	$new_node->{tag} = $node->attr('m/tag');
+	$new_node->{lemma} = $node->attr('m/lemma');
+	$new_node->{form} = $node->attr('m/form');
+	$new_node->{origf} = $node->attr('m/w/token');      
+      } else { # the root
+	$new_node->{ID1} = $node->{id};
+	$new_node->{tag} = 'Z#-------------';
+	$new_node->{lemma} = '#';
+	$new_node->{form} = '#'.$tree_no;
+	$new_node->{origf} = $new_node->{form};
+      }
+
+      my $type = join ":",$node->type;
+      foreach my $atr ($node->type->attributes()) {
+	delete $node->{$atr};
+      } 
+      foreach my $atr (keys %$new_node) {
+	$node->{$atr}=$new_node->{$atr};
+      }
+      $node->set_type(undef);
+    }
+  }
+
+  my $fsfile = $grp->{FSFile};
+  FileMetaData("schema",undef);
+  FileMetaData("fs-require",undef);
+  FileMetaData("ref",{});
+  FileMetaData("ref-index",{});
+  PDT::assignARHeader();
+
+  $fsfile->changeFilename($filename);
+  $fsfile->changeBackend('FSBackend');
+  $fsfile->changeEncoding('iso-8859-2');
+
+  ChangingFile(1);
+}
+
+1;
