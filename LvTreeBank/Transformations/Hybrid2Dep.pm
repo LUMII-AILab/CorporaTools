@@ -106,7 +106,7 @@ sub recalculateOrds
 		}
 		else
 		{
-			warn "RecalculateOrds warns: Multiple textnodes below ord node.\n"
+			warn "recalculateOrds warns: Multiple textnodes below ord node.\n"
 				if (@{$o->childNodes()} gt 1); # This should not happen.
 			$o->removeChild($o->firstChild);
 			$o->appendText($nextId);
@@ -161,6 +161,29 @@ sub transformTree
 			
 		# Add reformed subtree to the main tree.
 		$phrases[0]->replaceNode($newNode);
+	}
+	
+	&_finishRoles($xpc, $tree);
+}
+
+# Transform roles in form "someRole" to "someRole-0-0". Leave roles in form
+# "firstRole-secondRole-thirdRole" intact.
+# _finishRoles (XPath context with set namespaces, DOM node for tree root
+#				 (usualy "LM"))
+sub _finishRoles
+{
+	my $xpc = shift @_; # XPath context
+	my $tree = shift @_;
+	my @roles = $xpc->findnodes('.//pml:role', $tree);
+	
+	foreach my $r (@roles)
+	{
+		my $oldRole = $r->textContent;
+		next if $oldRole =~/-.*-/;
+		warn "_finishRoles warns: Multiple textnodes below role node.\n"
+			if (@{$r->childNodes()} gt 1); # This should not happen.
+		$r->removeChild($r->firstChild);
+		$r->appendText("$oldRole-0-0");
 	}
 }
 
