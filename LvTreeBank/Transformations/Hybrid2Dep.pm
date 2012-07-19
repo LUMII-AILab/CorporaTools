@@ -230,6 +230,15 @@ sub _transformSubtree
 	$roleTag =~ s/info$/type/;	
 	my $phRole = ${$xpc->findnodes("pml:$roleTag", $phrases[0])}[0]->textContent;
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role);
+
+	# Add dependency children.
+	my $newNodeChWrap = &_getChildrenNode($xpc, $newNode);	
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		$ch->unbindNode();
+		$newNodeChWrap->appendChild($ch);
+	}
+
 	$node->replaceNode($newNode);
 }
 
@@ -247,18 +256,18 @@ sub xPrep
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	
-	# Find basElem.
-	my @basElems = $xpc->findnodes('pml:children/pml:node[pml:role=\'basElem\']', $node);
-	die "xPrep below ". $node->find('../@id')." has ".(scalar @basElems)." \"basElem\"."
-		if (scalar @basElems ne 1);
-	my $basElem = $basElems[0];
+	# Find prep.
+	my @preps = $xpc->findnodes('pml:children/pml:node[pml:role=\'prep\']', $node);
+	die "xPrep below ". $node->find('../@id')." has ".(scalar @preps)." \"brep\"."
+		if (scalar @preps ne 1);
+	my $newRoot = $preps[0];
 
-	# Change role for basElem.
-	&_setNodeRole($xpc, $basElem, "$parentRole-xPrep-basElem");
+	# Change role for prep.
+	&_setNodeRole($xpc, $newRoot, "$parentRole-xPrep-prep");
 	
 	# Rebuild subtree.
-	$basElem->unbindNode();
-	my $basElemChNode = &_getChildrenNode($xpc, $basElem);
+	$newRoot->unbindNode();
+	my $basElemChNode = &_getChildrenNode($xpc, $newRoot);
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
 		# Change structure.
@@ -266,7 +275,7 @@ sub xPrep
 		$basElemChNode->appendChild($ch);
 	}
 
-	return $basElem;
+	return $newRoot;
 }
 
 sub defaultPhrase
