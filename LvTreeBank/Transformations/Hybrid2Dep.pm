@@ -77,7 +77,7 @@ END
 	File::Path::mkpath("$dirPrefix/res/");
 	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
 		or die "Output file opening: $!";	
-	print $outFile $doc->toString(1);	
+	print $outFile $doc->toString(1);
 	print "Processing $oldName finished!\n";
 }
 
