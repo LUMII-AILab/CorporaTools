@@ -24,11 +24,13 @@ use XML::LibXML;  # XML handling library
 # Lauma Pretkalniņa, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
-sub transform
+
+# Process single XML file. This should be used as entry point, if this module
+# is used standalone.
+sub transformFile
 {
 
 	autoflush STDOUT 1;
-	autoflush STDERR 1;
 	if (not @_ or @_ le 2)
 	{
 		print <<END;
@@ -41,7 +43,7 @@ Params:
    file name
    new file name [opt, current file name used otherwise]
 
-Latvian Treebank project, LUMII, 2011, provided under GPL
+Latvian Treebank project, LUMII, 2012, provided under GPL
 END
 		exit 1;
 	}
@@ -58,54 +60,14 @@ END
 	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
 	$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
 	
-	#Process XML.
+	# Process XML:
+	# process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
-		#Now we should process each tree.
-		
-		my $role = 'ROOT';
-		#my @childrenWraps = $tree->findnodes('children');
-		foreach my $childrenWrap ($xpc->findnodes('pml:children', $tree))
-		{
-			my @phrases = $xpc->findnodes(
-				#'pml:children/pml:xinfo|pml:children/pml:coordinfo|pml:children/pml:pmcinfo',
-				'pml:children/*[local-name()!=\'node\']',
-				$tree);
-			die ($tree->find('../@id'))." has ".(scalar @phrases)." non-node children for the root."
-				if (scalar @phrases ne 1);
-			
-			# Process rootnode's constituents.
-			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
-			{
-				&dfsProcessing($xpc, $ch);
-			}
-			# Process rootnode's dependants.
-			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
-			{
-				&dfsProcessing($xpc, $ch);
-			}
-			
-			# Process PMC (probably) node.
-			my $roleTag = $phrases[0]->nodeName();
-			$roleTag =~ s/info$/type/;
-			my $chRole = ${$xpc->findnodes("pml:$roleTag", $phrases[0])}[0]->textContent;
-			my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
-			
-			# Create or find "children" element.
-			my $newNodeChWrap = &getChildrenNode($xpc, $newNode);	
-			# Add children.
-			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
-			{
-				$ch->unbindNode();
-				$newNodeChWrap->appendChild($ch);
-			}
-			
-			# Add reformed subtree to the main tree.
-			$phrases[0]->replaceNode($newNode);
-		}
+		&transformTree($xpc, $tree);
 	}
 	
-	# Update the schema information and root name.
+	# ... and update the schema information and root name.
 	my @schemas = $xpc->findnodes(
 		'pml:lvadata/pml:head/pml:schema[@href=\'lvaschema.xml\']', $doc);
 	$schemas[0]->setAttribute('href', 'lvaschema-deponly.xml');
@@ -119,7 +81,59 @@ END
 	print "Processing $oldName finished!\n";
 }
 
-sub dfsProcessing
+# Transform single tee (LM element in most tree files).
+# transformTree (XPath context with set namespaces, DOM node for tree root
+#				 (usualy "LM"))
+sub transformTree
+{
+	my $xpc = shift @_; # XPath context
+	my $tree = shift @_;
+	my $role = 'ROOT';
+	
+	# Well, actually, for valid trees there should be only one children node.
+	foreach my $childrenWrap ($xpc->findnodes('pml:children', $tree))
+	{
+		my @phrases = $xpc->findnodes(
+			'pml:children/*[local-name()!=\'node\']',
+			$tree);
+		die ($tree->find('../@id'))." has ".(scalar @phrases)." non-node children for the root."
+			if (scalar @phrases ne 1);
+			
+		# Process rootnode's constituents.
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+		{
+			&_transformSubtree($xpc, $ch);
+		}
+		# Process rootnode's dependants.
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
+		{
+			&_transformSubtree($xpc, $ch);
+		}
+			
+		# Process PMC (probably) node.
+		my $roleTag = $phrases[0]->nodeName();
+		$roleTag =~ s/info$/type/;
+		my $chRole = ${$xpc->findnodes("pml:$roleTag", $phrases[0])}[0]->textContent;
+		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
+		
+		# Create or find "children" element.
+		my $newNodeChWrap = &_getChildrenNode($xpc, $newNode);	
+		# Add children.
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
+		{
+			$ch->unbindNode();
+			$newNodeChWrap->appendChild($ch);
+		}
+			
+		# Add reformed subtree to the main tree.
+		$phrases[0]->replaceNode($newNode);
+	}
+}
+
+# Traversal function for procesing any subtree except "the big Tree" starting
+# _transformSubtree (XPath context with set namespaces, DOM "node" node for
+#					 subtree root)
+sub _transformSubtree
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -128,7 +142,7 @@ sub dfsProcessing
 	# Process dependency children first.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
-		&dfsProcessing($xpc, $ch);
+		&_transformSubtree($xpc, $ch);
 	}
 	
 	# Find phrase nodes.
@@ -146,7 +160,7 @@ sub dfsProcessing
 	# Process phrase constituents.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
 	{
-		&dfsProcessing($xpc, $ch);
+		&_transformSubtree($xpc, $ch);
 	}
 	
 	# A bit structure checking: phrase can't have another phrase as direct child.
@@ -163,9 +177,11 @@ sub dfsProcessing
 }
 
 
-
 ###############################################################################
-# Phrase specific functions
+# Phrase specific functions (does not process phrase constituent children, this
+# is responsibility of &_transformSubtree.
+# phrase_name (XPath context with set namespaces, DOM "xinfo", "coordinfo" or
+#			   "pmcinfo" node for subtree root)
 ###############################################################################
 
 sub xPrep
@@ -181,15 +197,13 @@ sub xPrep
 	my $basElem = $basElems[0];
 
 	# Change role for basElem.
-	&setNodeRole($xpc, $basElem, "$parentRole-xPrep-basElem");
+	&_setNodeRole($xpc, $basElem, "$parentRole-xPrep-basElem");
 	
 	# Rebuild subtree.
 	$basElem->unbindNode();
-	my $basElemChNode = &getChildrenNode($xpc, $basElem);
+	my $basElemChNode = &_getChildrenNode($xpc, $basElem);
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
-		# Change role?
-		
 		# Change structure.
 		$ch->unbindNode();
 		$basElemChNode->appendChild($ch);
@@ -211,7 +225,7 @@ sub defaultPhrase
 	my @basElems = $xpc->findnodes('pml:children/pml:node[pml:role=\'basElem\']', $node);
 	my $lastBasElem = undef;
 	my $curentPosition = -1;
-	foreach my $ch (@basElems)
+	foreach my $ch (@basElems)	# Find a basElem with the greatest 'ord'.
 	{
 		my $tmpOrd = ${$xpc->findnodes('pml:ord', $ch)}[0]->textContent;
 		if ($tmpOrd ge $curentPosition)
@@ -220,7 +234,7 @@ sub defaultPhrase
 			$curentPosition = $tmpOrd;
 		}
 	}
-	if (not defined $lastBasElem)
+	if (not defined $lastBasElem) # If this phrase contains no basElem, use last constituent.
 	{
 		my @children = $xpc->findnodes('pml:children/pml:node', $node);
 		$lastBasElem = $children[-1];
@@ -228,15 +242,13 @@ sub defaultPhrase
 
 	# Change role for the subroot.
 	my $oldRole = ${$xpc->findnodes('pml:role', $lastBasElem)}[0]->textContent;
-	&setNodeRole($xpc, $lastBasElem, "$parentRole-$phraseRole-$oldRole");
+	&_setNodeRole($xpc, $lastBasElem, "$parentRole-$phraseRole-$oldRole");
 	
 	# Rebuild subtree.
 	$lastBasElem->unbindNode();
-	my $lastBasElemChNode = &getChildrenNode($xpc, $lastBasElem);
+	my $lastBasElemChNode = &_getChildrenNode($xpc, $lastBasElem);
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
-		# Change role ?
-		
 		# Change structure.
 		$ch->unbindNode();
 		$lastBasElemChNode->appendChild($ch);
@@ -249,46 +261,48 @@ sub defaultPhrase
 # Techsupport functions
 ###############################################################################
 
-sub getChildrenNode
+# _getChildrenNode (XPath context with set namespaces, DOM node)
+# returns "children" element below given node (creates one, if there was none)
+sub _getChildrenNode
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my @bestTry = $xpc->findnodes('pml:children', $node);
 
-	if (@bestTry)
-	{
-		return $bestTry[0];
-	}
-	else
-	{
-		my $childrenNode = XML::LibXML::Element->new('children');
-		$childrenNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
-		$node->appendChild($childrenNode);
-		return $childrenNode;
-	}
+	return $bestTry[0] if (@bestTry);
+	
+	my $childrenNode = XML::LibXML::Element->new('children');
+	$childrenNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
+	$node->appendChild($childrenNode);
+	return $childrenNode;
 }
 
-sub setNodeRole
+# Sets new role to the given node.
+# _setNodeRole (XPath context with set namespaces, DOM "node" node, new role value)
+sub _setNodeRole
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $newRole = shift @_;
-	
 	die 'Can\'t set \"role\" for '.$node->nodeName."\n"
 		unless ($node->nodeName eq 'node');
 		
 	my @roles = $xpc->findnodes('pml:role', $node);
-	
 	my $newRoleNode = XML::LibXML::Element->new('role');
 	$newRoleNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
 	$newRoleNode->appendTextNode($newRole);
-
 	$roles[0]->replaceNode($newRoleNode);
 }
 
-
+# AUTOLOAD is called when someone tries to access nonexixting method through
+# this package. See perl documentation.
+# This is used for handling unknown PMC/X-word/coordination types.
 sub AUTOLOAD
 {
+	our $AUTOLOAD;
+	my $name = $AUTOLOAD;
+	$name =~ s/.*::(.*?)$/$1/;
+	print "Don't know how to process \"$name\", will use default rule.\n";
 	return &defaultPhrase;
 }
 1;
