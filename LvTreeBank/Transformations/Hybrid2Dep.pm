@@ -52,7 +52,7 @@ END
 	my $newName = (shift @_ or $oldName);
 
 	# Load the XML.
-	my $parser = XML::LibXML->new();
+	my $parser = XML::LibXML->new('no_blanks' => 1);
 	my $doc = $parser->parse_file("$dirPrefix/$oldName");
 	
 	my $xpc = XML::LibXML::XPathContext->new();
@@ -77,7 +77,7 @@ END
 	File::Path::mkpath("$dirPrefix/res/");
 	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
 		or die "Output file opening: $!";	
-	print $outFile $doc->toString;	
+	print $outFile $doc->toString(1);	
 	print "Processing $oldName finished!\n";
 }
 
