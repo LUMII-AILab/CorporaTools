@@ -29,7 +29,6 @@ use XML::LibXML;  # XML handling library
 # is used standalone.
 sub transformFile
 {
-
 	autoflush STDOUT 1;
 	if (not @_ or @_ le 2)
 	{
@@ -65,6 +64,7 @@ END
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
 		&transformTree($xpc, $tree);
+		&recalculateOrds($xpc, $tree);
 	}
 	
 	# ... and update the schema information and root name.
@@ -79,6 +79,40 @@ END
 		or die "Output file opening: $!";	
 	print $outFile $doc->toString;	
 	print "Processing $oldName finished!\n";
+}
+
+# Recalculate values for "ord" fields - make them start with 1 and be
+# sequential. Remove ord for root node.
+# recalculateOrds (XPath context with set namespaces, DOM node for tree root
+#				 (usualy "LM"))
+sub recalculateOrds
+{
+	my $xpc = shift @_; # XPath context
+	my $tree = shift @_;
+
+	# Find ord nodes and sort them.
+	my @ords = $xpc->findnodes('.//pml:ord', $tree);
+	my @sorted = sort {$a->textContent <=> $b->textContent} @ords;
+	
+	# Renumber ord nodes.
+	my $nextId = 1;
+	foreach my $o (@sorted)
+	{
+		my $parent = $o->parentNode;
+		my $parName = $parent->nodeName;
+		if ($parName ne 'node')
+		{
+			$parent->removeChild($o);
+		}
+		else
+		{
+			warn "RecalculateOrds warns: Multiple textnodes below ord node.\n"
+				if (@{$o->childNodes()} gt 1); # This should not happen.
+			$o->removeChild($o->firstChild);
+			$o->appendText($nextId);
+			$nextId++;
+		}
+	}
 }
 
 # Transform single tee (LM element in most tree files).
