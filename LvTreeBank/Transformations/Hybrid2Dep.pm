@@ -130,39 +130,34 @@ sub transformTree
 		my @phrases = $xpc->findnodes(
 			'pml:children/*[local-name()!=\'node\']',
 			$tree);
-		die ($tree->find('../@id'))." has ".(scalar @phrases)." non-node children for the root."
+		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root."
 			if (scalar @phrases ne 1);
 			
 		# Process rootnode's constituents.
-		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
-		{
-			&_transformSubtree($xpc, $ch);
-		}
+#		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+#		{
+#			&_transformSubtree($xpc, $ch);
+#		}
 		# Process rootnode's dependants.
-		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
-		{
-			&_transformSubtree($xpc, $ch);
-		}
+#		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
+#		{
+#			&_transformSubtree($xpc, $ch);
+#		}
 			
 		# Process PMC (probably) node.
-		#my $roleTag = $phrases[0]->nodeName();
-		#$roleTag =~ s/info$/type/;
-		#my $chRole = ${$xpc->findnodes("pml:$roleTag", $phrases[0])}[0]->textContent;
 		my $chRole = &_getRole($xpc, $phrases[0]);
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
-		
-		# Create or find "children" element.
-		#my $newNodeChWrap = &_getChildrenNode($xpc, $newNode);	
-		# Add children.
-		#foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
-		#{
-		#	$ch->unbindNode();
-		#	$newNodeChWrap->appendChild($ch);
-		#}
-		
 		&_moveAllChildren($xpc, $tree, $newNode);
 		# Add reformed subtree to the main tree.
 		$phrases[0]->replaceNode($newNode);
+
+		# Process children.
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
+		{
+			&_transformSubtree($xpc, $ch);
+		}
+		&_transformSubtree($xpc, $newNode);
+
 	}
 	
 	&_finishRoles($xpc, $tree);
@@ -196,14 +191,13 @@ sub _transformSubtree
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
-	#my $role = ${$xpc->findnodes('pml:role', $node)}[0]->textContent;
 	my $role = &_getRole($xpc, $node);
 
 	# Process dependency children first.
-	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
-	{
-		&_transformSubtree($xpc, $ch);
-	}
+#	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+#	{
+#		&_transformSubtree($xpc, $ch);
+#	}
 	
 	# Find phrase nodes.
 	my @phrases = $xpc->findnodes(
@@ -214,37 +208,39 @@ sub _transformSubtree
 	die (($node->find('@id'))." has ".(scalar @phrases)." non-node children.")
 		if (scalar @phrases gt 1);
 	
-	# If there is no phrase children, finish.
-	return if (scalar @phrases lt 1);
+	# If there is no phrase children, process dependency children and finish.
+	if (scalar @phrases lt 1)
+	{
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+		{
+			&_transformSubtree($xpc, $ch);
+		}
+		return;
+	}
 	
 	# Process phrase constituents.
-	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
-	{
-		&_transformSubtree($xpc, $ch);
-	}
+#	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+#	{
+#		&_transformSubtree($xpc, $ch);
+#	}
 	
 	# A bit structure checking: phrase can't have another phrase as direct child.
 	my @phrasePhrases = $xpc->findnodes('pml:children/*[local-name()!=\'node\']', $phrases[0]);
 	die (($node->find('@id'))." has illegal phrase cascade as child.")
 		if (scalar @phrasePhrases gt 0);
 	
-	# Process phrase root.
-	#my $roleTag = $phrases[0]->nodeName();
-	#$roleTag =~ s/info$/type/;	
-	#my $phRole = ${$xpc->findnodes("pml:$roleTag", $phrases[0])}[0]->textContent;
+	# Process phrase node.
 	my $phRole = &_getRole($xpc, $phrases[0]);
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role);
-
-	# Add dependency children.
-	#my $newNodeChWrap = &_getChildrenNode($xpc, $newNode);	
-	#foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
-	#{
-	#	$ch->unbindNode();
-	#	$newNodeChWrap->appendChild($ch);
-	#}
 	&_moveAllChildren($xpc, $node, $newNode);
-	
 	$node->replaceNode($newNode);
+
+	# Process childen.
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
+	{
+		&_transformSubtree($xpc, $ch);
+	}
+	&_transformSubtree($xpc, $newNode);
 }
 
 
@@ -255,11 +251,12 @@ sub _transformSubtree
 #			   "pmcinfo" node for subtree root)
 ###############################################################################
 
+### X-words ###################################################################
+
 sub xPrep
 {
 	return &_allNodesBelowOne('prep', @_);
 }
-
 sub xSimile
 {
 	return &_allNodesBelowOne('conj', @_);
@@ -268,7 +265,6 @@ sub xParticle
 {
 	return &_allNodesBelowOne('particle', @_);
 }
-
 sub wGrAnal
 {
 	return &defaultPhrase(@_);
@@ -282,7 +278,7 @@ sub namedEnt
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die 'namedEnt below '. $node->find('../@id').' has no children.'
+	die 'namedEnt below '. $node->find('../../@id').' has no children.'
 		if (@ch lt 1);
 
 	if (@ch gt 1)
@@ -291,7 +287,6 @@ sub namedEnt
 	} else
 	{
 		# Change role for the subroot.
-		#my $oldRole = ${$xpc->findnodes('pml:role', $ch[0])}[0]->textContent;
 		my $oldRole = &_getRole($xpc, $ch[0]);
 		&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
 		$ch[0]->unbindNode();
@@ -299,14 +294,96 @@ sub namedEnt
 	}
 }
 
+### PMC #######################################################################
+# TODO: tied
+# TODO: everything with insertions
+
+sub sent
+{
+	return &_defaultPmc(@_);
+}
+sub mainCl
+{
+	return &_defaultPmc(@_);
+}
+sub subrCl
+{
+	return &_defaultPmc(@_);
+}
+sub interj
+{
+	return &_defaultPmc(@_);
+}
+sub spcPmc
+{
+	return &_defaultPmc(@_);
+}
+sub numPmc
+{
+	return &_defaultPmc(@_);
+}
+sub insPmc
+{
+	return &_defaultPmc(@_);
+}
+sub particle
+{
+	return &_defaultPmc(@_);
+}
+sub dirSp
+{
+	return &_defaultPmc(@_);
+}
+sub report
+{
+	return &_defaultPmc(@_);
+}
+sub address
+{
+	return &_defaultPmc(@_);
+}
+sub quot
+{
+	return &_defaultPmc(@_);
+}
+
+sub utter
+{
+
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	
+	# Find the new root ('subroot') for the current subtree.
+	my @res = $xpc->findnodes(
+		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
+		$node);
+	@res = $xpc->findnodes(
+		"pml:children/pml:node[pml:role!=\'punct\']", $node) unless (@res);
+	die "utter below ". $node->find('../../@id').' has no children.'
+		if (not @res);
+	warn "utter below ". $node->find('../../@id').' has '.(scalar @res).' potential rootnodes.'
+		if (scalar @res ne 1);
+		
+	my $newRoot = $res[0];
+	# Change role for node with speciffied rootRole.
+	my $oldRole = &_getRole($xpc, $newRoot);
+	&_setNodeRole($xpc, $newRoot, "$parentRole-utter-$oldRole");
+	
+	# Rebuild subtree.
+	$newRoot->unbindNode();
+	&_moveAllChildren($xpc, $node, $newRoot);
+		
+	return $newRoot;
+}
+
+### What to do when don't know what to do #####################################
+
 sub defaultPhrase
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
-	#my $roleTag = $node->nodeName();
-	#$roleTag =~ s/info$/type/;
-	#my $phraseRole = ${$xpc->findnodes("pml:$roleTag", $node)}[0]->textContent;
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
@@ -334,13 +411,6 @@ sub defaultPhrase
 	
 	# Rebuild subtree.
 	$lastBasElem->unbindNode();
-	#my $lastBasElemChNode = &_getChildrenNode($xpc, $lastBasElem);
-	#foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
-	#{
-		# Change structure.
-	#	$ch->unbindNode();
-	#	$lastBasElemChNode->appendChild($ch);
-	#}
 	&_moveAllChildren($xpc, $node, $lastBasElem);
 	
 	return $lastBasElem;
@@ -360,15 +430,11 @@ sub _allNodesBelowOne
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
-	
-	#my $roleTag = $node->nodeName();
-	#$roleTag =~ s/info$/type/;
-	#my $phraseRole = ${$xpc->findnodes("pml:$roleTag", $node)}[0]->textContent;
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find node with speciffied rootRole.
 	my @res = $xpc->findnodes("pml:children/pml:node[pml:role=\'$rootRole\']", $node);
-	die "$phraseRole below ". $node->find('../@id').' has '.(scalar @res)." \"$rootRole\"."
+	die "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)." \"$rootRole\"."
 		if (scalar @res ne 1);
 	my $newRoot = $res[0];
 
@@ -377,13 +443,6 @@ sub _allNodesBelowOne
 	
 	# Rebuild subtree.
 	$newRoot->unbindNode();
-	#my $basElemChNode = &_getChildrenNode($xpc, $newRoot);
-	#foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
-	#{
-		# Change structure.
-	#	$ch->unbindNode();
-	#	$basElemChNode->appendChild($ch);
-	#}
 	&_moveAllChildren($xpc, $node, $newRoot);
 
 	return $newRoot;
@@ -399,17 +458,17 @@ sub _defaultPmc
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
-	my @res = $xpc->findnodes("pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\']", $node);
-	die "$phraseRole below ". $node->find('../@id').' has no children.'
+	my @res = $xpc->findnodes(
+		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
+		$node);
+	die "$phraseRole below ". $node->find('../../@id').' has no children.'
 		if (not @res);
-	warn "$phraseRole below ". $node->find('../@id').' has '.(scalar @res).' potential rootnodes.'
+	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res).' potential rootnodes.'
 		if (scalar @res ne 1);
 	
 	my $newRoot = $res[0];
-	#my $oldRole = ${$xpc->findnodes('pml:role', $newRoot)}[0]->textContent;
-	my $oldRole = &_getRole($xpc, $newRoot);
-
 	# Change role for node with speciffied rootRole.
+	my $oldRole = &_getRole($xpc, $newRoot);
 	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
 	
 	# Rebuild subtree.
