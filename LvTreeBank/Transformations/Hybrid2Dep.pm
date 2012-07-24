@@ -253,7 +253,6 @@ sub _transformSubtree
 ###############################################################################
 
 ### X-words ###################################################################
-# TODO: xPred, xNum, xApp, phrasElem
 sub xPrep
 {
 	return &_allNodesBelowOne('prep', @_);
@@ -270,6 +269,18 @@ sub wGrAnal
 {
 	return &defaultPhrase(@_);
 }
+sub xNum
+{
+	return &_chainAllNodes(1, @_);
+}
+sub xPred
+{
+	return &_chainAllNodes(0, @_);
+}
+sub xApp
+{
+	return &_chainAllNodes(0, @_);
+}
 
 sub namedEnt
 {
@@ -284,6 +295,32 @@ sub namedEnt
 
 	if (@ch gt 1)
 	{
+		return &defaultPhrase($xpc, $node, $parentRole);
+	} else
+	{
+		# Change role for the subroot.
+		my $oldRole = &_getRole($xpc, $ch[0]);
+		&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
+		$ch[0]->unbindNode();
+		return $ch[0];
+	}
+}
+
+sub phrasElem
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+
+	# Find the new root ('subroot') for the current subtree.
+	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
+	die 'namedEnt below '. $node->find('../../@id').' has no children.'
+		if (@ch lt 1);
+
+	if (@ch gt 1)
+	{
+		warn "phrasElem below ". $node->find('../../@id').' has '.(scalar @ch)
+			.' children.';
 		return &defaultPhrase($xpc, $node, $parentRole);
 	} else
 	{
@@ -311,7 +348,7 @@ sub crdGeneral
 }
 
 ### PMC #######################################################################
-# TODO: tied, abbr
+# TODO: tied
 # TODO: everything with insertions
 
 sub sent
@@ -359,6 +396,10 @@ sub address
 	return &_defaultPmc(@_);
 }
 sub quot
+{
+	return &_defaultPmc(@_);
+}
+sub abbr
 {
 	return &_defaultPmc(@_);
 }
@@ -439,9 +480,8 @@ sub defaultPhrase
 ###############################################################################
 # Finds child element with specified role and makes ir parent of children
 # nodes.
-# _moveAllNodesBelowOne (role determining node to become root, XPath context
-#						 with set namespaces, DOM node, role of the parent
-#						 node)
+# _allNodesBelowOne (role determining node to become root, XPath context with
+#					 set namespaces, DOM node, role of the parent node)
 sub _allNodesBelowOne
 {
 	my $rootRole = shift @_;
@@ -463,6 +503,41 @@ sub _allNodesBelowOne
 	$newRoot->unbindNode();
 	&_moveAllChildren($xpc, $node, $newRoot);
 
+	return $newRoot;
+}
+# Makes parent-child chain of all node's children.
+# _chainAllNodes (should start with last node, XPath context with set
+#				  namespaces, DOM node, role of the parent node)
+sub _chainAllNodes
+{
+	my $invert = shift @_;
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $phraseRole = &_getRole($xpc, $node);
+
+	# Find the children.
+	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
+	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+		if (@ch lt 1);
+	my @sorted = @{&_sortNodesByOrd($xpc, $invert, @ch)};
+	my $newRoot = $sorted[0];
+	my $tmpRoot = $sorted[0];
+	
+	# Process new root.
+	$newRoot->unbindNode();
+	my $rootRole = &_getRole($xpc, $newRoot);
+	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+	
+	# Process other nodes.
+	for (my $ind = 1; $ind lt @sorted; $ind++)
+	{
+		# Move to new parent.
+		$sorted[$ind]->unbindNode();
+		my $chNode = &_getChildrenNode($xpc, $tmpRoot);
+		$chNode->appendChild($sorted[$ind]);
+		$tmpRoot = $sorted[$ind];
+	}
 	return $newRoot;
 }
 
@@ -491,11 +566,7 @@ sub _defaultPmc
 	}
 	die "$phraseRole below ". $node->find('../../@id').' has no children.'
 		if (not @ch);
-	my @res = sort {
-			${$xpc->findnodes('pml:ord', $a)}[0]->textContent
-			<=>
-			${$xpc->findnodes('pml:ord', $b)}[0]->textContent
-		} @ch;
+	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};
 	#die "$phraseRole below ". $node->find('../../@id').' has no children.'
 	#	if (not @res);
 	#warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
@@ -524,11 +595,7 @@ sub _defaultCoord
 	my $phraseRole = &_getRole($xpc, $node);
 
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	my @sorted = sort {
-			${$xpc->findnodes('pml:ord', $a)}[0]->textContent
-			<=>
-			${$xpc->findnodes('pml:ord', $b)}[0]->textContent
-		} @ch;
+	my @sorted = @{&_sortNodesByOrd($xpc, 0, @ch)};
 	
 	die "$phraseRole below ". $node->find('../../@id').' has no children.'
 		if (not @sorted);
@@ -682,6 +749,23 @@ sub _getRole
 	$tag =~ s/info$/type/;
 	my $role = ${$xpc->findnodes("pml:$tag", $node)}[0]->textContent;
 	return $role;
+}
+
+# _sortNodesByOrd (XPath context with set namespaces, should array be sorted in
+#				   descending order?, [array with] DOM "node" nodes)
+# returns reference to sorted array (original array is not mutated)
+sub _sortNodesByOrd
+{
+	my $xpc = shift @_; # XPath context
+	my $desc = shift @_;
+	my @nodes = @_;
+	
+	my @res = sort {
+			${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc)
+			<=>
+			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
+		} @nodes;
+	return \@res;
 }
 
 # AUTOLOAD is called when someone tries to access nonexixting method through
