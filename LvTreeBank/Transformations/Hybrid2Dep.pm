@@ -253,7 +253,7 @@ sub _transformSubtree
 ###############################################################################
 
 ### X-words ###################################################################
-
+# TODO: xPred, xNum, xApp, phrasElem
 sub xPrep
 {
 	return &_allNodesBelowOne('prep', @_);
@@ -311,7 +311,7 @@ sub crdGeneral
 }
 
 ### PMC #######################################################################
-# TODO: tied
+# TODO: tied, abbr
 # TODO: everything with insertions
 
 sub sent
@@ -476,14 +476,31 @@ sub _defaultPmc
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
-	my @res = $xpc->findnodes(
-		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
-		$node);
+	#my @res = $xpc->findnodes(
+	#	"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
+	#	$node);
+	my @ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'conj\']", $node);
+	@ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'punct\']", $node)
+		if (not @ch);
+	if (not @ch)
+	{
+		@ch = $xpc->findnodes("pml:children/pml:node[pml:role!=\'no\']", $node);
+		warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @ch)
+			.' potential non-punct/conj/no rootnodes.'
+			if (scalar @ch ne 1);
+	}
 	die "$phraseRole below ". $node->find('../../@id').' has no children.'
-		if (not @res);
-	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
-		.' potential rootnodes.'
-		if (scalar @res ne 1);
+		if (not @ch);
+	my @res = sort {
+			${$xpc->findnodes('pml:ord', $a)}[0]->textContent
+			<=>
+			${$xpc->findnodes('pml:ord', $b)}[0]->textContent
+		} @ch;
+	#die "$phraseRole below ". $node->find('../../@id').' has no children.'
+	#	if (not @res);
+	#warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
+	#	.' potential rootnodes.'
+	#	if (scalar @res ne 1);
 	
 	my $newRoot = $res[0];
 	# Change role for node with speciffied rootRole.
@@ -495,7 +512,6 @@ sub _defaultPmc
 	&_moveAllChildren($xpc, $node, $newRoot);
 		
 	return $newRoot;
-
 }
 
 # _defaultCoord (XPath context with set namespaces, DOM node, role of the parent
