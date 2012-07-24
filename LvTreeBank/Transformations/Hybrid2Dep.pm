@@ -13,7 +13,8 @@ use XML::LibXML;  # XML handling library
 # This program transforms Latvian Treebank analytical layer files from native
 # hybrid format to dependency-only simplification. Input files are supposed to
 # be valid against coresponding PML schemas. Invalid features like multiple
-# roles, ords per single node are not checked.
+# roles, ords per single node are not checked. To obtain best results, input
+# files should have all nodes numbered (TODO: fix this).
 #
 # Input files - utf8.
 # Output file can have diferent XML element order. To obtain standard order
@@ -103,8 +104,7 @@ sub recalculateOrds
 		if ($parName ne 'node')
 		{
 			$parent->removeChild($o);
-		}
-		else
+		} else
 		{
 			warn "recalculateOrds warns: Multiple textnodes below ord node.\n"
 				if (@{$o->childNodes()} gt 1); # This should not happen.
@@ -225,7 +225,8 @@ sub _transformSubtree
 #	}
 	
 	# A bit structure checking: phrase can't have another phrase as direct child.
-	my @phrasePhrases = $xpc->findnodes('pml:children/*[local-name()!=\'node\']', $phrases[0]);
+	my @phrasePhrases = $xpc->findnodes(
+		'pml:children/*[local-name()!=\'node\']', $phrases[0]);
 	die (($node->find('@id'))." has illegal phrase cascade as child.")
 		if (scalar @phrasePhrases gt 0);
 	
@@ -248,7 +249,7 @@ sub _transformSubtree
 # Phrase specific functions (does not process phrase constituent children, this
 # is responsibility of &_transformSubtree.
 # phrase_name (XPath context with set namespaces, DOM "xinfo", "coordinfo" or
-#			   "pmcinfo" node for subtree root)
+#			   "pmcinfo" node for subtree root, parent role)
 ###############################################################################
 
 ### X-words ###################################################################
@@ -292,6 +293,21 @@ sub namedEnt
 		$ch[0]->unbindNode();
 		return $ch[0];
 	}
+}
+
+### Coordination ##############################################################
+
+sub crdParts
+{
+	return &_defaultCoord(@_);
+}
+sub crdClauses
+{
+	return &_defaultCoord(@_);
+}
+sub crdGeneral
+{
+	return &_defaultCoord(@_);
 }
 
 ### PMC #######################################################################
@@ -362,7 +378,8 @@ sub utter
 		"pml:children/pml:node[pml:role!=\'punct\']", $node) unless (@res);
 	die "utter below ". $node->find('../../@id').' has no children.'
 		if (not @res);
-	warn "utter below ". $node->find('../../@id').' has '.(scalar @res).' potential rootnodes.'
+	warn "utter below ". $node->find('../../@id').' has '.(scalar @res)
+		.' potential rootnodes.'
 		if (scalar @res ne 1);
 		
 	my $newRoot = $res[0];
@@ -387,7 +404,8 @@ sub defaultPhrase
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
-	my @basElems = $xpc->findnodes('pml:children/pml:node[pml:role=\'basElem\']', $node);
+	my @basElems = $xpc->findnodes(
+		'pml:children/pml:node[pml:role=\'basElem\']', $node);
 	my $lastBasElem = undef;
 	my $curentPosition = -1;
 	foreach my $ch (@basElems)	# Find a basElem with the greatest 'ord'.
@@ -463,7 +481,8 @@ sub _defaultPmc
 		$node);
 	die "$phraseRole below ". $node->find('../../@id').' has no children.'
 		if (not @res);
-	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res).' potential rootnodes.'
+	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
+		.' potential rootnodes.'
 		if (scalar @res ne 1);
 	
 	my $newRoot = $res[0];
@@ -477,6 +496,103 @@ sub _defaultPmc
 		
 	return $newRoot;
 
+}
+
+# _defaultCoord (XPath context with set namespaces, DOM node, role of the parent
+#				 node)
+sub _defaultCoord
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $phraseRole = &_getRole($xpc, $node);
+
+	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
+	my @sorted = sort {
+			${$xpc->findnodes('pml:ord', $a)}[0]->textContent
+			<=>
+			${$xpc->findnodes('pml:ord', $b)}[0]->textContent
+		} @ch;
+	
+	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+		if (not @sorted);
+	warn "$phraseRole below ". $node->find('../../@id').' has only '
+		.(scalar @sorted).' children'
+		if (scalar @sorted lt 3);
+	
+	my ($newRoot, $prevRoot, $tmpRoot);
+	my @postponed = ();
+	while (@sorted) # Loop through all potential 'subroots'.
+	{
+		# Find next subroot.
+		while (not defined $tmpRoot)
+		{
+			my $tmp = shift @sorted;
+			# All coordination constituents have been traverset, no new
+			# subroots can be found: process last postponed nodes and exit.
+			if (not defined $tmp)
+			{
+				# Move last nodes.
+				my $chNode = &_getChildrenNode($xpc, $prevRoot);
+				foreach my $ch (@postponed)
+				{
+					$ch->unbindNode();
+					$chNode->appendChild($ch);
+				}
+				return $newRoot;
+			}
+			
+			my $role = &_getRole($xpc, $tmp);
+			if ($role eq 'punct' or $role eq 'conj')
+			{
+				$tmpRoot = $tmp;
+				last;
+			} else
+			{
+				push @postponed, $tmp;
+			}
+		}
+		my $rootRole = &_getRole($xpc, $tmpRoot);
+		die "$phraseRole below ". $node->find('../../@id')." ends with $rootRole."
+			if (not @sorted);
+		my $nextRole = &_getRole($xpc, $sorted[0]);
+		
+		# Deal with comma near  conjuction.
+		if ($rootRole eq 'punct' and $nextRole eq 'conj')
+		{
+			push @postponed, $tmpRoot;
+			$tmpRoot = shift @sorted;
+		}
+		if ($rootRole eq 'conj' and $nextRole eq 'punct')
+		{
+			push @postponed, shift @ch;
+		}
+		
+		# Rebuild tree fragment.
+		$tmpRoot->unbindNode();
+		my $chNode = &_getChildrenNode($xpc, $tmpRoot);
+		foreach my $ch (@postponed)
+		{
+			$ch->unbindNode();
+			$chNode->appendChild($ch);
+		}
+
+		 # Set the pointer to the prhrase root, if this was first conj/punct.
+		if (not defined $prevRoot)
+		{
+			$newRoot = $tmpRoot;
+			$rootRole = &_getRole($xpc, $tmpRoot);
+			&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+		}
+	} continue
+	{
+		$prevRoot = $tmpRoot;
+		$tmpRoot = undef;
+		@postponed = ();
+	}
+	
+	# This is imposible exit.
+	return $newRoot;
 }
 
 ###############################################################################
