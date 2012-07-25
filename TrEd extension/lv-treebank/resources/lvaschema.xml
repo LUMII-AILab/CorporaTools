@@ -2,7 +2,7 @@
 <pml_schema
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
-  <revision>2.9</revision>
+  <revision>2.10</revision>
   <description>Schema for Latvian Treebank syntax layer: dependency based
 	hybrid annotation style (default).</description>
   <reference name="mdata" readas="pml"/>
@@ -115,35 +115,36 @@
   
   <type name="a-pmctype.type">
     <choice>
-      <value>sent</value>		<!-- sentence,		teik -->
-	  <value>utter</value>		<!-- utterance,		izteikums (bez verba) -->
-	  <value>mainCl</value>		<!-- main clause,		patstTeik -->
-      <value>subrCl</value>		<!-- subordinate clause,	palīgTeik -->
-	  <value>interj</value>		<!-- punctuation mark construct for interjections**,	izsauksm -->
-	  <value>spcPmc</value>		<!-- punctuation mark construct for pmc**,		savrup-->
+      <value>sent</value>		<!-- sentence -->
+	  <value>utter</value>		<!-- utterance -->
+	  <value>mainCl</value>		<!-- main clause -->
+      <value>subrCl</value>		<!-- subordinate clause -->
+	  <value>interj</value>		<!-- punctuation mark construct for interjections** -->
+	  <value>spcPmc</value>		<!-- punctuation mark construct for pmc** -->
 	  <value>numPmc</value>		<!-- punctuation mark construct for numbers** -->
-	  <value>insPmc</value>		<!-- punctuation mark construct for insertion** ,	iespraudums--> 
-	  <value>particle</value>	<!-- punctuation mark construct for particle**-->
-	  <value>tied</value>		<!-- tied parenthesis and tied insertion**-->
-	  <value>dirSp</value>		<!-- direct speech,	tiešāRuna-->
-	  <value>report</value>		<!-- reporting verb,	piebilde -->
-	  <value>address</value>	<!-- address,		uzruna -->
-	  <value>quot</value>	<!-- quotation marks,	pēdiņas -->
-	  <value>abbr</value>	<!-- abbreviation -->
+	  <value>insPmc</value>		<!-- punctuation mark construct for insertion** --> 
+	  <value>particle</value>	<!-- punctuation mark construct for particle** -->
+	  <!--<value>tied</value>-->		<!-- tied parenthesis and tied insertion** -->
+	  <value>dirSp</value>		<!-- direct speech -->
+	  <value>report</value>		<!-- reporting verb -->
+	  <value>address</value>	<!-- address -->
+	  <value>quot</value>		<!-- quotation marks -->
+	  <value>abbr</value>		<!-- abbreviation -->
 	  <value>N/A</value>	<!-- not available -->
     </choice>
   </type>
   
   <type name="a-xtype.type">
     <choice>
-      <value>xPrep</value>		<!-- xPriev -->
-      <value>xSimile</value>	<!-- simile, salīdzinājums -->
+      <value>xPrep</value>
+      <value>xSimile</value>
 	  <value>xParticle</value>
-      <value>xPred</value>		<!-- xIzt -->
-      <value>xNum</value>		<!-- xSk -->
-      <value>xApp</value>		<!-- apposition,		pielik -->
-      <value>namedEnt</value>	<!-- xNoun -->
-	  <value>wGrAnal</value>	<!-- analogue of subordinate word-group* -->
+      <value>xPred</value>
+      <value>xNum</value>
+      <value>xApp</value>
+      <value>namedEnt</value>	<!-- named entity -->
+	  <value>subrAnal</value>	<!-- analogue of subordinate word-group* -->
+	  <value>coordAnal</value>	<!-- analogue of coordinative word-group* -->
 	  <value>phrasElem</value>	<!-- phraseological elements** -->
 	  <value>N/A</value>
     </choice>
@@ -151,7 +152,7 @@
   
   <type name="a-coordtype.type">
     <choice>
-	  <value>crdParts</value>	<!-- coordinated parts of senence -->	
+	  <value>crdParts</value>		<!-- coordinated parts of senence -->	
 	  <value>crdClauses</value>		<!-- coordinated clauses -->  
 	  <value>crdGeneral</value>		<!-- coordination with generalizing word -->
 	  <value>N/A</value>		
@@ -160,55 +161,43 @@
 
   <type name="a-role.type">
     <choice>
-      <value>subj</value>	<!-- subject,		teikPr -->
-      <value>attr</value>	<!-- attribute,		apz -->
-      <value>obj</value>	<!-- object,			papild -->
-      <value>adv</value>	<!-- adverbial modifier,	apst -->
-      <value>spc</value>	<!-- semi-predicative component,	spk -->
-      <value>sit</value>	<!-- situant*,		situants -->
-	  <value>det</value>	<!-- determinant,	determinants -->
-	  <value>no</value>		<!-- auxiliary words, addresses, etc**,	navLoc -->
+      <value>subj</value>	<!-- subject -->
+      <value>attr</value>	<!-- attribute -->
+      <value>obj</value>	<!-- object -->
+      <value>adv</value>	<!-- adverbial modifier -->
+      <value>spc</value>	<!-- semi-predicative component -->
+      <value>sit</value>	<!-- situant* -->
+	  <value>det</value>	<!-- determinant -->
+	  <value>no</value>		<!-- particles, addresses, etc** -->
+	  <value>ins</value>	<!-- insertion, parenthesis -->
 	  
-<!--      <value>redPred</value>	 reduced predicate -->
-<!--      <value>redSubj</value>	 reduced subject -->
-<!--      <value>redAttr</value>	 reduced attribute -->
-<!--      <value>redObj</value>		 reduced object -->
-<!--      <value>redAdv</value>		 reduced adverbial modifier -->
-<!--      <value>redApp</value>		 reduced apposition -->
-<!--      <value>redSpc</value>		 reduced semi-predicative component -->
-<!--      <value>redSit</value>		 reduced situant* -->
-
-      <value>subjCl</value>		<!-- subject clause,	teikPrPt -->
-      <value>predCl</value>		<!-- predicative clause,	iztPt-->
-      <value>attrCl</value>		<!-- attribute clause,	apzPt -->
-      <value>objCl</value>		<!-- object clause,		papildPt -->
-      <value>appCl</value>		<!-- apposition clause*,	pielikPt -->
-      <value>placeCl</value>	<!-- subordinate clause of place,	vtApstPt -->
-      <value>timeCl</value>		<!-- subordinate clause of time,	lApstPt -->
-      <value>manCl</value>		<!-- subordinate clause of manner,	vdApstPt -->
-      <value>degCl</value>		<!-- subordinate clause of degree,	mApstPt -->
-      <value>causCl</value>		<!-- causal clause,				cApstPt-->
-      <value>purpCl</value>		<!-- subordinate clause of purpose,	nlApstPt -->
-      <value>condCl</value>		<!-- conditional clause,	nsApstPt-->
-      <value>cnsecCl</value>	<!-- consecutive clause,	sekuPt-->
-      <value>compCl</value>		<!-- comparative clause,	salPt -->
-      <value>cncesCl</value>	<!-- concessive clause,	 pieļāvPt-->
-      <value>motivCl</value>	<!-- causal clause,	subordinate clause of motivation**,	pamatPt -->
-      <value>quasiCl</value>	<!-- quasi-clause,	relPt -->
+      <value>subjCl</value>		<!-- subject clause -->
+      <value>predCl</value>		<!-- predicative clause -->
+      <value>attrCl</value>		<!-- attribute clause -->
+      <value>objCl</value>		<!-- object clause -->
+      <value>appCl</value>		<!-- apposition clause* -->
+      <value>placeCl</value>	<!-- subordinate clause of place -->
+      <value>timeCl</value>		<!-- subordinate clause of time -->
+      <value>manCl</value>		<!-- subordinate clause of manner -->
+      <value>degCl</value>		<!-- subordinate clause of degree -->
+      <value>causCl</value>		<!-- causal clause -->
+      <value>purpCl</value>		<!-- subordinate clause of purpose -->
+      <value>condCl</value>		<!-- conditional clause -->
+      <value>cnsecCl</value>	<!-- consecutive clause -->
+      <value>compCl</value>		<!-- comparative clause -->
+      <value>cncesCl</value>	<!-- concessive clause -->
+      <value>motivCl</value>	<!-- causal clause,	subordinate clause of motivation** -->
+      <value>quasiCl</value>	<!-- quasi-clause -->
 	  
-      <value>pred</value>	<!-- predicate,	izt -->
-	  <value>prep</value>	<!-- preposition,	priev -->
-	  <value>conj</value>	<!-- conjunction,	saiklis	(subordinating, coordinating) -->
-	  <value>crdPart</value>	<!-- coordinated part (one of)**, vienlLoc -->
+      <value>pred</value>		<!-- predicate -->
+	  <value>prep</value>		<!-- preposition -->
+	  <value>conj</value>		<!-- conjunction (subordinating, coordinating) -->
+	  <value>crdPart</value>	<!-- coordinated part (one of)** -->
 	  <value>mod</value>		<!-- modal word -->
-<!--	  <value>redMod</value>		 reduced modal word** -->
 	  <value>auxVerb</value>	<!-- auxiliary verb -->
-<!--	  <value>redAuxVerb</value>	 reduced auxiliary verb** -->
-	  <value>basElem</value>	<!-- basic element**,	pamatelem -->
-<!--	  <value>parenth</value>	 parenthesis -->
-	  <value>ins</value>		<!-- insertion -->
-	  <value>punct</value>		<!-- punctuation mark,	pieturz -->
-	  <value>gen</value>	<!-- generalizing word* -->
+	  <value>basElem</value>	<!-- basic element** -->
+	  <value>punct</value>		<!-- punctuation mark -->
+	  <value>gen</value>		<!-- generalizing word* -->
 	  <value>genList</value>	<!-- list of specific items, used together with generalizing word** -->
 	  
 	  <value>N/A</value>

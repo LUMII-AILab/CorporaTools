@@ -265,7 +265,7 @@ sub xParticle
 {
 	return &_allNodesBelowOne('no', @_);
 }
-sub wGrAnal
+sub subrAnal
 {
 	return &defaultPhrase(@_);
 }

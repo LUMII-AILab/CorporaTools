@@ -127,6 +127,7 @@ sub is_allowed_for_parent
   }
 
   my @normalRoles = qw(subj attr obj adv app spc sit det);
+  my @detRoles = qw(ins sit det);
   #my @redRoles = qw(redSubj redAttr redObj redAdv redApp redSpc redSit);
   my @clRoles = qw(subjCl predCl attrCl objCl appCl placeCl timeCl manCl degCl causCl purpCl condCl cnsecCl compCl cncesCl motivCl quasiCl);
   my @clauses = qw(sent mainCl subrCl insPmc report dirSp utter);
@@ -203,9 +204,19 @@ sub is_allowed_for_parent
 	{
 	  return 1 if ($p->{'#name'} eq 'node' or
 				   $p->{'s.rf'} or
-				   $p->{'pmctype'} eq 'sent' or		# Parcelaati.
-				   $p->{'pmctype'} eq 'utter' or
+				   #$p->{'pmctype'} eq 'sent' or
+				   $p->{'pmctype'} eq 'utter' or # Parcelaati.
 				   $p->{'pmctype'} eq 'ins');
+	  return 0;
+	}
+  }
+  # insertions, determinants and situants must be in dependency
+  foreach (@detRoles) 
+  {
+	if ($node->{'role'} eq $_)
+	{
+	  return 1 if ($p->{'#name'} eq 'node' or
+				   $p->{'s.rf'});
 	  return 0;
 	}
   }
@@ -219,15 +230,15 @@ sub is_allowed_for_parent
 	return 0;
   }
   # insertions goes below sentence or below tied.
-  if ($node->{'role'} eq 'ins')
-  {
-    foreach (@clauses)
-	{
-	  return 1 if ($p->{'pmctype'} eq $_);
-	}
-    return 1 if ($p->{'pmctype'} eq 'tied');
-	return 0;
-  }
+  #if ($node->{'role'} eq 'ins')
+  #{
+  #  foreach (@clauses)
+	#{
+	#  return 1 if ($p->{'pmctype'} eq $_);
+	#}
+    #return 1 if ($p->{'pmctype'} eq 'tied');
+	#return 0;
+  #}
   return 1;
 }
 
@@ -344,7 +355,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   }
   if (&is_lvadep_file())
   {
-    SetCurrentStylesheet('lv-a') if $resuming;
+    SetCurrentStylesheet('lv-a-dep-ord') if $resuming;
     return 'LV_A_PureDependency';
   }
   return;
