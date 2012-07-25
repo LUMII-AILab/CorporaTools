@@ -253,6 +253,7 @@ sub _transformSubtree
 ###############################################################################
 
 ### X-words ###################################################################
+# TODO: coordAnal
 sub xPrep
 {
 	return &_allNodesBelowOne('prep', @_);
@@ -326,7 +327,7 @@ sub phrasElem
 	{
 		# Change role for the subroot.
 		my $oldRole = &_getRole($xpc, $ch[0]);
-		&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
+		&_setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
 		$ch[0]->unbindNode();
 		return $ch[0];
 	}
