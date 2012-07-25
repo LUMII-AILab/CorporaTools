@@ -263,7 +263,7 @@ sub xSimile
 }
 sub xParticle
 {
-	return &_allNodesBelowOne('particle', @_);
+	return &_allNodesBelowOne('no', @_);
 }
 sub wGrAnal
 {
