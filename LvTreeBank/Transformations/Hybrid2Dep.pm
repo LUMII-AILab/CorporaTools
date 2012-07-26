@@ -354,60 +354,59 @@ sub crdGeneral
 
 sub sent
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub mainCl
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub subrCl
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub interj
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub spcPmc
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub numPmc
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub insPmc
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub particle
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub dirSp
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub report
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub address
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub quot
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 sub abbr
 {
-	return &_defaultPmc(@_);
+	return &_allBelowBasElem(@_);
 }
 
 sub utter
 {
-
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
@@ -542,9 +541,9 @@ sub _chainAllNodes
 	return $newRoot;
 }
 
-# _defaultPmc (XPath context with set namespaces, DOM node, role of the parent
-#			   node)
-sub _defaultPmc
+# _allBelowPunct (XPath context with set namespaces, DOM node, role of the
+#				  parent node)
+sub _allBelowPunct
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -552,9 +551,6 @@ sub _defaultPmc
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
-	#my @res = $xpc->findnodes(
-	#	"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
-	#	$node);
 	my @ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'conj\']", $node);
 	@ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'punct\']", $node)
 		if (not @ch);
@@ -567,12 +563,38 @@ sub _defaultPmc
 	}
 	die "$phraseRole below ". $node->find('../../@id').' has no children.'
 		if (not @ch);
+	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};	
+	my $newRoot = $res[0];
+	
+	# Change role for node with speciffied rootRole.
+	my $oldRole = &_getRole($xpc, $newRoot);
+	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
+	
+	# Rebuild subtree.
+	$newRoot->unbindNode();
+	&_moveAllChildren($xpc, $node, $newRoot);
+		
+	return $newRoot;
+}
+# _allBelowBasElem (XPath context with set namespaces, DOM node, role of the
+#					parent node)
+sub _allBelowBasElem
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $phraseRole = &_getRole($xpc, $node);
+	
+	# Find the new root ('subroot') for the current subtree.
+	my @ch = $xpc->findnodes(
+		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
+		$node);
 	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};
-	#die "$phraseRole below ". $node->find('../../@id').' has no children.'
-	#	if (not @res);
-	#warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
-	#	.' potential rootnodes.'
-	#	if (scalar @res ne 1);
+	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+		if (not @res);
+	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
+		.' potential rootnodes.'
+		if (scalar @res ne 1);
 	
 	my $newRoot = $res[0];
 	# Change role for node with speciffied rootRole.
