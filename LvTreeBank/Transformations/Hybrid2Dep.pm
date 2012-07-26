@@ -16,6 +16,8 @@ use XML::LibXML;  # XML handling library
 # roles, ords per single node are not checked. To obtain best results, input
 # files should have all nodes numbered (TODO: fix this).
 #
+# Works with A level schema v.2.12.
+#
 # Input files - utf8.
 # Output file can have diferent XML element order. To obtain standard order
 # resave file with TrEd.
@@ -133,17 +135,6 @@ sub transformTree
 		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root."
 			if (scalar @phrases ne 1);
 			
-		# Process rootnode's constituents.
-#		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
-#		{
-#			&_transformSubtree($xpc, $ch);
-#		}
-		# Process rootnode's dependants.
-#		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
-#		{
-#			&_transformSubtree($xpc, $ch);
-#		}
-			
 		# Process PMC (probably) node.
 		my $chRole = &_getRole($xpc, $phrases[0]);
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
@@ -193,12 +184,6 @@ sub _transformSubtree
 	my $node = shift @_;
 	my $role = &_getRole($xpc, $node);
 
-	# Process dependency children first.
-#	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
-#	{
-#		&_transformSubtree($xpc, $ch);
-#	}
-	
 	# Find phrase nodes.
 	my @phrases = $xpc->findnodes(
 		#'pml:children/pml:xinfo|pml:children/pml:coordinfo|pml:children/pml:pmcinfo',
@@ -211,18 +196,13 @@ sub _transformSubtree
 	# If there is no phrase children, process dependency children and finish.
 	if (scalar @phrases lt 1)
 	{
+		# Process dependency children.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 		{
 			&_transformSubtree($xpc, $ch);
 		}
 		return;
 	}
-	
-	# Process phrase constituents.
-#	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
-#	{
-#		&_transformSubtree($xpc, $ch);
-#	}
 	
 	# A bit structure checking: phrase can't have another phrase as direct child.
 	my @phrasePhrases = $xpc->findnodes(
@@ -349,8 +329,6 @@ sub crdGeneral
 }
 
 ### PMC #######################################################################
-# TODO: tied
-# TODO: everything with insertions
 
 sub sent
 {
@@ -478,6 +456,9 @@ sub defaultPhrase
 ###############################################################################
 # Aditional functions for phrase handling
 ###############################################################################
+
+### ...for X-words ############################################################
+
 # Finds child element with specified role and makes ir parent of children
 # nodes.
 # _allNodesBelowOne (role determining node to become root, XPath context with
@@ -540,6 +521,8 @@ sub _chainAllNodes
 	}
 	return $newRoot;
 }
+
+### ...for PMC ################################################################
 
 # _allBelowPunct (XPath context with set namespaces, DOM node, role of the
 #				  parent node)
@@ -608,8 +591,10 @@ sub _allBelowBasElem
 	return $newRoot;
 }
 
-# _defaultCoord (XPath context with set namespaces, DOM node, role of the parent
-#				 node)
+### ...for coordination #######################################################
+
+# _defaultCoord (XPath context with set namespaces, DOM node, role of the
+#				 parent node)
 sub _defaultCoord
 {
 	my $xpc = shift @_; # XPath context
