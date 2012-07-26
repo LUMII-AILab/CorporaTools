@@ -134,10 +134,16 @@ sub transformTree
 			$tree);
 		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root."
 			if (scalar @phrases ne 1);
-			
+		
+
 		# Process PMC (probably) node.
 		my $chRole = &_getRole($xpc, $phrases[0]);
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
+		# Reset dependents' roles.
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
+		{
+			&_renameDependent($xpc, $ch);
+		}
 		&_moveAllChildren($xpc, $tree, $newNode);
 		# Add reformed subtree to the main tree.
 		$phrases[0]->replaceNode($newNode);
@@ -151,7 +157,7 @@ sub transformTree
 
 	}
 	
-	&_finishRoles($xpc, $tree);
+	# &_finishRoles($xpc, $tree);
 }
 
 # Transform roles in form "someRole" to "someRole-0-0". Leave roles in form
@@ -183,6 +189,12 @@ sub _transformSubtree
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $role = &_getRole($xpc, $node);
+
+	# Reset dependents' roles.
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renameDependent($xpc, $ch);
+	}
 
 	# Find phrase nodes.
 	my @phrases = $xpc->findnodes(
@@ -224,6 +236,33 @@ sub _transformSubtree
 	&_transformSubtree($xpc, $newNode);
 }
 
+# Role transformations
+
+sub _renamePhraseChild
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $phraseRole = shift @_;
+	my $nodeRole = &_getRole($xpc, $node);
+	&_setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
+}
+sub _renamePhraseSubroot
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $phraseRole = shift @_;
+	my $nodeRole = &_getRole($xpc, $node);
+	&_setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
+}
+
+sub _renameDependent
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $nodeRole = &_getRole($xpc, $node);
+	&_setNodeRole($xpc, $node, "dep:$nodeRole") if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+}
 
 ###############################################################################
 # Phrase specific functions (does not process phrase constituent children, this
@@ -280,8 +319,9 @@ sub namedEnt
 	} else
 	{
 		# Change role for the subroot.
-		my $oldRole = &_getRole($xpc, $ch[0]);
-		&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
+		#my $oldRole = &_getRole($xpc, $ch[0]);
+		#&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
+		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt');
 		$ch[0]->unbindNode();
 		return $ch[0];
 	}
@@ -295,7 +335,7 @@ sub phrasElem
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die 'namedEnt below '. $node->find('../../@id').' has no children.'
+	die 'phrasElem below '. $node->find('../../@id').' has no children.'
 		if (@ch lt 1);
 
 	if (@ch gt 1)
@@ -306,8 +346,9 @@ sub phrasElem
 	} else
 	{
 		# Change role for the subroot.
-		my $oldRole = &_getRole($xpc, $ch[0]);
-		&_setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
+		#my $oldRole = &_getRole($xpc, $ch[0]);
+		#&_setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
+		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'phrasElem');
 		$ch[0]->unbindNode();
 		return $ch[0];
 	}
@@ -403,11 +444,16 @@ sub utter
 		
 	my $newRoot = $res[0];
 	# Change role for node with speciffied rootRole.
-	my $oldRole = &_getRole($xpc, $newRoot);
-	&_setNodeRole($xpc, $newRoot, "$parentRole-utter-$oldRole");
-	
+	#my $oldRole = &_getRole($xpc, $newRoot);
+	#&_setNodeRole($xpc, $newRoot, "$parentRole-utter-$oldRole");
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, 'utter');
+
 	# Rebuild subtree.
 	$newRoot->unbindNode();
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renamePhraseChild($xpc, $ch, 'utter');
+	}
 	&_moveAllChildren($xpc, $node, $newRoot);
 		
 	return $newRoot;
@@ -443,11 +489,16 @@ sub defaultPhrase
 	}
 
 	# Change role for the subroot.
-	my $oldRole = ${$xpc->findnodes('pml:role', $lastBasElem)}[0]->textContent;
-	&_setNodeRole($xpc, $lastBasElem, "$parentRole-$phraseRole-$oldRole");
+	#my $oldRole = ${$xpc->findnodes('pml:role', $lastBasElem)}[0]->textContent;
+	#&_setNodeRole($xpc, $lastBasElem, "$parentRole-$phraseRole-$oldRole");
+	&_renamePhraseSubroot($xpc, $lastBasElem, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
 	$lastBasElem->unbindNode();
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renamePhraseChild($xpc, $ch, $phraseRole);
+	}
 	&_moveAllChildren($xpc, $node, $lastBasElem);
 	
 	return $lastBasElem;
@@ -478,10 +529,15 @@ sub _allNodesBelowOne
 	my $newRoot = $res[0];
 
 	# Change role for node with speciffied rootRole.
-	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
-	
+	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
+
 	# Rebuild subtree.
 	$newRoot->unbindNode();
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renamePhraseChild($xpc, $ch, $phraseRole);
+	}
 	&_moveAllChildren($xpc, $node, $newRoot);
 
 	return $newRoot;
@@ -507,14 +563,16 @@ sub _chainAllNodes
 	
 	# Process new root.
 	$newRoot->unbindNode();
-	my $rootRole = &_getRole($xpc, $newRoot);
-	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+	#my $rootRole = &_getRole($xpc, $newRoot);
+	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Process other nodes.
 	for (my $ind = 1; $ind lt @sorted; $ind++)
 	{
 		# Move to new parent.
 		$sorted[$ind]->unbindNode();
+		&_renamePhraseChild($xpc, $sorted[$ind], $phraseRole);
 		my $chNode = &_getChildrenNode($xpc, $tmpRoot);
 		$chNode->appendChild($sorted[$ind]);
 		$tmpRoot = $sorted[$ind];
@@ -550,11 +608,16 @@ sub _allBelowPunct
 	my $newRoot = $res[0];
 	
 	# Change role for node with speciffied rootRole.
-	my $oldRole = &_getRole($xpc, $newRoot);
-	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
+	#my $oldRole = &_getRole($xpc, $newRoot);
+	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
 	$newRoot->unbindNode();
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renamePhraseChild($xpc, $ch, $phraseRole);
+	}
 	&_moveAllChildren($xpc, $node, $newRoot);
 		
 	return $newRoot;
@@ -581,11 +644,16 @@ sub _allBelowBasElem
 	
 	my $newRoot = $res[0];
 	# Change role for node with speciffied rootRole.
-	my $oldRole = &_getRole($xpc, $newRoot);
-	&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
+	#my $oldRole = &_getRole($xpc, $newRoot);
+	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
 	$newRoot->unbindNode();
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
+	{
+		&_renamePhraseChild($xpc, $ch, $phraseRole);
+	}
 	&_moveAllChildren($xpc, $node, $newRoot);
 		
 	return $newRoot;
@@ -628,6 +696,7 @@ sub _defaultCoord
 				foreach my $ch (@postponed)
 				{
 					$ch->unbindNode();
+					&_renamePhraseChild($xpc, $ch, $phraseRole);
 					$chNode->appendChild($ch);
 				}
 				return $newRoot;
@@ -665,6 +734,7 @@ sub _defaultCoord
 		foreach my $ch (@postponed)
 		{
 			$ch->unbindNode();
+			&_renamePhraseChild($xpc, $ch, $phraseRole);
 			$chNode->appendChild($ch);
 		}
 
@@ -673,7 +743,8 @@ sub _defaultCoord
 		{
 			$newRoot = $tmpRoot;
 			$rootRole = &_getRole($xpc, $tmpRoot);
-			&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+			#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+			&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 		}
 	} continue
 	{
