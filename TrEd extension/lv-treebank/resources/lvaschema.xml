@@ -121,7 +121,7 @@
       <value>subrCl</value>		<!-- subordinate clause -->
 	  <value>interj</value>		<!-- punctuation mark construct for interjections** -->
 	  <value>spcPmc</value>		<!-- punctuation mark construct for pmc** -->
-	  <value>numPmc</value>		<!-- punctuation mark construct for numbers** -->
+	  <!--<value>numPmc</value>-->		<!-- punctuation mark construct for numbers** -->
 	  <value>insPmc</value>		<!-- punctuation mark construct for insertion** --> 
 	  <value>particle</value>	<!-- punctuation mark construct for particle** -->
 	  <!--<value>tied</value>-->		<!-- tied parenthesis and tied insertion** -->
@@ -129,7 +129,7 @@
 	  <value>report</value>		<!-- reporting verb -->
 	  <value>address</value>	<!-- address -->
 	  <value>quot</value>		<!-- quotation marks -->
-	  <value>abbr</value>		<!-- abbreviation -->
+	  <!--<value>abbr</value>-->		<!-- abbreviation -->
 	  <value>N/A</value>	<!-- not available -->
     </choice>
   </type>

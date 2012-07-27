@@ -1453,42 +1453,30 @@
               <role>pred</role>
               <ord>3</ord>
               <children>
+                <node id="a-zeens-p15s1w1">
+                  <m.rf>m#m-zeens-p15s1w1</m.rf>
+                  <role>adv</role>
+                  <ord>4</ord>
+                </node>
                 <coordinfo>
                   <coordtype>crdParts</coordtype>
                   <tag>vm0is0030a0</tag>
-                  <ord>17</ord>
+                  <ord>13</ord>
                   <children>
                     <node id="a-zeens-p15s1w8">
                       <m.rf>m#m-zeens-p15s1w8</m.rf>
                       <role>crdPart</role>
-                      <ord>18</ord>
+                      <ord>14</ord>
                       <children>
                         <node id="a-zeens-p15s1w11">
                           <m.rf>m#m-zeens-p15s1w11</m.rf>
                           <role>obj</role>
-                          <ord>23</ord>
+                          <ord>16</ord>
                           <children>
-                            <node id="a-zeens-p15s1x26">
+                            <node id="a-zeens-p15s1w9">
+                              <m.rf>m#m-zeens-p15s1w9</m.rf>
                               <role>attr</role>
-                              <ord>19</ord>
-                              <children>
-                                <pmcinfo>
-                                  <pmctype>numPmc</pmctype>
-                                  <ord>20</ord>
-                                  <children>
-                                    <node id="a-zeens-p15s1w9">
-                                      <m.rf>m#m-zeens-p15s1w9</m.rf>
-                                      <role>basElem</role>
-                                      <ord>21</ord>
-                                    </node>
-                                    <node id="a-zeens-p15s1w10">
-                                      <m.rf>m#m-zeens-p15s1w10</m.rf>
-                                      <role>punct</role>
-                                      <ord>22</ord>
-                                    </node>
-                                  </children>
-                                </pmcinfo>
-                              </children>
+                              <ord>15</ord>
                             </node>
                           </children>
                         </node>
@@ -1497,31 +1485,31 @@
                     <node id="a-zeens-p15s1w12">
                       <m.rf>m#m-zeens-p15s1w12</m.rf>
                       <role>conj</role>
-                      <ord>24</ord>
+                      <ord>17</ord>
                     </node>
                     <node id="a-zeens-p15s1w13">
                       <m.rf>m#m-zeens-p15s1w13</m.rf>
                       <role>crdPart</role>
-                      <ord>25</ord>
+                      <ord>18</ord>
                       <children>
                         <node id="a-zeens-p15s1x24">
                           <role>adv</role>
-                          <ord>26</ord>
+                          <ord>19</ord>
                           <children>
                             <xinfo>
                               <xtype>xPrep</xtype>
                               <tag>ncmsg0[preyno]</tag>
-                              <ord>27</ord>
+                              <ord>20</ord>
                               <children>
                                 <node id="a-zeens-p15s1w14">
                                   <m.rf>m#m-zeens-p15s1w14</m.rf>
                                   <role>prep</role>
-                                  <ord>28</ord>
+                                  <ord>21</ord>
                                 </node>
                                 <node id="a-zeens-p15s1w15">
                                   <m.rf>m#m-zeens-p15s1w15</m.rf>
                                   <role>basElem</role>
-                                  <ord>29</ord>
+                                  <ord>22</ord>
                                 </node>
                               </children>
                             </xinfo>
@@ -1530,22 +1518,22 @@
                         <node id="a-zeens-p15s1w17">
                           <m.rf>m#m-zeens-p15s1w17</m.rf>
                           <role>obj</role>
-                          <ord>31</ord>
+                          <ord>24</ord>
                           <children>
                             <node id="a-zeens-p15s1w16">
                               <m.rf>m#m-zeens-p15s1w16</m.rf>
                               <role>attr</role>
-                              <ord>30</ord>
+                              <ord>23</ord>
                             </node>
                             <node id="a-zeens-p15s1w19">
                               <m.rf>m#m-zeens-p15s1w19</m.rf>
                               <role>attr</role>
-                              <ord>33</ord>
+                              <ord>26</ord>
                               <children>
                                 <node id="a-zeens-p15s1w18">
                                   <m.rf>m#m-zeens-p15s1w18</m.rf>
                                   <role>attr</role>
-                                  <ord>32</ord>
+                                  <ord>25</ord>
                                 </node>
                               </children>
                             </node>
@@ -1555,65 +1543,38 @@
                     </node>
                   </children>
                 </coordinfo>
-                <node id="a-zeens-p15s1x32">
-                  <role>adv</role>
-                  <ord>4</ord>
-                  <children>
-                    <pmcinfo>
-                      <pmctype>numPmc</pmctype>
-                      <ord>5</ord>
-                      <children>
-                        <node id="a-zeens-p15s1w1">
-                          <m.rf>m#m-zeens-p15s1w1</m.rf>
-                          <role>basElem</role>
-                          <ord>6</ord>
-                        </node>
-                        <node id="a-zeens-p15s1w2">
-                          <m.rf>m#m-zeens-p15s1w2</m.rf>
-                          <role>punct</role>
-                          <ord>7</ord>
-                        </node>
-                        <node id="a-zeens-p15s1w3">
-                          <m.rf>m#m-zeens-p15s1w3</m.rf>
-                          <role>basElem</role>
-                          <ord>8</ord>
-                        </node>
-                      </children>
-                    </pmcinfo>
-                  </children>
-                </node>
                 <node id="a-zeens-p15s1x30">
                   <role>subj</role>
-                  <ord>9</ord>
+                  <ord>5</ord>
                   <children>
                     <xinfo>
                       <xtype>xApp</xtype>
                       <tag>n0msn0</tag>
-                      <ord>10</ord>
+                      <ord>6</ord>
                       <children>
                         <node id="a-zeens-p15s1x1">
                           <role>basElem</role>
-                          <ord>12</ord>
+                          <ord>8</ord>
                           <children>
                             <xinfo>
                               <xtype>namedEnt</xtype>
                               <tag>npmsn0</tag>
-                              <ord>13</ord>
+                              <ord>9</ord>
                               <children>
                                 <node id="a-zeens-p15s1w5">
                                   <m.rf>m#m-zeens-p15s1w5</m.rf>
                                   <role>basElem</role>
-                                  <ord>14</ord>
+                                  <ord>10</ord>
                                 </node>
                                 <node id="a-zeens-p15s1w6">
                                   <m.rf>m#m-zeens-p15s1w6</m.rf>
                                   <role>basElem</role>
-                                  <ord>15</ord>
+                                  <ord>11</ord>
                                 </node>
                                 <node id="a-zeens-p15s1w7">
                                   <m.rf>m#m-zeens-p15s1w7</m.rf>
                                   <role>basElem</role>
-                                  <ord>16</ord>
+                                  <ord>12</ord>
                                 </node>
                               </children>
                             </xinfo>
@@ -1622,7 +1583,7 @@
                         <node id="a-zeens-p15s1w4">
                           <m.rf>m#m-zeens-p15s1w4</m.rf>
                           <role>basElem</role>
-                          <ord>11</ord>
+                          <ord>7</ord>
                         </node>
                       </children>
                     </xinfo>
@@ -1633,7 +1594,7 @@
             <node id="a-zeens-p15s1w20">
               <m.rf>m#m-zeens-p15s1w20</m.rf>
               <role>punct</role>
-              <ord>34</ord>
+              <ord>27</ord>
             </node>
           </children>
         </pmcinfo>
@@ -4513,6 +4474,86 @@
               <m.rf>m#m-zeens-p44s1w8</m.rf>
               <role>punct</role>
               <ord>16</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-zeens-p45s1">
+      <s.rf>m#m-zeens-p45s1</s.rf>
+      <ord>1</ord>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <ord>2</ord>
+          <children>
+            <node id="a-zeens-p45s1x1">
+              <role>pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p45s1x2">
+                  <role>subj</role>
+                  <ord>4</ord>
+                  <children>
+                    <xinfo>
+                      <xtype>xApp</xtype>
+                      <tag>xx</tag>
+                      <ord>5</ord>
+                      <children>
+                        <node id="a-zeens-p45s1w1">
+                          <m.rf>m#m-zeens-p45s1w1</m.rf>
+                          <role>basElem</role>
+                          <ord>6</ord>
+                        </node>
+                        <node id="a-zeens-p45s1w2">
+                          <m.rf>m#m-zeens-p45s1w2</m.rf>
+                          <role>basElem</role>
+                          <ord>7</ord>
+                        </node>
+                      </children>
+                    </xinfo>
+                  </children>
+                </node>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vm0ip003san[adjsfn]</tag>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p45s1w3">
+                      <m.rf>m#m-zeens-p45s1w3</m.rf>
+                      <role>auxVerb</role>
+                      <ord>9</ord>
+                    </node>
+                    <node id="a-zeens-p45s1w4">
+                      <m.rf>m#m-zeens-p45s1w4</m.rf>
+                      <role>basElem</role>
+                      <ord>10</ord>
+                    </node>
+                  </children>
+                </xinfo>
+                <node id="a-zeens-p45s1w7">
+                  <m.rf>m#m-zeens-p45s1w7</m.rf>
+                  <role>adv</role>
+                  <ord>13</ord>
+                  <children>
+                    <node id="a-zeens-p45s1w5">
+                      <m.rf>m#m-zeens-p45s1w5</m.rf>
+                      <role>attr</role>
+                      <ord>11</ord>
+                    </node>
+                    <node id="a-zeens-p45s1w6">
+                      <m.rf>m#m-zeens-p45s1w6</m.rf>
+                      <role>attr</role>
+                      <ord>12</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p45s1w8">
+              <m.rf>m#m-zeens-p45s1w8</m.rf>
+              <role>punct</role>
+              <ord>14</ord>
             </node>
           </children>
         </pmcinfo>

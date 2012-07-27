@@ -391,10 +391,6 @@ sub spcPmc
 {
 	return &_allBelowBasElem(@_);
 }
-sub numPmc
-{
-	return &_allBelowBasElem(@_);
-}
 sub insPmc
 {
 	return &_allBelowBasElem(@_);
@@ -416,10 +412,6 @@ sub address
 	return &_allBelowBasElem(@_);
 }
 sub quot
-{
-	return &_allBelowBasElem(@_);
-}
-sub abbr
 {
 	return &_allBelowBasElem(@_);
 }
