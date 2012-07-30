@@ -278,9 +278,11 @@ sub new_m_node
 
   # Create new m-level node. This invokes switching to the m-file, editing it,
   # saving it and switching back again.
+  print 'moo';
   my $node = $this;
   my $m_id = &write_new_m($bro);
   $this = $node;
+  print 'moooooo';
 
   # Map a-node to m-node.
   $this->{'m'}{'#knit_prefix'} = 'm';
@@ -316,7 +318,9 @@ sub write_new_m
   my $a_file = CurrentFile();
   my $ref_id = $a_file->referenceNameHash->{'mdata'};
   my $ref_file = $a_file->referenceURLHash->{$ref_id};
-  my $m_file = Open($ref_file, ('-keep' => 1));
+  print "$ref_id, $ref_file.\n";
+  #my $m_file = Open($ref_file, ('-keep' => 1)); #Doesn't work for TrEd 2.x
+  my $m_file = Open($ref_file);
   NextTree() while ($root->attr('id') ne $m_sent_id);
   
   # Create new m-node.
