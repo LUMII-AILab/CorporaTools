@@ -399,11 +399,7 @@ sub particle
 {
 	return &_allBelowBasElem(@_);
 }
-sub dirSp
-{
-	return &_allBelowBasElem(@_);
-}
-sub report
+sub dirSpPmc
 {
 	return &_allBelowBasElem(@_);
 }
