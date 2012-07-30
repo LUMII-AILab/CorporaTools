@@ -125,8 +125,9 @@
 	  <value>insPmc</value>		<!-- punctuation mark construct for insertion** --> 
 	  <value>particle</value>	<!-- punctuation mark construct for particle** -->
 	  <!--<value>tied</value>-->		<!-- tied parenthesis and tied insertion** -->
-	  <value>dirSp</value>		<!-- direct speech -->
-	  <value>report</value>		<!-- reporting verb -->
+	  <!--<value>dirSp</value>-->		<!-- direct speech -->
+	  <!--<value>report</value>-->		<!-- reporting verb -->
+	  <value>dirSpPmc</value>	<!-- punctuation mark construct for direct speech** -->
 	  <value>address</value>	<!-- address -->
 	  <value>quot</value>		<!-- quotation marks -->
 	  <!--<value>abbr</value>-->		<!-- abbreviation -->
@@ -169,7 +170,9 @@
       <value>sit</value>	<!-- situant* -->
 	  <value>det</value>	<!-- determinant -->
 	  <value>no</value>		<!-- particles, addresses, etc** -->
+
 	  <value>ins</value>	<!-- insertion, parenthesis -->
+	  <value>dirSp</value>		<!-- direct speech -->
 	  
       <value>subjCl</value>		<!-- subject clause -->
       <value>predCl</value>		<!-- predicative clause -->

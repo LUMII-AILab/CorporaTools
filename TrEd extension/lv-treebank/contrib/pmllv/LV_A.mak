@@ -114,6 +114,7 @@ sub is_allowed_for_parent
       $node->{'pmctype'} eq 'utter')
   {
     return 1 if ($p eq $root);
+	return 1 if ($p->parent->{'pmctype'} eq 'dirSpPmc');
 	return 0;
   }
   
