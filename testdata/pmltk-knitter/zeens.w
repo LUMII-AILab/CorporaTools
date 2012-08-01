@@ -415,6 +415,46 @@
       <w id="w-zeens-p13w7">
         <token>"</token>
       </w>
+      <w id="w-zeens-p13w8">
+        <token>"</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p13w9">
+        <token>Nē</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p13w10">
+        <token>,</token>
+      </w>
+      <w id="w-zeens-p13w11">
+        <token>šonakt</token>
+      </w>
+      <w id="w-zeens-p13w12">
+        <token>labāk</token>
+      </w>
+      <w id="w-zeens-p13w13">
+        <token>paliksim</token>
+      </w>
+      <w id="w-zeens-p13w14">
+        <token>tepat</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p13w15">
+        <token>,</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p13w16">
+        <token>"</token>
+      </w>
+      <w id="w-zeens-p13w17">
+        <token>viņš</token>
+      </w>
+      <w id="w-zeens-p13w18">
+        <token>nepiekrita</token>
+      </w>
+      <w id="w-zeens-p13w19">
+        <token>.</token>
+      </w>
     </para>
     <para>
       <w id="w-zeens-p14w1">
@@ -492,6 +532,61 @@
       </w>
       <w id="w-zeens-p14w22">
         <token>"</token>
+      </w>
+      <w id="w-zeens-p14w23">
+        <token>Anna</token>
+      </w>
+      <w id="w-zeens-p14w24">
+        <token>nomurmināja</token>
+      </w>
+      <w id="w-zeens-p14w25">
+        <token>:</token>
+      </w>
+      <w id="w-zeens-p14w26">
+        <token>"</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p14w27">
+        <token>Gan</token>
+      </w>
+      <w id="w-zeens-p14w28">
+        <token>jau</token>
+      </w>
+      <w id="w-zeens-p14w29">
+        <token>būs</token>
+      </w>
+      <w id="w-zeens-p14w30">
+        <token>labi</token>
+      </w>
+      <w id="w-zeens-p14w31">
+        <token>!</token>
+      </w>
+      <w id="w-zeens-p14w32">
+        <token>Rīt</token>
+      </w>
+      <w id="w-zeens-p14w33">
+        <token>skaidrosies</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p14w34">
+        <token>,</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p14w35">
+        <token>"</token>
+      </w>
+      <w id="w-zeens-p14w36">
+        <token>un</token>
+      </w>
+      <w id="w-zeens-p14w37">
+        <token>turpināja</token>
+      </w>
+      <w id="w-zeens-p14w38">
+        <token>adīt</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p14w39">
+        <token>.</token>
       </w>
     </para>
     <para>
@@ -1442,7 +1537,106 @@
       </w>
       <w id="w-zeens-p42w8">
         <token>.</token>
+      </w>
+    </para>
+    <para>
+      <w id="w-zeens-p43w1">
+        <token>Lai</token>
+      </w>
+      <w id="w-zeens-p43w2">
+        <token>top</token>
+      </w>
+      <w id="w-zeens-p43w3">
+        <token>izpirkti</token>
+      </w>
+      <w id="w-zeens-p43w4">
+        <token>arī</token>
+      </w>
+      <w id="w-zeens-p43w5">
+        <token>simt</token>
+      </w>
+      <w id="w-zeens-p43w6">
+        <token>divdesmit</token>
+      </w>
+      <w id="w-zeens-p43w7">
+        <token>septiņi</token>
+      </w>
+      <w id="w-zeens-p43w8">
+        <token>grēki</token>
         <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p43w9">
+        <token>!</token>
+      </w>
+    </para>
+    <para>
+      <w id="w-zeens-p44w1">
+        <token>Atrast</token>
+      </w>
+      <w id="w-zeens-p44w2">
+        <token>piecus</token>
+      </w>
+      <w id="w-zeens-p44w3">
+        <token>desmit</token>
+      </w>
+      <w id="w-zeens-p44w4">
+        <token>latus</token>
+      </w>
+      <w id="w-zeens-p44w5">
+        <token>ir</token>
+      </w>
+      <w id="w-zeens-p44w6">
+        <token>cūkas</token>
+      </w>
+      <w id="w-zeens-p44w7">
+        <token>laime</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p44w8">
+        <token>.</token>
+      </w>
+    </para>
+    <para>
+      <w id="w-zeens-p45w1">
+        <token>Funkc</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p45w2">
+        <token>.</token>
+      </w>
+      <w id="w-zeens-p45w3">
+        <token>f</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p45w4">
+        <token>(</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p45w5">
+        <token>x</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p45w6">
+        <token>)</token>
+      </w>
+      <w id="w-zeens-p45w7">
+        <token>ir</token>
+      </w>
+      <w id="w-zeens-p45w8">
+        <token>augoša</token>
+      </w>
+      <w id="w-zeens-p45w9">
+        <token>visā</token>
+      </w>
+      <w id="w-zeens-p45w10">
+        <token>definīcijas</token>
+      </w>
+      <w id="w-zeens-p45w11">
+        <token>apgabalā</token>
+        <no_space_after>1</no_space_after>
+      </w>
+      <w id="w-zeens-p45w12">
+        <token>.</token>
       </w>
     </para>
   </doc>
