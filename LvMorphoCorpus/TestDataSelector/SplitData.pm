@@ -15,9 +15,11 @@ use strict;
 
 use File::Path;
 use IO::File;
-#use IO::Dir;
 use XML::LibXML;
 
+###############################################################################
+# Split single M file.
+###############################################################################
 sub splitFile
 {
 	autoflush STDOUT 1;
@@ -32,6 +34,7 @@ Params:
    directory prefix
    file name
    probability
+   seed [optional]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
 END
@@ -41,6 +44,7 @@ END
 	my $dirPrefix = shift @_;
 	my $fileName = shift @_;
 	my $prob = shift @_;
+	my $seed = shift @_;
 
 	# Load the XML.
 	my $parser = XML::LibXML->new('no_blanks' => 1);
@@ -54,7 +58,15 @@ END
 	my $devSet = &_copyHeader($xpc, $data);
 	my $testSet = &_copyHeader($xpc, $data);
 	
-	# Process XML:
+	srand $seed;
+	# Process each sentence.
+	foreach my $sent ($xpc->findnodes('/pml:lvmdata/pml:s', $data))
+	{
+		my $coin = rand;
+		my $destSet = $coin ge $prob ? $devSet : $testSet;
+		my $destRoot = $destSet->documentElement;
+		$destRoot->appendChild($sent->cloneNode(1));
+	}
 
 	# Print out all the results.
 	mkpath("$dirPrefix/dev/");
@@ -65,20 +77,33 @@ END
 	$outFile = IO::File->new("$dirPrefix/test/$fileName", ">")
 		or die "Output file opening: $!";	
 	print $outFile $testSet->toString(1);
+	
+	#Print stats.
+	my $sentCount = @{$xpc->findnodes('/pml:lvmdata/pml:s', $devSet)};
+	my $morphoCount = @{$xpc->findnodes('/pml:lvmdata/pml:s/pml:m', $devSet)};
+	print "Development set contains $sentCount sentences and $morphoCount tokens.\n";
+	$sentCount = @{$xpc->findnodes('/pml:lvmdata/pml:s', $testSet)};
+	$morphoCount = @{$xpc->findnodes('/pml:lvmdata/pml:s/pml:m', $testSet)};
+	print "Test set contains $sentCount sentences and $morphoCount tokens.\n";
 	print "Processing $fileName finished!\n";
 }
 
+# Create new DOM document and copy header information from the given DOM
+# document.
+# _copyHeader (XPath context with set namespaces, source document)
+# Returns new DOM document.
 sub _copyHeader
 {
 	my $xpc = shift @_;
-	my $oldDoc = shift @_;	
-	my $newDoc = (shift @_ or XML::LibXML::Document->new(
-		$oldDoc->version(), $oldDoc->encoding()));
+	my $oldDoc = shift @_;
+	
+	my $newDoc = XML::LibXML::Document->new(
+		$oldDoc->version(), $oldDoc->encoding());
 	my $newRoot = $oldDoc->documentElement->cloneNode(0);
 	$newDoc->setDocumentElement($newRoot);
 	
 	my @copyNodes = $xpc->findnodes(
-		'pml:lvmdata/*[local-name()!=\'s\']', $oldDoc);
+		'/pml:lvmdata/*[local-name()!=\'s\']', $oldDoc);
 	foreach my $n (@copyNodes)
 	{
 		$newRoot->appendChild($n->cloneNode(1));
