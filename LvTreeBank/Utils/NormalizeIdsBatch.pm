@@ -26,7 +26,7 @@ sub normalizeIdsBatch
 
 		while (defined(my $in_file = $dir->read))
 		{
-			if ((! -d $in_file) and ($in_file =~ /^(.+)\.w$/))
+			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
 			{
 				LvTreeBank::Utils::NormalizeIds::normalizeIds ($dir_name, $1, $1);
 			}

@@ -59,7 +59,7 @@ END
 	
 	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d $inFile) and ($inFile =~ /^(.+)\.w$/))
+		if ((! -d "$dirName\$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
 			my $id = $1;
 			my $xmls = LvTreeBank::Utils::NormalizeIds::load ($dirName, $id, $fileName);
