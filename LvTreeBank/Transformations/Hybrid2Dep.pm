@@ -17,10 +17,7 @@ use XML::LibXML;  # XML handling library
 # files should have all nodes numbered (TODO: fix this).
 #
 # Works with A level schema v.2.12.
-#
 # Input files - utf8.
-# Output file can have diferent XML element order. To obtain standard order
-# resave file with TrEd.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Latvian Treebank project, 2012
