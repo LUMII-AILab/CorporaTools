@@ -46,7 +46,7 @@ END
 
 	while (defined(my $in_file = $in_dir->read))
 	{
-		if (! -d $in_file)
+		if (! -d "$in_dir_name\\$in_file")
 		{
 			my $in = IO::File->new;
 			open $in, "<:encoding(UTF-8)", "$in_dir_name\\$in_file"

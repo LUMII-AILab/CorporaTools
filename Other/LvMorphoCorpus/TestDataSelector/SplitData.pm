@@ -2,6 +2,7 @@
 package LvMorphoCorpus::TestDataSelector::SplitData;
 use utf8;
 use strict;
+use 5.010;  # so filetest ops can stack
 ###############################################################################
 # This module splits PML M files into two data sets, whose size depends on
 # given probability. All new M files reference the same W files as the old
@@ -14,8 +15,42 @@ use strict;
 ###############################################################################
 
 use File::Path;
+use IO::Dir;
 use IO::File;
 use XML::LibXML;
+
+###############################################################################
+# Split directory with M files.
+###############################################################################
+sub splitCorpus
+{
+	autoflush STDOUT 1;
+	if (not @_ or @_ le 1)
+	{
+		print <<END;
+Script for splitting each PML M file in given directory into two data sets,
+whose size depends on given probability.
+Input files should be provided in UTF-8.
+
+Params:
+   data directory
+   probability
+   seed [optional]
+
+Latvian Treebank project, LUMII, 2012, provided under GPL
+END
+		exit 1;
+	}
+
+	my $dirName = shift @_;
+	my @args = @_;
+	
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
+	while (defined(my $file = $dir->read))
+	{
+		&splitFile ($dirName, $file, @args) if (not -d "$dirName/$file");
+	}
+}
 
 ###############################################################################
 # Split single M file.
@@ -27,8 +62,8 @@ sub splitFile
 	{
 		print <<END;
 Script for splitting PML M file into two data sets, whose size depends on given
-probability..
-Input files should be provided as UTF-8.
+probability.
+Input files should be provided in UTF-8.
 
 Params:
    directory prefix

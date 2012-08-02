@@ -85,7 +85,7 @@ END
 	mkdir $logDir;
 	while (defined(my $wFile = readdir(W_DIR)))
 	{
-		if (! -d $wFile)
+		if (! -d "$wDir\\$wFile")
 		{
 			$wFile =~ /^(.*)\.w$/;
 			my $docId = $1;

@@ -51,7 +51,7 @@ END
 	while (defined(my $inFile = readdir(DIR)))
 	{
 		# do something with "$dirname/$file"
-		if (! -d $inFile)
+		if (! -d "$corpus\\$inFile")
 		{
 			$inFile =~ /^(.*)\..*?$/;
 			my $docid = $1;
