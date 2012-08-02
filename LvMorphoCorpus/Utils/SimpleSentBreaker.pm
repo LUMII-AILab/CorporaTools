@@ -42,7 +42,7 @@ END
 	mkdir $out_dir;
 	while (defined(my $file = readdir(DIR))) {
 		# do something with "$dirname/$file"
-		if (! -d $file)
+		if (! -d "$corpus\\$file")
 		{
 			open INPUT, "<:encoding($encoding)", "$corpus\\$file"
 				or warn "Input file error $file: $!";

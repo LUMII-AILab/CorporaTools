@@ -138,7 +138,7 @@ END
 
 	while (defined(my $inFile = $inDir->read))
 	{
-		if (! -d $inFile)
+		if (not -d "$inDirName\\$inFile")
 		{
 			my $in = IO::File->new("$inDirName\\$inFile", "<")
 				or die "Could not open file $inFile: $!";
