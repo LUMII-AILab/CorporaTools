@@ -280,7 +280,7 @@ sub xSimile
 }
 sub xParticle
 {
-	return &_allNodesBelowOne('no', @_);
+	return &_allNodesBelowOne('basElem', @_);
 }
 sub subrAnal
 {
