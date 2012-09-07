@@ -54,7 +54,7 @@ sub normalize_m_ords_all_trees
 sub normalize_n_ords
 {
   &normalize_m_ords;
-  &give_ord_everybody;
+  &_give_ord_everybody;
   my @nodes = GetNodes;
   SortByOrd(\@nodes);
   my $npk = 1;
@@ -78,7 +78,7 @@ sub normalize_n_ords_all_trees
 
 
 # Give "ord" tags to the "empty" nodes.
-sub give_ord_everybody
+sub _give_ord_everybody
 {
   my @nodes = GetNodes;
   SortByOrd(\@nodes);
@@ -99,7 +99,7 @@ sub give_ord_everybody
 	  if ($ord_giver)
 	  {
 	    my $ord = $ord_giver->attr('ord');
-	    &rise_ords($ord);
+	    &_rise_ords($ord);
 		$nodes[$i]->set_attr('ord', $ord);
 	  }
 	  # The order for this node can't be calculated from it's brothers.
@@ -112,7 +112,7 @@ sub give_ord_everybody
 	    if ($ord_giver)
 	    {
 	      my $ord = $ord_giver->attr('ord') + 1;
-	      &rise_ords($ord);
+	      &_rise_ords($ord);
 		  $nodes[$i]->set_attr('ord', $ord);
 	    }
 	  }
@@ -139,7 +139,7 @@ sub give_ord_everybody
 	#writeln($change_anc);
 	if ($change_anc)
 	{
-	  &rise_ords($i);
+	  &_rise_ords($i);
 	  #writeln($change_anc);
 	  #foreach my $n (@nodes)
 	  #{
@@ -153,7 +153,7 @@ sub give_ord_everybody
 # Support function.
 # Adds +1 to each ord, which is equal or greater than integer recieved as
 # first parameter.
-sub rise_ords
+sub _rise_ords
 {
   my $param = shift;
   my @nodes = GetNodes;
@@ -180,7 +180,7 @@ sub incorp_in_parent
   {
     TredMacro::AddToList($this->parent, 'm/w', $member);
   }
-  $this->parent->set_attr('m/form', get_form_from_tokens($this->parent));
+  $this->parent->set_attr('m/form', &_get_form_from_tokens($this->parent));
   $this->set_attr('m/deleted', '1');
   TredMacro::AddToListUniq($this->parent, 'm/form_change', 'union');
   &delete_node;
@@ -195,11 +195,19 @@ sub new_xinfo_node
     stderr 'X node is not allowed here!';
 	return;
   }
-  TredMacro::PlainNewSon($this);
-  $this->{'#name'}='xinfo';
-  $this->{'xtype'}='N/A';
-  $this->{'tag'}='N/A';
+  my $n = Treex::PML::Factory->createTypedNode(
+	'a-xinfo.type', $root->type->schema); 
+  PasteNode($n, $this);
+  $n->{'#name'}='xinfo';
+  $n->{'xtype'}='N/A';
+  $n->{'tag'}='N/A';
+  $this = $n;
+#  TredMacro::PlainNewSon($this);
+#  $this->{'#name'}='xinfo';
+#  $this->{'xtype'}='N/A';
+#  $this->{'tag'}='N/A';
 }
+
 # Create new PMC node.
 sub new_pmcinfo_node
 {
@@ -208,9 +216,15 @@ sub new_pmcinfo_node
     stderr 'PMC node is not allowed here!';
 	return;
   }
-  TredMacro::PlainNewSon($this);
-  $this->{'#name'}='pmcinfo';
-  $this->{'pmctype'}='N/A';
+  my $n = Treex::PML::Factory->createTypedNode(
+	'a-pmcinfo.type', $root->type->schema); 
+  PasteNode($n, $this);
+  $n->{'#name'}='pmcinfo';
+  $n->{'pmctype'}='N/A';
+  $this = $n;
+  #TredMacro::PlainNewSon($this);
+  #$this->{'#name'}='pmcinfo';
+  #$this->{'pmctype'}='N/A';
 }
 
 # Create new coordination node.
@@ -221,38 +235,115 @@ sub new_coordinfo_node
     stderr 'Coordination node is not allowed here!';
 	return;
   }
-  TredMacro::PlainNewSon($this);
-  $this->{'#name'}='coordinfo';
-  $this->{'coordtype'}='N/A';
+  my $n = Treex::PML::Factory->createTypedNode(
+	'a-coordinfo.type', $root->type->schema); 
+  PasteNode($n, $this);
+  $n->{'#name'}='coordinfo';
+  $n->{'coordtype'}='N/A';
+  $this = $n;
+
+  #TredMacro::PlainNewSon($this);
+  #$this->{'#name'}='coordinfo';
+  #$this->{'coordtype'}='N/A';
+}
+
+# Create backbone structure for coordinated clauses.
+sub new_coordcl_struct
+{
+  # Ask, how many children we should have.
+  my $chN;
+  my $mw = GUI()->{'framegroup'}->{'top'};
+  my $scheme = $this->type->schema;
+  #use Data::Dumper;
+  #print Dumper(keys %$mw);
+  my $d = $mw->DialogBox(-title => 'Number of Children',
+		-buttons => ['OK', 'Cancel'], -default_button => 'OK');
+  $d->add('LabEntry', -textvariable => \$chN, -width => 20, 
+         -label => 'Number of Children', -labelPack => [-side => 'left'])->pack;
+    #$d->BindReturn( $d, 1 );
+    #$d->BindEscape();
+  $d->resizable( 0, 0 );
+  $d->BindButtons;
+  my $answer = $d->Show();
+  
+  return unless ($answer eq "OK");
+  $chN = 0 if $chN lt 1;
+  
+  #print Dumper($this->type);
+  my $sentid = $root->{'id'};
+
+  # Create basElem.
+  &new_child_node;
+  $this->{'role'}='basElem';
+  # Create coord node.
+  &new_coordinfo_node();
+  my $coordCl = $this;
+  $this->{'coordtype'}='coordCl';
+  
+  my $clauseType = '';
+  if ($chN ge 1)
+  {
+    # Create 1st crdPart.
+	&new_child_node;
+    $this->{'role'}='crdPart';
+
+    # Create clause under 1st crdPart.
+	&new_pmcinfo_node;
+    $this->{'#name'} = 'pmcinfo';
+    # Prompt user for give order number for newly created node.
+    EditAttribute($this, 'pmctype');
+	$clauseType = $this->{'pmctype'};
+	
+	for (2 .. $chN)
+	{
+      # Create next crdPart.
+	  $this = $coordCl;
+	  &new_child_node;
+      $this->{'role'}='crdPart';
+      # Create clause under crdPart.
+	  &new_pmcinfo_node;
+      $this->{'#name'} = 'pmcinfo';
+      $this->{'pmctype'} = $clauseType;
+	}
+  }
 }
 
 # Create new ordinary empty node.
 sub new_child_node
 {
-  TredMacro::PlainNewSon($this);
+  #TredMacro::PlainNewSon($this);
   my $sentid = $root->{'id'};
-  #my @count = GetNodes;
-  #my $c = scalar (@{scalar GetNodes}) + 1;
-  #$sentid .= "x$c";
-  $sentid .= 'x' . &get_next_id('x');
-  $this->{'#name'} = 'node';
-  $this->{'id'} = $sentid;
-  $this->{'role'}='N/A';
+  my $n = Treex::PML::Factory->createTypedNode(
+	'a-node.type', $root->type->schema); 
+  PasteNode($n, $this);
+  $n->{'#name'} = 'node';
+  $n->{'id'} = $sentid . 'x' . &_get_next_id('x');;
+  $n->{'role'}='N/A';
+  $this = $n;
+
+#  $sentid .= 'x' . &_get_next_id('x');
+#  $this->{'#name'} = 'node';
+#  $this->{'id'} = $sentid;
+#  $this->{'role'}='N/A';
 }
 
 # Create new ordinary node with "place" for morphology.
 # Really hacky code, forces save on all files, can't be undone.
+#TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 sub new_m_node
 {
   my $context = CurrentContext();
   my $stylesheet = GetCurrentStylesheet();
   my $sentid = $root->{'id'};
-  my $nid = $sentid . 'w' . &get_next_id('w');
+  my $nid = $sentid . 'w' . &_get_next_id('w');
   my @old_nodes = GetNodes;
   SortByOrd(\@old_nodes);
 
   # Create new a-level node.
-  PlainNewSon($this);
+  my $n = Treex::PML::Factory->createTypedNode(
+	'a-node.type', $root->type->schema); 
+  PasteNode($n, $this);
+  $this = $n;
   # Fill a-level fields for newly created node.  
   $this->{'#name'} = 'node';
   $this->{'id'} = $nid;
@@ -278,11 +369,9 @@ sub new_m_node
 
   # Create new m-level node. This invokes switching to the m-file, editing it,
   # saving it and switching back again.
-  print 'moo';
   my $node = $this;
-  my $m_id = &write_new_m($bro);
+  my $m_id = &_write_new_m($bro);
   $this = $node;
-  print 'moooooo';
 
   # Map a-node to m-node.
   $this->{'m'}{'#knit_prefix'} = 'm';
@@ -309,7 +398,7 @@ sub new_m_node
 # Create new m-level node. This this is done by switching to the coresponding
 # m-file, finding the coresponding tree (linear time) editing it, saving it and
 # switching back again.
-sub write_new_m
+sub _write_new_m
 {
   my $bro_id = shift;
   # Open m-file and find the necessary tree (sentence).
@@ -341,7 +430,7 @@ sub write_new_m
   }
   
   # Fill the m-nodes fields with initial values.
-  my $m_id = $m_sent_id . 'w' . &get_next_id('w', 1);
+  my $m_id = $m_sent_id . 'w' . &_get_next_id('w', 1);
   $this->{'#name'} = 'm';
   $this->{'#content'}{'id'} = $m_id;
   $this->{'#content'}{'form'} = 'N/A';
@@ -370,7 +459,7 @@ sub delete_node
 }
 
 #Supporting function: find first free id of given type. Types supported: x, w.
-sub get_next_id
+sub _get_next_id
 {
   my ($type, $prefix) = @_;
   my @nodes = GetNodes($root);
@@ -399,7 +488,7 @@ sub get_next_id
 }
 
 # Makes 'm/form' value from 'm/w/token' values.
-sub get_form_from_tokens
+sub _get_form_from_tokens
 {
   my $node = shift;
   my $result;
@@ -421,6 +510,7 @@ sub get_form_from_tokens
 #bind new_coordinfo_node to c menu New Coordination Node
 #bind new_child_node to n menu New Ordinary Node
 #bind new_m_node to m menu New Node with Morphology (forces save, can't be undone)
+#bind new_coordcl_struct to C menu New Coordination Construction
 
 #bind incorp_in_parent to Ctrl+Up menu Incorporate in Parent
 #bind delete_node to Delete menu Delete Leaf Node

@@ -123,6 +123,7 @@ sub is_allowed_for_parent
 	return 1 if ($node->{'pmctype'} eq 'sent' or
                  $node->{'pmctype'} eq 'utter' or
 				 $node->{'pmctype'} eq 'quot' or
+				 $node->{'pmctype'} eq 'dirSpPmc' or
 				 $node->{'#name'} eq 'node');
 	return 0;
   }
