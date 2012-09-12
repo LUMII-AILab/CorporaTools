@@ -278,7 +278,7 @@ sub new_coordcl_struct
   # Create coord node.
   &new_coordinfo_node();
   my $coordCl = $this;
-  $this->{'coordtype'}='coordCl';
+  $this->{'coordtype'}='crdClauses';
   
   my $clauseType = '';
   if ($chN ge 1)
