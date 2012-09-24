@@ -105,7 +105,8 @@ END
 			print $out "\t_\t"; #CPOSTAG
 			print $out ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent; #POSTAG
 			print $out "\t_\t"; #FEATS
-			exists($n2id{$head}) ? print $out "$n2id{$head}" : print $out "0";	#HEAD
+			exists($n2id{$head->findvalue('@id')}) ?
+				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
 			print $out "\t";
 			if ($printLabels)
 			{
