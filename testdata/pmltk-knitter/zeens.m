@@ -778,7 +778,7 @@
       <w.rf>w#w-zeens-p12w7</w.rf>
       <form>manu</form>
       <lemma>mans</lemma>
-      <tag>ps0msan[0]</tag>
+      <tag>ps0msan</tag>
     </m>
     <m id="m-zeens-p12s2w6">
       <src.rf>experimental</src.rf>
@@ -822,7 +822,7 @@
       <w.rf>w#w-zeens-p13w1</w.rf>
       <form>Viņa</form>
       <lemma>viņa</lemma>
-      <tag>pp3fsnn[0]</tag>
+      <tag>pp3fsnn</tag>
     </m>
     <m id="m-zeens-p13s1w2">
       <src.rf>experimental</src.rf>
@@ -966,7 +966,7 @@
       <w.rf>w#w-zeens-p14w2</w.rf>
       <form>Mēs</form>
       <lemma>mēs</lemma>
-      <tag>pp10pnn[0]</tag>
+      <tag>pp10pnn</tag>
     </m>
     <m id="m-zeens-p14s1w3">
       <src.rf>experimental</src.rf>
@@ -987,7 +987,7 @@
       <w.rf>w#w-zeens-p14w5</w.rf>
       <form>viņš</form>
       <lemma>viņš</lemma>
-      <tag>pp3msnn[0]</tag>
+      <tag>pp3msnn</tag>
     </m>
     <m id="m-zeens-p14s1w6">
       <src.rf>experimental</src.rf>
@@ -1075,7 +1075,7 @@
       <w.rf>w#w-zeens-p14w18</w.rf>
       <form>tu</form>
       <lemma>tu</lemma>
-      <tag>pp20snn[0]</tag>
+      <tag>pp20snn</tag>
     </m>
     <m id="m-zeens-p14s1w18">
       <src.rf>experimental</src.rf>
@@ -1309,7 +1309,7 @@
       <w.rf>w#w-zeens-p15w14</w.rf>
       <form>no</form>
       <lemma>no</lemma>
-      <tag>spsg[y]</tag>
+      <tag>spsgy</tag>
     </m>
     <m id="m-zeens-p15s1w15">
       <src.rf>experimental</src.rf>
@@ -1360,7 +1360,7 @@
       <w.rf>w#w-zeens-p16w1</w.rf>
       <form>Viņš</form>
       <lemma>viņš</lemma>
-      <tag>pp3msnn[0]</tag>
+      <tag>pp3msnn</tag>
     </m>
     <m id="m-zeens-p16s1w2">
       <src.rf>experimental</src.rf>
@@ -1374,7 +1374,7 @@
       <w.rf>w#w-zeens-p16w3</w.rf>
       <form>kas</form>
       <lemma>kas</lemma>
-      <tag>pi000nn[0]</tag>
+      <tag>pi000nn</tag>
     </m>
     <m id="m-zeens-p16s1w4">
       <src.rf>experimental</src.rf>
@@ -1537,7 +1537,7 @@
       <w.rf>w#w-zeens-p17w10</w.rf>
       <form>mēs</form>
       <lemma>mēs</lemma>
-      <tag>pp10pnn[0]</tag>
+      <tag>pp10pnn</tag>
     </m>
     <m id="m-zeens-p17s1w11">
       <src.rf>experimental</src.rf>
@@ -1809,7 +1809,7 @@
       <w.rf>w#w-zeens-p19w6</w.rf>
       <form>kuru</form>
       <lemma>kurš</lemma>
-      <tag>pq0msan[0]</tag>
+      <tag>pq0msan</tag>
     </m>
     <m id="m-zeens-p19s1w7">
       <src.rf>experimental</src.rf>
@@ -1823,7 +1823,7 @@
       <w.rf>w#w-zeens-p19w8</w.rf>
       <form>tas</form>
       <lemma>tas</lemma>
-      <tag>pd3msnn[s]</tag>
+      <tag>pd3msnn</tag>
     </m>
     <m id="m-zeens-p19s1w9">
       <src.rf>experimental</src.rf>
