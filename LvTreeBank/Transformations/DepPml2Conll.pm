@@ -26,7 +26,6 @@ use XML::LibXML;  # XML handling library
 
 # Process single XML file. This should be used as entry point, if this module
 # is used standalone.
-
 sub transformFile
 {
 	autoflush STDOUT 1;
@@ -38,6 +37,7 @@ PML format to CoNLL format.
 Input files should be provided as UTF-8.
 
 Params:
+   0/1 - print labeled output (if true, trees with reductions will be ommited)
    directory prefix
    file name
    new file name [opt, current file name used otherwise]
@@ -47,6 +47,7 @@ END
 		exit 1;
 	}
 	# Input paramaters.
+	my $printLabels = shift @_;
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
@@ -67,29 +68,37 @@ END
 	# Process each tree.
 	foreach my $tree ($xpc->findnodes('/pml:lvadepdata/pml:trees/pml:LM', $doc))
 	{
+		if ($printLabels and @{$xpc->findnodes('.//pml:reduction', $tree)} gt 0)
+		{
+			print "Tree ".$tree->find('@id')." has reductions and, thus, will be omitted.\n";
+			next;
+		}
 		my @nodes = sort
 			{
 				${$xpc->findnodes('pml:ord', $a)}[0]->textContent
 				<=> ${$xpc->findnodes('pml:ord', $b)}[0]->textContent
 			}
-			($xpc->findnodes('.//pml:node', $tree));
+			($xpc->findnodes('.//pml:node[pml:m.rf]', $tree));
 		
 		# Calculate ID's for CoNLL format.
 		my $id = 1;
 		my %n2id = ();
 		foreach my $n (@nodes)
 		{
-			$n2id{$n} = $id;
+			$n2id{$n->findvalue('@id')} = $id;
 			$id++;
-			# Do stuff.
 		}
-		
+
 		# Do output in CoNLL format.
 		foreach my $n (@nodes)
 		{
-			my $head = $n->parentNode->parentNode;
-			print Dumper($n);
-			print $out "$n2id{$n}\t"; #ID
+			my $head = $n->parentNode;
+			while (not exists($n2id{$head->findvalue('@id')}) and
+				$head->findvalue('@id') ne $tree->findvalue('@id'))
+			{
+				$head = $head->parentNode;
+			}
+			print $out "$n2id{$n->findvalue('@id')}\t"; #ID
 			print $out ${$xpc->findnodes('pml:m.rf/pml:form', $n)}[0]->textContent; #FORM
 			print $out "\t";
 			print $out ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent; #LEMMA
@@ -98,7 +107,13 @@ END
 			print $out "\t_\t"; #FEATS
 			exists($n2id{$head}) ? print $out "$n2id{$head}" : print $out "0";	#HEAD
 			print $out "\t";
-			print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #DEPREL
+			if ($printLabels)
+			{
+				print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #DEPREL
+			} else
+			{
+				print $out "_"; #DEPREL
+			}
 			print $out "\t_\t_\n"; #PHEAD, PDEPREL
 		}
 		print $out "\n";
