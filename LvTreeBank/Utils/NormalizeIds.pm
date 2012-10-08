@@ -262,6 +262,8 @@ sub _normalizeM
 				{	# Morphological unit cosists of single token.
 					$oldWId = $m->{'w.rf'}->{'content'};
 					$oldWId =~ s/w#(.*)$/$1/;
+					warn "w ID $oldWId was not found!"
+						if (not exists $wMap->{$oldWId});
 					$m->{'w.rf'}->{'content'} = 'w#'.$wMap->{$oldWId};
 				} else
 				{	# Morphological unit cosists of multiple tokens.
@@ -269,6 +271,8 @@ sub _normalizeM
 					{
 						$oldWId = $m->{'w.rf'}->{'LM'}[$lmNo]->{'content'};
 						$oldWId =~ s/w#(.*)$/$1/;
+						warn "w ID $oldWId was not found!"
+							if (not exists $wMap->{$oldWId});
 						$m->{'w.rf'}->{'LM'}[$lmNo]->{'content'} = 'w#'.$wMap->{$oldWId};
 					}
 				}
@@ -380,6 +384,8 @@ sub _normalizeA
 			{	# Regular nodes.
 				my $oldSref = $current->{'m.rf'}->{'content'};
 				$oldSref =~ s/^m#(.*)$/$1/;
+				warn "m ID $oldSref was not found!"
+					if (not exists $mMap->{$oldSref});
 				$current->{'m.rf'}->{'content'} = 'm#'.$mMap->{$oldSref};
 				$mMap->{$oldSref} =~ /^.*w(.*?)$/;
 				my $newId = "${newSId}w$1";
