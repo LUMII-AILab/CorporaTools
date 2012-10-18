@@ -54,15 +54,15 @@ sub normalize_m_ords_all_trees
 sub normalize_n_ords
 {
   &normalize_m_ords;
-  &_give_ord_everybody;
-  my @nodes = GetNodes;
-  SortByOrd(\@nodes);
-  my $npk = 1;
-  foreach my $n (@nodes)
-  {
-	$n->{'ord'} = $npk;
-	$npk++;
-  }
+  &_give_ord_everybody($root);
+#  my @nodes = GetNodes;
+#  SortByOrd(\@nodes);
+#  my $npk = 1;
+#  foreach my $n (@nodes)
+#  {
+#	$n->{'ord'} = $npk;
+#	$npk++;
+#  }
 }
 # Recalculate ord values and give ords to the empty nodes for all trees.
 sub normalize_n_ords_all_trees
@@ -76,79 +76,65 @@ sub normalize_n_ords_all_trees
   GotoTree($tree + 1);
 }
 
-
 # Give "ord" tags to the "empty" nodes.
 sub _give_ord_everybody
 {
-  my @nodes = GetNodes;
-  SortByOrd(\@nodes);
-  for (my $i = 0; $nodes[$i]->attr('ord') < 1; $i++)
-  {
-    # The ord for this node can't be calculated from it's children.
-    if (not $nodes[$i]->firstson)
+	my $tree = shift;
+	# Process children recursively.
+	my $new_id = 0;
+	my @ch_array = $tree->children;
+	for my $ch ($tree->children)
 	{
-	  my $ord_giver = $nodes[$i]->rbrother;
-	  $ord_giver = $ord_giver->rbrother
-  	    while ($ord_giver and $ord_giver->attr('ord') < 1);
-	  if (not $ord_giver)
-	  {
-	    $ord_giver = $nodes[$i]->lbrother;
-	    $ord_giver = $ord_giver->lbrother
-		  while ($ord_giver and $ord_giver->attr('ord') < 1);
-	  }
-	  if ($ord_giver)
-	  {
-	    my $ord = $ord_giver->attr('ord');
-	    &_rise_ords($ord);
-		$nodes[$i]->set_attr('ord', $ord);
-	  }
-	  # The order for this node can't be calculated from it's brothers.
-	  else
-	  {
-	    $ord_giver = $nodes[$i]->parent;
-	    $ord_giver = $ord_giver->parent
-		  while ($ord_giver and $ord_giver->attr('ord') < 1);
-		
-	    if ($ord_giver)
-	    {
-	      my $ord = $ord_giver->attr('ord') + 1;
-	      &_rise_ords($ord);
-		  $nodes[$i]->set_attr('ord', $ord);
-	    }
-	  }
+		&_give_ord_everybody($ch);
+		my $tmp_ord = $ch->attr('ord');
+		$new_id = $tmp_ord
+			if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));
+			#if ($tmp_ord gt 0 and ($tmp_ord lt $new_id or $new_id le 0));
 	}
-  }
-  
-  # Calculate ords for the nodes from their children.
-  for (my $i = 1; $i <= GetNodes; $i++)
-  {
-    #writeln($i);
-    my @nodes = GetNodes;
-    SortByOrd(\@nodes);
-	last if (@nodes[0]->attr('ord') > 0);
-	my $node_id = 0;
-	$node_id++ while (@nodes[$node_id]->attr('ord') < $i);#$node_id < GetNodes and 
-	#last if ($node_id = GetNodes);
-	my $ancestor = @nodes[$node_id]->parent;
-	my $change_anc = undef;
-	while ($ancestor)
+	return if ($tree->attr('ord') > 0);
+	
+	# Obtain new id if given node has no children.
+	if ($new_id <= 0)
 	{
-		$change_anc = $ancestor if ($ancestor->attr('ord') < 1);
-		$ancestor = $ancestor->parent;
-	}
-	#writeln($change_anc);
-	if ($change_anc)
+		my $follower = $tree->following;
+		while ($follower and $follower->attr('ord') <= 0)
+		{
+			$follower = $follower->following;
+		}
+		$new_id = $follower->attr('ord') if ($follower);
+	} else
 	{
-	  &_rise_ords($i);
-	  #writeln($change_anc);
-	  #foreach my $n (@nodes)
-	  #{
-	  #  $n->set_attr('ord', $n->attr('ord') + 1) if ($n->attr('ord') >= $i);
-	  #}
-	  $change_anc->set_attr('ord', $i);
+		$new_id++;
 	}
-  }
+	
+	# Give ord to root of the subtree.	
+	&_rise_ords($new_id);
+	$tree->set_attr('ord', $new_id)
 }
+
+#sub _give_ord_everybody3
+#{
+#	my $tree = shift;
+#	# Process children recursively.
+#	for my $ch ($tree->children)
+#	{
+#		&_give_ord_everybody2($ch);
+#	}
+#	
+#	# Obtain new id if given node has no ord.
+#	my $new_id = 0;
+#	if ($tree->attr('ord') le 0)
+#	{
+#		my $follower = $tree->following;
+#		while ($follower and $follower->attr('ord') le 0)
+#		{
+#			$follower = $follower->following;
+#		}
+#		$new_id = $follower->attr('ord') if ($follower);
+#		&_rise_ords($new_id);
+#		$tree->set_attr('ord', $new_id)
+#	}	
+#}
 
 # Support function.
 # Adds +1 to each ord, which is equal or greater than integer recieved as
