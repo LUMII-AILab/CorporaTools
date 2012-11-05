@@ -48,7 +48,7 @@ END
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 	while (defined(my $file = $dir->read))
 	{
-		&splitFile ($dirName, $file, @args) if (not -d "$dirName/$file");
+		&splitFile ($dirName, $file, @args) if ((not -d "$dirName/$file") && $file =~ m/.*\.m/);
 	}
 }
 
