@@ -138,20 +138,24 @@ public class MorphoEntry
 		String l = lemma == null ? "N/A" : lemma;
 		
 		StringBuffer res = new StringBuffer(content.toString());
-		res.append("\r\n<w.rf>");
-		if (wRefs.size() < 2) res.append(wRefs.get(0));
-		else
+		if (wRefs != null && wRefs.size() > 0)
 		{
-			for (String ref : wRefs)
+			res.append("\r\n<w.rf>");
+			if (wRefs.size() < 2) res.append(wRefs.get(0));
+			else
 			{
-				res.append("\r\n<LM>");
-				res.append(ref);
-				res.append("</LM>");
+				for (String ref : wRefs)
+				{
+					res.append("\r\n<LM>");
+					res.append(ref);
+					res.append("</LM>");
+				}
+				res.append("\r\n");
 			}
-			res.append("\r\n");
+			res.append("</w.rf>");
 		}
 		
-		res.append("</w.rf>\r\n<form>");
+		res.append("\r\n<form>");
 		res.append(token);
 		res.append("</form>\r\n<lemma>");
 		res.append(l);

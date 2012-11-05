@@ -163,8 +163,8 @@ public class CorpusVerificator
 		{
     		public int compare(Wordform w1, Wordform w2)
     		{
-    			int e1 = morphStat.getEstimate(w1);
-    			int e2 = morphStat.getEstimate(w2);
+    			double e1 = morphStat.getEstimate(w1);
+    			double e2 = morphStat.getEstimate(w2);
     			if (e1 < e2) return 1;
     			else if (e1 == e2) return 0;
     			else return -1;
