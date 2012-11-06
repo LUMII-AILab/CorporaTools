@@ -254,7 +254,7 @@ sub _normalizeM
 		{	# Goes through all m-s in all s-s.
 			
 			# Update references to w layer.
-			if ($m->{'w.rf'})
+			if ($m->{'w.rf'} and %{$m->{'w.rf'}}) # Nonempty hash.
 			{
 				my $oldWId;
 				#if (ref $m->{'w.rf'})
