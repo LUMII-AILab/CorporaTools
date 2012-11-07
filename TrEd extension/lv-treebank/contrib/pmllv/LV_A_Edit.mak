@@ -41,6 +41,7 @@ sub normalize_m_ords
 # Deletes ords of the "empty" nodes.
 sub normalize_m_ords_all_trees
 {
+  print 'Recalculating token ords for all trees... ';
   my $tree = CurrentTreeNumber;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
@@ -48,6 +49,7 @@ sub normalize_m_ords_all_trees
 	&normalize_m_ords;
   }
   GotoTree($tree + 1);
+  print "Finished!\n"
 }
 
 # Recalculate ord values, and give ords to the empty nodes.
@@ -67,6 +69,7 @@ sub normalize_n_ords
 # Recalculate ord values and give ords to the empty nodes for all trees.
 sub normalize_n_ords_all_trees
 {
+  print 'Recalculating node ords for all trees... ';
   my $tree = CurrentTreeNumber;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
@@ -74,26 +77,50 @@ sub normalize_n_ords_all_trees
 	&normalize_n_ords;
   }
   GotoTree($tree + 1);
+  print "Finished!\n"
 }
 
 # Give "ord" tags to the "empty" nodes.
 sub _give_ord_everybody
 {
 	my $tree = shift;
+	my $smallerSibOrd = shift or 0;
 	# Process children recursively.
 	my $new_id = 0;
-	my @ch_array = $tree->children;
+	#my @ch_array = $tree->children;
+	my (@processFirst, @postponed) = ((), ());
+	
+	# At first we process those children who have nonzero ord somewhere below
+	# them. After that - all other children.
 	for my $ch ($tree->children)
 	{
-		&_give_ord_everybody($ch);
+		&_has_ord_child($ch) ? 
+			push @processFirst, $ch :
+			push @postponed, $ch;
+	}
+	push @processFirst, @postponed;
+	for my $ch (@processFirst)
+	{
+		my @sibOrds = 
+			sort (
+				map {$_->attr('ord')} (
+					grep {$_->attr('ord') and $_->attr('ord') > 0} $tree->children));
+	#	my @sibOrds = 				# Seems that this solution is slower.
+	#		sort (
+	#			grep {$_ > 0} (
+	#				map {$_->attr('ord') or 0}  $tree->children));
+		&_give_ord_everybody($ch, $sibOrds[0]);
 		my $tmp_ord = $ch->attr('ord');
 		$new_id = $tmp_ord
 			if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));
 			#if ($tmp_ord gt 0 and ($tmp_ord lt $new_id or $new_id le 0));
+		
 	}
+	
 	return if ($tree->attr('ord') > 0);
 	
 	# Obtain new id if given node has no children.
+	$new_id = $smallerSibOrd if ($new_id <= 0);
 	if ($new_id <= 0)
 	{
 		my $follower = $tree->following;
@@ -107,9 +134,23 @@ sub _give_ord_everybody
 		$new_id++;
 	}
 	
-	# Give ord to root of the subtree.	
+	# Give ord to root of the subtree.
 	&_rise_ords($new_id);
 	$tree->set_attr('ord', $new_id)
+}
+
+# Support function.
+# Determines wether given subtree contains at least one node that corresponds
+# to a token from sentence (has non-automatically assigned ord value).
+sub _has_ord_child
+{
+	my $tree = shift;
+	return 1 if ($tree->attr('m/form'));
+	for my $ch ($tree->children)
+	{
+		return 1 if (&_has_ord_child($ch));
+	}
+	return 0;
 }
 
 #sub _give_ord_everybody3
@@ -502,9 +543,9 @@ sub _get_form_from_tokens
 #bind delete_node to Delete menu Delete Leaf Node
 
 #bind normalize_m_ords to Ctrl+w menu Recalculate Word Order (delete empty nodes' ords)
-#insert normalize_m_ords_all_trees menu Recalculate Word Order for All Trees
+#bind normalize_m_ords_all_trees to Ctrl+Alt+w menu Recalculate Word Order for All Trees (might take some time)
 #bind normalize_n_ords to Ctrl+n menu Recalculate Node Order (give ords for empty nodes)
-#insert normalize_n_ords_all_trees menu Recalculate Node Order for All Trees
+#bind normalize_n_ords_all_trees to Ctrl+Alt+n menu Recalculate Node Order for All Trees (might take some time)
 
 #bind Redraw_All to Alt+r menu Redraw
 #bind swich_styles_vert to Alt+v menu Switch On/Off Vertical Layout
