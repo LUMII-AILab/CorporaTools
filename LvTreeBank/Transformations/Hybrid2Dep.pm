@@ -50,7 +50,11 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
-	
+
+	mkpath("$dirPrefix/res/");
+	mkpath("$dirPrefix/warnings/");
+	my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
+		or die "$newName-warnings.txt: $!";
 	print "Processing $oldName started...\n";
 
 	# Load the XML.
@@ -65,7 +69,7 @@ END
 	# process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
-		&transformTree($xpc, $tree);
+		&transformTree($xpc, $tree, $warnFile);
 		&recalculateOrds($xpc, $tree);
 	}
 	
@@ -80,7 +84,11 @@ END
 	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
 		or die "Output file opening: $!";	
 	print $outFile $doc->toString(1);
+	$outFile->close();
+	
 	print "Processing $oldName finished!\n";
+	print $warnFile "Processing $oldName finished!\n";
+	$warnFile->close();
 }
 
 # Recalculate values for "ord" fields - make them start with 1 and be
@@ -118,11 +126,12 @@ sub recalculateOrds
 
 # Transform single tee (LM element in most tree files).
 # transformTree (XPath context with set namespaces, DOM node for tree root
-#				 (usualy "LM"))
+#				 (usualy "LM"), output flow for warnings)
 sub transformTree
 {
 	my $xpc = shift @_; # XPath context
 	my $tree = shift @_;
+	my $warnFile = shift @_;
 	my $role = 'ROOT';
 	
 	# Well, actually, for valid trees there should be only one children node.
@@ -137,7 +146,7 @@ sub transformTree
 
 		# Process PMC (probably) node.
 		my $chRole = &_getRole($xpc, $phrases[0]);
-		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role);
+		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile);
 		# Reset dependents' roles.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
 		{
@@ -150,9 +159,9 @@ sub transformTree
 		# Process children.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
 		{
-			&_transformSubtree($xpc, $ch);
+			&_transformSubtree($xpc, $ch, $warnFile);
 		}
-		&_transformSubtree($xpc, $newNode);
+		&_transformSubtree($xpc, $newNode, $warnFile);
 
 	}
 	
@@ -182,11 +191,12 @@ sub _finishRoles
 
 # Traversal function for procesing any subtree except "the big Tree" starting
 # _transformSubtree (XPath context with set namespaces, DOM "node" node for
-#					 subtree root)
+#					 subtree root, output flow for warnings)
 sub _transformSubtree
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
+	my $warnFile = shift @_;
 	my $role = &_getRole($xpc, $node);
 
 	# Reset dependents' roles.
@@ -210,7 +220,7 @@ sub _transformSubtree
 		# Process dependency children.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 		{
-			&_transformSubtree($xpc, $ch);
+			&_transformSubtree($xpc, $ch, $warnFile);
 		}
 		return;
 	}
@@ -223,16 +233,16 @@ sub _transformSubtree
 	
 	# Process phrase node.
 	my $phRole = &_getRole($xpc, $phrases[0]);
-	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role);
+	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile);
 	&_moveAllChildren($xpc, $node, $newNode);
 	$node->replaceNode($newNode);
 
 	# Process childen.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
 	{
-		&_transformSubtree($xpc, $ch);
+		&_transformSubtree($xpc, $ch, $warnFile);
 	}
-	&_transformSubtree($xpc, $newNode);
+	&_transformSubtree($xpc, $newNode, $warnFile);
 }
 
 # Role transformations
@@ -266,8 +276,9 @@ sub _renameDependent
 ###############################################################################
 # Phrase specific functions (does not process phrase constituent children, this
 # is responsibility of &_transformSubtree.
-# phrase_name (XPath context with set namespaces, DOM "xinfo", "coordinfo" or
-#			   "pmcinfo" node for subtree root, parent role)
+# phrase_name (XPath context with set namespaces, DOM "xinfo" or "coordinfo" or
+#			   "pmcinfo" node for subtree root, parent role, output flow for
+#			   warnings)
 ###############################################################################
 
 ### X-words ###################################################################
@@ -306,6 +317,7 @@ sub namedEnt
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	my $warnFile = shift @_;
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
@@ -314,12 +326,10 @@ sub namedEnt
 
 	if (@ch gt 1)
 	{
-		return &defaultPhrase($xpc, $node, $parentRole);
+		return &defaultPhrase($xpc, $node, $parentRole, $warnFile);
 	} else
 	{
 		# Change role for the subroot.
-		#my $oldRole = &_getRole($xpc, $ch[0]);
-		#&_setNodeRole($xpc, $ch[0], "$parentRole-namedEnt-$oldRole");
 		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt');
 		$ch[0]->unbindNode();
 		return $ch[0];
@@ -331,6 +341,7 @@ sub phrasElem
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	my $warnFile = shift @_;
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
@@ -340,9 +351,10 @@ sub phrasElem
 	if (@ch gt 1)
 	{
 		# Warning about suspective structure.
-		print 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
+		print 'phrasElem has '.(scalar @ch)." children.\n";
+		print $warnFile 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
 			." children.\n";
-		return &defaultPhrase($xpc, $node, $parentRole);
+		return &defaultPhrase($xpc, $node, $parentRole, $warnFile);
 	} else
 	{
 		# Change role for the subroot.
@@ -466,6 +478,7 @@ sub defaultPhrase
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	# my $warnFile = shift @_; # Not used right now
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
@@ -489,8 +502,6 @@ sub defaultPhrase
 	}
 
 	# Change role for the subroot.
-	#my $oldRole = ${$xpc->findnodes('pml:role', $lastBasElem)}[0]->textContent;
-	#&_setNodeRole($xpc, $lastBasElem, "$parentRole-$phraseRole-$oldRole");
 	&_renamePhraseSubroot($xpc, $lastBasElem, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
@@ -513,13 +524,15 @@ sub defaultPhrase
 # Finds child element with specified role and makes ir parent of children
 # nodes.
 # _allNodesBelowOne (role determining node to become root, XPath context with
-#					 set namespaces, DOM node, role of the parent node)
+#					 set namespaces, DOM node, role of the parent node, output
+#					 flow for warnings)
 sub _allNodesBelowOne
 {
 	my $rootRole = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	# my $warnFile = shift @_; # Not used right now
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find node with speciffied rootRole.
@@ -544,13 +557,15 @@ sub _allNodesBelowOne
 }
 # Makes parent-child chain of all node's children.
 # _chainAllNodes (should start with last node, XPath context with set
-#				  namespaces, DOM node, role of the parent node)
+#				  namespaces, DOM node, role of the parent node, output flow
+#				  for warnings)
 sub _chainAllNodes
 {
 	my $invert = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	# my $warnFile = shift @_; # Not used right now
 	my $phraseRole = &_getRole($xpc, $node);
 
 	# Find the children.
@@ -563,8 +578,6 @@ sub _chainAllNodes
 	
 	# Process new root.
 	$newRoot->unbindNode();
-	#my $rootRole = &_getRole($xpc, $newRoot);
-	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
 	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Process other nodes.
@@ -584,7 +597,7 @@ sub _chainAllNodes
 
 # _allBelowPunct (should start with last 'punct', treat 'no' as 'basElem',
 #				  XPath context with set namespaces, DOM node, role of the
-#				  parent node)
+#				  parent node, output flow for warnings)
 sub _allBelowPunct
 {
 	my $invert = shift @_;
@@ -592,6 +605,7 @@ sub _allBelowPunct
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	my $warnFile = shift @_;
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
@@ -609,19 +623,19 @@ sub _allBelowPunct
 			'pml:children/pml:node[pml:role!=\'no\']';
 		@ch = $xpc->findnodes($searchString, $node);
 		# Warning about suspective structure.
-		print "$phraseRole below ". $node->find('../../@id').' has '.(scalar @ch)
-			." potential non-punct/conj/no rootnodes.\n"
-			if (scalar @ch ne 1);
+		if (scalar @ch ne 1){
+			print "$phraseRole has ".(scalar @ch)
+				." potential non-punct/conj/no rootnodes.\n";
+			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+				.(scalar @ch)." potential non-punct/conj/no rootnodes.\n";
+		}
 		@res = @{&_sortNodesByOrd($xpc, 0, @ch)};	
 	}
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @ch);
-	#my @res = @{&_sortNodesByOrd($xpc, $invert, @ch)};	
 	my $newRoot = $res[0];
 	
 	# Change role for node with speciffied rootRole.
-	#my $oldRole = &_getRole($xpc, $newRoot);
-	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
 	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
@@ -635,12 +649,13 @@ sub _allBelowPunct
 	return $newRoot;
 }
 # _allBelowBasElem (XPath context with set namespaces, DOM node, role of the
-#					parent node)
+#					parent node, output flow for warnings)
 sub _allBelowBasElem
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	my $warnFile = shift @_;
 	my $phraseRole = &_getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
@@ -651,14 +666,15 @@ sub _allBelowBasElem
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @res);
 	# Warning about suspective structure.
-	print "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
-		." potential rootnodes.\n"
-		if (scalar @res ne 1);
+	if (scalar @res ne 1)
+	{
+		print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+			.(scalar @res)." potential rootnodes.\n";
+	}
 	
 	my $newRoot = $res[0];
 	# Change role for node with speciffied rootRole.
-	#my $oldRole = &_getRole($xpc, $newRoot);
-	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$oldRole");
 	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Rebuild subtree.
@@ -675,29 +691,35 @@ sub _allBelowBasElem
 ### ...for coordination #######################################################
 
 # _defaultCoord (XPath context with set namespaces, DOM node, role of the
-#				 parent node)
+#				 parent node, output flow for warnings)
 sub _defaultCoord
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
+	my $warnFile = shift @_;
 	my $phraseRole = &_getRole($xpc, $node);
 
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
 	my @sorted = @{&_sortNodesByOrd($xpc, 0, @ch)};
-	#print "skaits: " . @sorted . "\n";
 	
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @sorted);
 	# Warning about suspective structure.
-	print "$phraseRole below ". $node->find('../../@id').' has only '
-		.(scalar @sorted)." children.\n"
-		if (scalar @sorted < 3);
+	if (scalar @sorted < 3)
+	{
+		print "$phraseRole has only ".(scalar @sorted)." children.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id')
+			.' has only '.(scalar @sorted)." children.\n";
+	}
 	my $firstRole = &_getRole($xpc, $sorted[0]);
 	# Warning about suspective structure.
-	print "$phraseRole below ". $node->find('../../@id')." starts with $firstRole.\n"
-		if ($firstRole eq 'punct');
-
+	if ($firstRole eq 'punct')
+	{
+		print "$phraseRole starts with $firstRole.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id')
+			." starts with $firstRole.\n";
+	}
 		
 	# If this coordination contained no node appropriate to be coordination
 	# head ("punct" or "conj"), it is analized as coordination anague
@@ -705,7 +727,7 @@ sub _defaultCoord
 		'pml:children/pml:node[pml:role=\'conj\' or pml:role=\'punct\']', $node);
 	if (not @validRootRoles or @validRootRoles lt 1)
 	{
-		return  &coordAnal ($xpc, $node, $parentRole);
+		return  &coordAnal ($xpc, $node, $parentRole, $warnFile);
 	}
 		
 	my ($newRoot, $prevRoot, $tmpRoot);
@@ -722,7 +744,6 @@ sub _defaultCoord
 			if (not defined $tmp)
 			{
 				# Move last nodes.
-				#print "4: $prevRoot\n";
 				my $chNode = &_getChildrenNode($xpc, $prevRoot);
 				foreach my $ch (@postponed)
 				{
@@ -890,8 +911,10 @@ sub AUTOLOAD
 	our $AUTOLOAD;
 	my $name = $AUTOLOAD;
 	$name =~ s/.*::(.*?)$/$1/;
+	my $warnFile = $_[3];
 	
-	print "Don't know how to process \"$name\" below ".$_[1]->find('../../@id')
+	print "Don't know how to process \"$name\", will use default rule.\n";
+	print $warnFile "Don't know how to process \"$name\" below ".$_[1]->find('../../@id')
 		.", will use default rule.\n";
 	return &defaultPhrase;
 }
