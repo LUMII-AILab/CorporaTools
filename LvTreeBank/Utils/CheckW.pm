@@ -57,7 +57,7 @@ END
 	my $movedPara = 0;
 
 	mkpath("$dirPrefix/res/");
-	my $errFile = IO::File->new("$dirPrefix/res/errors.txt", ">") or die "errors.txt: $!";
+	my $errFile = IO::File->new("$dirPrefix/res/$pml-errors.txt", ">") or die "errors.txt: $!";
 	
 	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "TXT file $txt: $!";
 	my $wIn = IO::File->new("$dirPrefix/$pml", "< :encoding(UTF-8)") or die "W file $pml: $!";
