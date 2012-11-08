@@ -13,8 +13,8 @@ use XML::LibXML;  # XML handling library
 # This program transforms Latvian Treebank analytical layer files from native
 # hybrid format to dependency-only simplification. Input files are supposed to
 # be valid against coresponding PML schemas. Invalid features like multiple
-# roles, ords per single node are not checked. To obtain best results, input
-# files should have all nodes numbered (TODO: fix this).
+# roles, ords per single node are not checked. To obtain results, input files
+# files must have all nodes numbered (TODO: fix this).
 #
 # Works with A level schema v.2.12.
 # Input files - utf8.
@@ -50,6 +50,8 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
+	
+	print "Processing $oldName started...\n";
 
 	# Load the XML.
 	my $parser = XML::LibXML->new('no_blanks' => 1);
@@ -105,7 +107,7 @@ sub recalculateOrds
 			$parent->removeChild($o);
 		} else
 		{
-			warn "recalculateOrds warns: Multiple textnodes below ord node.\n"
+			warn "recalculateOrds warns: Multiple textnodes below ord node\n"
 				if (@{$o->childNodes()} gt 1); # This should not happen.
 			$o->removeChild($o->firstChild);
 			$o->appendText($nextId);
@@ -129,7 +131,7 @@ sub transformTree
 		my @phrases = $xpc->findnodes(
 			'pml:children/*[local-name()!=\'node\']',
 			$tree);
-		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root."
+		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root!"
 			if (scalar @phrases ne 1);
 		
 
@@ -171,7 +173,7 @@ sub _finishRoles
 	{
 		my $oldRole = $r->textContent;
 		next if $oldRole =~/-.*-/;
-		warn "_finishRoles warns: Multiple textnodes below role node.\n"
+		warn "_finishRoles warns: Multiple textnodes below role node\n"
 			if (@{$r->childNodes()} gt 1); # This should not happen.
 		$r->removeChild($r->firstChild);
 		$r->appendText("$oldRole-0-0");
@@ -199,7 +201,7 @@ sub _transformSubtree
 		'pml:children/*[local-name()!=\'node\']',
 		$node);
 	# A bit structure checking: only one phrase per regular node is allowed.
-	die (($node->find('@id'))." has ".(scalar @phrases)." non-node children.")
+	die (($node->find('@id'))." has ".(scalar @phrases)." non-node children!")
 		if (scalar @phrases gt 1);
 	
 	# If there is no phrase children, process dependency children and finish.
@@ -216,7 +218,7 @@ sub _transformSubtree
 	# A bit structure checking: phrase can't have another phrase as direct child.
 	my @phrasePhrases = $xpc->findnodes(
 		'pml:children/*[local-name()!=\'node\']', $phrases[0]);
-	die (($node->find('@id'))." has illegal phrase cascade as child.")
+	die (($node->find('@id'))." has illegal phrase cascade as child!")
 		if (scalar @phrasePhrases gt 0);
 	
 	# Process phrase node.
@@ -307,7 +309,7 @@ sub namedEnt
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die 'namedEnt below '. $node->find('../../@id').' has no children.'
+	die 'namedEnt below '. $node->find('../../@id').' has no children!'
 		if (@ch lt 1);
 
 	if (@ch gt 1)
@@ -332,13 +334,14 @@ sub phrasElem
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die 'phrasElem below '. $node->find('../../@id').' has no children.'
+	die 'phrasElem below '. $node->find('../../@id').' has no children!'
 		if (@ch lt 1);
 
 	if (@ch gt 1)
 	{
-		warn "phrasElem below ". $node->find('../../@id').' has '.(scalar @ch)
-			.' children.';
+		# Warning about suspective structure.
+		print 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
+			." children.\n";
 		return &defaultPhrase($xpc, $node, $parentRole);
 	} else
 	{
@@ -432,10 +435,11 @@ sub utter
 #		$node);
 #	@res = $xpc->findnodes(
 #		"pml:children/pml:node[pml:role!=\'punct\']", $node) unless (@res);
-#	die "utter below ". $node->find('../../@id').' has no children.'
+#	die "utter below ". $node->find('../../@id').' has no children!'
 #		if (not @res);
-#	warn "utter below ". $node->find('../../@id').' has '.(scalar @res)
-#		.' potential rootnodes.'
+	# Warning about suspective structure.
+#	print "utter below ". $node->find('../../@id').' has '.(scalar @res)
+#		." potential rootnodes.\n"
 #		if (scalar @res ne 1);
 		
 #	my $newRoot = $res[0];
@@ -456,7 +460,7 @@ sub utter
 }
 
 ### What to do when don't know what to do #####################################
-
+# Put everrything below last basElem or last constituent.
 sub defaultPhrase
 {
 	my $xpc = shift @_; # XPath context
@@ -520,7 +524,7 @@ sub _allNodesBelowOne
 	
 	# Find node with speciffied rootRole.
 	my @res = $xpc->findnodes("pml:children/pml:node[pml:role=\'$rootRole\']", $node);
-	die "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)." \"$rootRole\"."
+	die "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)." \"$rootRole\"!"
 		if (scalar @res ne 1);
 	my $newRoot = $res[0];
 
@@ -551,7 +555,7 @@ sub _chainAllNodes
 
 	# Find the children.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (@ch lt 1);
 	my @sorted = @{&_sortNodesByOrd($xpc, $invert, @ch)};
 	my $newRoot = $sorted[0];
@@ -604,12 +608,13 @@ sub _allBelowPunct
 			'pml:children/pml:node' :
 			'pml:children/pml:node[pml:role!=\'no\']';
 		@ch = $xpc->findnodes($searchString, $node);
-		warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @ch)
-			.' potential non-punct/conj/no rootnodes.'
+		# Warning about suspective structure.
+		print "$phraseRole below ". $node->find('../../@id').' has '.(scalar @ch)
+			." potential non-punct/conj/no rootnodes.\n"
 			if (scalar @ch ne 1);
 		@res = @{&_sortNodesByOrd($xpc, 0, @ch)};	
 	}
-	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @ch);
 	#my @res = @{&_sortNodesByOrd($xpc, $invert, @ch)};	
 	my $newRoot = $res[0];
@@ -643,10 +648,11 @@ sub _allBelowBasElem
 		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
 		$node);
 	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};
-	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @res);
-	warn "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
-		.' potential rootnodes.'
+	# Warning about suspective structure.
+	print "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)
+		." potential rootnodes.\n"
 		if (scalar @res ne 1);
 	
 	my $newRoot = $res[0];
@@ -679,13 +685,29 @@ sub _defaultCoord
 
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
 	my @sorted = @{&_sortNodesByOrd($xpc, 0, @ch)};
+	#print "skaits: " . @sorted . "\n";
 	
-	die "$phraseRole below ". $node->find('../../@id').' has no children.'
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @sorted);
-	warn "$phraseRole below ". $node->find('../../@id').' has only '
-		.(scalar @sorted).' children'
-		if (scalar @sorted lt 3);
-	
+	# Warning about suspective structure.
+	print "$phraseRole below ". $node->find('../../@id').' has only '
+		.(scalar @sorted)." children.\n"
+		if (scalar @sorted < 3);
+	my $firstRole = &_getRole($xpc, $sorted[0]);
+	# Warning about suspective structure.
+	print "$phraseRole below ". $node->find('../../@id')." starts with $firstRole.\n"
+		if ($firstRole eq 'punct');
+
+		
+	# If this coordination contained no node appropriate to be coordination
+	# head ("punct" or "conj"), it is analized as coordination anague
+	my @validRootRoles = $xpc->findnodes(
+		'pml:children/pml:node[pml:role=\'conj\' or pml:role=\'punct\']', $node);
+	if (not @validRootRoles or @validRootRoles lt 1)
+	{
+		return  &coordAnal ($xpc, $node, $parentRole);
+	}
+		
 	my ($newRoot, $prevRoot, $tmpRoot);
 	my @postponed = ();
 	while (@sorted) # Loop through all potential 'subroots'.
@@ -694,11 +716,13 @@ sub _defaultCoord
 		while (not defined $tmpRoot)
 		{
 			my $tmp = shift @sorted;
+			
 			# All coordination constituents have been traversed, no new
 			# subroots can be found: process last postponed nodes and exit.
 			if (not defined $tmp)
 			{
 				# Move last nodes.
+				#print "4: $prevRoot\n";
 				my $chNode = &_getChildrenNode($xpc, $prevRoot);
 				foreach my $ch (@postponed)
 				{
@@ -709,6 +733,7 @@ sub _defaultCoord
 				return $newRoot;
 			}
 			
+			# Find next subroot.
 			my $role = &_getRole($xpc, $tmp);
 			if ($role eq 'punct' or $role eq 'conj')
 			{
@@ -720,9 +745,9 @@ sub _defaultCoord
 			}
 		}
 		my $rootRole = &_getRole($xpc, $tmpRoot);
-		die "$phraseRole below ". $node->find('../../@id')." ends with $rootRole."
-			if (not @sorted);
-		my $nextRole = &_getRole($xpc, $sorted[0]);
+		die "$phraseRole below ". $node->find('../../@id')." ends with $rootRole!"
+			if ($rootRole ne 'conj' and not @sorted);
+		my $nextRole = @sorted ? &_getRole($xpc, $sorted[0]) : '';
 		
 		# Deal with comma near  conjuction.
 		if ($rootRole eq 'punct' and $nextRole eq 'conj')
@@ -772,7 +797,7 @@ sub _defaultCoord
 ###############################################################################
 
 # Move children from one node to an other.
-# _getChildrenNode (XPath context with set namespaces, old parent of children
+# _moveAllChildren (XPath context with set namespaces, old parent of children
 #					to be moved, new parent)
 # return new parent
 sub _moveAllChildren
@@ -813,7 +838,7 @@ sub _setNodeRole
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $newRole = shift @_;
-	die 'Can\'t set \"role\" for '.$node->nodeName."\n"
+	die 'Can\'t set \"role\" for '.$node->nodeName."!\n"
 		unless ($node->nodeName eq 'node');
 		
 	my @roles = $xpc->findnodes('pml:role', $node);
@@ -865,7 +890,9 @@ sub AUTOLOAD
 	our $AUTOLOAD;
 	my $name = $AUTOLOAD;
 	$name =~ s/.*::(.*?)$/$1/;
-	print "Don't know how to process \"$name\", will use default rule.\n";
+	
+	print "Don't know how to process \"$name\" below ".$_[1]->find('../../@id')
+		.", will use default rule.\n";
 	return &defaultPhrase;
 }
 1;
