@@ -35,7 +35,7 @@ Params:
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
 END
-		exit 0;
+		exit 1;
 	}
 	my $dir_name = shift @ARGV;
 	my $pmltk_path = shift @ARGV;
