@@ -8,7 +8,8 @@ use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing interface for pmltk-1.1.5 knitter. WinXP specific.
+# Batch processing interface for pmltk-1.1.5 knitter. WinXP specific. Exits
+# after first failed file processing.
 #
 # Input: directory with files to process,
 #		 directory where PML Toolkit is (default is 'pmltk-1.1.5').
@@ -34,17 +35,26 @@ Params:
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
 END
-		exit 1;
+		exit 0;
 	}
 	my $dir_name = shift @ARGV;
-	my $pmltk_path = shift @ARGV or 'pmltk-1.1.5';
+	my $pmltk_path = shift @ARGV;
+	$pmltk_path = 'pmltk-1.1.5' if (not $pmltk_path);
 	my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
 	while (defined(my $in_file = $dir->read))
 	{
 		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
 		{
-			system ("perl $pmltk_path/tools/knit.pl $dir_name/$1.a $dir_name/$1.pml");
+			my $fail = system ("perl $pmltk_path/tools/knit.pl $dir_name/$1.a $dir_name/$1.pml");
+			if (not $fail) 
+			{
+				print "Processing $1 finished!\n";
+			} else
+			{
+				print "Something failed while processing $1!";
+				exit 1;
+			}
 		}
 	}
 }
