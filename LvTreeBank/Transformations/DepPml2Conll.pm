@@ -28,8 +28,10 @@ use LvTreeBank::Transformations::TagPurifier;
 
 # If form or token contains space, it will be replaced with this string.
 our $space_replacement = "_";
-# Used as boolean to determine, if add non-underscore CPOSTAG.
-our $add_cpostag = 1;
+# What postag to use?
+#our $postag = 'purify'; #'full' or 'purify', default is full.
+# What cpostag to use?
+#our $cpostag = 'first'; #'purify' or 'first' (single letter) or 'none', default is none;
 
 # Process single XML file. This should be used as entry point, if this module
 # is used standalone.
@@ -47,6 +49,8 @@ Params:
    0/1 - print labeled output (if true, trees with reductions will be ommited)
    directory prefix
    file name
+   CPOSTAG mode [opt, 'purify' or 'first' (single letter) or 'none'(default)]
+   POSTAG mode [opt, 'purify' or 'full' (default)]
    new file name [opt, current file name used otherwise]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
@@ -57,6 +61,8 @@ END
 	my $printLabels = shift @_;
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
+	my $cpostag = (shift @_ or 'none');
+	my $postag = (shift @_ or 'full');
 	my $newName = (shift @_ or $oldName);
 	
 	# Open output file.
@@ -112,18 +118,33 @@ END
 			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
 			$lemma =~ s/ /\Q$space_replacement\E/g;
 			print $out "$lemma\t"; #LEMMA
+			
 			my $tag = ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent;
 			$tag =~ tr/][//d;
-			if ($add_cpostag)
+			$tag =~ s#^N/A$#_#;
+			
+			if ($cpostag eq 'purify')
 			{
-				my $ctag = LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag);
-				print $out "$ctag\t"; #CPOSTAG
+				print $out LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag); #CPOSTAG
+			} elsif ($cpostag eq 'first')
+			{
+				$tag =~/^(.)/;
+				print $out "$1"; #CPOSTAG
 			} else
 			{
-				print $out "_\t"; #CPOSTAG
+				print $out "_"; #CPOSTAG
 			}
-			#print $out ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent; #POSTAG
-			print $out "$tag\t_\t"; #POSTAG, FEATS
+			print $out "\t";
+			
+			if ($postag eq 'purify')
+			{
+				print $out LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag); #POSTAG
+			} else
+			{
+				print $out "$tag"; #POSTAG
+			}
+			
+			print $out "\t_\t"; #FEATS
 			exists($n2id{$head->findvalue('@id')}) ?
 				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
 			print $out "\t";

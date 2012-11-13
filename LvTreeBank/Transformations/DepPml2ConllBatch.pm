@@ -9,8 +9,9 @@ use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing for LvTreeBank::Transformations::DepPml2Conll - if two
-# arguments provided, treat it as directory and process all files in it.
+# Batch processing for LvTreeBank::Transformations::DepPml2Conll - if 4
+# arguments (mode, directory name, cpostag mode, postag mode) provided, treat
+# it as directory and process all files in it.
 # Otherwise pass all arguments to DepPml2Conll.
 #
 # Developed on Strawberry Perl 5.12.3.0
@@ -20,10 +21,12 @@ use IO::Dir;
 ###############################################################################
 sub transformFileBatch
 {
-	if (@ARGV eq 2)
+	if (@ARGV eq 4)
 	{
 		my $mode = shift @ARGV;
 		my $dir_name = shift @ARGV;
+		my $cpostag = shift @ARGV;
+		my $postag = shift @ARGV;
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 		my $infix = $mode ? "nored" : "unlabeled";
 		
@@ -32,7 +35,7 @@ sub transformFileBatch
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
 			{
 				LvTreeBank::Transformations::DepPml2Conll::transformFile (
-					$mode, $dir_name, $in_file, "$1-$infix.conll");
+					$mode, $dir_name, $in_file, $cpostag, $postag, "$1-$infix.conll");
 			}
 		}
 

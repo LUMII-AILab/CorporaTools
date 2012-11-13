@@ -22,8 +22,8 @@ sub purifyKamolsTag
 		$tag =~ s/^n.(...).$/n_$1_/i;
 	} elsif ($tag =~ /^v.{10}$/i) # Process verbs.
 	{
-		$tag =~ s/^v(.).([^p].)..(...).$/v$1_$2__$3_/i;	# For verbs.
-		$tag =~ s/^v(.).(p....).(.).$/v$1_$2_$3_/i;		# For participles.
+		$tag =~ s/^v(.).([^p].)..(..)..$/v$1_$2__$3__/i;	# For verbs.
+		$tag =~ s/^v(.).(p....).(.).$/v$1_$2_$3_/i;			# For participles.
 	} elsif ($tag =~ /^a.{6}/i) # Process adjectives.
 	{
 		$tag =~ s/^a.(...)..$/a_$1__/i;
