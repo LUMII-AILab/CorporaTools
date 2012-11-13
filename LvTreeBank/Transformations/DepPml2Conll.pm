@@ -9,6 +9,8 @@ use File::Path;
 use IO::File;
 use XML::LibXML;  # XML handling library
 
+use LvTreeBank::Transformations::TagPurifier;
+
 ###############################################################################
 # This program transforms Latvian Treebank files in dependency-only form from
 # knited-in PML to CoNLL format. Inputfiles must containtain no empty nodes
@@ -26,6 +28,8 @@ use XML::LibXML;  # XML handling library
 
 # If form or token contains space, it will be replaced with this string.
 our $space_replacement = "_";
+# Used as boolean to determine, if add non-underscore CPOSTAG.
+our $add_cpostag = 1;
 
 # Process single XML file. This should be used as entry point, if this module
 # is used standalone.
@@ -107,9 +111,19 @@ END
 			print $out "$form\t"; #FORM
 			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
 			$lemma =~ s/ /\Q$space_replacement\E/g;
-			print $out "$lemma\t_\t"; #LEMMA, CPOSTAG
-			print $out ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent; #POSTAG
-			print $out "\t_\t"; #FEATS
+			print $out "$lemma\t"; #LEMMA
+			my $tag = ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent;
+			$tag =~ tr/][//d;
+			if ($add_cpostag)
+			{
+				my $ctag = LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag);
+				print $out "$ctag\t"; #CPOSTAG
+			} else
+			{
+				print $out "_\t"; #CPOSTAG
+			}
+			#print $out ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent; #POSTAG
+			print $out "$tag\t_\t"; #POSTAG, FEATS
 			exists($n2id{$head->findvalue('@id')}) ?
 				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
 			print $out "\t";
