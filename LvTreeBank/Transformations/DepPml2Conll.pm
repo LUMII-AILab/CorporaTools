@@ -24,6 +24,9 @@ use XML::LibXML;  # XML handling library
 # Licenced under GPL.
 ###############################################################################
 
+# If form or token contains space, it will be replaced with this string.
+our $space_replacement = "_";
+
 # Process single XML file. This should be used as entry point, if this module
 # is used standalone.
 sub transformFile
@@ -99,10 +102,12 @@ END
 				$head = $head->parentNode;
 			}
 			print $out "$n2id{$n->findvalue('@id')}\t"; #ID
-			print $out ${$xpc->findnodes('pml:m.rf/pml:form', $n)}[0]->textContent; #FORM
-			print $out "\t";
-			print $out ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent; #LEMMA
-			print $out "\t_\t"; #CPOSTAG
+			my $form = ${$xpc->findnodes('pml:m.rf/pml:form', $n)}[0]->textContent;
+			$form =~ s/ /\Q$space_replacement\E/g;
+			print $out "$form\t"; #FORM
+			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
+			$lemma =~ s/ /\Q$space_replacement\E/g;
+			print $out "$lemma\t_\t"; #LEMMA, CPOSTAG
 			print $out ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent; #POSTAG
 			print $out "\t_\t"; #FEATS
 			exists($n2id{$head->findvalue('@id')}) ?
