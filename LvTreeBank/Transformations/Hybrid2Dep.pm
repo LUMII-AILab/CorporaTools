@@ -299,6 +299,23 @@ sub subrAnal
 {
 	return &defaultPhrase(@_);
 }
+sub coordAnal
+{
+	my $xpc = $_[0]; # XPath context
+	my $node = $_[1];
+	#my $parentRole = $_[2];
+	my $warnFile = $_[3];
+
+	# Warning about suspective structure.
+	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
+	if (@ch != 2)
+	{
+		print 'coordAnal has '.(scalar @ch)." children.\n";
+		print $warnFile 'coordAnal below '. $node->find('../../@id').' has '
+				.(scalar @ch)." children.\n";
+	}
+	return &_chainAllNodes(1, @_);
+}
 sub xNum
 {
 	return &_chainAllNodes(1, @_);
