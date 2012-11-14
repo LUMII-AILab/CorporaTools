@@ -297,21 +297,21 @@ sub xParticle
 }
 sub subrAnal
 {
-	return &defaultPhrase(@_);
+	return &_defaultPhrase(@_);
 }
 sub coordAnal
 {
 	my $xpc = $_[0]; # XPath context
 	my $node = $_[1];
-	#my $parentRole = $_[2];
+	my $parentRole = $_[2];
 	my $warnFile = $_[3];
 
 	# Warning about suspective structure.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	if (@ch != 2)
+	if (@ch != 2 and $parentRole eq 'coordAnal')
 	{
-		print 'coordAnal has '.(scalar @ch)." children.\n";
-		print $warnFile 'coordAnal below '. $node->find('../../@id').' has '
+		print "$parentRole has ".(scalar @ch)." children.\n";
+		print $warnFile "$parentRole below ". $node->find('../../@id').' has '
 				.(scalar @ch)." children.\n";
 	}
 	return &_chainAllNodes(1, @_);
@@ -343,7 +343,7 @@ sub namedEnt
 
 	if (@ch gt 1)
 	{
-		return &defaultPhrase($xpc, $node, $parentRole, $warnFile);
+		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
 	} else
 	{
 		# Change role for the subroot.
@@ -371,7 +371,7 @@ sub phrasElem
 		print 'phrasElem has '.(scalar @ch)." children.\n";
 		print $warnFile 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
 			." children.\n";
-		return &defaultPhrase($xpc, $node, $parentRole, $warnFile);
+		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
 	} else
 	{
 		# Change role for the subroot.
@@ -490,7 +490,7 @@ sub utter
 
 ### What to do when don't know what to do #####################################
 # Put everrything below last basElem or last constituent.
-sub defaultPhrase
+sub _defaultPhrase
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -725,9 +725,9 @@ sub _defaultCoord
 	# Warning about suspective structure.
 	if (scalar @sorted < 3)
 	{
-		print "$phraseRole has only ".(scalar @sorted)." children.\n";
+		print "$phraseRole has left only ".(scalar @sorted)." children.\n";
 		print $warnFile "$phraseRole below ". $node->find('../../@id')
-			.' has only '.(scalar @sorted)." children.\n";
+			.' has left only '.(scalar @sorted)." children.\n";
 	}
 	my $firstRole = &_getRole($xpc, $sorted[0]);
 	# Warning about suspective structure.
@@ -744,6 +744,10 @@ sub _defaultCoord
 		'pml:children/pml:node[pml:role=\'conj\' or pml:role=\'punct\']', $node);
 	if (not @validRootRoles or @validRootRoles lt 1)
 	{
+		# Warning about suspective structure.
+		print "$phraseRole contains not enough conj and punct.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id')
+			." contains not enough conj and punct.\n";
 		return  &coordAnal ($xpc, $node, $parentRole, $warnFile);
 	}
 		
@@ -933,6 +937,6 @@ sub AUTOLOAD
 	print "Don't know how to process \"$name\", will use default rule.\n";
 	print $warnFile "Don't know how to process \"$name\" below ".$_[1]->find('../../@id')
 		.", will use default rule.\n";
-	return &defaultPhrase;
+	return &_defaultPhrase;
 }
 1;
