@@ -9,5 +9,5 @@ resultfile="`echo "$filelist" | sed -e 's/^\(.*\)\.m$/\1\.txt/g'`"
 
 echo "PML->plain: Converting $filelist to $resultfile"
 
-perl -e "use LvMorphoCorpus::Utils::ApplyXSLT; LvMorphoCorpus::Utils::ApplyXSLT::applyXSLT1_0(@ARGV)" "$filelist" LvMorphoCorpus/PMLToPlain/pmlM2plain.xsl "$resultfile"
+perl -e "use LvCorporaTools::GenericUtils::ApplyXSLT; LvCorporaTools::GenericUtils::ApplyXSLT::applyXSLT1_0(@ARGV)" "$filelist" LvCorporaTools/PMLToPlain/pmlM2plain.xsl "$resultfile"
 
