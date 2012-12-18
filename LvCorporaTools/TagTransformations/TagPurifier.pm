@@ -1,8 +1,13 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Transformations::TagPurifier;
+package LvCorporaTools::TagTransformations::TagPurifier;
 
 use strict;
 use warnings;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(purifyKamolsTag);
+
 ###############################################################################
 # This program takes single Semti-Kamols morphotag and removes nonsyntactical
 # features.

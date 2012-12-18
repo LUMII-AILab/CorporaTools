@@ -1,15 +1,15 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Transformations::Hybrid2DepBatch;
+package LvCorporaTools::TreeTransformations::Hybrid2DepBatch;
 
-use LvTreeBank::Transformations::Hybrid2Dep;
+use LvCorporaTools::TreeTransformations::Hybrid2Dep qw(transformFile);
 
 use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing for LvTreeBank::Transformations::Hybrid2Dep - if single argument
-# provided, treat it as directory and process all files in it. Otherwise pass
-# all arguments to Hybrid2Dep.
+# Batch processing for LvCorporaTools::TreeTransformations::Hybrid2Dep - if
+# single argument provided, treat it as directory and process all files in it.
+# Otherwise pass all arguments to Hybrid2Dep.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Latvian Treebank project, 2012
@@ -28,14 +28,14 @@ sub transformFileBatch
 		{
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
 			{
-				LvTreeBank::Transformations::Hybrid2Dep::transformFile ($dir_name, $in_file, "$1-dep.a");
+				transformFile ($dir_name, $in_file, "$1-dep.a");
 			}
 		}
 
 	}
 	else
 	{
-		LvTreeBank::Transformations::Hybrid2Dep::transformFile (@ARGV);
+		transformFile (@ARGV);
 	}
 }
 1;

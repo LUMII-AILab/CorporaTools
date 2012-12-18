@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Utils::NormalizeIds;
+package LvCorporaTools::PMLUtils::NormalizeIds;
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ use XML::Simple;  # XML handling library
 use Tie::IxHash; # This class provides analogue to java's LinkedHashMap
 use IO::File;
 use File::Path;
-use LvTreeBank::Utils::SimpleXmlIo qw(loadXml printXml);
+use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 
 ###############################################################################
 # This program recalculate IDs in the given PML dataset. Number of first

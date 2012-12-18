@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Utils::CheckW;
+package LvCorporaTools::PMLUtils::CheckW;
 
 use strict;
 use warnings;

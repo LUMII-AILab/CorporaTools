@@ -1,9 +1,14 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Transformations::Hybrid2Dep;
+package LvCorporaTools::TreeTransformations::Hybrid2Dep;
 
 use strict;
 use warnings;
 #use utf8;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(transformFile transformTree recalculateOrds);
+
 
 use File::Path;
 use IO::File;

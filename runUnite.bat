@@ -1,2 +1,2 @@
-perl -e "use LvTreeBank::Utils::Unite; LvTreeBank::Utils::Unite::unite(@ARGV)" testdata\Unite TestaRezultaats
+perl -e "use LvCorporaTools::PMLUtils::Unite; LvCorporaTools::PMLUtils::Unite::unite(@ARGV)" testdata\Unite TestaRezultaats
 pause

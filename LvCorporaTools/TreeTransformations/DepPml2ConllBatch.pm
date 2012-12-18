@@ -1,15 +1,15 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Transformations::DepPml2ConllBatch;
+package LvCorporaTools::TreeTransformations::DepPml2ConllBatch;
 
 use strict;
 use warnings;
 
-use LvTreeBank::Transformations::DepPml2Conll;
+use LvCorporaTools::TreeTransformations::DepPml2Conll qw(transformFile);
 use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing for LvTreeBank::Transformations::DepPml2Conll - if 4
+# Batch processing for LvCorporaTools::TreeTransformations::DepPml2Conll - if 4
 # arguments (mode, directory name, cpostag mode, postag mode) provided, treat
 # it as directory and process all files in it.
 # Otherwise pass all arguments to DepPml2Conll.
@@ -34,15 +34,15 @@ sub transformFileBatch
 		{
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
 			{
-				LvTreeBank::Transformations::DepPml2Conll::transformFile (
-					$mode, $dir_name, $in_file, $cpostag, $postag, "$1-$infix.conll");
+				transformFile ($mode, $dir_name, $in_file, $cpostag, $postag,
+					"$1-$infix.conll");
 			}
 		}
 
 	}
 	else
 	{
-		LvTreeBank::Transformations::DepPml2Conll::transformFile (@ARGV);
+		transformFile (@ARGV);
 	}
 }
 1;

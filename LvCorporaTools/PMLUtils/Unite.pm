@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Utils::Unite;
+package LvCorporaTools::PMLUtils::Unite;
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ use warnings;
 use Exporter();
 our @EXPORT_OK = qw(unite);
 
-use LvTreeBank::Utils::NormalizeIds;# qw(load process doOutput);
+use LvCorporaTools::PMLUtils::NormalizeIds qw(load process doOutput);
 
 use IO::File;
 use IO::Dir;
@@ -62,8 +62,8 @@ END
 		if ((! -d "$dirName\$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
 			my $id = $1;
-			my $xmls = LvTreeBank::Utils::NormalizeIds::load ($dirName, $id, $fileName);
-			my $res = LvTreeBank::Utils::NormalizeIds::process (
+			my $xmls = load ($dirName, $id, $fileName);
+			my $res = process (
 				$fileName, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
 				$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);
 				
@@ -91,7 +91,7 @@ END
 		}
 	}
 	
-	LvTreeBank::Utils::NormalizeIds::doOutput $dirName, $fileName, $xmlData;
+	doOutput($dirName, $fileName, $xmlData);
 
 }
 

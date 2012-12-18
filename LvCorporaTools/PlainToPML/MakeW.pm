@@ -1,5 +1,5 @@
 ﻿#!C:\strawberry\perl\bin\perl -w
-package LvMorphoCorpus::PlainToPML::MakeW;
+package LvCorporaTools::PlainToPML::MakeW;
 
 use utf8;
 use strict;

@@ -1,8 +1,8 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Utils::SimpleXmlIo;
+package LvCorporaTools::GenericUtils::SimpleXmlIo;
 ###############################################################################
-# This module contains most basic helper functions for reading and writing PML
-# files with XML::Simple.
+# This module contains most basic helper functions for reading and writing
+# lv-PML files with XML::Simple.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Latvian Treebank project, 2012

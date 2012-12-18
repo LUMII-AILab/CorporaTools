@@ -1,15 +1,19 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Transformations::DepPml2Conll;
+package LvCorporaTools::TreeTransformations::DepPml2Conll;
 
 use strict;
 use warnings;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(transformFile space_replacement);
 
 use Data::Dumper;
 use File::Path;
 use IO::File;
 use XML::LibXML;  # XML handling library
 
-use LvTreeBank::Transformations::TagPurifier;
+use LvCorporaTools::TagTransformations::TagPurifier qw(purifyKamolsTag);
 
 ###############################################################################
 # This program transforms Latvian Treebank files in dependency-only form from
@@ -125,7 +129,7 @@ END
 			
 			if ($cpostag eq 'purify')
 			{
-				print $out LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag); #CPOSTAG
+				print $out purifyKamolsTag($tag); #CPOSTAG
 			} elsif ($cpostag eq 'first')
 			{
 				$tag =~/^(.)/;
@@ -138,7 +142,7 @@ END
 			
 			if ($postag eq 'purify')
 			{
-				print $out LvTreeBank::Transformations::TagPurifier::purifyKamolsTag($tag); #POSTAG
+				print $out purifyKamolsTag($tag); #POSTAG
 			} else
 			{
 				print $out "$tag"; #POSTAG

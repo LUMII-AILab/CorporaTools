@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvTreeBank::Utils::PmltkKnitterBatch;
+package LvCorporaTools::PMLUtils::PmltkKnitterBatch;
 
 use strict;
 use warnings;

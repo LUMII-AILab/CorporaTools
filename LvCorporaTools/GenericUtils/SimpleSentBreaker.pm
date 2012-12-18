@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvMorphoCorpus::Utils::SimpleSentBreaker;
+package LvCorporaTools::GenericUtils::SimpleSentBreaker;
 
 use utf8;
 use strict;

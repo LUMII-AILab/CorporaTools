@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvMorphoCorpus::TagTransformations::TagTransformator;
+package LvCorporaTools::TagTransformations::TagTransformator;
 use utf8;
 use strict;
 ###############################################################################
