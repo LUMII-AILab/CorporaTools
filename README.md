@@ -6,9 +6,16 @@ corpora. Native data format of the Latvian corpora are adjusted PML.
 Corresponding PML Schemas are available at
 "TrEd extension/lv-treebank/resources".
 
-Here we provide source code (folders LvTreeBank and LvMorphoCorpus) together
-with invocation samples for Windows (*.bat files) and test data.
+Contents
+--------
 
+* LvCorporaTools - perl scripts and xslt-s for varios coprora data processing;
+* testdata - data samples for stuff in LvCorporaTools;
+* TrEd extension - development snapshot for lv-treebank module for TrEd tool
+* *.bat files - invocation examples for LvCorporaTools;
+(this enables TrEd to operate with lv-PML files);
+* MorphoVerificator - java written tool implementing various heuristics for
+searching human errors in morphological corpora.
 
 License
 -------
