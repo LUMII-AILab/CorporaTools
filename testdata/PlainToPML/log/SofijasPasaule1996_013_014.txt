@@ -1,0 +1,936 @@
+Kā	Kā	w-SofijasPasaule1996_013_014-p1w1	﻿Kā	﻿Kā <[r,0,m],'kā','veida apstāklis','būtu'>
+doesn't match 
+būtu	būtu	w-SofijasPasaule1996_013_014-p1w2	būtu	būtu <[v,m,n,c,0,i,i,0,0,a,n],'būt','',''>
+,	,	w-SofijasPasaule1996_013_014-p1w3	,	, <[z,c],',','',''>
+ja	ja	w-SofijasPasaule1996_013_014-p1w4	ja	ja <[c,s,s],'ja','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p1w5	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','tiešais papildinātājs','sauktu'>
+sauktu	sauktu	w-SofijasPasaule1996_013_014-p1w6	sauktu	sauktu <[v,m,n,c,0,t,1,0,0,a,n],'saukt','',''>
+kāda	kāda	w-SofijasPasaule1996_013_014-p1w7	kāda	kāda <[p,i,0,m,s,l,_,[0]],'kāda','',''>
+citā	citā	w-SofijasPasaule1996_013_014-p1w8	citā	citā <[p,i,0,m,s,l,_,[0]],'cits','apzīmētājs','vārdā'>
+vārdā	vārdā	w-SofijasPasaule1996_013_014-p1w9	vārdā	vārdā <[n,c,m,s,l,1],'vārds','',''>
+?	?	w-SofijasPasaule1996_013_014-p1w10	?	? <[z,s],'?','',''>
+Piemēram	Piemēram	w-SofijasPasaule1996_013_014-p1w11	Piemēram	Piemēram <[r,0,m],'piemēram','',''>
+,	,	w-SofijasPasaule1996_013_014-p1w12	,	, <[z,c],',','',''>
+par	par	w-SofijasPasaule1996_013_014-p1w13	prievārdeklis	prievārdeklis <[n,p,m,s,a,1],'','',''>
+doesn't match 
+par	par	w-SofijasPasaule1996_013_014-p1w13	par	par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+Annu	Annu	w-SofijasPasaule1996_013_014-p1w14	Annu	Annu <[n,p,f,s,a,4],'anna','apzīmētājs','Knutsenu'>
+Knutsenu	Knutsenu	w-SofijasPasaule1996_013_014-p1w15	Knutsenu	Knutsenu <[n,p,f,s,a,4],'knutsena','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p1w16	.	. <[z,s],'.','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p1w17	Vai	Vai <[q,s],'vai','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p1w18	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+būtu	būtu	w-SofijasPasaule1996_013_014-p1w19	būtu	būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','izteicējs','?'>
+tādā	tādā	w-SofijasPasaule1996_013_014-p1w20	tādā	tādā <[p,d,0,m,s,l,_,[a]],'tāds','vietas apstāklis','būtu'>
+gadījumā	gadījumā	w-SofijasPasaule1996_013_014-p1w21	gadījumā	gadījumā <[n,c,m,s,l,1],'gadījums','laika apstāklis','būtu'>
+cita	cita	w-SofijasPasaule1996_013_014-p1w22	cita	cita <[p,i,0,f,s,n,_,[0]],'cita','teikuma priekšmets','būtu'>
+?	?	w-SofijasPasaule1996_013_014-p1w23	?	? <[z,s],'?','',''>
+Pēkšņi	Pēkšņi	w-SofijasPasaule1996_013_014-p2w1	Pēkšņi	Pēkšņi <[r,0,m],'pēkšņi','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p2w2	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+ienāca	ienāca	w-SofijasPasaule1996_013_014-p2w3	ienāca	ienāca <[v,m,n,i,s,i,1,3,0,a,n],'ienākt','',''>
+prātā	prātā	w-SofijasPasaule1996_013_014-p2w4	prātā	prātā <[n,c,m,s,l,1],'prāts','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w5	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p2w6	ka	ka <[c,s,s],'ka','',''>
+tētis	tētis	w-SofijasPasaule1996_013_014-p2w7	tētis	tētis <[n,c,m,s,n,2],'tētis','',''>
+sākumā	sākumā	w-SofijasPasaule1996_013_014-p2w8	sākumā	sākumā <[n,c,m,s,l,1],'sākums','',''>
+esot	esot	w-SofijasPasaule1996_013_014-p2w9	esot	esot <[v,c,n,r,p,i,i,0,0,a,n],'būt','',''>
+vēlējies	vēlējies	w-SofijasPasaule1996_013_014-p2w10	vēlējies	vēlējies <[v,m,y,p,d,m,s,n,a,s,n],'vēlēties','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w11	,	, <[z,c],',','',''>
+lai	lai	w-SofijasPasaule1996_013_014-p2w12	lai	lai <[c,s,s],'lai','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p2w13	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+sauktu	sauktu	w-SofijasPasaule1996_013_014-p2w14	sauktu	sauktu <[v,m,n,c,0,t,1,0,0,a,n],'saukt','',''>
+par	par	w-SofijasPasaule1996_013_014-p2w15	par	par <[s,p,s,a,[n]],'par','',''>
+Sinēvi	Sinēvi	w-SofijasPasaule1996_013_014-p2w16	Sinēvi	Sinēvi <[n,p,m,s,a,5],'sinēve','',''>
+.	.	w-SofijasPasaule1996_013_014-p2w17	.	. <[z,s],'.','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p2w18	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+mēģināja	mēģināja	w-SofijasPasaule1996_013_014-p2w19	mēģināja	mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+iztēloties	iztēloties	w-SofijasPasaule1996_013_014-p2w20	iztēloties	iztēloties <[v,m,y,n,0,t,2,0,0,0,n],'iztēloties','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w21	,	, <[z,c],',','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p2w22	kā	kā <[r,0,m],'kā','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p2w23	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pastiepj	pastiepj	w-SofijasPasaule1996_013_014-p2w24	pastiepj	pastiepj <[v,m,n,i,p,t,1,3,0,a,n],'pastiept','',''>
+sveicienam	sveicienam	w-SofijasPasaule1996_013_014-p2w25	sveicienam	sveicienam <[n,c,m,s,d,1],'sveiciens','',''>
+roku	roku	w-SofijasPasaule1996_013_014-p2w26	roku	roku <[n,c,f,s,a,4],'roka','',''>
+un	un	w-SofijasPasaule1996_013_014-p2w27	un	un <[c,c,s],'un','',''>
+nosauc	nosauc	w-SofijasPasaule1996_013_014-p2w28	nosauc	nosauc <[v,m,n,i,p,t,1,3,0,a,n],'nosaukt','',''>
+savu	savu	w-SofijasPasaule1996_013_014-p2w29	savu	savu <[p,s,0,m,s,a,_,[0]],'savs','',''>
+vārdu	vārdu	w-SofijasPasaule1996_013_014-p2w30	vārdu	vārdu <[n,c,m,s,a,1],'vārds','',''>
+—	—	w-SofijasPasaule1996_013_014-p2w31	—	— <[z,d],'—','',''>
+Sinēve	Sinēve	w-SofijasPasaule1996_013_014-p2w32	Sinēve	Sinēve <[n,p,m,s,n,5],'sinēve','',''>
+Amundsena	Amundsena	w-SofijasPasaule1996_013_014-p2w33	Amundsena	Amundsena <[n,p,f,s,n,4],'amundsena','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w34	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p2w35	bet	bet <[c,c,s],'bet','',''>
+nē	nē	w-SofijasPasaule1996_013_014-p2w36	nē	nē <[q,s],'nē','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w37	,	, <[z,c],',','',''>
+to	to	w-SofijasPasaule1996_013_014-p2w38	to	to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p2w39	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+grūti	grūti	w-SofijasPasaule1996_013_014-p2w40	grūti	grūti <[r,_,_],'grūti','',''>
+iedomāties	iedomāties	w-SofijasPasaule1996_013_014-p2w41	iedomāties	iedomāties <[v,m,y,n,0,t,2,0,0,0,n],'iedomāties','',''>
+.	.	w-SofijasPasaule1996_013_014-p2w42	.	. <[z,s],'.','',''>
+Šķita	Šķita	w-SofijasPasaule1996_013_014-p2w43	Šķita	Šķita <[v,m,n,i,s,i,1,3,0,a,n],'šķist','',''>
+,	,	w-SofijasPasaule1996_013_014-p2w44	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p2w45	ka	ka <[c,s,s],'ka','',''>
+tā	tā	w-SofijasPasaule1996_013_014-p2w46	tā	tā <[p,d,3,f,s,n,_,[s]],'tā','veida apstāklis','ir'>
+ir	ir	w-SofijasPasaule1996_013_014-p2w47	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+pavisam	pavisam	w-SofijasPasaule1996_013_014-p2w48	pavisam	pavisam <[r,0,m],'pavisam','veida apstāklis','ir'>
+cita	cita	w-SofijasPasaule1996_013_014-p2w49	cita	cita <[p,i,0,f,s,n,_,[0]],'cita','apzīmētājs','meitene'>
+meitene	meitene	w-SofijasPasaule1996_013_014-p2w50	meitene	meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','ir'>
+,	,	w-SofijasPasaule1996_013_014-p2w51	,	, <[z,c],',','',''>
+kas	kas	w-SofijasPasaule1996_013_014-p2w52	kas	kas <[p,r,0,0,0,n,_,[0]],'kas','teikuma priekšmets','stādījās'>
+stādījās	stādījās	w-SofijasPasaule1996_013_014-p2w53	stādījās	stādījās <[v,m,y,i,s,i,3,3,0,a,n],'stādīties','izteicējs','.'>
+priekšā	priekšā	w-SofijasPasaule1996_013_014-p2w54	priekšā	priekšā <[r,0,p],'priekšā','laika apstāklis','stādījās'>
+.	.	w-SofijasPasaule1996_013_014-p2w55	.	. <[z,s],'.','',''>
+Tad	Tad	w-SofijasPasaule1996_013_014-p3w1	Tad	Tad <[r,0,t],'tad','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p3w2	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pielēca	pielēca	w-SofijasPasaule1996_013_014-p3w3	pielēca	pielēca <[v,m,n,i,s,i,1,3,0,a,n],'pielēkt','',''>
+kājās	kājās	w-SofijasPasaule1996_013_014-p3w4	kājās	kājās <[n,c,f,p,l,4],'kāja','',''>
+un	un	w-SofijasPasaule1996_013_014-p3w5	un	un <[c,c,s],'un','',''>
+iegāja	iegāja	w-SofijasPasaule1996_013_014-p3w6	iegāja	iegāja <[v,m,n,i,s,i,i,3,0,a,n],'ieiet','',''>
+vannas	vannas	w-SofijasPasaule1996_013_014-p3w7	vannas	vannas <[n,c,f,s,g,4],'vanna','',''>
+istabā	istabā	w-SofijasPasaule1996_013_014-p3w8	istabā	istabā <[n,c,f,s,l,4],'istaba','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p3w9	ar	ar <[s,p,s,a,[n]],'ar','',''>
+dīvaino	dīvaino	w-SofijasPasaule1996_013_014-p3w10	dīvaino	dīvaino <[a,f,f,s,a,y,p],'dīvaina','',''>
+vēstuli	vēstuli	w-SofijasPasaule1996_013_014-p3w11	vēstuli	vēstuli <[n,c,f,s,a,5],'vēstule','',''>
+rokā	rokā	w-SofijasPasaule1996_013_014-p3w12	rokā	rokā <[n,c,f,s,l,4],'roka','',''>
+.	.	w-SofijasPasaule1996_013_014-p3w13	.	. <[z,s],'.','',''>
+Viņa	Viņa	w-SofijasPasaule1996_013_014-p3w14	Viņa	Viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nostājās'>
+nostājās	nostājās	w-SofijasPasaule1996_013_014-p3w15	nostājās	nostājās <[v,m,y,i,s,i,1,3,0,a,n],'nostāties','',''>
+spoguļa	spoguļa	w-SofijasPasaule1996_013_014-p3w16	spoguļa	spoguļa <[n,c,m,s,g,2],'spogulis','apzīmētājs','priekšā'>
+priekšā	priekšā	w-SofijasPasaule1996_013_014-p3w17	priekšā	priekšā <[n,c,f,s,l,4],'priekša','laika apstāklis','nostājās'>
+un	un	w-SofijasPasaule1996_013_014-p3w18	un	un <[c,c,s],'un','',''>
+skatījās	skatījās	w-SofijasPasaule1996_013_014-p3w19	skatījās	skatījās <[v,m,y,i,s,t,3,3,0,a,n],'skatīties','izteicējs','.'>
+sev	sev	w-SofijasPasaule1996_013_014-p3w20	sev	sev <[p,x,0,0,0,d,_,[0]],'sevis','netiešais papildinātājs','skatījās'>
+acīs	acīs	w-SofijasPasaule1996_013_014-p3w21	acīs	acīs <[n,c,f,p,l,6],'acs','laika apstāklis','skatījās'>
+.	.	w-SofijasPasaule1996_013_014-p3w22	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p4w1	„Es	„Es <[x],'','',''>
+doesn't match 
+Es	Es	w-SofijasPasaule1996_013_014-p4w2	„Es	„Es <[x],'','',''>
+doesn't match 
+esmu	esmu	w-SofijasPasaule1996_013_014-p4w3	izteicējs	izteicējs <[v,m,_,i,p,0,0,1,s,a,n],'','',''>
+doesn't match 
+esmu	esmu	w-SofijasPasaule1996_013_014-p4w3	esmu	esmu <[v,c,n,i,p,i,i,1,s,a,n],'būt','','izteicējs'>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p4w4	Sofija	Sofija <[n,p,f,s,n,4],'sofija','','izteicējs'>
+Amundsena	Amundsena	w-SofijasPasaule1996_013_014-p4w5	Amundsena	Amundsena <[n,p,f,s,n,4],'amundsena','teikuma priekšmets','izteicējs'>
+,	,	w-SofijasPasaule1996_013_014-p4w6	,	, <[z,c],',','',''>
+”	”	w-SofijasPasaule1996_013_014-p4w7	”	” <[x],'','',''>
+—	—	w-SofijasPasaule1996_013_014-p4w8	—	— <[z,d],'—','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p4w9	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','teica'>
+teica	teica	w-SofijasPasaule1996_013_014-p4w10	teica	teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p4w11	.	. <[z,s],'.','',''>
+Meitene	Meitene	w-SofijasPasaule1996_013_014-p5w1	Meitene	Meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','neatbildēja'>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p5w2	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','neatbildēja'>
+neatbildēja	neatbildēja	w-SofijasPasaule1996_013_014-p5w3	neatbildēja	neatbildēja <[v,m,n,i,s,t,3,3,0,a,y],'neatbildēt','',''>
+neko	neko	w-SofijasPasaule1996_013_014-p5w4	neko	neko <[p,i,0,m,s,a,y,[0]],'nekas','tiešais papildinātājs','neatbildēja'>
+,	,	w-SofijasPasaule1996_013_014-p5w5	,	, <[z,c],',','',''>
+pat	pat	w-SofijasPasaule1996_013_014-p5w6	pat	pat <[q,s],'pat','',''>
+ne	ne	w-SofijasPasaule1996_013_014-p5w7	ne	ne <[q,s],'ne','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p5w8	ar	ar <[s,p,s,a,[n]],'ar','izteicējs','.'>
+mazāko	mazāko	w-SofijasPasaule1996_013_014-p5w9	mazāko	mazāko <[a,f,m,s,a,y,c],'mazs','apzīmētājs','vaibstu'>
+vaibstu	vaibstu	w-SofijasPasaule1996_013_014-p5w10	vaibstu	vaibstu <[n,c,m,s,a,1],'vaibsts','tiešais papildinātājs','ar'>
+.	.	w-SofijasPasaule1996_013_014-p5w11	.	. <[z,s],'.','',''>
+Lai	Lai	w-SofijasPasaule1996_013_014-p5w12	Lai	Lai <[c,s,s],'lai','',''>
+ko	ko	w-SofijasPasaule1996_013_014-p5w13	ko	ko <[p,i,0,0,0,a,_,[_]],'','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p5w14	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+nedarītu	nedarītu	w-SofijasPasaule1996_013_014-p5w15	nedarītu	nedarītu <[v,m,n,c,0,t,3,0,0,a,y],'nedarīt','',''>
+,	,	w-SofijasPasaule1996_013_014-p5w16	,	, <[z,c],',','',''>
+meitene	meitene	w-SofijasPasaule1996_013_014-p5w17	meitene	meitene <[n,c,f,s,n,5],'meitene','teikuma priekšmets','darīja'>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p5w18	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','darīja'>
+darīja	darīja	w-SofijasPasaule1996_013_014-p5w19	darīja	darīja <[v,m,n,i,s,t,3,3,0,a,n],'darīt','',''>
+to	to	w-SofijasPasaule1996_013_014-p5w20	to	to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','darīja'>
+pašu	pašu	w-SofijasPasaule1996_013_014-p5w21	pašu	pašu <[n,c,m,s,a,1],'pase','',''>
+.	.	w-SofijasPasaule1996_013_014-p5w22	.	. <[z,s],'.','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p5w23	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+mēģināja	mēģināja	w-SofijasPasaule1996_013_014-p5w24	mēģināja	mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+apsteigt	apsteigt	w-SofijasPasaule1996_013_014-p5w25	apsteigt	apsteigt <[v,m,n,n,0,t,1,0,0,0,n],'apsteigt','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p5w26	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p5w27	ar	ar <[s,p,s,a,[n]],'ar','',''>
+kādu	kādu	w-SofijasPasaule1996_013_014-p5w28	kādu	kādu <[p,i,0,f,s,a,_,[0]],'kāda','',''>
+zibenīgi	zibenīgi	w-SofijasPasaule1996_013_014-p5w29	zibenīgi	zibenīgi <[r,_,_],'zibenīgi','',''>
+strauju	strauju	w-SofijasPasaule1996_013_014-p5w30	strauju	strauju <[a,f,f,s,a,n,p],'strauja','',''>
+kustību	kustību	w-SofijasPasaule1996_013_014-p5w31	kustību	kustību <[n,c,f,s,a,4],'kustība','',''>
+,	,	w-SofijasPasaule1996_013_014-p5w32	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p5w33	bet	bet <[c,c,s],'bet','',''>
+tā	tā	w-SofijasPasaule1996_013_014-p5w34	tā	tā <[p,d,3,f,s,n,_,[s]],'tā','',''>
+otra	otra	w-SofijasPasaule1996_013_014-p5w35	otra	otra <[m,c,s,f,s,n,[_]],'otra','',''>
+tur	tur	w-SofijasPasaule1996_013_014-p5w36	tur	tur <[r,0,p],'tur','',''>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p5w37	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p5w38	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tikpat	tikpat	w-SofijasPasaule1996_013_014-p5w39	tikpat	tikpat <[r,0,q],'tikpat','',''>
+veikla	veikla	w-SofijasPasaule1996_013_014-p5w40	veikla	veikla <[a,f,f,s,n,n,p],'veikla','',''>
+.	.	w-SofijasPasaule1996_013_014-p5w41	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p6w1	„Kas	„Kas <[x],'','',''>
+doesn't match 
+Kas	Kas	w-SofijasPasaule1996_013_014-p6w2	„Kas	„Kas <[x],'','',''>
+doesn't match 
+tu	tu	w-SofijasPasaule1996_013_014-p6w3	tu	tu <[p,p,2,0,s,n,_,[0]],'tu','teikuma priekšmets','esi'>
+esi	esi	w-SofijasPasaule1996_013_014-p6w4	esi	esi <[v,m,n,i,p,i,i,2,s,a,n],'būt','izteicējs','?'>
+?	?	w-SofijasPasaule1996_013_014-p6w5	?	? <[z,s],'?','',''>
+”	”	w-SofijasPasaule1996_013_014-p6w6	”	” <[x],'','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p6w7	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','vaicāja'>
+vaicāja	vaicāja	w-SofijasPasaule1996_013_014-p6w8	vaicāja	vaicāja <[v,m,n,i,s,t,2,3,0,a,n],'vaicāt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p6w9	.	. <[z,s],'.','',''>
+Viņa	Viņa	w-SofijasPasaule1996_013_014-p7w1	Viņa	Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nesaņēma	nesaņēma	w-SofijasPasaule1996_013_014-p7w2	nesaņēma	nesaņēma <[v,m,n,i,s,t,1,3,0,a,y],'nesaņemt','',''>
+atbildi	atbildi	w-SofijasPasaule1996_013_014-p7w3	atbildi	atbildi <[n,c,f,s,a,5],'atbilde','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p7w4	arī	arī <[q,s],'arī','',''>
+tagad	tagad	w-SofijasPasaule1996_013_014-p7w5	tagad	tagad <[r,0,t],'tagad','',''>
+,	,	w-SofijasPasaule1996_013_014-p7w6	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p7w7	bet	bet <[c,c,s],'bet','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p7w8	uz	uz <[s,p,s,a,[y]],'uz','',''>
+kādu	kādu	w-SofijasPasaule1996_013_014-p7w9	kādu	kādu <[p,i,0,m,s,a,_,[0]],'kāds','',''>
+pavisam	pavisam	w-SofijasPasaule1996_013_014-p7w10	pavisam	pavisam <[r,0,m],'pavisam','',''>
+īsu	īsu	w-SofijasPasaule1996_013_014-p7w11	īsu	īsu <[a,f,m,s,a,n,p],'īss','',''>
+mirkli	mirkli	w-SofijasPasaule1996_013_014-p7w12	mirkli	mirkli <[n,c,m,s,a,2],'mirklis','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p7w13	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+pārņēma	pārņēma	w-SofijasPasaule1996_013_014-p7w14	pārņēma	pārņēma <[v,m,n,i,s,t,1,3,0,a,n],'pārņemt','',''>
+šaubas	šaubas	w-SofijasPasaule1996_013_014-p7w15	šaubas	šaubas <[n,c,f,p,n,4],'šaubas','',''>
+par	par	w-SofijasPasaule1996_013_014-p7w16	par	par <[s,p,s,a,[n]],'par','',''>
+to	to	w-SofijasPasaule1996_013_014-p7w17	to	to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+,	,	w-SofijasPasaule1996_013_014-p7w18	,	, <[z,c],',','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p7w19	vai	vai <[c,c,s],'vai','',''>
+jautātāja	jautātāja	w-SofijasPasaule1996_013_014-p7w20	jautātāja	jautātāja <[n,c,f,s,n,4],'jautātāja','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p7w21	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p7w22	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pati	pati	w-SofijasPasaule1996_013_014-p7w23	pati	pati <[p,g,0,f,s,n,_,[0]],'pati','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p7w24	vai	vai <[c,c,s],'vai','',''>
+varbūt	varbūt	w-SofijasPasaule1996_013_014-p7w25	varbūt	varbūt <[q,s],'varbūt','',''>
+meitene	meitene	w-SofijasPasaule1996_013_014-p7w26	meitene	meitene <[n,c,f,s,n,5],'meitene','',''>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p7w27	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','',''>
+.	.	w-SofijasPasaule1996_013_014-p7w28	.	. <[z,s],'.','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p8w1	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','piespieda'>
+piespieda	piespieda	w-SofijasPasaule1996_013_014-p8w2	piespieda	piespieda <[v,m,n,i,s,t,1,3,0,a,n],'piespiest','',''>
+rādītājpirkstu	rādītājpirkstu	w-SofijasPasaule1996_013_014-p8w3	rādītājpirkstu	rādītājpirkstu <[n,c,m,s,a,1],'rādītājpirksts','tiešais papildinātājs','piespieda'>
+pie	pie	w-SofijasPasaule1996_013_014-p8w4	prievārdeklis	prievārdeklis <[n,c,m,s,g,1],'','vietas apstāklis','piespieda'>
+doesn't match 
+pie	pie	w-SofijasPasaule1996_013_014-p8w4	pie	pie <[s,p,s,g,[y]],'pie','','prievārdeklis'>
+degungala	degungala	w-SofijasPasaule1996_013_014-p8w5	degungala	degungala <[n,c,m,s,g,1],'degungals','','prievārdeklis'>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p8w6	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','piespieda'>
+un	un	w-SofijasPasaule1996_013_014-p8w7	un	un <[c,c,s],'un','',''>
+sacīja	sacīja	w-SofijasPasaule1996_013_014-p8w8	sacīja	sacīja <[v,m,n,i,s,t,3,3,0,a,n],'sacīt','',''>
+:	:	w-SofijasPasaule1996_013_014-p8w9	:	: <[z,o],':','',''>
+„	„	w-SofijasPasaule1996_013_014-p9w1	„Tu	„Tu <[x],'','',''>
+doesn't match 
+Tu	Tu	w-SofijasPasaule1996_013_014-p9w2	„Tu	„Tu <[x],'','',''>
+doesn't match 
+esi	esi	w-SofijasPasaule1996_013_014-p9w3	izteicējs	izteicējs <[v,m,_,i,p,0,0,2,s,a,n],'','izteicējs','.'>
+doesn't match 
+esi	esi	w-SofijasPasaule1996_013_014-p9w3	esi	esi <[v,c,n,i,p,i,i,2,s,a,n],'būt','','izteicējs'>
+es	es	w-SofijasPasaule1996_013_014-p9w4	es	es <[p,p,1,0,s,n,_,[0]],'es','','izteicējs'>
+.	.	w-SofijasPasaule1996_013_014-p9w5	.	. <[z,s],'.','',''>
+”	”	w-SofijasPasaule1996_013_014-p9w6	”	” <[x],'','',''>
+Tā	Tā	w-SofijasPasaule1996_013_014-p10w1	Tā	Tā <[c,s,c],'tā','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p10w2	kā	kā <[c,s,c],'kā','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p10w3	arī	arī <[q,s],'arī','',''>
+tagad	tagad	w-SofijasPasaule1996_013_014-p10w4	tagad	tagad <[r,0,t],'tagad','',''>
+nebija	nebija	w-SofijasPasaule1996_013_014-p10w5	nebija	nebija <[v,g,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+nekādas	nekādas	w-SofijasPasaule1996_013_014-p10w6	nekādas	nekādas <[p,i,0,f,s,g,y,[0]],'nekāda','',''>
+atbildes	atbildes	w-SofijasPasaule1996_013_014-p10w7	atbildes	atbildes <[n,c,f,s,g,5],'atbilde','',''>
+,	,	w-SofijasPasaule1996_013_014-p10w8	,	, <[z,c],',','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p10w9	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+apgrieza	apgrieza	w-SofijasPasaule1996_013_014-p10w10	apgrieza	apgrieza <[v,m,n,i,s,t,1,3,0,a,n],'apgriezt','',''>
+teikto	teikto	w-SofijasPasaule1996_013_014-p10w11	teikto	teikto <[v,m,n,p,d,m,s,a,p,s,y],'teikt','',''>
+otrādi	otrādi	w-SofijasPasaule1996_013_014-p10w12	otrādi	otrādi <[r,0,m],'otrādi','',''>
+un	un	w-SofijasPasaule1996_013_014-p10w13	un	un <[c,c,s],'un','',''>
+sacīja	sacīja	w-SofijasPasaule1996_013_014-p10w14	sacīja	sacīja <[v,m,n,i,s,t,3,3,0,a,n],'sacīt','',''>
+:	:	w-SofijasPasaule1996_013_014-p10w15	:	: <[z,o],':','',''>
+„	„	w-SofijasPasaule1996_013_014-p11w1	„Es	„Es <[x],'','',''>
+doesn't match 
+Es	Es	w-SofijasPasaule1996_013_014-p11w2	„Es	„Es <[x],'','',''>
+doesn't match 
+esmu	esmu	w-SofijasPasaule1996_013_014-p11w3	izteicējs	izteicējs <[v,m,_,i,p,0,0,1,s,a,n],'','izteicējs','.'>
+doesn't match 
+esmu	esmu	w-SofijasPasaule1996_013_014-p11w3	esmu	esmu <[v,c,n,i,p,i,i,1,s,a,n],'būt','','izteicējs'>
+tu	tu	w-SofijasPasaule1996_013_014-p11w4	tu	tu <[p,p,2,0,s,n,_,[0]],'tu','','izteicējs'>
+.	.	w-SofijasPasaule1996_013_014-p11w5	.	. <[z,s],'.','',''>
+”	”	w-SofijasPasaule1996_013_014-p11w6	”	” <[x],'','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p12w1	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+Amundsena	Amundsena	w-SofijasPasaule1996_013_014-p12w2	Amundsena	Amundsena <[n,p,f,s,n,4],'amundsena','',''>
+nevarēja	nevarēja	w-SofijasPasaule1996_013_014-p12w3	nevarēja	nevarēja <[v,o,n,i,s,t,3,3,0,a,y],'nevarēt','',''>
+teikt	teikt	w-SofijasPasaule1996_013_014-p12w4	teikt	teikt <[v,m,n,n,0,t,1,0,0,0,n],'teikt','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w5	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p12w6	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p12w7	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+vienmēr	vienmēr	w-SofijasPasaule1996_013_014-p12w8	vienmēr	vienmēr <[r,0,t],'vienmēr','',''>
+būtu	būtu	w-SofijasPasaule1996_013_014-p12w9	būtu	būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','',''>
+apmierināta	apmierināta	w-SofijasPasaule1996_013_014-p12w10	apmierināta	apmierināta <[v,m,n,p,d,f,s,n,p,s,n],'apmierināt','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p12w11	ar	ar <[s,p,s,a,[n]],'ar','',''>
+savu	savu	w-SofijasPasaule1996_013_014-p12w12	savu	savu <[p,s,0,m,s,a,_,[0]],'savs','',''>
+izskatu	izskatu	w-SofijasPasaule1996_013_014-p12w13	izskatu	izskatu <[n,c,m,s,a,1],'izskats','',''>
+.	.	w-SofijasPasaule1996_013_014-p12w14	.	. <[z,s],'.','',''>
+Sofijai	Sofijai	w-SofijasPasaule1996_013_014-p12w15	Sofijai	Sofijai <[n,p,f,s,d,4],'sofija','',''>
+bieži	bieži	w-SofijasPasaule1996_013_014-p12w16	bieži	bieži <[r,0,q],'bieži','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p12w17	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+nācies	nācies	w-SofijasPasaule1996_013_014-p12w18	nācies	nācies <[v,m,y,p,d,m,s,n,a,s,n],'nākties','',''>
+dzirdēt	dzirdēt	w-SofijasPasaule1996_013_014-p12w19	dzirdēt	dzirdēt <[v,m,n,n,0,t,3,0,0,0,n],'dzirdēt','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w20	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p12w21	ka	ka <[c,s,s],'ka','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p12w22	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+esot	esot	w-SofijasPasaule1996_013_014-p12w23	esot	esot <[v,m,n,r,p,i,i,0,0,a,n],'būt','',''>
+skaistas	skaistas	w-SofijasPasaule1996_013_014-p12w24	skaistas	skaistas <[a,f,f,p,n,n,p],'skaista','',''>
+mandeļu	mandeļu	w-SofijasPasaule1996_013_014-p12w25	mandeļu	mandeļu <[n,c,f,p,g,5],'mandele','',''>
+acis	acis	w-SofijasPasaule1996_013_014-p12w26	acis	acis <[n,c,f,p,n,6],'acs','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w27	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p12w28	bet	bet <[c,c,s],'bet','',''>
+to	to	w-SofijasPasaule1996_013_014-p12w29	to	to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+droši	droši	w-SofijasPasaule1996_013_014-p12w30	droši	droši <[r,0,m],'droši','',''>
+vien	vien	w-SofijasPasaule1996_013_014-p12w31	vien	vien <[q,s],'vien','',''>
+teica	teica	w-SofijasPasaule1996_013_014-p12w32	teica	teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','',''>
+tikai	tikai	w-SofijasPasaule1996_013_014-p12w33	tikai	tikai <[q,s],'tikai','',''>
+tādēļ	tādēļ	w-SofijasPasaule1996_013_014-p12w34	tādēļ	tādēļ <[r,0,c],'tādēļ','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w35	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p12w36	ka	ka <[c,s,s],'ka','',''>
+deguns	deguns	w-SofijasPasaule1996_013_014-p12w37	deguns	deguns <[n,c,m,s,n,1],'deguns','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p12w38	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+par	par	w-SofijasPasaule1996_013_014-p12w39	par	par <[s,p,s,a,[n]],'par','',''>
+mazu	mazu	w-SofijasPasaule1996_013_014-p12w40	mazu	mazu <[a,f,m,s,a,n,p],'mazs','',''>
+un	un	w-SofijasPasaule1996_013_014-p12w41	un	un <[c,c,s],'un','',''>
+mute	mute	w-SofijasPasaule1996_013_014-p12w42	mute	mute <[n,c,f,s,n,5],'mute','',''>
+par	par	w-SofijasPasaule1996_013_014-p12w43	par	par <[s,p,s,a,[n]],'par','',''>
+lielu	lielu	w-SofijasPasaule1996_013_014-p12w44	lielu	lielu <[a,f,m,s,a,n,p],'liels','',''>
+.	.	w-SofijasPasaule1996_013_014-p12w45	.	. <[z,s],'.','',''>
+Visļaunāk	Visļaunāk	w-SofijasPasaule1996_013_014-p12w46	Visļaunāk	Visļaunāk <[r,s,_],'ļauni','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p12w47	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p12w48	ar	ar <[s,p,p,d,[n]],'ar','',''>
+matiem	matiem	w-SofijasPasaule1996_013_014-p12w49	matiem	matiem <[n,c,m,p,d,1],'mats','',''>
+—	—	w-SofijasPasaule1996_013_014-p12w50	—	— <[z,d],'—','',''>
+tie	tie	w-SofijasPasaule1996_013_014-p12w51	tie	tie <[p,d,3,m,p,n,_,[s]],'tas','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p12w52	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tik	tik	w-SofijasPasaule1996_013_014-p12w53	tik	tik <[r,0,q],'tik','',''>
+taisni	taisni	w-SofijasPasaule1996_013_014-p12w54	taisni	taisni <[a,f,m,p,n,n,p],'taisns','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w55	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p12w56	ka	ka <[c,s,s],'ka','',''>
+tos	tos	w-SofijasPasaule1996_013_014-p12w57	tos	tos <[p,d,3,m,p,a,_,[s]],'tas','',''>
+nekādi	nekādi	w-SofijasPasaule1996_013_014-p12w58	nekādi	nekādi <[r,0,m],'nekādi','',''>
+nebija	nebija	w-SofijasPasaule1996_013_014-p12w59	nebija	nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+iespējams	iespējams	w-SofijasPasaule1996_013_014-p12w60	iespējams	iespējams <[a,r,m,s,n,n,p],'iespējams','',''>
+sakārtot	sakārtot	w-SofijasPasaule1996_013_014-p12w61	sakārtot	sakārtot <[v,m,n,n,0,t,2,0,0,0,n],'sakārtot','',''>
+.	.	w-SofijasPasaule1996_013_014-p12w62	.	. <[z,s],'.','',''>
+Dažreiz	Dažreiz	w-SofijasPasaule1996_013_014-p12w63	Dažreiz	Dažreiz <[r,0,t],'dažreiz','',''>
+tētis	tētis	w-SofijasPasaule1996_013_014-p12w64	tētis	tētis <[n,c,m,s,n,2],'tētis','',''>
+noglāstīja	noglāstīja	w-SofijasPasaule1996_013_014-p12w65	noglāstīja	noglāstīja <[v,m,n,i,s,t,3,3,0,a,n],'noglāstīt','',''>
+viņas	viņas	w-SofijasPasaule1996_013_014-p12w66	viņas	viņas <[p,p,3,f,s,g,_,[0]],'viņa','',''>
+matus	matus	w-SofijasPasaule1996_013_014-p12w67	matus	matus <[n,c,m,p,a,1],'mats','',''>
+un	un	w-SofijasPasaule1996_013_014-p12w68	un	un <[c,c,s],'un','',''>
+sauca	sauca	w-SofijasPasaule1996_013_014-p12w69	sauca	sauca <[v,m,n,i,s,t,1,3,0,a,n],'saukt','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p12w70	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+par	par	w-SofijasPasaule1996_013_014-p12w71	par	par <[s,p,s,a,[n]],'par','',''>
+savu	savu	w-SofijasPasaule1996_013_014-p12w72	savu	savu <[p,s,0,f,s,a,_,[0]],'sava','',''>
+«	«	w-SofijasPasaule1996_013_014-p12w73	«meiteni	«meiteni <[x],'','',''>
+doesn't match 
+meiteni	meiteni	w-SofijasPasaule1996_013_014-p12w74	«meiteni	«meiteni <[x],'','',''>
+doesn't match 
+ar	ar	w-SofijasPasaule1996_013_014-p12w75	ar	ar <[s,p,p,d,[n]],'ar','',''>
+linukrāsas	linukrāsas	w-SofijasPasaule1996_013_014-p12w76	linukrāsas	linukrāsas <[n,c,f,s,g,4],'linukrāsa','',''>
+matiem	matiem	w-SofijasPasaule1996_013_014-p12w77	matiem»	matiem» <[x],'','',''>
+doesn't match 
+»	»	w-SofijasPasaule1996_013_014-p12w78	»	» <[x],'','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p12w79	kā	kā <[q,s],'kā','',''>
+Kloda	Kloda	w-SofijasPasaule1996_013_014-p12w80	Kloda	Kloda <[n,p,m,s,g,1],'klods','',''>
+Debisī	Debisī	w-SofijasPasaule1996_013_014-p12w81	Debisī	Debisī <[n,p,_,_,_,0],'debisī','',''>
+klaviergabalu	klaviergabalu	w-SofijasPasaule1996_013_014-p12w82	klaviergabalu	klaviergabalu <[n,c,m,s,a,1],'klaviergabals','',''>
+.	.	w-SofijasPasaule1996_013_014-p12w83	.	. <[z,s],'.','',''>
+To	To	w-SofijasPasaule1996_013_014-p12w84	To	To <[p,d,3,m,s,a,_,[s]],'tas','',''>
+viņš	viņš	w-SofijasPasaule1996_013_014-p12w85	viņš	viņš <[p,p,3,m,s,n,_,[0]],'viņš','',''>
+varēja	varēja	w-SofijasPasaule1996_013_014-p12w86	varēja	varēja <[v,o,n,i,s,t,3,3,0,a,n],'varēt','',''>
+gan	gan	w-SofijasPasaule1996_013_014-p12w87	gan	gan <[q,s],'gan','',''>
+darīt	darīt	w-SofijasPasaule1996_013_014-p12w88	darīt	darīt <[v,m,n,n,0,t,3,0,0,0,n],'darīt','',''>
+,	,	w-SofijasPasaule1996_013_014-p12w89	,	, <[z,c],',','',''>
+jo	jo	w-SofijasPasaule1996_013_014-p12w90	jo	jo <[c,s,s],'jo','',''>
+viņam	viņam	w-SofijasPasaule1996_013_014-p12w91	viņam	viņam <[p,p,3,m,s,d,_,[0]],'viņš','',''>
+vis	vis	w-SofijasPasaule1996_013_014-p12w92	vis	vis <[q,s],'vis','',''>
+nebija	nebija	w-SofijasPasaule1996_013_014-p12w93	nebija	nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','',''>
+lemts	lemts	w-SofijasPasaule1996_013_014-p12w94	lemts	lemts <[v,m,n,p,d,m,s,n,p,s,n],'lemt','',''>
+savus	savus	w-SofijasPasaule1996_013_014-p12w95	savus	savus <[p,s,0,m,p,a,_,[0]],'savs','',''>
+melnos	melnos	w-SofijasPasaule1996_013_014-p12w96	melnos	melnos <[a,f,m,p,a,y,p],'melns','',''>
+matus	matus	w-SofijasPasaule1996_013_014-p12w97	matus	matus <[n,c,m,p,a,1],'mats','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p12w98	uz	uz <[s,p,s,a,[y]],'uz','',''>
+visu	visu	w-SofijasPasaule1996_013_014-p12w99	visu	visu <[p,g,0,m,s,a,_,[0]],'viss','',''>
+mūžu	mūžu	w-SofijasPasaule1996_013_014-p12w100	mūžu	mūžu <[n,c,m,s,a,1],'mūžs','',''>
+paturēt	paturēt	w-SofijasPasaule1996_013_014-p12w101	paturēt	paturēt <[v,m,n,n,0,t,3,0,0,0,n],'paturēt','',''>
+kaut	kaut	w-SofijasPasaule1996_013_014-p12w102	kaut	kaut <[q,s],'kaut','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p12w103	vai	vai <[q,s],'vai','',''>
+taisni	taisni	w-SofijasPasaule1996_013_014-p12w104	taisni	taisni <[r,_,_],'taisni','',''>
+karājamies	karājamies	w-SofijasPasaule1996_013_014-p12w105	karājamies	karājamies <[v,m,y,p,u,0,0,0,0,0,0],'karāties','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p12w106	uz	uz <[s,p,s,a,[y]],'uz','',''>
+leju	leju	w-SofijasPasaule1996_013_014-p12w107	leju	leju <[n,c,f,s,a,4],'leja','',''>
+.	.	w-SofijasPasaule1996_013_014-p12w108	.	. <[z,s],'.','',''>
+Sofijas	Sofijas	w-SofijasPasaule1996_013_014-p12w109	Sofijas	Sofijas <[n,p,f,s,g,4],'sofija','',''>
+matiem	matiem	w-SofijasPasaule1996_013_014-p12w110	matiem	matiem <[n,c,m,p,d,1],'mats','apzīmētājs','Sofijas'>
+nelīdzēja	nelīdzēja	w-SofijasPasaule1996_013_014-p12w111	nelīdzēja	nelīdzēja <[v,m,n,i,s,t,3,3,0,a,y],'nelīdzēt','izteicējs','.'>
+nedz	nedz	w-SofijasPasaule1996_013_014-p12w112	apvienojums	apvienojums <[n,_,_,_,n,_],'','teikuma priekšmets','nelīdzēja'>
+doesn't match 
+nedz	nedz	w-SofijasPasaule1996_013_014-p12w112	nedz	nedz <[c,c,r],'nedz','','apvienojums'>
+laka	laka	w-SofijasPasaule1996_013_014-p12w113	laka	laka <[n,c,f,s,n,4],'laka','','apvienojums'>
+,	,	w-SofijasPasaule1996_013_014-p12w114	,	, <[z,c],',','','apvienojums'>
+nedz	nedz	w-SofijasPasaule1996_013_014-p12w115	nedz	nedz <[c,c,r],'nedz','','apvienojums'>
+matu	matu	w-SofijasPasaule1996_013_014-p12w116	matu	matu <[n,c,m,p,g,1],'mats','apzīmētājs','želeja'>
+želeja	želeja	w-SofijasPasaule1996_013_014-p12w117	želeja	želeja <[n,c,f,s,n,4],'želeja','','apvienojums'>
+.	.	w-SofijasPasaule1996_013_014-p12w118	.	. <[z,s],'.','',''>
+Dažreiz	Dažreiz	w-SofijasPasaule1996_013_014-p13w1	Dažreiz	Dažreiz <[r,0,t],'dažreiz','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p13w2	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+pašas	pašas	w-SofijasPasaule1996_013_014-p13w3	pašas	pašas <[p,g,0,f,s,g,_,[0]],'pati','',''>
+izskats	izskats	w-SofijasPasaule1996_013_014-p13w4	izskats	izskats <[n,c,m,s,n,1],'izskats','',''>
+šķita	šķita	w-SofijasPasaule1996_013_014-p13w5	šķita	šķita <[v,t,n,i,s,i,1,3,0,a,n],'šķist','',''>
+tik	tik	w-SofijasPasaule1996_013_014-p13w6	tik	tik <[r,0,q],'tik','',''>
+dīvains	dīvains	w-SofijasPasaule1996_013_014-p13w7	dīvains	dīvains <[a,f,m,s,n,n,p],'dīvains','',''>
+,	,	w-SofijasPasaule1996_013_014-p13w8	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p13w9	ka	ka <[c,s,s],'ka','',''>
+radās	radās	w-SofijasPasaule1996_013_014-p13w10	radās	radās <[v,m,y,i,s,i,1,3,0,a,n],'rasties','',''>
+šaubas	šaubas	w-SofijasPasaule1996_013_014-p13w11	šaubas	šaubas <[n,c,f,p,n,4],'šaubas','',''>
+,	,	w-SofijasPasaule1996_013_014-p13w12	,	, <[z,c],',','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p13w13	vai	vai <[c,c,s],'vai','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p13w14	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+maz	maz	w-SofijasPasaule1996_013_014-p13w15	maz	maz <[r,0,q],'maz','',''>
+ir	ir	w-SofijasPasaule1996_013_014-p13w16	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+normāla	normāla	w-SofijasPasaule1996_013_014-p13w17	normāla	normāla <[a,r,m,s,g,n,p],'normāls','',''>
+.	.	w-SofijasPasaule1996_013_014-p13w18	.	. <[z,s],'.','',''>
+Māte	Māte	w-SofijasPasaule1996_013_014-p13w19	Māte	Māte <[n,c,f,s,n,5],'māte','',''>
+kaut	kaut	w-SofijasPasaule1996_013_014-p13w20	kaut	kaut <[p,i,0,0,0,a,_,[_]],'kaut','',''>
+ko	ko	w-SofijasPasaule1996_013_014-p13w21	ko	ko <[p,i,0,0,0,a,_,[_]],'','tiešais papildinātājs','izteicējs'>
+bija	bija	w-SofijasPasaule1996_013_014-p13w22	izteicējs	izteicējs <[v,m,n,i,s,0,0,3,s,a,n],'','izteicējs','.'>
+doesn't match 
+bija	bija	w-SofijasPasaule1996_013_014-p13w22	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+minējusi	minējusi	w-SofijasPasaule1996_013_014-p13w23	minējusi	minējusi <[v,m,n,p,d,f,s,n,a,s,n],'minēt','','izteicējs'>
+par	par	w-SofijasPasaule1996_013_014-p13w24	prievārdeklis	prievārdeklis <[n,c,f,p,d,4],'','nolūka apstāklis','izteicējs'>
+doesn't match 
+par	par	w-SofijasPasaule1996_013_014-p13w24	par	par <[s,p,p,d,[n]],'par','','prievārdeklis'>
+īpaši	īpaši	w-SofijasPasaule1996_013_014-p13w25	īpaši	īpaši <[r,_,q],'īpaši','mēra apstāklis','smagām'>
+smagām	smagām	w-SofijasPasaule1996_013_014-p13w26	smagām	smagām <[a,f,f,p,d,n,p],'smaga','apzīmētājs','dzemdībām'>
+dzemdībām	dzemdībām	w-SofijasPasaule1996_013_014-p13w27	dzemdībām	dzemdībām <[n,c,f,p,d,4],'dzemdības','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p13w28	.	. <[z,s],'.','',''>
+Bet	Bet	w-SofijasPasaule1996_013_014-p13w29	Bet	Bet <[c,c,s],'bet','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p13w30	vai	vai <[q,s],'vai','',''>
+tiešām	tiešām	w-SofijasPasaule1996_013_014-p13w31	tiešām	tiešām <[q,s],'tiešām','',''>
+dzimšanas	dzimšanas	w-SofijasPasaule1996_013_014-p13w32	dzimšanas	dzimšanas <[n,c,f,s,g,4],'dzimšana','',''>
+norise	norise	w-SofijasPasaule1996_013_014-p13w33	norise	norise <[n,c,f,s,n,5],'norise','teikuma priekšmets','izteicējs'>
+spēj	spēj	w-SofijasPasaule1996_013_014-p13w34	izteicējs	izteicējs <[v,m,n,i,p,t,0,3,0,a,n],'','izteicējs','?'>
+doesn't match 
+spēj	spēj	w-SofijasPasaule1996_013_014-p13w34	spēj	spēj <[v,o,n,i,p,t,1,3,0,a,n],'spēt','','izteicējs'>
+tik	tik	w-SofijasPasaule1996_013_014-p13w35	tik	tik <[r,0,q],'tik','mēra apstāklis','ļoti'>
+ļoti	ļoti	w-SofijasPasaule1996_013_014-p13w36	ļoti	ļoti <[r,0,q],'ļoti','mēra apstāklis','ietekmēt'>
+ietekmēt	ietekmēt	w-SofijasPasaule1996_013_014-p13w37	ietekmēt	ietekmēt <[v,m,n,n,0,t,2,0,0,0,n],'ietekmēt','','izteicējs'>
+cilvēka	cilvēka	w-SofijasPasaule1996_013_014-p13w38	cilvēka	cilvēka <[n,c,m,s,g,1],'cilvēks','apzīmētājs','izskatu'>
+izskatu	izskatu	w-SofijasPasaule1996_013_014-p13w39	izskatu	izskatu <[n,c,m,s,a,1],'izskats','tiešais papildinātājs','izteicējs'>
+?	?	w-SofijasPasaule1996_013_014-p13w40	?	? <[z,s],'?','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p14w1	Vai	Vai <[q,s],'vai','',''>
+nav	nav	w-SofijasPasaule1996_013_014-p14w2	izteicējs	izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+doesn't match 
+nav	nav	w-SofijasPasaule1996_013_014-p14w2	nav	nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+jocīgi	jocīgi	w-SofijasPasaule1996_013_014-p14w3	jocīgi	jocīgi <[a,f,m,p,n,n,p],'jocīgs','','izteicējs'>
+,	,	w-SofijasPasaule1996_013_014-p14w4	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p14w5	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p14w6	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nezina'>
+nezina	nezina	w-SofijasPasaule1996_013_014-p14w7	nezina	nezina <[v,m,n,i,p,t,3,3,0,a,y],'nezināt','',''>
+,	,	w-SofijasPasaule1996_013_014-p14w8	,	, <[z,c],',','',''>
+kas	kas	w-SofijasPasaule1996_013_014-p14w9	kas	kas <[p,q,0,0,0,n,_,[0]],'kas','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p14w10	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','ir'>
+ir	ir	w-SofijasPasaule1996_013_014-p14w11	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','izteicējs','?'>
+?	?	w-SofijasPasaule1996_013_014-p14w12	?	? <[z,s],'?','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p14w13	Vai	Vai <[q,s],'vai','',''>
+nav	nav	w-SofijasPasaule1996_013_014-p14w14	izteicējs	izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+doesn't match 
+nav	nav	w-SofijasPasaule1996_013_014-p14w14	nav	nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+muļķīgi	muļķīgi	w-SofijasPasaule1996_013_014-p14w15	muļķīgi	muļķīgi <[a,f,m,p,n,n,p],'muļķīgs','','izteicējs'>
+arī	arī	w-SofijasPasaule1996_013_014-p14w16	arī	arī <[q,s],'arī','',''>
+tas	tas	w-SofijasPasaule1996_013_014-p14w17	tas	tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+,	,	w-SofijasPasaule1996_013_014-p14w18	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p14w19	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p14w20	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nav	nav	w-SofijasPasaule1996_013_014-p14w21	nav	nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','',''>
+noteicēja	noteicēja	w-SofijasPasaule1996_013_014-p14w22	noteicēja	noteicēja <[n,c,f,s,n,4],'noteicējs','teikuma priekšmets','nav'>
+pati	pati	w-SofijasPasaule1996_013_014-p14w23	pati	pati <[p,g,0,f,s,n,_,[0]],'pati','',''>
+par	par	w-SofijasPasaule1996_013_014-p14w24	par	par <[s,p,s,a,[y]],'pār','',''>
+savu	savu	w-SofijasPasaule1996_013_014-p14w25	savu	savu <[p,s,0,m,s,a,_,[0]],'savs','tiešais papildinātājs','izskatu'>
+izskatu	izskatu	w-SofijasPasaule1996_013_014-p14w26	izskatu	izskatu <[n,c,m,s,a,1],'izskats','izteicējs','?'>
+?	?	w-SofijasPasaule1996_013_014-p14w27	?	? <[z,s],'?','',''>
+Tas	Tas	w-SofijasPasaule1996_013_014-p14w28	Tas	Tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+nāca	nāca	w-SofijasPasaule1996_013_014-p14w29	nāca	nāca <[v,m,n,i,s,i,1,3,0,a,n],'nākt','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p14w30	kā	kā <[q,s],'kā','veida apstāklis','nāca'>
+kaut	kaut	w-SofijasPasaule1996_013_014-p14w31	kaut	kaut <[p,i,0,0,0,n,_,[_]],'','spk','nāca'>
+kas	kas	w-SofijasPasaule1996_013_014-p14w32	kas	kas <[p,i,0,0,0,n,_,[_]],'','teikuma priekšmets','nāca'>
+iepriekš	iepriekš	w-SofijasPasaule1996_013_014-p14w33	iepriekš	iepriekš <[r,0,t],'iepriekš','laika apstāklis','nāca'>
+dots	dots	w-SofijasPasaule1996_013_014-p14w34	dots	dots <[v,m,n,p,d,m,s,n,p,s,n],'dot','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p14w35	.	. <[z,s],'.','',''>
+Viņa	Viņa	w-SofijasPasaule1996_013_014-p14w36	Viņa	Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+varbūt	varbūt	w-SofijasPasaule1996_013_014-p14w37	varbūt	varbūt <[q,s],'varbūt','',''>
+varēja	varēja	w-SofijasPasaule1996_013_014-p14w38	izteicējs	izteicējs <[v,m,y,i,s,i,0,3,0,a,n],'','',''>
+doesn't match 
+varēja	varēja	w-SofijasPasaule1996_013_014-p14w38	varēja	varēja <[v,o,n,i,s,t,3,3,0,a,n],'varēt','','izteicējs'>
+izvēlēties	izvēlēties	w-SofijasPasaule1996_013_014-p14w39	izvēlēties	izvēlēties <[v,m,y,n,0,i,3,0,0,0,n],'izvēlēties','','izteicējs'>
+sev	sev	w-SofijasPasaule1996_013_014-p14w40	sev	sev <[p,x,0,0,0,d,_,[0]],'sevis','netiešais papildinātājs','izteicējs'>
+draugus	draugus	w-SofijasPasaule1996_013_014-p14w41	draugus	draugus <[n,c,m,p,a,1],'draugs','',''>
+,	,	w-SofijasPasaule1996_013_014-p14w42	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p14w43	bet	bet <[c,c,s],'bet','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p14w44	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nebija	nebija	w-SofijasPasaule1996_013_014-p14w45	izteicējs	izteicējs <[v,m,y,i,s,0,0,3,s,a,y],'','izteicējs','.'>
+doesn't match 
+nebija	nebija	w-SofijasPasaule1996_013_014-p14w45	nebija	nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','','izteicējs'>
+izvēlējusies	izvēlējusies	w-SofijasPasaule1996_013_014-p14w46	izvēlējusies	izvēlējusies <[v,m,y,p,d,f,s,n,a,s,n],'izvēlēties','','izteicējs'>
+pati	pati	w-SofijasPasaule1996_013_014-p14w47	pati	pati <[p,g,0,f,s,n,_,[0]],'pati','teikuma priekšmets','izteicējs'>
+sevi	sevi	w-SofijasPasaule1996_013_014-p14w48	sevi	sevi <[p,x,0,0,0,a,_,[0]],'sevis','tiešais papildinātājs','izteicējs'>
+.	.	w-SofijasPasaule1996_013_014-p14w49	.	. <[z,s],'.','',''>
+Viņa	Viņa	w-SofijasPasaule1996_013_014-p14w50	Viņa	Viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','izteicējs'>
+vispār	vispār	w-SofijasPasaule1996_013_014-p14w51	vispār	vispār <[r,0,m],'vispār','veida apstāklis','izteicējs'>
+nebija	nebija	w-SofijasPasaule1996_013_014-p14w52	izteicējs	izteicējs <[v,m,y,i,s,0,0,3,s,a,y],'','',''>
+doesn't match 
+nebija	nebija	w-SofijasPasaule1996_013_014-p14w52	nebija	nebija <[v,c,n,i,s,i,i,3,0,a,y],'nebūt','','izteicējs'>
+izvēlējusies	izvēlējusies	w-SofijasPasaule1996_013_014-p14w53	izvēlējusies	izvēlējusies <[v,m,y,p,d,f,s,n,a,s,n],'izvēlēties','','izteicējs'>
+kļūt	kļūt	w-SofijasPasaule1996_013_014-p14w54	kļūt	kļūt <[v,m,n,n,0,i,1,0,0,0,n],'kļūt','izteicējs','.'>
+par	par	w-SofijasPasaule1996_013_014-p14w55	prievārdeklis	prievārdeklis <[n,c,m,s,a,1],'','nolūka apstāklis','kļūt'>
+doesn't match 
+par	par	w-SofijasPasaule1996_013_014-p14w55	par	par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+cilvēku	cilvēku	w-SofijasPasaule1996_013_014-p14w56	cilvēku	cilvēku <[n,c,m,s,a,1],'cilvēks','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p14w57	.	. <[z,s],'.','',''>
+Kas	Kas	w-SofijasPasaule1996_013_014-p15w1	Kas	Kas <[p,q,0,0,0,n,_,[0]],'kas','teikuma priekšmets','izteicējs'>
+ir	ir	w-SofijasPasaule1996_013_014-p15w2	izteicējs	izteicējs <[v,m,_,i,p,0,0,3,0,a,n],'','izteicējs','?'>
+doesn't match 
+ir	ir	w-SofijasPasaule1996_013_014-p15w2	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','','izteicējs'>
+cilvēks	cilvēks	w-SofijasPasaule1996_013_014-p15w3	cilvēks	cilvēks <[n,c,m,s,n,1],'cilvēks','','izteicējs'>
+?	?	w-SofijasPasaule1996_013_014-p15w4	?	? <[z,s],'?','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p16w1	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','pavērās'>
+atkal	atkal	w-SofijasPasaule1996_013_014-p16w2	atkal	atkal <[r,0,t],'atkal','laika apstāklis','pavērās'>
+pavērās	pavērās	w-SofijasPasaule1996_013_014-p16w3	pavērās	pavērās <[v,m,y,i,s,i,1,3,0,a,n],'pavērties','izteicējs','.'>
+uz	uz	w-SofijasPasaule1996_013_014-p16w4	prievārdeklis	prievārdeklis <[n,c,f,s,a,5],'','nolūka apstāklis','pavērās'>
+doesn't match 
+uz	uz	w-SofijasPasaule1996_013_014-p16w4	uz	uz <[s,p,s,a,[y]],'uz','','prievārdeklis'>
+meiteni	meiteni	w-SofijasPasaule1996_013_014-p16w5	meiteni	meiteni <[n,c,f,s,a,5],'meitene','','prievārdeklis'>
+spogulī	spogulī	w-SofijasPasaule1996_013_014-p16w6	spogulī	spogulī <[n,c,m,s,l,2],'spogulis','laika apstāklis','pavērās'>
+.	.	w-SofijasPasaule1996_013_014-p16w7	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p17w1	„Es	„Es <[x],'','',''>
+doesn't match 
+Es	Es	w-SofijasPasaule1996_013_014-p17w2	„Es	„Es <[x],'','',''>
+doesn't match 
+domāju	domāju	w-SofijasPasaule1996_013_014-p17w3	domāju	domāju <[v,m,n,i,p,t,2,1,s,a,n],'domāt','',''>
+,	,	w-SofijasPasaule1996_013_014-p17w4	,	, <[z,c],',','',''>
+būs	būs	w-SofijasPasaule1996_013_014-p17w5	būs	būs <[v,c,n,i,f,i,i,3,0,a,n],'būt','',''>
+jākāpj	jākāpj	w-SofijasPasaule1996_013_014-p17w6	jākāpj	jākāpj <[v,m,n,d,0,t,1,0,0,a,n],'kāpt','',''>
+augšā	augšā	w-SofijasPasaule1996_013_014-p17w7	augšā	augšā <[r,0,p],'augšā','',''>
+un	un	w-SofijasPasaule1996_013_014-p17w8	un	un <[c,c,s],'un','',''>
+jāsāk	jāsāk	w-SofijasPasaule1996_013_014-p17w9	jāsāk	jāsāk <[v,m,n,d,0,t,1,0,0,a,n],'sākt','',''>
+gatavot	gatavot	w-SofijasPasaule1996_013_014-p17w10	gatavot	gatavot <[v,m,n,n,0,t,2,0,0,0,n],'gatavot','',''>
+mājasdarbu	mājasdarbu	w-SofijasPasaule1996_013_014-p17w11	mājasdarbu	mājasdarbu <[n,c,m,s,a,1],'mājasdarbs','',''>
+dabasmācībā	dabasmācībā	w-SofijasPasaule1996_013_014-p17w12	dabasmācībā	dabasmācībā <[n,c,f,s,l,4],'dabasmācība','',''>
+,	,	w-SofijasPasaule1996_013_014-p17w13	,	, <[z,c],',','',''>
+”	”	w-SofijasPasaule1996_013_014-p17w14	”	” <[x],'','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p17w15	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+teica	teica	w-SofijasPasaule1996_013_014-p17w16	teica	teica <[v,m,n,i,s,t,1,3,0,a,n],'teikt','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p17w17	kā	kā <[q,s],'kā','',''>
+atvainodamās	atvainodamās	w-SofijasPasaule1996_013_014-p17w18	atvainodamās	atvainodamās <[v,m,y,p,u,f,_,_,a,_,_],'atvainoties','',''>
+.	.	w-SofijasPasaule1996_013_014-p17w19	.	. <[z,s],'.','',''>
+Taču	Taču	w-SofijasPasaule1996_013_014-p18w1	Taču	Taču <[c,c,s],'taču','',''>
+nākamajā	nākamajā	w-SofijasPasaule1996_013_014-p18w2	nākamajā	nākamajā <[v,m,n,p,d,m,s,l,p,p,y],'nākt','apzīmētājs','mirklī'>
+mirklī	mirklī	w-SofijasPasaule1996_013_014-p18w3	mirklī	mirklī <[n,c,m,s,l,2],'mirklis','laika apstāklis','bija'>
+viņa	viņa	w-SofijasPasaule1996_013_014-p18w4	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','bija'>
+jau	jau	w-SofijasPasaule1996_013_014-p18w5	jau	jau <[r,0,t],'jau','laika apstāklis','bija'>
+bija	bija	w-SofijasPasaule1996_013_014-p18w6	bija	bija <[v,m,n,i,s,i,i,3,0,a,n],'būt','',''>
+ārā	ārā	w-SofijasPasaule1996_013_014-p18w7	ārā	ārā <[n,c,m,s,l,1],'ārā','laika apstāklis','bija'>
+,	,	w-SofijasPasaule1996_013_014-p18w8	,	, <[z,c],',','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p18w9	prievārdeklis	prievārdeklis <[n,c,f,s,g,4],'','',''>
+doesn't match 
+uz	uz	w-SofijasPasaule1996_013_014-p18w9	uz	uz <[s,p,s,g,[y]],'uz','','prievārdeklis'>
+taciņas	taciņas	w-SofijasPasaule1996_013_014-p18w10	taciņas	taciņas <[n,c,f,s,g,4],'taciņa','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p18w11	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p19w1	„Es	„Es <[x],'','',''>
+doesn't match 
+Es	Es	w-SofijasPasaule1996_013_014-p19w2	„Es	„Es <[x],'','',''>
+doesn't match 
+labāk	labāk	w-SofijasPasaule1996_013_014-p19w3	labāk	labāk <[r,c,t],'labi','laika apstāklis','iešu'>
+iešu	iešu	w-SofijasPasaule1996_013_014-p19w4	iešu	iešu <[v,m,n,i,f,i,i,1,s,a,n],'iet','',''>
+dārzā	dārzā	w-SofijasPasaule1996_013_014-p19w5	dārzā	dārzā <[n,c,m,s,l,1],'dārzs','laika apstāklis','iešu'>
+,	,	w-SofijasPasaule1996_013_014-p19w6	,	, <[z,c],',','',''>
+”	”	w-SofijasPasaule1996_013_014-p19w7	”	” <[x],'','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p19w8	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','nodomāja'>
+nodomāja	nodomāja	w-SofijasPasaule1996_013_014-p19w9	nodomāja	nodomāja <[v,m,n,i,s,t,2,3,0,a,n],'nodomāt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p19w10	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p20w1	„Minci	„Minci <[x],'','',''>
+doesn't match 
+Minci	Minci	w-SofijasPasaule1996_013_014-p20w2	„Minci	„Minci <[x],'','',''>
+doesn't match 
+,	,	w-SofijasPasaule1996_013_014-p20w3	,	, <[z,c],',','',''>
+minci	minci	w-SofijasPasaule1996_013_014-p20w4	apvienojums	apvienojums <[n,_,_,_,a,_],'','',''>
+doesn't match 
+minci	minci	w-SofijasPasaule1996_013_014-p20w4	minci	minci <[n,c,m,s,v,2],'mincis','','apvienojums'>
+,	,	w-SofijasPasaule1996_013_014-p20w5	,	, <[z,c],',','','apvienojums'>
+minci	minci	w-SofijasPasaule1996_013_014-p20w6	minci	minci <[n,c,m,s,v,2],'mincis','','apvienojums'>
+!	!	w-SofijasPasaule1996_013_014-p20w7	!	! <[z,s],'!','',''>
+”	”	w-SofijasPasaule1996_013_014-p20w8	”	” <[x],'”','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p21w1	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','izšķūrēja'>
+izšķūrēja	izšķūrēja	w-SofijasPasaule1996_013_014-p21w2	izšķūrēja	izšķūrēja <[v,m,n,i,s,t,2,3,0,a,n],'izšķūrēt','',''>
+runci	runci	w-SofijasPasaule1996_013_014-p21w3	runci	runci <[n,c,m,s,a,2],'runcis','tiešais papildinātājs','izšķūrēja'>
+ārā	ārā	w-SofijasPasaule1996_013_014-p21w4	ārā	ārā <[n,c,m,s,l,1],'ārs','laika apstāklis','izšķūrēja'>
+uz	uz	w-SofijasPasaule1996_013_014-p21w5	prievārdeklis	prievārdeklis <[n,c,f,p,d,5],'','nolūka apstāklis','izšķūrēja'>
+doesn't match 
+uz	uz	w-SofijasPasaule1996_013_014-p21w5	uz	uz <[s,p,p,d,[y]],'uz','','prievārdeklis'>
+trepēm	trepēm	w-SofijasPasaule1996_013_014-p21w6	trepēm	trepēm <[n,c,f,p,d,5],'trepes','','prievārdeklis'>
+un	un	w-SofijasPasaule1996_013_014-p21w7	un	un <[c,c,s],'un','',''>
+aizvēra	aizvēra	w-SofijasPasaule1996_013_014-p21w8	aizvēra	aizvēra <[v,m,n,i,s,t,1,3,0,a,n],'aizvērt','izteicējs','.'>
+durvis	durvis	w-SofijasPasaule1996_013_014-p21w9	durvis	durvis <[n,c,f,p,a,6],'durvis','tiešais papildinātājs','aizvēra'>
+no	no	w-SofijasPasaule1996_013_014-p21w10	prievārdeklis	prievārdeklis <[n,c,f,s,g,5],'','cēloņa apstāklis','aizvēra'>
+doesn't match 
+no	no	w-SofijasPasaule1996_013_014-p21w10	no	no <[s,p,s,g,[y]],'no','','prievārdeklis'>
+ārpuses	ārpuses	w-SofijasPasaule1996_013_014-p21w11	ārpuses	ārpuses <[n,c,f,s,g,5],'ārpuse','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p21w12	.	. <[z,s],'.','',''>
+Kad	Kad	w-SofijasPasaule1996_013_014-p23w1	Kad	Kad <[r,0,t],'kad','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p23w2	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+tā	tā	w-SofijasPasaule1996_013_014-p23w3	tā	tā <[r,0,m],'tā','',''>
+stāvēja	stāvēja	w-SofijasPasaule1996_013_014-p23w4	stāvēja	stāvēja <[v,m,n,i,s,t,3,3,0,a,n],'stāvēt','',''>
+ārā	ārā	w-SofijasPasaule1996_013_014-p23w5	ārā	ārā <[n,_,m,s,l,1],'ārs','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p23w6	uz	uz <[s,p,s,g,[y]],'uz','',''>
+grantēta	grantēta	w-SofijasPasaule1996_013_014-p23w7	grantēta	grantēta <[v,m,n,p,d,m,s,g,p,s,n],'grantēt','',''>
+celiņa	celiņa	w-SofijasPasaule1996_013_014-p23w8	celiņa	celiņa <[n,c,m,s,g,1],'celiņš','',''>
+ar	ar	w-SofijasPasaule1996_013_014-p23w9	ar	ar <[s,p,s,a,[n]],'ar','',''>
+noslēpumaino	noslēpumaino	w-SofijasPasaule1996_013_014-p23w10	noslēpumaino	noslēpumaino <[a,f,f,s,a,y,p],'noslēpumaina','',''>
+vēstuli	vēstuli	w-SofijasPasaule1996_013_014-p23w11	vēstuli	vēstuli <[n,c,f,s,a,5],'vēstule','',''>
+rokā	rokā	w-SofijasPasaule1996_013_014-p23w12	rokā	rokā <[n,c,f,s,l,4],'roka','',''>
+,	,	w-SofijasPasaule1996_013_014-p23w13	,	, <[z,c],',','',''>
+viņu	viņu	w-SofijasPasaule1996_013_014-p23w14	viņu	viņu <[p,p,3,f,s,a,_,[0]],'viņa','',''>
+pēkšņi	pēkšņi	w-SofijasPasaule1996_013_014-p23w15	pēkšņi	pēkšņi <[r,0,m],'pēkšņi','',''>
+pārņēma	pārņēma	w-SofijasPasaule1996_013_014-p23w16	pārņēma	pārņēma <[v,m,n,i,s,t,1,3,0,a,n],'pārņemt','',''>
+brīnumaina	brīnumaina	w-SofijasPasaule1996_013_014-p23w17	brīnumaina	brīnumaina <[a,f,f,s,n,n,p],'brīnumaina','',''>
+nojausma	nojausma	w-SofijasPasaule1996_013_014-p23w18	nojausma	nojausma <[n,c,f,s,n,4],'nojausma','',''>
+.	.	w-SofijasPasaule1996_013_014-p23w19	.	. <[z,s],'.','',''>
+Sajūta	Sajūta	w-SofijasPasaule1996_013_014-p23w20	Sajūta	Sajūta <[n,c,f,s,n,4],'sajūta','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p23w21	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+tāda	tāda	w-SofijasPasaule1996_013_014-p23w22	tāda	tāda <[p,d,0,f,s,n,_,[a]],'tāda','',''>
+,	,	w-SofijasPasaule1996_013_014-p23w23	,	, <[z,c],',','',''>
+it	it	w-SofijasPasaule1996_013_014-p23w24	it	it <[c,s,c],'it','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p23w25	kā	kā <[c,s,s],'kā','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p23w26	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+būtu	būtu	w-SofijasPasaule1996_013_014-p23w27	būtu	būtu <[v,c,n,c,0,i,i,0,0,a,n],'būt','',''>
+kāda	kāda	w-SofijasPasaule1996_013_014-p23w28	kāda	kāda <[p,i,0,f,s,n,_,[0]],'kāda','',''>
+lelle	lelle	w-SofijasPasaule1996_013_014-p23w29	lelle	lelle <[n,c,f,s,n,5],'lelle','',''>
+,	,	w-SofijasPasaule1996_013_014-p23w30	,	, <[z,c],',','',''>
+kas	kas	w-SofijasPasaule1996_013_014-p23w31	kas	kas <[p,r,0,0,0,n,_,[0]],'kas','',''>
+gulējusi	gulējusi	w-SofijasPasaule1996_013_014-p23w32	gulējusi	gulējusi <[v,m,n,p,d,f,s,n,a,s,n],'gulēt','',''>
+ratiņos	ratiņos	w-SofijasPasaule1996_013_014-p23w33	ratiņos	ratiņos <[n,c,m,p,l,1],'ratiņš','',''>
+un	un	w-SofijasPasaule1996_013_014-p23w34	un	un <[c,c,s],'un','',''>
+pēkšņi	pēkšņi	w-SofijasPasaule1996_013_014-p23w35	pēkšņi	pēkšņi <[r,0,m],'pēkšņi','',''>
+ir	ir	w-SofijasPasaule1996_013_014-p23w36	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+atdzīvojusies	atdzīvojusies	w-SofijasPasaule1996_013_014-p23w37	atdzīvojusies	atdzīvojusies <[v,m,y,p,d,f,s,n,a,s,n],'atdzīvoties','',''>
+.	.	w-SofijasPasaule1996_013_014-p23w38	.	. <[z,s],'.','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p24w1	Vai	Vai <[q,s],'vai','',''>
+nav	nav	w-SofijasPasaule1996_013_014-p24w2	nav	nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','',''>
+dīvaini	dīvaini	w-SofijasPasaule1996_013_014-p24w3	dīvaini	dīvaini <[r,_,_],'dīvaini','',''>
+,	,	w-SofijasPasaule1996_013_014-p24w4	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p24w5	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p24w6	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+vispār	vispār	w-SofijasPasaule1996_013_014-p24w7	vispār	vispār <[r,0,m],'vispār','',''>
+ir	ir	w-SofijasPasaule1996_013_014-p24w8	ir	ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+pasaulē	pasaulē	w-SofijasPasaule1996_013_014-p24w9	pasaulē	pasaulē <[n,c,f,s,l,5],'pasaule','',''>
+tieši	tieši	w-SofijasPasaule1996_013_014-p24w10	tieši	tieši <[q,s],'tieši','',''>
+tagad	tagad	w-SofijasPasaule1996_013_014-p24w11	tagad	tagad <[r,0,t],'tagad','',''>
+un	un	w-SofijasPasaule1996_013_014-p24w12	un	un <[c,c,s],'un','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p24w13	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p24w14	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+var	var	w-SofijasPasaule1996_013_014-p24w15	var	var <[v,o,n,i,p,t,3,3,0,a,n],'varēt','',''>
+klīst	klīst	w-SofijasPasaule1996_013_014-p24w16	klīst	klīst <[v,m,n,n,0,i,1,0,0,0,n],'klīst','',''>
+pa	pa	w-SofijasPasaule1996_013_014-p24w17	pa	pa <[s,p,s,a,[y]],'pa','',''>
+to	to	w-SofijasPasaule1996_013_014-p24w18	to	to <[p,d,3,f,s,a,_,[s]],'tā','',''>
+kā	kā	w-SofijasPasaule1996_013_014-p24w19	kā	kā <[q,s],'kā','',''>
+brīnumu	brīnumu	w-SofijasPasaule1996_013_014-p24w20	brīnumu	brīnumu <[n,c,m,s,a,1],'brīnums','',''>
+pasakā	pasakā	w-SofijasPasaule1996_013_014-p24w21	pasakā	pasakā <[n,c,f,s,l,4],'pasaka','',''>
+?	?	w-SofijasPasaule1996_013_014-p24w22	?	? <[z,s],'?','',''>
+Šerekāns	Šerekāns	w-SofijasPasaule1996_013_014-p25w1	Šerekāns	Šerekāns <[n,p,m,s,n,1],'šerekāns','teikuma priekšmets','pārlēca'>
+viegli	viegli	w-SofijasPasaule1996_013_014-p25w2	viegli	viegli <[r,0,c],'viegli','cēloņa apstāklis','pārlēca'>
+pārlēca	pārlēca	w-SofijasPasaule1996_013_014-p25w3	pārlēca	pārlēca <[v,m,n,i,s,i,1,3,0,a,n],'pārlēkt','',''>
+nožogojumam	nožogojumam	w-SofijasPasaule1996_013_014-p25w4	nožogojumam	nožogojumam <[n,c,m,s,d,1],'nožogojums','netiešais papildinātājs','pārlēca'>
+un	un	w-SofijasPasaule1996_013_014-p25w5	un	un <[c,c,s],'un','',''>
+veikli	veikli	w-SofijasPasaule1996_013_014-p25w6	veikli	veikli <[r,0,m],'veikls','',''>
+noslēpās	noslēpās	w-SofijasPasaule1996_013_014-p25w7	noslēpās	noslēpās <[v,m,y,i,s,i,1,3,0,a,n],'','',''>
+starp	starp	w-SofijasPasaule1996_013_014-p25w8	prievārdeklis	prievārdeklis <[n,c,m,p,d,1],'','',''>
+doesn't match 
+starp	starp	w-SofijasPasaule1996_013_014-p25w8	starp	starp <[s,p,p,d,[y]],'starp','','prievārdeklis'>
+jāņogu	jāņogu	w-SofijasPasaule1996_013_014-p25w9	jāņogu	jāņogu <[n,c,f,p,g,4],'jāņoga','apzīmētājs','krūmiem'>
+krūmiem	krūmiem	w-SofijasPasaule1996_013_014-p25w10	krūmiem	krūmiem <[n,c,m,p,d,1],'krūms','','prievārdeklis'>
+.	.	w-SofijasPasaule1996_013_014-p25w11	.	. <[z,s],'.','',''>
+Dzīvs	Dzīvs	w-SofijasPasaule1996_013_014-p25w12	Dzīvs	Dzīvs <[a,f,m,s,n,n,p],'dzīvs','apzīmētājs','kaķis'>
+kaķis	kaķis	w-SofijasPasaule1996_013_014-p25w13	kaķis	kaķis <[n,c,m,s,n,2],'kaķis','',''>
+,	,	w-SofijasPasaule1996_013_014-p25w14	,	, <[z,c],',','',''>
+dzīvs	dzīvs	w-SofijasPasaule1996_013_014-p25w15	dzīvs	dzīvs <[a,f,m,s,n,n,p],'dzīvs','',''>
+,	,	w-SofijasPasaule1996_013_014-p25w16	,	, <[z,c],',','',''>
+sākot	sākot	w-SofijasPasaule1996_013_014-p25w17	redukcija	redukcija <[v,m,n,r,p,t,0,0,0,a,n],'','',''>
+doesn't match 
+sākot	sākot	w-SofijasPasaule1996_013_014-p25w17	sākot	sākot <[v,p,n,r,p,t,1,0,0,a,n],'sākt','','redukcija'>
+no	no	w-SofijasPasaule1996_013_014-p25w18	prievārdeklis	prievārdeklis <[n,c,f,p,d,4],'','cēloņa apstāklis','līdz'>
+doesn't match 
+no	no	w-SofijasPasaule1996_013_014-p25w18	no	no <[s,p,p,d,[y]],'no','','prievārdeklis'>
+smalkajām	smalkajām	w-SofijasPasaule1996_013_014-p25w19	apvienojums	apvienojums <[a,r,f,p,d,y,p],'','apzīmētājs','spalviņām'>
+doesn't match 
+smalkajām	smalkajām	w-SofijasPasaule1996_013_014-p25w19	smalkajām	smalkajām <[a,f,f,p,d,y,p],'smalka','','apvienojums'>
+,	,	w-SofijasPasaule1996_013_014-p25w20	,	, <[z,c],',','','apvienojums'>
+gaišajām	gaišajām	w-SofijasPasaule1996_013_014-p25w21	gaišajām	gaišajām <[a,f,f,p,d,y,p],'gaiša','','apvienojums'>
+spalviņām	spalviņām	w-SofijasPasaule1996_013_014-p25w22	spalviņām	spalviņām <[n,c,f,p,d,4],'spalviņa','','prievārdeklis'>
+ausu	ausu	w-SofijasPasaule1996_013_014-p25w23	ausu	ausu <[n,c,f,p,g,6],'auss','apzīmētājs','galos'>
+galos	galos	w-SofijasPasaule1996_013_014-p25w24	galos	galos <[n,c,m,p,l,1],'gals','laika apstāklis','līdz'>
+līdz	līdz	w-SofijasPasaule1996_013_014-p25w25	līdz	līdz <[s,p,p,d,[y]],'līdz','',''>
+pat	pat	w-SofijasPasaule1996_013_014-p25w26	pat	pat <[q,s],'pat','',''>
+gludā	gludā	w-SofijasPasaule1996_013_014-p25w27	gludā	gludā <[a,f,m,s,g,y,p],'gluds','apzīmētājs','ķermeņa'>
+ķermeņa	ķermeņa	w-SofijasPasaule1996_013_014-p25w28	ķermeņa	ķermeņa <[n,c,m,s,g,2],'ķermenis','apzīmētājs','astes'>
+astes	astes	w-SofijasPasaule1996_013_014-p25w29	astes	astes <[n,c,f,s,g,5],'aste','apzīmētājs','galiņam'>
+galiņam	galiņam	w-SofijasPasaule1996_013_014-p25w30	galiņam	galiņam <[n,c,m,s,d,1],'galiņš','',''>
+.	.	w-SofijasPasaule1996_013_014-p25w31	.	. <[z,s],'.','',''>
+Arī	Arī	w-SofijasPasaule1996_013_014-p25w32	Arī	Arī <[q,s],'arī','',''>
+viņš	viņš	w-SofijasPasaule1996_013_014-p25w33	viņš	viņš <[p,p,3,m,s,n,_,[0]],'viņš','teikuma priekšmets','ir'>
+ir	ir	w-SofijasPasaule1996_013_014-p25w34	ir	ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+dārzā	dārzā	w-SofijasPasaule1996_013_014-p25w35	dārzā	dārzā <[n,c,m,s,l,1],'dārzs','laika apstāklis','ir'>
+,	,	w-SofijasPasaule1996_013_014-p25w36	,	, <[z,c],',','',''>
+bet	bet	w-SofijasPasaule1996_013_014-p25w37	bet	bet <[c,c,s],'bet','',''>
+diez	diez	w-SofijasPasaule1996_013_014-p25w38	diez	diez <[q,s],'diez','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p25w39	vai	vai <[q,s],'vai','',''>
+viņš	viņš	w-SofijasPasaule1996_013_014-p25w40	viņš	viņš <[p,p,3,m,s,n,_,[0]],'viņš','',''>
+to	to	w-SofijasPasaule1996_013_014-p25w41	to	to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','apzinās'>
+tik	tik	w-SofijasPasaule1996_013_014-p25w42	tik	tik <[r,0,q],'tik','mēra apstāklis','skaidri'>
+skaidri	skaidri	w-SofijasPasaule1996_013_014-p25w43	skaidri	skaidri <[r,0,c],'skaidri','cēloņa apstāklis','apzinās'>
+apzinās	apzinās	w-SofijasPasaule1996_013_014-p25w44	apzinās	apzinās <[v,m,y,i,p,t,3,3,0,a,n],'apzināties','izteicējs','.'>
+kā	kā	w-SofijasPasaule1996_013_014-p25w45	kā	kā <[q,s],'kā','veida apstāklis','apzinās'>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p25w46	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','apzinās'>
+.	.	w-SofijasPasaule1996_013_014-p25w47	.	. <[z,s],'.','',''>
+Pēc	Pēc	w-SofijasPasaule1996_013_014-p26w1	Pēc	Pēc <[s,p,s,g,[y]],'pēc','',''>
+brītiņa	brītiņa	w-SofijasPasaule1996_013_014-p26w2	brītiņa	brītiņa <[n,c,m,s,g,1],'brītiņš','',''>
+,	,	w-SofijasPasaule1996_013_014-p26w3	,	, <[z,c],',','',''>
+kad	kad	w-SofijasPasaule1996_013_014-p26w4	kad	kad <[r,0,t],'kad','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p26w5	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p26w6	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+pārdomājusi	pārdomājusi	w-SofijasPasaule1996_013_014-p26w7	pārdomājusi	pārdomājusi <[v,m,n,p,d,f,s,n,a,s,n],'pārdomāt','',''>
+savu	savu	w-SofijasPasaule1996_013_014-p26w8	savu	savu <[p,s,0,f,s,a,_,[0]],'sava','',''>
+esmi	esmi	w-SofijasPasaule1996_013_014-p26w9	esmi	esmi <[n,c,f,s,a,5],'esme','',''>
+,	,	w-SofijasPasaule1996_013_014-p26w10	,	, <[z,c],',','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p26w11	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+ienāca	ienāca	w-SofijasPasaule1996_013_014-p26w12	ienāca	ienāca <[v,m,n,i,s,i,1,3,0,a,n],'ienākt','',''>
+prātā	prātā	w-SofijasPasaule1996_013_014-p26w13	prātā	prātā <[n,c,m,s,l,1],'prāts','',''>
+,	,	w-SofijasPasaule1996_013_014-p26w14	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p26w15	ka	ka <[c,s,s],'ka','',''>
+šai	šai	w-SofijasPasaule1996_013_014-p26w16	šai	šai <[p,d,3,f,s,d,_,[s]],'šī','',''>
+pasaulē	pasaulē	w-SofijasPasaule1996_013_014-p26w17	pasaulē	pasaulē <[n,c,f,s,l,5],'pasaule','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p26w18	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+nebūs	nebūs	w-SofijasPasaule1996_013_014-p26w19	nebūs	nebūs <[v,m,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+mūžīgi	mūžīgi	w-SofijasPasaule1996_013_014-p26w20	mūžīgi	mūžīgi <[r,_,_],'mūžīgi','',''>
+.	.	w-SofijasPasaule1996_013_014-p26w21	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p27w1	„Es	„Es <[x],'','',''>
+doesn't match 
+Es	Es	w-SofijasPasaule1996_013_014-p27w2	„Es	„Es <[x],'','',''>
+doesn't match 
+esmu	esmu	w-SofijasPasaule1996_013_014-p27w3	esmu	esmu <[v,m,n,i,p,i,i,1,s,a,n],'būt','',''>
+pasaulē	pasaulē	w-SofijasPasaule1996_013_014-p27w4	pasaulē	pasaulē <[n,c,f,s,l,5],'pasaule','laika apstāklis','esmu'>
+tagad	tagad	w-SofijasPasaule1996_013_014-p27w5	tagad	tagad <[r,0,t],'tagad','laika apstāklis','esmu'>
+,	,	w-SofijasPasaule1996_013_014-p27w6	,	, <[z,c],',','',''>
+”	”	w-SofijasPasaule1996_013_014-p27w7	”	” <[x],'','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p27w8	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','teikuma priekšmets','domāja'>
+domāja	domāja	w-SofijasPasaule1996_013_014-p27w9	domāja	domāja <[v,m,n,i,s,t,2,3,0,a,n],'domāt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p27w10	.	. <[z,s],'.','',''>
+„	„	w-SofijasPasaule1996_013_014-p27w11	„Bet	„Bet <[x],'','',''>
+doesn't match 
+Bet	Bet	w-SofijasPasaule1996_013_014-p27w12	„Bet	„Bet <[x],'','',''>
+doesn't match 
+nāks	nāks	w-SofijasPasaule1996_013_014-p27w13	nāks	nāks <[v,m,n,i,f,i,1,3,0,a,n],'nākt','',''>
+diena	diena	w-SofijasPasaule1996_013_014-p27w14	diena	diena <[n,c,f,s,n,4],'diena','teikuma priekšmets','nāks'>
+,	,	w-SofijasPasaule1996_013_014-p27w15	,	, <[z,c],',','',''>
+kad	kad	w-SofijasPasaule1996_013_014-p27w16	kad	kad <[r,0,t],'kad','',''>
+manis	manis	w-SofijasPasaule1996_013_014-p27w17	manis	manis <[p,p,1,0,s,g,_,[0]],'es','',''>
+vairs	vairs	w-SofijasPasaule1996_013_014-p27w18	vairs	vairs <[r,0,t],'vairs','laika apstāklis','nebūs'>
+nebūs	nebūs	w-SofijasPasaule1996_013_014-p27w19	nebūs	nebūs <[v,g,n,i,f,i,i,3,0,a,y],'nebūt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p27w20	.	. <[z,s],'.','',''>
+”	”	w-SofijasPasaule1996_013_014-p27w21	”	” <[x],'','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p28w1	Vai	Vai <[q,s],'vai','',''>
+pastāv	pastāv	w-SofijasPasaule1996_013_014-p28w2	pastāv	pastāv <[v,m,n,i,p,t,3,3,0,a,n],'pastāvēt','izteicējs','?'>
+dzīve	dzīve	w-SofijasPasaule1996_013_014-p28w3	dzīve	dzīve <[n,c,f,s,n,5],'dzīve','teikuma priekšmets','pastāv'>
+pēc	pēc	w-SofijasPasaule1996_013_014-p28w4	prievārdeklis	prievārdeklis <[n,c,f,s,g,5],'','laika apstāklis','pastāv'>
+doesn't match 
+pēc	pēc	w-SofijasPasaule1996_013_014-p28w4	pēc	pēc <[s,p,s,g,[y]],'pēc','','prievārdeklis'>
+nāves	nāves	w-SofijasPasaule1996_013_014-p28w5	nāves	nāves <[n,c,f,s,g,5],'nāve','','prievārdeklis'>
+?	?	w-SofijasPasaule1996_013_014-p28w6	?	? <[z,s],'?','',''>
+Arī	Arī	w-SofijasPasaule1996_013_014-p28w7	Arī	Arī <[q,s],'arī','',''>
+par	par	w-SofijasPasaule1996_013_014-p28w8	prievārdeklis	prievārdeklis <[n,c,m,s,a,1],'','nolūka apstāklis','nebija'>
+doesn't match 
+par	par	w-SofijasPasaule1996_013_014-p28w8	par	par <[s,p,s,a,[n]],'par','','prievārdeklis'>
+šo	šo	w-SofijasPasaule1996_013_014-p28w9	šo	šo <[p,d,3,m,s,a,_,[s]],'šis','apzīmētājs','jautājumu'>
+jautājumu	jautājumu	w-SofijasPasaule1996_013_014-p28w10	jautājumu	jautājumu <[n,c,m,s,a,1],'jautājums','','prievārdeklis'>
+kaķim	kaķim	w-SofijasPasaule1996_013_014-p28w11	kaķim	kaķim <[n,c,m,s,d,2],'kaķis','netiešais papildinātājs','nebija'>
+nebija	nebija	w-SofijasPasaule1996_013_014-p28w12	nebija	nebija <[v,g,n,i,s,i,i,3,0,a,y],'nebūt','izteicējs','.'>
+nekādas	nekādas	w-SofijasPasaule1996_013_014-p28w13	nekādas	nekādas <[p,i,0,f,s,g,y,[0]],'nekāda','',''>
+daļas	daļas	w-SofijasPasaule1996_013_014-p28w14	daļas	daļas <[n,c,f,s,g,4],'daļa','teikuma priekšmets','nebija'>
+.	.	w-SofijasPasaule1996_013_014-p28w15	.	. <[z,s],'.','',''>
+Ne	Ne	w-SofijasPasaule1996_013_014-p29w1	Ne	Ne <[q,s],'ne','',''>
+tik	tik	w-SofijasPasaule1996_013_014-p29w2	tik	tik <[r,0,q],'tik','mēra apstāklis','sen'>
+sen	sen	w-SofijasPasaule1996_013_014-p29w3	sen	sen <[r,0,t],'sen','laika apstāklis','izteicējs'>
+Sofijai	Sofijai	w-SofijasPasaule1996_013_014-p29w4	Sofijai	Sofijai <[n,p,f,s,d,4],'sofija','netiešais papildinātājs','izteicējs'>
+bija	bija	w-SofijasPasaule1996_013_014-p29w5	izteicējs	izteicējs <[v,m,n,i,s,0,0,3,s,a,n],'','izteicējs','.'>
+doesn't match 
+bija	bija	w-SofijasPasaule1996_013_014-p29w5	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+nomirusi	nomirusi	w-SofijasPasaule1996_013_014-p29w6	nomirusi	nomirusi <[v,m,n,p,d,f,s,n,a,s,n],'nomirt','','izteicējs'>
+vecmāmiņa	vecmāmiņa	w-SofijasPasaule1996_013_014-p29w7	vecmāmiņa	vecmāmiņa <[n,c,f,s,n,4],'vecmāmiņa','teikuma priekšmets','izteicējs'>
+.	.	w-SofijasPasaule1996_013_014-p29w8	.	. <[z,s],'.','',''>
+Vairāk	Vairāk	w-SofijasPasaule1996_013_014-p29w9	Vairāk	Vairāk <[r,c,q],'vairāk','',''>
+nekā	nekā	w-SofijasPasaule1996_013_014-p29w10	nekā	nekā <[q,s],'nekā','',''>
+pusgadu	pusgadu	w-SofijasPasaule1996_013_014-p29w11	pusgadu	pusgadu <[n,c,m,s,a,1],'pusgads','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p29w12	Sofija	Sofija <[n,p,f,s,n,4],'sofija','',''>
+vai	vai	w-SofijasPasaule1996_013_014-p29w13	vai	vai <[q,s],'vai','',''>
+ik	ik	w-SofijasPasaule1996_013_014-p29w14	ik	ik <[q,s],'ik','',''>
+dienu	dienu	w-SofijasPasaule1996_013_014-p29w15	dienu	dienu <[n,c,f,s,a,4],'diena','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p29w16	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+jutusi	jutusi	w-SofijasPasaule1996_013_014-p29w17	jutusi	jutusi <[v,m,n,p,d,f,s,n,a,s,n],'just','',''>
+,	,	w-SofijasPasaule1996_013_014-p29w18	,	, <[z,c],',','',''>
+cik	cik	w-SofijasPasaule1996_013_014-p29w19	cik	cik <[c,s,s],'cik','',''>
+ļoti	ļoti	w-SofijasPasaule1996_013_014-p29w20	ļoti	ļoti <[r,0,q],'ļoti','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p29w21	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+vecmāmiņas	vecmāmiņas	w-SofijasPasaule1996_013_014-p29w22	vecmāmiņas	vecmāmiņas <[n,c,f,s,g,4],'vecmāmiņa','',''>
+trūkst	trūkst	w-SofijasPasaule1996_013_014-p29w23	trūkst	trūkst <[v,g,n,i,p,i,1,3,0,a,n],'trūkt','',''>
+.	.	w-SofijasPasaule1996_013_014-p29w24	.	. <[z,s],'.','',''>
+Vai	Vai	w-SofijasPasaule1996_013_014-p29w25	Vai	Vai <[q,s],'vai','',''>
+nav	nav	w-SofijasPasaule1996_013_014-p29w26	izteicējs	izteicējs <[v,m,_,i,p,0,0,3,p,a,y],'','',''>
+doesn't match 
+nav	nav	w-SofijasPasaule1996_013_014-p29w26	nav	nav <[v,c,n,i,p,i,i,3,0,a,y],'būt','','izteicējs'>
+briesmīgi	briesmīgi	w-SofijasPasaule1996_013_014-p29w27	briesmīgi	briesmīgi <[r,_,_],'briesmīgi','','izteicējs'>
+netaisni	netaisni	w-SofijasPasaule1996_013_014-p29w28	netaisni	netaisni <[r,0,c],'netaisni','cēloņa apstāklis','izteicējs'>
+,	,	w-SofijasPasaule1996_013_014-p29w29	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p29w30	ka	ka <[c,s,s],'ka','',''>
+dzīvei	dzīvei	w-SofijasPasaule1996_013_014-p29w31	dzīvei	dzīvei <[n,c,f,s,d,5],'dzīve','teikuma priekšmets','jābeidzas'>
+reiz	reiz	w-SofijasPasaule1996_013_014-p29w32	reiz	reiz <[r,0,t],'reiz','laika apstāklis','jābeidzas'>
+jābeidzas	jābeidzas	w-SofijasPasaule1996_013_014-p29w33	jābeidzas	jābeidzas <[v,m,y,d,0,i,1,0,0,a,n],'beigties','izteicējs','?'>
+?	?	w-SofijasPasaule1996_013_014-p29w34	?	? <[z,s],'?','',''>
+Sofija	Sofija	w-SofijasPasaule1996_013_014-p30w1	Sofija	Sofija <[n,p,f,s,n,4],'sofija','teikuma priekšmets','palika'>
+palika	palika	w-SofijasPasaule1996_013_014-p30w2	palika	palika <[v,m,n,i,s,i,1,3,0,a,n],'palikt','',''>
+stāvam	stāvam	w-SofijasPasaule1996_013_014-p30w3	stāvam	stāvam <[v,m,n,p,u,0,0,0,0,0,0],'stāvēt','',''>
+uz	uz	w-SofijasPasaule1996_013_014-p30w4	prievārdeklis	prievārdeklis <[n,c,m,s,g,1],'','vietas apstāklis','stāvam'>
+doesn't match 
+uz	uz	w-SofijasPasaule1996_013_014-p30w4	uz	uz <[s,p,s,g,[y]],'uz','','prievārdeklis'>
+celiņa	celiņa	w-SofijasPasaule1996_013_014-p30w5	celiņa	celiņa <[n,c,m,s,g,1],'celiņš','','prievārdeklis'>
+un	un	w-SofijasPasaule1996_013_014-p30w6	un	un <[c,c,s],'un','',''>
+domājam	domājam	w-SofijasPasaule1996_013_014-p30w7	domājam	domājam <[v,m,n,p,u,0,0,0,0,0,0],'domāt','izteicējs','.'>
+.	.	w-SofijasPasaule1996_013_014-p30w8	.	. <[z,s],'.','',''>
+Viņa	Viņa	w-SofijasPasaule1996_013_014-p30w9	Viņa	Viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+visiem	visiem	w-SofijasPasaule1996_013_014-p30w10	visiem	visiem <[n,c,m,p,d,1],'viss','',''>
+spēkiem	spēkiem	w-SofijasPasaule1996_013_014-p30w11	spēkiem	spēkiem <[n,c,m,p,d,1],'spēks','',''>
+mēģināja	mēģināja	w-SofijasPasaule1996_013_014-p30w12	mēģināja	mēģināja <[v,o,n,i,s,t,3,3,0,a,n],'mēģināt','',''>
+domāt	domāt	w-SofijasPasaule1996_013_014-p30w13	domāt	domāt <[v,m,n,n,0,t,2,0,0,0,n],'domāt','',''>
+par	par	w-SofijasPasaule1996_013_014-p30w14	par	par <[s,p,s,a,[n]],'par','',''>
+to	to	w-SofijasPasaule1996_013_014-p30w15	to	to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w16	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p30w17	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p30w18	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+pašlaik	pašlaik	w-SofijasPasaule1996_013_014-p30w19	pašlaik	pašlaik <[r,0,t],'pašlaik','',''>
+ir	ir	w-SofijasPasaule1996_013_014-p30w20	ir	ir <[v,m,n,i,p,i,i,3,0,a,n],'būt','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w21	,	, <[z,c],',','',''>
+lai	lai	w-SofijasPasaule1996_013_014-p30w22	lai	lai <[c,s,s],'lai','',''>
+tādā	tādā	w-SofijasPasaule1996_013_014-p30w23	tādā	tādā <[p,d,0,m,s,l,_,[a]],'tāds','',''>
+veidā	veidā	w-SofijasPasaule1996_013_014-p30w24	veidā	veidā <[n,c,m,s,l,1],'veids','',''>
+aizmirstu	aizmirstu	w-SofijasPasaule1996_013_014-p30w25	aizmirstu	aizmirstu <[v,m,n,c,0,t,1,0,0,a,n],'aizmirst','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w26	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p30w27	ka	ka <[c,s,s],'ka','',''>
+vienmēr	vienmēr	w-SofijasPasaule1996_013_014-p30w28	vienmēr	vienmēr <[r,0,t],'vienmēr','',''>
+tas	tas	w-SofijasPasaule1996_013_014-p30w29	tas	tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+tā	tā	w-SofijasPasaule1996_013_014-p30w30	tā	tā <[r,0,m],'tā','',''>
+nebūs	nebūs	w-SofijasPasaule1996_013_014-p30w31	nebūs	nebūs <[v,m,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+.	.	w-SofijasPasaule1996_013_014-p30w32	.	. <[z,s],'.','',''>
+Bet	Bet	w-SofijasPasaule1996_013_014-p30w33	Bet	Bet <[c,c,s],'bet','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p30w34	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','izteicējs','.'>
+gandrīz	gandrīz	w-SofijasPasaule1996_013_014-p30w35	gandrīz	gandrīz <[r,0,q],'gandrīz','mēra apstāklis','neiespējami'>
+neiespējami	neiespējami	w-SofijasPasaule1996_013_014-p30w36	neiespējami	neiespējami <[a,r,m,p,n,n,p],'neiespējams','cēloņa apstāklis','bija'>
+to	to	w-SofijasPasaule1996_013_014-p30w37	to	to <[p,d,3,m,s,a,_,[s]],'tas','tiešais papildinātājs','izdarīt'>
+izdarīt	izdarīt	w-SofijasPasaule1996_013_014-p30w38	izdarīt	izdarīt <[v,m,n,n,0,t,3,0,0,0,n],'izdarīt','spk','bija'>
+.	.	w-SofijasPasaule1996_013_014-p30w39	.	. <[z,s],'.','',''>
+Tiklīdz	Tiklīdz	w-SofijasPasaule1996_013_014-p30w40	Tiklīdz	Tiklīdz <[c,s,s],'tiklīdz','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p30w41	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+sakopoja	sakopoja	w-SofijasPasaule1996_013_014-p30w42	sakopoja	sakopoja <[v,m,n,i,s,t,2,3,0,a,n],'sakopot','',''>
+visas	visas	w-SofijasPasaule1996_013_014-p30w43	visas	visas <[p,g,0,f,p,a,_,[0]],'visa','',''>
+domas	domas	w-SofijasPasaule1996_013_014-p30w44	domas	domas <[n,c,f,p,a,4],'doma','',''>
+par	par	w-SofijasPasaule1996_013_014-p30w45	par	par <[s,p,s,a,[n]],'par','',''>
+to	to	w-SofijasPasaule1996_013_014-p30w46	to	to <[p,d,3,m,s,a,_,[s]],'tas','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w47	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p30w48	ka	ka <[c,s,s],'ka','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p30w49	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+eksistē	eksistē	w-SofijasPasaule1996_013_014-p30w50	eksistē	eksistē <[v,m,n,i,p,i,2,3,0,a,n],'eksistēt','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w51	,	, <[z,c],',','',''>
+tūlīt	tūlīt	w-SofijasPasaule1996_013_014-p30w52	tūlīt	tūlīt <[r,0,t],'tūlīt','',''>
+klāt	klāt	w-SofijasPasaule1996_013_014-p30w53	klāt	klāt <[v,m,n,n,0,t,1,0,0,0,n],'klāt','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p30w54	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p30w55	arī	arī <[q,s],'arī','',''>
+doma	doma	w-SofijasPasaule1996_013_014-p30w56	doma	doma <[n,c,f,s,n,4],'doma','',''>
+par	par	w-SofijasPasaule1996_013_014-p30w57	par	par <[s,p,s,a,[n]],'par','',''>
+dzīves	dzīves	w-SofijasPasaule1996_013_014-p30w58	dzīves	dzīves <[n,c,f,s,g,5],'dzīve','',''>
+galu	galu	w-SofijasPasaule1996_013_014-p30w59	galu	galu <[n,c,m,s,a,1],'gals','',''>
+.	.	w-SofijasPasaule1996_013_014-p30w60	.	. <[z,s],'.','',''>
+Tāpat	Tāpat	w-SofijasPasaule1996_013_014-p30w61	Tāpat	Tāpat <[q,s],'tāpat','',''>
+notika	notika	w-SofijasPasaule1996_013_014-p30w62	notika	notika <[v,m,n,i,s,i,1,3,0,a,n],'notikt','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p30w63	arī	arī <[q,s],'arī','',''>
+pretējā	pretējā	w-SofijasPasaule1996_013_014-p30w64	pretējā	pretējā <[a,r,m,s,l,n,p],'pretējs','apzīmētājs','virzienā'>
+virzienā	virzienā	w-SofijasPasaule1996_013_014-p30w65	virzienā	virzienā <[n,c,m,s,l,1],'virziens','',''>
+:	:	w-SofijasPasaule1996_013_014-p30w66	:	: <[z,o],':','',''>
+tiklīdz	tiklīdz	w-SofijasPasaule1996_013_014-p30w67	tiklīdz	tiklīdz <[c,s,s],'tiklīdz','',''>
+viņa	viņa	w-SofijasPasaule1996_013_014-p30w68	viņa	viņa <[p,p,3,f,s,n,_,[0]],'viņa','',''>
+spēja	spēja	w-SofijasPasaule1996_013_014-p30w69	spēja	spēja <[v,o,n,i,s,t,1,3,0,a,n],'spēt','',''>
+iejusties	iejusties	w-SofijasPasaule1996_013_014-p30w70	iejusties	iejusties <[v,m,y,n,0,t,1,0,0,0,n],'iejusties','',''>
+stāvoklī	stāvoklī	w-SofijasPasaule1996_013_014-p30w71	stāvoklī	stāvoklī <[n,c,m,s,l,2],'stāvoklis','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w72	,	, <[z,c],',','',''>
+ka	ka	w-SofijasPasaule1996_013_014-p30w73	ka	ka <[c,s,s],'ka','',''>
+kādu	kādu	w-SofijasPasaule1996_013_014-p30w74	kādu	kādu <[p,i,0,f,s,a,_,[0]],'kāda','',''>
+dienu	dienu	w-SofijasPasaule1996_013_014-p30w75	dienu	dienu <[n,c,f,s,a,4],'diena','',''>
+viņas	viņas	w-SofijasPasaule1996_013_014-p30w76	viņas	viņas <[p,d,3,f,s,g,_,[_]],'','',''>
+vairs	vairs	w-SofijasPasaule1996_013_014-p30w77	vairs	vairs <[r,0,t],'vairs','',''>
+nemaz	nemaz	w-SofijasPasaule1996_013_014-p30w78	nemaz	nemaz <[r,0,q],'nemaz','',''>
+nebūs	nebūs	w-SofijasPasaule1996_013_014-p30w79	nebūs	nebūs <[v,g,n,i,f,i,i,3,0,a,y],'nebūt','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w80	,	, <[z,c],',','',''>
+tā	tā	w-SofijasPasaule1996_013_014-p30w81	tā	tā <[r,0,m],'tā','',''>
+viņai	viņai	w-SofijasPasaule1996_013_014-p30w82	viņai	viņai <[p,p,3,f,s,d,_,[0]],'viņa','',''>
+tūlīt	tūlīt	w-SofijasPasaule1996_013_014-p30w83	tūlīt	tūlīt <[r,0,t],'tūlīt','',''>
+kļuva	kļuva	w-SofijasPasaule1996_013_014-p30w84	kļuva	kļuva <[v,t,n,i,s,i,1,3,0,a,n],'kļūt','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p30w85	arī	arī <[q,s],'arī','',''>
+skaidrs	skaidrs	w-SofijasPasaule1996_013_014-p30w86	skaidrs	skaidrs <[a,f,m,s,n,n,p],'skaidrs','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w87	,	, <[z,c],',','',''>
+cik	cik	w-SofijasPasaule1996_013_014-p30w88	cik	cik <[c,s,s],'cik','',''>
+bezgala	bezgala	w-SofijasPasaule1996_013_014-p30w89	bezgala	bezgala <[n,c,f,s,n,4],'bezgala','',''>
+vērtīga	vērtīga	w-SofijasPasaule1996_013_014-p30w90	vērtīga	vērtīga <[a,f,f,s,n,n,p],'vērtīga','',''>
+ir	ir	w-SofijasPasaule1996_013_014-p30w91	ir	ir <[v,c,n,i,p,i,i,3,0,a,n],'būt','',''>
+dzīvība	dzīvība	w-SofijasPasaule1996_013_014-p30w92	dzīvība	dzīvība <[n,c,f,s,n,4],'dzīvība','',''>
+.	.	w-SofijasPasaule1996_013_014-p30w93	.	. <[z,s],'.','',''>
+Tas	Tas	w-SofijasPasaule1996_013_014-p30w94	Tas	Tas <[p,d,3,m,s,n,_,[s]],'tas','',''>
+bija	bija	w-SofijasPasaule1996_013_014-p30w95	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','',''>
+gluži	gluži	w-SofijasPasaule1996_013_014-p30w96	gluži	gluži <[r,0,q],'gluži','mēra apstāklis','bija'>
+kā	kā	w-SofijasPasaule1996_013_014-p30w97	kā	kā <[q,s],'kā','veida apstāklis','bija'>
+monētas	monētas	w-SofijasPasaule1996_013_014-p30w98	monētas	monētas <[n,c,f,s,g,4],'monēta','teikuma priekšmets','bija'>
+divas	divas	w-SofijasPasaule1996_013_014-p30w99	divas	divas <[m,c,s,f,p,n,[v]],'divas','apzīmētājs','puses'>
+puses	puses	w-SofijasPasaule1996_013_014-p30w100	puses	puses <[n,c,f,p,n,5],'puse','',''>
+,	,	w-SofijasPasaule1996_013_014-p30w101	,	, <[z,c],',','',''>
+ko	ko	w-SofijasPasaule1996_013_014-p30w102	ko	ko <[p,r,0,0,0,a,_,[0]],'kas','',''>
+nepārtraukti	nepārtraukti	w-SofijasPasaule1996_013_014-p30w103	nepārtraukti	nepārtraukti <[v,m,n,p,d,m,p,n,p,s,n],'nepārtraukt','izteicējs','.'>
+groza	groza	w-SofijasPasaule1996_013_014-p30w104	groza	groza <[v,m,n,i,p,t,3,3,0,a,n],'grozīt','apzīmētājs','pirkstos'>
+pirkstos	pirkstos	w-SofijasPasaule1996_013_014-p30w105	pirkstos	pirkstos <[n,c,m,p,l,1],'pirksts','laika apstāklis','nepārtraukti'>
+.	.	w-SofijasPasaule1996_013_014-p30w106	.	. <[z,s],'.','',''>
+Jo	Jo	w-SofijasPasaule1996_013_014-p30w107	Jo	Jo <[c,c,r],'jo','',''>
+lielāka	lielāka	w-SofijasPasaule1996_013_014-p30w108	apvienojums	apvienojums <[a,_,m,s,g,n,c],'','',''>
+doesn't match 
+lielāka	lielāka	w-SofijasPasaule1996_013_014-p30w108	lielāka	lielāka <[a,f,f,s,n,n,c],'liela','','apvienojums'>
+un	un	w-SofijasPasaule1996_013_014-p30w109	un	un <[c,c,s],'un','','apvienojums'>
+nozīmīgāka	nozīmīgāka	w-SofijasPasaule1996_013_014-p30w110	nozīmīgāka	nozīmīgāka <[a,f,f,s,n,n,c],'nozīmīga','','apvienojums'>
+bija	bija	w-SofijasPasaule1996_013_014-p30w111	izteicējs	izteicējs <[v,m,_,i,s,0,0,3,0,a,n],'','',''>
+doesn't match 
+bija	bija	w-SofijasPasaule1996_013_014-p30w111	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+viena	viena	w-SofijasPasaule1996_013_014-p30w112	viena	viena <[m,c,s,f,s,n,[v]],'viena','apzīmētājs','puse'>
+puse	puse	w-SofijasPasaule1996_013_014-p30w113	puse	puse <[n,c,f,s,n,5],'puse','','izteicējs'>
+,	,	w-SofijasPasaule1996_013_014-p30w114	,	, <[z,c],',','',''>
+jo	jo	w-SofijasPasaule1996_013_014-p30w115	jo	jo <[c,c,r],'jo','',''>
+lielāka	lielāka	w-SofijasPasaule1996_013_014-p30w116	apvienojums	apvienojums <[a,_,m,s,g,n,c],'','',''>
+doesn't match 
+lielāka	lielāka	w-SofijasPasaule1996_013_014-p30w116	lielāka	lielāka <[a,f,f,s,n,n,c],'liela','','apvienojums'>
+un	un	w-SofijasPasaule1996_013_014-p30w117	un	un <[c,c,s],'un','','apvienojums'>
+nozīmīgāka	nozīmīgāka	w-SofijasPasaule1996_013_014-p30w118	nozīmīgāka	nozīmīgāka <[a,f,f,s,n,n,c],'nozīmīga','','apvienojums'>
+kļuva	kļuva	w-SofijasPasaule1996_013_014-p30w119	kļuva	kļuva <[v,t,n,i,s,i,1,3,0,a,n],'kļūt','',''>
+arī	arī	w-SofijasPasaule1996_013_014-p30w120	arī	arī <[q,s],'arī','',''>
+otra	otra	w-SofijasPasaule1996_013_014-p30w121	otra	otra <[m,c,s,f,s,n,[_]],'otra','apzīmētājs','puse'>
+puse	puse	w-SofijasPasaule1996_013_014-p30w122	puse	puse <[n,c,f,s,n,5],'puse','',''>
+.	.	w-SofijasPasaule1996_013_014-p30w123	.	. <[z,s],'.','',''>
+Dzīvība	Dzīvība	w-SofijasPasaule1996_013_014-p30w124	apvienojums	apvienojums <[n,_,_,_,n,_],'','teikuma priekšmets','izteicējs'>
+doesn't match 
+Dzīvība	Dzīvība	w-SofijasPasaule1996_013_014-p30w124	Dzīvība	Dzīvība <[n,c,f,s,n,4],'dzīvība','','apvienojums'>
+un	un	w-SofijasPasaule1996_013_014-p30w125	un	un <[c,c,s],'un','','apvienojums'>
+nāve	nāve	w-SofijasPasaule1996_013_014-p30w126	nāve	nāve <[n,c,f,s,n,5],'nāve','','apvienojums'>
+bija	bija	w-SofijasPasaule1996_013_014-p30w127	izteicējs	izteicējs <[v,m,_,i,s,0,0,3,0,a,n],'','',''>
+doesn't match 
+bija	bija	w-SofijasPasaule1996_013_014-p30w127	bija	bija <[v,c,n,i,s,i,i,3,0,a,n],'būt','','izteicējs'>
+vienas	vienas	w-SofijasPasaule1996_013_014-p30w128	xyz	xyz <[n,c,f,p,n,5],'','','izteicējs'>
+doesn't match 
+vienas	vienas	w-SofijasPasaule1996_013_014-p30w128	vienas	vienas <[m,c,s,f,s,g,[v]],'viena','','xyz'>
+lietas	lietas	w-SofijasPasaule1996_013_014-p30w129	lietas	lietas <[n,c,f,s,g,4],'lieta','','xyz'>
+divas	divas	w-SofijasPasaule1996_013_014-p30w130	divas	divas <[m,c,s,f,p,n,[v]],'divas','apzīmētājs','puses'>
+puses	puses	w-SofijasPasaule1996_013_014-p30w131	puses	puses <[n,c,f,p,n,5],'puse','','xyz'>
+.	.	w-SofijasPasaule1996_013_014-p30w132	.	. <[z,s],'.','',''>
+bad morpho 
