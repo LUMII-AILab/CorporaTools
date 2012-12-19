@@ -1,6 +1,6 @@
-PML toolkit (pmltk) lieto kaut kādus paša TrEd moduļus un laikam arī kaut ko no TrEd pakas EasyTreex. Lai viss strādātu, pareizie ceļi jāiedabū iekš perl @INC ar perl -I /path/to/lib vai uzstādot vides mainīgos PERL5LIB vai PERLLIB. (Windows)
+It seems, that PML toolkit (pmltk) uses some modules from TrEd itself and probably something from TrEd package EasyTreex, too. To get everything working, correct paths must be set in perl @INC. It can be done either using perl -I /path/to/lib or by setting enviroment variable PERL5LIB or PERLLIB. (Windows)
 
-Nav ne jausmas, kas PML toolkit-a knit-erim ir ar $VERSION mainīgo, nemācēju neko citu kā izmainīt kodu, lai viņu nelietotu. Tā ir vienīgā atšķirība no pmltk-1.1.5., ko izplata UFAL.
+No idea, why PML Toolkit kniter has a problem with $VERSION variable - only thing I managed to figure out was to change the source code to avoid using this variable. This is the only difference between this version of PML Toolkit and pmltk-1.1.5. distributed by UFAL.
 
-2012-06-14
+2012-06-14 (2012-12-19 in English)
 
