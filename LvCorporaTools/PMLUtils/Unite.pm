@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Exporter();
+our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(unite);
 
 use LvCorporaTools::PMLUtils::NormalizeIds qw(load process doOutput);
