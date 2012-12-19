@@ -1,3 +1,3 @@
-perl -e "use LvCorporaTools::PMLUtils::NormalizeIdsBatch; LvCorporaTools::PMLUtils::NormalizeIdsBatch::normalizeIdsBatch(@ARGV)" testdata\NormalizeIds
+perl -e "use LvCorporaTools::PMLUtils::NormalizeIdsBatch qw(normalizeIdsBatch); normalizeIdsBatch(@ARGV)" testdata\NormalizeIds
 
 pause

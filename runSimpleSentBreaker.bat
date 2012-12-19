@@ -1,3 +1,3 @@
-perl -e "use LvCorporaTools::GenericUtils::SimpleSentBreaker; LvCorporaTools::GenericUtils::SimpleSentBreaker::simpleSentBreaker(@ARGV)" testdata\PlainToPML\data testdata\PlainToPML\sentences UTF-8
+perl -e "use LvCorporaTools::GenericUtils::SimpleSentBreaker qw(simpleSentBreaker); simpleSentBreaker(@ARGV)" testdata\PlainToPML\data testdata\PlainToPML\sentences UTF-8
 
 pause

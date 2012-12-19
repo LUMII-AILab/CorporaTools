@@ -1,3 +1,3 @@
-perl -e "use LvCorporaTools::TreeTransformations::Hybrid2DepBatch; LvCorporaTools::TreeTransformations::Hybrid2DepBatch::transformFileBatch(@ARGV)" testdata\Hybrid2Dep
+perl -e "use LvCorporaTools::TreeTransformations::Hybrid2DepBatch qw(transformFileBatch); transformFileBatch(@ARGV)" testdata\Hybrid2Dep
 
 pause
