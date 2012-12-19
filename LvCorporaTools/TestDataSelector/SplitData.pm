@@ -3,6 +3,11 @@ package LvCorporaTools::TestDataSelector::SplitData;
 use utf8;
 use strict;
 use 5.010;  # so filetest ops can stack
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(splitCorpus splitFile);
+
 ###############################################################################
 # This module splits PML M files into two data sets, whose size depends on
 # given probability. All new M files reference the same W files as the old

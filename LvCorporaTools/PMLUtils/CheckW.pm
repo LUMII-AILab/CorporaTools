@@ -5,6 +5,10 @@ use strict;
 use warnings;
 use utf8;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(checkW);
+
 #use Data::Dumper;
 use XML::Simple;  # XML handling library
 use IO::File;

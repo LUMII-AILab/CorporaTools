@@ -1,6 +1,13 @@
 #!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::TreeTransformations::Hybrid2DepBatch;
 
+use strict;
+use warnings;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(transformFileBatch);
+
 use LvCorporaTools::TreeTransformations::Hybrid2Dep qw(transformFile);
 
 use IO::File;

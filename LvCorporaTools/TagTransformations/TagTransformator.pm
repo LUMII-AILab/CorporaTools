@@ -2,6 +2,11 @@
 package LvCorporaTools::TagTransformations::TagTransformator;
 use utf8;
 use strict;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(VeestnesisTagToKamols VeestnesisDirToKamols EsTagToKamols EsDirToKamols);
+
 ###############################################################################
 # This module performs conversation between different tag formats. Input data
 # format must have no more than one morphotag per line delimited with

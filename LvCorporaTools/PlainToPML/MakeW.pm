@@ -4,6 +4,11 @@ package LvCorporaTools::PlainToPML::MakeW;
 use utf8;
 use strict;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(makeW metainfo);
+
+
 our $vers = 0.2;
 our $metainfo = 'Nezināms korpuss';
 our $progname = "w līmeņa auto-marķētājs, $vers";

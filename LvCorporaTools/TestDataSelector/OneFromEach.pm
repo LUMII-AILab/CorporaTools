@@ -4,6 +4,10 @@ package LvCorporaTools::TestDataSelector::OneFromEach;
 use utf8;
 use strict;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(oneFromEach);
+
 use IO::File;
 use IO::Dir;
 

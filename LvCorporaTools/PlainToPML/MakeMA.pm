@@ -4,6 +4,10 @@ package LvCorporaTools::PlainToPML::MakeMA;
 use utf8;
 use strict;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(makeMA roles);
+
 our $vers = 0.4;
 our $progname = "m un a līmeņa automātiskais konvertors, $vers";
 #our $metainfo = 'Nezināms korpuss';

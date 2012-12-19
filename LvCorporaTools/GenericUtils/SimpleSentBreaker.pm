@@ -4,6 +4,11 @@ package LvCorporaTools::GenericUtils::SimpleSentBreaker;
 use utf8;
 use strict;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(simpleSentBreaker);
+
+
 ###############################################################################
 # This program performs simple sentence breaking. This is not a valid Latvian
 # tokenizer/sentence braker!

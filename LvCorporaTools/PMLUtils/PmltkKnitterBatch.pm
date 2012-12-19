@@ -4,6 +4,10 @@ package LvCorporaTools::PMLUtils::PmltkKnitterBatch;
 use strict;
 use warnings;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(runPmltkKnitterBatch);
+
 use IO::File;
 use IO::Dir;
 

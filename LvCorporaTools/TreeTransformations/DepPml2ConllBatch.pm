@@ -4,6 +4,10 @@ package LvCorporaTools::TreeTransformations::DepPml2ConllBatch;
 use strict;
 use warnings;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(transformFileBatch);
+
 use LvCorporaTools::TreeTransformations::DepPml2Conll qw(transformFile);
 use IO::File;
 use IO::Dir;

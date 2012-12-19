@@ -15,7 +15,7 @@ use warnings;
 #use utf8;
 
 use Exporter();
-our @ISA= qw( Exporter );
+our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(loadXml printXml);
 
 #use Data::Dumper;

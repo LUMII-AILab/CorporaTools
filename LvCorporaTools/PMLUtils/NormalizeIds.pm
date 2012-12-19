@@ -6,7 +6,7 @@ use warnings;
 #use utf8;
 
 use Exporter();
-our @ISA= qw( Exporter );
+our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(normalizeIds load process doOutput);
 
 use Data::Dumper;

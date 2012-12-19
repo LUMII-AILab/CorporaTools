@@ -1,6 +1,13 @@
 #!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::PMLUtils::NormalizeIdsBatch;
 
+use strict;
+use warnings;
+
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(normalizeIdsBatch);
+
 use LvCorporaTools::PMLUtils::NormalizeIds qw(normalizeIds);
 
 use IO::File;

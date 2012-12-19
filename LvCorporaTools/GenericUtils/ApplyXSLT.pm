@@ -4,6 +4,10 @@ package LvCorporaTools::GenericUtils::ApplyXSLT;
 #use utf8;
 use strict;
 
+use Exporter();
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(applyXSLT1_0);
+
 sub applyXSLT1_0
 {
 	use XML::LibXSLT;
