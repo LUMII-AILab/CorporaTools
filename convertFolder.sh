@@ -4,7 +4,7 @@ set -o errexit
 
 if test "$1"
 then pmlFolder="$1"
-else pmlFolder="testdata/SplitData"
+else pmlFolder="testdata/SplitMorphoData"
 fi
 
 echo "Converting $pmlFolder"
