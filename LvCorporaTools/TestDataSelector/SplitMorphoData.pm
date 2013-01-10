@@ -103,7 +103,7 @@ END
 	foreach my $sent ($xpc->findnodes('/pml:lvmdata/pml:s', $data))
 	{
 		my $coin = rand;
-		my $destSet = $coin ge $prob ? $devSet : $testSet;
+		my $destSet = $coin >= $prob ? $devSet : $testSet;
 		my $destRoot = $destSet->documentElement;
 		$destRoot->appendChild($sent->cloneNode(1));
 	}
