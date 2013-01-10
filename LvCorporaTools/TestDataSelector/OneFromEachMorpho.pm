@@ -14,8 +14,8 @@ use IO::Dir;
 #use Data::Dumper;
 
 ###############################################################################
-# Select one sentence from each file in provided corpus. Input data must be
-# UTF-8 PML M.
+# Select one sentence from each file in provided morphocorpus. Input data must
+# be UTF-8 PML M.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv, 2012
