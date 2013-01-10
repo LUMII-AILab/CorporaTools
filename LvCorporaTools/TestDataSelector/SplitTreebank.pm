@@ -82,6 +82,7 @@ sub _splitIn2
 	my $dirName;
 	my $prob;
 
+	# Open output files.
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 	my $devOut = IO::File->new("$dirName/res/dev.conll", ">")
 		or die "Output file opening: $!";	
@@ -90,6 +91,7 @@ sub _splitIn2
 	# Sentence counters (statistics).
 	my ($devCount, $testCount) = (0, 0);
 
+	#Process data.
 	while (defined(my $file = $dir->read))
 	{
 		my $sent = &_readSentence($file);
@@ -115,32 +117,70 @@ sub _splitIn2
 		}
 		$file->close();
 	}
+	
+	#Close output files.
 	$devOut->close();
 	$testOut->close();
 	print "Development set contains $devCount sentences; test set - $testCount sentences.\n"
 }
-
+# Splits treebank for N-fold cross-validation.
+# _splitForCV (data directory, part count N)
 sub _splitForCV
 {
-	print "Not implemented yet."
-	exit 0;
-	
 	my $dirName;
 	my $partCount;
 	
+	my @outputs;
+	my @stats;
+	# Initialization for otput files and stats counters.
+	for ($i = 0; $i < $partCount; $i++)
+	{
+		$outputs[$i][0] = IO::File->new("$dirPrefix/res/train$i.conll", ">")
+			or die "Output file opening: $!";
+		$outputs[$i][1] = IO::File->new("$dirPrefix/res/val$i.conll", ">")
+			or die "Output file opening: $!";
+		$stats[$i][0] = 0;
+		$stats[$i][1] = 0;
+	}
+	
+	# Process data.
 	my $dir = IO::Dir->new($dirName) or die "dir $!";	
 	while (defined(my $file = $dir->read))
 	{
 		my $sent = &_readSentence($file);
 		while ($sent)
 		{
+			next unless ($sent !~ /^\s*$/);
+			my $coin = rand;
+			for ($i = 0; $i < $partCount; $i++)
+			{
+				if ($coin >= $i /$partCount and $coin < ($i + 1) /$partCount)
+				{
+					print $outputs[$i][1] $sent;
+					$stats[$i][1]++;
+				}
+				else
+				{
+					print $outputs[$i][0] $sent;
+					$stats[$i][0]++;
+				}
+			}
 		}
 		continue
 		{
 			$sent = &_readSentence($file);
 		}
+		$file->close();
 	}
 	
+	#Close output files and print statistics.
+	print "Statistics about created data sets:\n";
+	for ($i = 0; $i < $partCount; $i++)
+	{
+		$outputs[$i][0]->close();
+		$outputs[$i][1]->close();
+		print "  $i. Training set: stats[$i][0] sentences, validation set:  stats[$i][1].\n"
+	}
 }
 
 # Read single sentence from input stream.
