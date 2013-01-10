@@ -1,0 +1,289 @@
+1	"	"	_	zq	_	13	_	_	_
+2	Čārlza	Čārlzs	_	npmsg1	_	3	_	_	_
+3	Cukini	cukini	_	ncms00	_	5	_	_	_
+4	gurķu	gurķis	_	ncmpg2	_	5	_	_	_
+5	kantoris	kantoris	_	ncmsn2	_	1	_	_	_
+6	"	"	_	zq	_	1	_	_	_
+7	(	(	_	zb	_	1	_	_	_
+8	turpmāk	turpmāk	_	r0t	_	10	_	_	_
+9	tekstā	teksts	_	ncmsl1	_	10	_	_	_
+10	-	-	_	zd	_	7	_	_	_
+11	ČCGK	ČCGK	_	y	_	10	_	_	_
+12	)	)	_	zb	_	7	_	_	_
+13	pārtrauc	pārtraukt	_	vmnipt130an	_	17	_	_	_
+14	matraču	matracis	_	ncmpg2	_	15	_	_	_
+15	ražošanu	ražošana	_	ncfsa4	_	13	_	_	_
+16	,	,	_	zc	_	17	_	_	_
+17	savukārt	savukārt	_	r0c	_	22	_	_	_
+18	šokolādes	šokolāde	_	ncfsg5	_	19	_	_	_
+19	fabrika	fabrika	_	ncfsn4	_	20	_	_	_
+20	-	-	_	zd	_	17	_	_	_
+21	zefīra	zefīrs	_	ncmsg1	_	20	_	_	_
+22	.	.	_	zs	_	0	_	_	_
+
+1	Juris	Juris	_	npmsn2	_	2	_	_	_
+2	-	-	_	zd	_	6	_	_	_
+3	ČCGK	ČCGK	_	y	_	5	_	_	_
+4	labākais	labākais	_	afmsnyc	_	5	_	_	_
+5	konditors	konditors	_	ncmsn1	_	2	_	_	_
+6	.	.	_	zs	_	0	_	_	_
+
+1	Debesis	debess	_	ncfpn6	_	2	_	_	_
+2	ir	būt	_	vcnipii30an	_	12	_	_	_
+3	tik	tik	_	r0q	_	4	_	_	_
+4	zilas	zils	_	affpnnp	_	2	_	_	_
+5	(	(	_	zb	_	12	_	_	_
+6	kuru	kurš	_	pq0msan	_	9	_	_	_
+7	gan	gan	_	qs	_	10	_	_	_
+8	tas	tas	_	pd3msnn	_	9	_	_	_
+9	interesē	interesēt	_	vmnipt230an	_	10	_	_	_
+10	?	?	_	zs	_	5	_	_	_
+11	)	)	_	zb	_	5	_	_	_
+12	.	.	_	zs	_	0	_	_	_
+
+1	Mēs	mēs	_	pp10pnn0	_	2	_	_	_
+2	zinām	zināt	_	vmnipt31pan	_	5	_	_	_
+3	,	,	_	zc	_	2	_	_	_
+4	kā	kā	_	r0m	_	3	_	_	_
+5	.	.	_	zs	_	0	_	_	_
+
+1	Līst	līt	_	vmnn0i1000n	_	2	_	_	_
+2	.	.	_	zs	_	0	_	_	_
+
+1	Paldies	paldies	_	is	_	4	_	_	_
+2	par	par	_	sppdn	_	1	_	_	_
+3	ogām	oga	_	ncfpa4	_	2	_	_	_
+4	!	!	_	zs	_	0	_	_	_
+
+1	Tādas	tāds	_	pd0fpana	_	2	_	_	_
+2	sēnes	sēne	_	ncfpn5	_	3	_	_	_
+3	kā	kā	_	css	_	9	_	_	_
+4	gailenes	gailene	_	ncfpn5	_	5	_	_	_
+5	,	,	_	zc	_	3	_	_	_
+6	baravikas	baravika	_	ncfpn4	_	7	_	_	_
+7	un	un	_	ccs	_	5	_	_	_
+8	bērzlapes	bērzlape	_	ncfpn5	_	7	_	_	_
+9	ir	būt	_	vcnipii30an	_	11	_	_	_
+10	ēdamas	ēst	_	vmnpdfpnppn	_	9	_	_	_
+11	.	.	_	zs	_	0	_	_	_
+
+1	Bērnam	bērns	_	ncmsd1	_	2	_	_	_
+2	var	varēt	_	vonipt330an	_	9	_	_	_
+3	dot	dot	_	vmnn0ti000n	_	2	_	_	_
+4	ne	ne	_	qs	_	5	_	_	_
+5	vairāk	vairāk	_	rcq	_	6	_	_	_
+6	kā	kā	_	qs	_	7	_	_	_
+7	divus	divi	_	mcsmpav	_	8	_	_	_
+8	vārdus	vārds	_	ncmpa1	_	2	_	_	_
+9	.	.	_	zs	_	0	_	_	_
+
+1	Spēle	spēle	_	ncfsn5	_	2	_	_	_
+2	noslēdzās	noslēgties	_	vmyisi230an	_	8	_	_	_
+3	ar	ar	_	spsa	_	2	_	_	_
+4	vairāk	vairāk	_	rcq	_	5	_	_	_
+5	nekā	nekā	_	qs	_	6	_	_	_
+6	pārliecinošu	pārliecināt	_	vmnpdfsaapn	_	7	_	_	_
+7	uzvaru	uzvara	_	ncfsa4	_	3	_	_	_
+8	.	.	_	zs	_	0	_	_	_
+
+1	Latvijā	Latvija	_	npfsl4	_	7	_	_	_
+2	vairāk	vairāk	_	rcq	_	3	_	_	_
+3	nekā	nekā	_	css	_	1	_	_	_
+4	jebkur	jebkur	_	r0p	_	5	_	_	_
+5	citur	citur	_	r0p	_	3	_	_	_
+6	ļaudis	ļaudis	_	ncmpa6	_	7	_	_	_
+7	mīl	mīl	_	vmnipt330an	_	10	_	_	_
+8	labi	labi	_	rpm	_	9	_	_	_
+9	paēst	paēst	_	vmnn0t1000n	_	7	_	_	_
+10	.	.	_	zs	_	0	_	_	_
+
+1	Es	es	_	pp10snn0	_	2	_	_	_
+2	esmu	būt	_	vcnipii1san	_	5	_	_	_
+3	kļuvusi	kļūt	_	vtnpdfsnasn	_	2	_	_	_
+4	veca	vecs	_	afmsgnp	_	3	_	_	_
+5	.	.	_	zs	_	0	_	_	_
+
+1	Viņš	viņš	_	pp3msnn0	_	2	_	_	_
+2	negrib	negribēt	_	vonipt330ay	_	5	_	_	_
+3	kļūt	kļūt	_	vtnn0i1000n	_	2	_	_	_
+4	vecs	vecs	_	afmsnnp	_	3	_	_	_
+5	.	.	_	zs	_	0	_	_	_
+
+1	Dzīvnieks	dzīvnieks	_	ncmsn1	_	2	_	_	_
+2	bija	būt	_	vcnisii30an	_	6	_	_	_
+3	mazs	mazs	_	afmsnnp	_	4	_	_	_
+4	un	un	_	ccs	_	2	_	_	_
+5	slimīgs	slimīgs	_	afmsnnp	_	4	_	_	_
+6	.	.	_	zs	_	0	_	_	_
+
+1	Man	es	_	pp10sdn	_	5	_	_	_
+2	ir	būt	_	vmnipii30an	_	5	_	_	_
+3	skaista	skaists	_	affsnnp	_	4	_	_	_
+4	māja	māja	_	ncfsn4	_	2	_	_	_
+5	un	un	_	ccs	_	10	_	_	_
+6	kādreiz	kādreiz	_	r0t	_	7	_	_	_
+7	piederēs	piederēt	_	vmnifi330an	_	5	_	_	_
+8	arī	arī	_	qs	_	7	_	_	_
+9	suns	suns	_	ncmsn2	_	7	_	_	_
+10	.	.	_	zs	_	0	_	_	_
+
+1	Man	es	_	pp10sdn	_	3	_	_	_
+2	salst	salt	_	vmnipi130an	_	3	_	_	_
+3	.	.	_	zs	_	0	_	_	_
+
+1	Saulei	saule	_	ncfsd5	_	2	_	_	_
+2	austot	aust	_	vmnpu000000	_	3	_	_	_
+3	,	,	_	zc	_	7	_	_	_
+4	putni	putns	_	ncmpn1	_	5	_	_	_
+5	sāka	sākt	_	vpnist130an	_	7	_	_	_
+6	čivināt	čivināt	_	vmnn0t3000n	_	5	_	_	_
+7	un	un	_	ccs	_	10	_	_	_
+8	kļuva	kļūt	_	vcnisi130an	_	7	_	_	_
+9	siltāks	silts	_	afmsnnc	_	8	_	_	_
+10	.	.	_	zs	_	0	_	_	_
+
+1	Pa	pa	_	spsay	_	13	_	_	_
+2	ielu	iela	_	ncfsa4	_	1	_	_	_
+3	,	,	_	zc	_	8	_	_	_
+4	skaņu	skaņa	_	ncfpg4	_	5	_	_	_
+5	signāliem	signāls	_	ncmpd1	_	7	_	_	_
+6	griezīgi	grizīgi	_	rpm	_	7	_	_	_
+7	kaucot	kaukt	_	vmnrpi100an	_	3	_	_	_
+8	un	un	_	ccs	_	13	_	_	_
+9	zibinot	zibināt	_	vmnrpt300an	_	12	_	_	_
+10	oranžas	oranža	_	arfpanp	_	11	_	_	_
+11	bākugunis	bākuguns	_	ncfpa6	_	9	_	_	_
+12	,	,	_	zc	_	8	_	_	_
+13	traucas	traukties	_	vmyipi130an	_	17	_	_	_
+14	ātrās	ātra	_	affsgyp	_	15	_	_	_
+15	palīdzības	palīdzība	_	ncfsg4	_	16	_	_	_
+16	mašīna	mašīna	_	ncfsn4	_	13	_	_	_
+17	.	.	_	zs	_	0	_	_	_
+
+1	Aptaustījis	aptaustīt	_	vmnpdmsnasn	_	2	_	_	_
+2	un	un	_	ccs	_	5	_	_	_
+3	apostījis	apostīt	_	vmnpdmsnasn	_	2	_	_	_
+4	maisiņu	maisiņš	_	ncmsa1	_	2	_	_	_
+5	,	,	_	zc	_	8	_	_	_
+6	pērtiķis	pērtiķis	_	ncmsn2	_	8	_	_	_
+7	to	tas	_	pd3msan	_	8	_	_	_
+8	atvēra	atvērt	_	vmnist130an	_	9	_	_	_
+9	.	.	_	zs	_	0	_	_	_
+
+1	Man	es	_	pp10sdn0	_	4	_	_	_
+2	jāiet	iet	_	vmnd0ii00an	_	4	_	_	_
+3	prom	prom	_	r0p	_	4	_	_	_
+4	.	.	_	zs	_	0	_	_	_
+
+1	Laukā	laukā	_	r0p	_	3	_	_	_
+2	temperatūra	temperatūra	_	ncfsn4	_	3	_	_	_
+3	ir	būt	_	vcnipii30an	_	6	_	_	_
+4	ap	ap	_	spsay	_	3	_	_	_
+5	nulli	nulle	_	ncfsa5	_	4	_	_	_
+6	.	.	_	zs	_	0	_	_	_
+
+1	Par	par	_	spsan	_	5	_	_	_
+2	ko	kas	_	pr000an0	_	1	_	_	_
+3	man	es	_	pp10sdn0	_	6	_	_	_
+4	tas	tas	_	pd3msnns	_	5	_	_	_
+5	ir	būt	_	vmnipii30an	_	6	_	_	_
+6	,	,	_	zc	_	8	_	_	_
+7	es	es	_	pp10snn0	_	8	_	_	_
+8	domāju	domāt	_	vmnipt21san	_	12	_	_	_
+9	,	,	_	zc	_	8	_	_	_
+10	par	par	_	spsan	_	9	_	_	_
+11	ko	kas	_	pr000an0	_	10	_	_	_
+12	.	.	_	zs	_	0	_	_	_
+
+1	Man	es	_	pp10sdn0	_	9	_	_	_
+2	ienāca	ienākt	_	vmnisi130an	_	9	_	_	_
+3	prātā	prāts	_	ncmsl1	_	2	_	_	_
+4	,	,	_	zc	_	5	_	_	_
+5	ka	ka	_	css	_	2	_	_	_
+6	vajag	vajadzēt	_	vonipt330an	_	5	_	_	_
+7	nopirkt	nopirkt	_	vmnn0t1000n	_	6	_	_	_
+8	sodu	soda	_	ncfsa4	_	6	_	_	_
+9	.	.	_	zs	_	0	_	_	_
+
+1	Pasniedzējs	pasniedzējs	_	ncmsn1	_	2	_	_	_
+2	likās	likties	_	vmyisi130an	_	5	_	_	_
+3	gudrs	gudrs	_	afmsnnp	_	2	_	_	_
+4	esam	būt	_	vcnpu000000	_	3	_	_	_
+5	.	.	_	zs	_	0	_	_	_
+
+1	No	no	_	spsgy	_	4	_	_	_
+2	tādas	tāda	_	pd0fsgna	_	3	_	_	_
+3	situācijas	situācija	_	ncfsg4	_	1	_	_	_
+4	nav	nebūt	_	vmnipii30ay	_	7	_	_	_
+5	ko	kas	_	pr000an0	_	6	_	_	_
+6	gaidīt	gaidīt	_	vmnn0t3000n	_	4	_	_	_
+7	.	.	_	zs	_	0	_	_	_
+
+1	Ar	ar	_	spsan	_	4	_	_	_
+2	Balvi	balvis	_	npmsa2	_	1	_	_	_
+3	vismaz	vismaz	_	r0q	_	4	_	_	_
+4	nebija	nebūt	_	vcnisii30ay	_	6	_	_	_
+5	garlaicīgi	garlaicīgi	_	r0m	_	4	_	_	_
+6	.	.	_	zs	_	0	_	_	_
+
+1	Vēlāk	vēlāk	_	r0t	_	3	_	_	_
+2	Sofija	sofija	_	npfsn4	_	3	_	_	_
+3	ieguva	iegūt	_	vmnist130an	_	9	_	_	_
+4	pundurpapagailīšus	pundurpapagailītis	_	ncmpa2	_	3	_	_	_
+5	vārdā	vārds	_	ncmsl1	_	4	_	_	_
+6	Smits	smits	_	npmsn1	_	7	_	_	_
+7	un	un	_	ccs	_	5	_	_	_
+8	Smulē	smulē	_	npmsn0	_	7	_	_	_
+9	.	.	_	zs	_	0	_	_	_
+
+1	Meiteni	meitene	_	ncfsa5	_	3	_	_	_
+2	grāmatā	grāmata	_	ncfsl4	_	3	_	_	_
+3	sauc	saukt	_	vmnipt130an	_	5	_	_	_
+4	Emīlija	emīlija	_	npfsn4	_	3	_	_	_
+5	.	.	_	zs	_	0	_	_	_
+
+1	Es	es	_	pp10snn0	_	2	_	_	_
+2	dzīvoju	dzīvot	_	vmnist21san	_	7	_	_	_
+3	laukos	lauks	_	ncmpl1	_	2	_	_	_
+4	desmit	desmit	_	mcs0p0d	_	5	_	_	_
+5	gadus	gads	_	ncmpa1	_	2	_	_	_
+6	atpakaļ	atpakaļ	_	r0p	_	2	_	_	_
+7	.	.	_	zs	_	0	_	_	_
+
+1	Neviens	neviens	_	pi0msny0	_	4	_	_	_
+2	no	no	_	sppdy	_	1	_	_	_
+3	viņiem	viņš	_	pp3mpdn0	_	2	_	_	_
+4	nevēlējās	nevēlēties	_	voyist230ay	_	8	_	_	_
+5	uzņemties	uzņemties	_	vmyn0i1000n	_	4	_	_	_
+6	administratīvos	administratīvs	_	armpayp	_	7	_	_	_
+7	pienākumus	pienākums	_	ncmpa1	_	4	_	_	_
+8	.	.	_	zs	_	0	_	_	_
+
+1	Lai	lai	_	qs	_	2	_	_	_
+2	top	tapt	_	vtnipi130an	_	9	_	_	_
+3	izpirkti	izpirkt	_	vmnpdmpnpsn	_	2	_	_	_
+4	arī	arī	_	qs	_	8	_	_	_
+5	simt	simt	_	mcs0p0s	_	6	_	_	_
+6	divdesmit	divdesmit	_	mcc0p0d	_	7	_	_	_
+7	septiņi	septiņi	_	mcsmpnv	_	8	_	_	_
+8	grēki	grēks	_	ncmpn1	_	2	_	_	_
+9	!	!	_	zs	_	0	_	_	_
+
+1	Atrast	atrast	_	vmnm0t1000n	_	5	_	_	_
+2	piecus	pieci	_	mcsmpav	_	3	_	_	_
+3	desmit	desmit	_	mcs0ppd	_	4	_	_	_
+4	latus	lats	_	ncmpa1	_	1	_	_	_
+5	ir	būt	_	vcnipii30an	_	8	_	_	_
+6	cūkas	cūka	_	ncfsg4	_	7	_	_	_
+7	laime	laime	_	ncfsn5	_	5	_	_	_
+8	.	.	_	zs	_	0	_	_	_
+
+1	Funkc.	funkc.	_	y	_	3	_	_	_
+2	f(x)	f(x)	_	xx	_	1	_	_	_
+3	ir	būt	_	vcnipii30an	_	8	_	_	_
+4	augoša	augt	_	vmnpdfsnapn	_	3	_	_	_
+5	visā	viss	_	pg0msln	_	7	_	_	_
+6	definīcijas	definīcija	_	ncfsg4	_	7	_	_	_
+7	apgabalā	apgabals	_	ncmsl1	_	3	_	_	_
+8	.	.	_	zs	_	0	_	_	_
+

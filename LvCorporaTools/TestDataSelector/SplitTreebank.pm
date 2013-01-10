@@ -22,6 +22,7 @@ our @EXPORT_OK = qw(splitCorpus);
 # Licenced under GPL.
 ###############################################################################
 
+use File::Path;
 use IO::File;
 use IO::Dir;
 
@@ -79,14 +80,14 @@ END
 # _splitIn2 (data directory, probability)
 sub _splitIn2
 {
-	my $dirName;
-	my $prob;
+	my $dirName = shift @_;
+	my $prob = shift @_;
 
 	# Open output files.
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
-	my $devOut = IO::File->new("$dirName/res/dev.conll", ">")
+	my $dir = IO::Dir->new($dirName) or die "dir $dirName $!";
+	my $devOut = IO::File->new("$dirName/res/dev.conll", "> :encoding(UTF-8)")
 		or die "Output file opening: $!";	
-	my $testOut = IO::File->new("$dirPrefix/res/test.conll", ">")
+	my $testOut = IO::File->new("$dirName/res/test.conll", "> :encoding(UTF-8)")
 		or die "Output file opening: $!";
 	# Sentence counters (statistics).
 	my ($devCount, $testCount) = (0, 0);
@@ -94,28 +95,33 @@ sub _splitIn2
 	#Process data.
 	while (defined(my $file = $dir->read))
 	{
-		my $sent = &_readSentence($file);
-		while ($sent)
+		if (! -d "$dirName/$file")
 		{
-			next unless ($sent !~ /^\s*$/);
-			my $coin = rand;
-			if ($coin >= $prob)
+			my $in = IO::File->new("$dirName/$file", "< :encoding(UTF-8)")
+				or die "Input file opening: $!";
+			my $sent = &_readSentence($in);
+			while ($sent)
 			{
-				print $devOut $sent;
-				$devCount++;
-			} else
-			{
-				print $testOut $sent;
-				$testCount++;
+				next if ($sent =~ /^\s*$/);
+				my $coin = rand;
+				if ($coin >= $prob)
+				{
+					print $devOut $sent;
+					$devCount++;
+				} else
+				{
+					print $testOut $sent;
+					$testCount++;
+				}
+				#my $destOut = $coin ge $prob ? $devOut : $testOut;
+				#print $destOut $sent;
 			}
-			#my $destOut = $coin ge $prob ? $devOut : $testOut;
-			#print $destOut $sent;
+			continue
+			{
+				$sent = &_readSentence($file);
+			}
+			$in->close();
 		}
-		continue
-		{
-			$sent = &_readSentence($file);
-		}
-		$file->close();
 	}
 	
 	#Close output files.
@@ -127,64 +133,72 @@ sub _splitIn2
 # _splitForCV (data directory, part count N)
 sub _splitForCV
 {
-	my $dirName;
-	my $partCount;
+	my $dirName = shift @_;
+	my $partCount = shift @_;
 	
 	my @outputs;
 	my @stats;
 	# Initialization for otput files and stats counters.
-	for ($i = 0; $i < $partCount; $i++)
+	for (my $i = 0; $i < $partCount; $i++)
 	{
-		$outputs[$i][0] = IO::File->new("$dirPrefix/res/train$i.conll", ">")
+		$outputs[$i][0] = IO::File->new("$dirName/res/train$i.conll", ">")
 			or die "Output file opening: $!";
-		$outputs[$i][1] = IO::File->new("$dirPrefix/res/val$i.conll", ">")
+		$outputs[$i][1] = IO::File->new("$dirName/res/val$i.conll", ">")
 			or die "Output file opening: $!";
 		$stats[$i][0] = 0;
 		$stats[$i][1] = 0;
 	}
 	
 	# Process data.
-	my $dir = IO::Dir->new($dirName) or die "dir $!";	
+	my $dir = IO::Dir->new($dirName) or die "dir $dirName $!";	
 	while (defined(my $file = $dir->read))
 	{
-		my $sent = &_readSentence($file);
-		while ($sent)
+		if (! -d "$dirName/$file")
 		{
-			next unless ($sent !~ /^\s*$/);
-			my $coin = rand;
-			for ($i = 0; $i < $partCount; $i++)
+			my $in = IO::File->new("$dirName/$file", "< :encoding(UTF-8)")
+				or die "Input file opening: $!";
+			my $sent = &_readSentence($in);
+			while ($sent)
 			{
-				if ($coin >= $i /$partCount and $coin < ($i + 1) /$partCount)
+				next if ($sent =~ /^\s*$/);
+				my $coin = rand;
+				for (my $i = 0; $i < $partCount; $i++)
 				{
-					print $outputs[$i][1] $sent;
-					$stats[$i][1]++;
-				}
-				else
-				{
-					print $outputs[$i][0] $sent;
-					$stats[$i][0]++;
+					if ($coin >= $i /$partCount and $coin < ($i + 1) /$partCount)
+					{
+						my $tmp = $outputs[$i][1];
+						print $tmp $sent;
+						$stats[$i][1]++;
+					}
+					else
+					{
+						my $tmp = $outputs[$i][0];
+						print $tmp $sent;
+						$stats[$i][0]++;
+					}
 				}
 			}
+			continue
+			{
+				$sent = &_readSentence($file);
+			}
+			$in->close();
 		}
-		continue
-		{
-			$sent = &_readSentence($file);
-		}
-		$file->close();
 	}
 	
 	#Close output files and print statistics.
 	print "Statistics about created data sets:\n";
-	for ($i = 0; $i < $partCount; $i++)
+	for (my $i = 0; $i < $partCount; $i++)
 	{
 		$outputs[$i][0]->close();
 		$outputs[$i][1]->close();
-		print "  $i. Training set: stats[$i][0] sentences, validation set:  stats[$i][1].\n"
+		print "  $i. Training set: $stats[$i][0] sentences, validation set: $stats[$i][1].\n"
 	}
 }
 
 # Read single sentence from input stream.
 # _readSentence (input stream)
+# FIXME
 sub _readSentence
 {
 	my $in = shift @_;
@@ -194,5 +208,6 @@ sub _readSentence
 		return undef if (not defined $_);
 		$res += $_;
 	}
+	print "|$res|\n";
 	return $res;
 }
