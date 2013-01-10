@@ -1,3 +1,3 @@
-perl -e "use LvCorporaTools::TestDataSelector::OneFromEach qw(oneFromEach); oneFromEach(@ARGV)" testdata\TestDataSelector test.xml
+perl -e "use LvCorporaTools::TestDataSelector::OneFromEachMorpho qw(selectOneFromEach); selectOneFromEach(@ARGV)" testdata\TestDataSelector test.xml
 
 pause

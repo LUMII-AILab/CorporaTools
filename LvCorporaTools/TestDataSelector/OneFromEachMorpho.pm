@@ -1,12 +1,12 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TestDataSelector::OneFromEach;
+package LvCorporaTools::TestDataSelector::OneFromEachMorpho;
 
 use utf8;
 use strict;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(oneFromEach);
+our @EXPORT_OK = qw(selectOneFromEach);
 
 use IO::File;
 use IO::Dir;
@@ -21,7 +21,7 @@ use IO::Dir;
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv, 2012
 # Licenced under GPL.
 ###############################################################################
-sub oneFromEach
+sub selectOneFromEach
 {
 	autoflush STDOUT 1;
 	if (not @_ or @_ le 1)
