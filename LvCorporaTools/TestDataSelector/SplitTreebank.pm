@@ -100,17 +100,17 @@ sub _splitIn2
 			my $in = IO::File->new("$dirName/$file", "< :encoding(UTF-8)")
 				or die "Input file opening: $!";
 			my $sent = &_readSentence($in);
-			while ($sent)
+			while (defined $sent)
 			{
 				next if ($sent =~ /^\s*$/);
 				my $coin = rand;
 				if ($coin >= $prob)
 				{
-					print $devOut $sent;
+					print $devOut "$sent\n";
 					$devCount++;
 				} else
 				{
-					print $testOut $sent;
+					print $testOut "$sent\n";
 					$testCount++;
 				}
 				#my $destOut = $coin ge $prob ? $devOut : $testOut;
@@ -118,7 +118,7 @@ sub _splitIn2
 			}
 			continue
 			{
-				$sent = &_readSentence($file);
+				$sent = &_readSentence($in);
 			}
 			$in->close();
 		}
@@ -141,9 +141,9 @@ sub _splitForCV
 	# Initialization for otput files and stats counters.
 	for (my $i = 0; $i < $partCount; $i++)
 	{
-		$outputs[$i][0] = IO::File->new("$dirName/res/train$i.conll", ">")
+		$outputs[$i][0] = IO::File->new("$dirName/res/train$i.conll", "> :encoding(UTF-8)")
 			or die "Output file opening: $!";
-		$outputs[$i][1] = IO::File->new("$dirName/res/val$i.conll", ">")
+		$outputs[$i][1] = IO::File->new("$dirName/res/val$i.conll", "> :encoding(UTF-8)")
 			or die "Output file opening: $!";
 		$stats[$i][0] = 0;
 		$stats[$i][1] = 0;
@@ -158,7 +158,7 @@ sub _splitForCV
 			my $in = IO::File->new("$dirName/$file", "< :encoding(UTF-8)")
 				or die "Input file opening: $!";
 			my $sent = &_readSentence($in);
-			while ($sent)
+			while (defined $sent)
 			{
 				next if ($sent =~ /^\s*$/);
 				my $coin = rand;
@@ -167,20 +167,20 @@ sub _splitForCV
 					if ($coin >= $i /$partCount and $coin < ($i + 1) /$partCount)
 					{
 						my $tmp = $outputs[$i][1];
-						print $tmp $sent;
+						print $tmp "$sent\n";
 						$stats[$i][1]++;
 					}
 					else
 					{
 						my $tmp = $outputs[$i][0];
-						print $tmp $sent;
+						print $tmp "$sent\n";
 						$stats[$i][0]++;
 					}
 				}
 			}
 			continue
 			{
-				$sent = &_readSentence($file);
+				$sent = &_readSentence($in);
 			}
 			$in->close();
 		}
@@ -203,11 +203,12 @@ sub _readSentence
 {
 	my $in = shift @_;
 	my $res = '';
-	while (<$in> and $res !~ /^\s*$/)
+	while (1)	#my $rinda = <$in> and $res !~ /^\s*$/)
 	{
-		return undef if (not defined $_);
-		$res += $_;
+		my $rinda = <$in>;
+		return undef if (not defined $rinda and $res =~/^\s*$/);
+		return $res if ($rinda =~/^\s*$/);
+		$res .= $rinda;
 	}
-	print "|$res|\n";
-	return $res;
+	undef;
 }
