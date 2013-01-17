@@ -109,8 +109,16 @@ sub decodeTag
 	my $tagHash = shift;
 	my @tagChars = split //, $tag;
 	
+	# Empty tags.
+	return [['_']] if ($tag eq 'N/A' or $tag eq '_');
+	
 	# Part Of Speech.
 	my $pos = $tagHash->{0}->{$tagChars[0]};
+	if (not $pos)
+	{
+		warn "POS not recognized in tag $tag!$!";
+		return [['_']];
+	}
 	my @res = ([$tagHash->{0}->{'NAME'}, $pos]);
 	# Magical treatment for participles.
 	$pos = 'Divdabis' if ($tagHash->{$pos}->{3}->{$tagChars[3]} eq 'Divdabis');
