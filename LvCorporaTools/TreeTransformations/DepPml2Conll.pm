@@ -14,6 +14,7 @@ use IO::File;
 use XML::LibXML;  # XML handling library
 
 use LvCorporaTools::TagTransformations::TagPurifier qw(purifyKamolsTag);
+use LvCorporaTools::TagTransformations::Tag2FeatureList qw(parseTagSet decodeTag);
 
 ###############################################################################
 # This program transforms Latvian Treebank files in dependency-only form from
@@ -73,8 +74,11 @@ END
 	File::Path::mkpath("$dirPrefix/res/");
 	my $out = IO::File->new("$dirPrefix/res/$newName", "> :encoding(UTF-8)")
 		or die "Could create file $newName: $!";
+		
+	# Load the tagset XML.
+	my $tagDecoder = parseTagSet();
 	
-	# Load the XML.
+	# Load the data XML.
 	my $parser = XML::LibXML->new('no_blanks' => 1);
 	my $doc = $parser->parse_file("$dirPrefix/$oldName");
 	
@@ -148,7 +152,14 @@ END
 				print $out "$tag"; #POSTAG
 			}
 			
-			print $out "\t_\t"; #FEATS
+			my $decoded = decodeTag($tag, $tagDecoder);
+			my $feats = join '|', map{ join '=', @$_} @$decoded;
+			if (not $feats)
+			{
+				$feats = '_';
+				warn "Tag $tag was not decoded!";
+			}
+			print $out "\t$feats\t"; #FEATS
 			exists($n2id{$head->findvalue('@id')}) ?
 				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
 			print $out "\t";
