@@ -21,7 +21,7 @@ use XML::Simple;
 # Licenced under GPL.
 ###############################################################################
 
-# parseTagSet (tagset file)
+# parseTagSet (tagset file(optional))
 # Parse given TagSet.xml to hashmap in form:
 # {
 #	0 =>
@@ -53,6 +53,13 @@ sub parseTagSet
 {
 	my $inFile = shift;
 	
+	# Default TagSet.xml is in the same directory where this script.
+	use File::Basename;
+	my $dirname = dirname(__FILE__);
+	$inFile = "$dirname/TagSet.xml" unless $inFile;
+	no File::Basename;
+	
+	# Read file.
 	my $in = IO::File->new($inFile, "< :encoding(UTF-8)")
 		or die "Could not open file $inFile: $!";
 	my $xmlString = join '', <$in>;
@@ -89,7 +96,7 @@ sub parseTagSet
 		}
 	}
 	
-	print Dumper($res);
+	#print Dumper($res);
 	# Return name of 0th tag and tag name hashmap.
 	return $res;
 }
