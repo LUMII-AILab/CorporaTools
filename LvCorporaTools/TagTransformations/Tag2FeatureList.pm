@@ -120,6 +120,8 @@ sub decodeTag
 		my $tmp = $tagHash->{$pos}->{$ind};
 		push @res, [$tmp->{'NAME'}, $tmp->{$tagChars[$ind]}]
 			if ($tmp->{$tagChars[$ind]});
+		warn "Position $ind (POS=0) could not be decoded in tag $tag!$!"
+			if (not $tmp->{$tagChars[$ind]} and $tagChars[$ind] ne '_');
 	}
 	return \@res;
 }
