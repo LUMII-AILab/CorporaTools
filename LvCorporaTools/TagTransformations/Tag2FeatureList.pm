@@ -111,14 +111,15 @@ sub decodeTag
 	
 	# Part Of Speech.
 	my $pos = $tagHash->{0}->{$tagChars[0]};
+	my @res = ([$tagHash->{0}->{'NAME'}, $pos]);
 	# Magical treatment for participles.
-	$pos = 'Divdabis' if ($tagHash->{$pos}->{3} eq 'Divdabis');
-	my @res = (($tagHash->{0}->{'NAME'}, $pos));
+	$pos = 'Divdabis' if ($tagHash->{$pos}->{3}->{$tagChars[3]} eq 'Divdabis');
 	
 	for (my $ind = 1; $ind < @tagChars; $ind++)
 	{
 		my $tmp = $tagHash->{$pos}->{$ind};
-		push @res, ($tmp->{'NAME'}, $tmp->{$tagChars[$ind]});
+		push @res, [$tmp->{'NAME'}, $tmp->{$tagChars[$ind]}]
+			if ($tmp->{$tagChars[$ind]});
 	}
 	return \@res;
 }
