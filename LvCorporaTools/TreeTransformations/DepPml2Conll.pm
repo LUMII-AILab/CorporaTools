@@ -154,6 +154,7 @@ END
 			
 			my $decoded = decodeTag($tag, $tagDecoder);
 			my $feats = join '|', map{ join '=', @$_} @$decoded;
+			$feats =~ s/ /\+/g;
 			if (not $feats)
 			{
 				$feats = '_';
