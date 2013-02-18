@@ -23,7 +23,9 @@ use XML::Simple;  # XML handling library
 use IO::File;
 
 # loadXml (file name with extension and everything, reference to array
-#          containing 'ForceArray' options for XML::Simple)
+#          containing 'ForceArray' options for XML::Simple, [reference to
+#		   array containing 'KeyAttr' options for XML::Simple, empty used
+#		   as default])
 # returns hash refernece:
 #		'xml' => loaded XML data structure, 'header' => XML header,
 #       'handler' => XML::Simple object
@@ -31,6 +33,7 @@ sub loadXml
 {
 	my $filename = shift;
 	my $forceArrayOpts = shift;
+	my $keyAttrOpts = (shift or []);
 	
 	my $in = IO::File->new($filename, "< :encoding(UTF-8)")
 		or die "Could not open file $filename: $!";
@@ -40,7 +43,7 @@ sub loadXml
 	my $sxml = XML::Simple->new();
 	my $data = $sxml->XMLin(
 		$xmlString,
-		'KeyAttr' => [],
+		'KeyAttr' => $keyAttrOpts,
 		'ForceContent' => 1,
 		'ForceArray' => $forceArrayOpts,
 #		'GroupTags' => {},

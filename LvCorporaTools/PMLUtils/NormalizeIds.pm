@@ -26,7 +26,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 # resave file with TrEd.
 #
 # Developed on ActivePerl 5.10.1.1007, tested on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2011-2012
+# Latvian Treebank project, 2011-2013
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
@@ -70,10 +70,10 @@ END
 
 	&doOutput($dirPrefix, $newName, $xmls);
 	
-	print "NormalizeIds.pl has finished procesing \"$oldName\".\n";
+	print "NormalizeIds has finished procesing \"$oldName\".\n";
 }
 
-# load (source directory, file name without extension, [new file name])
+# load (source directory, file name without extension)
 # returns hash refernece:
 #		'w' => XML data from &loadXML for w,
 #		'm' => XML data from &loadXML for m,
@@ -84,7 +84,7 @@ sub load
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $newName = (shift @_ or $oldName);
+	#my $newName = (shift @_ or $oldName);
 
 	# Load w-level.
 	my $w = loadXml ("$dirPrefix\\$oldName.w", ['para', 'w', 'schema']);
@@ -236,7 +236,7 @@ sub _normalizeM
 	my $sentId = $firstSent;
 	my $mId = $firstM;
 	my $paraId = $firstPara;
-	#We don't want ID of 1st paragraph be different depending on index of 1s word.
+	#We don't want ID of 1st paragraph be different depending on index of 1st word.
 	my $docBegin = 1;
 	my $prevPara = -1;
 	# Normalize IDs in the main data.
