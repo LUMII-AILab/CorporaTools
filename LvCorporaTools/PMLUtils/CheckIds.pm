@@ -209,7 +209,7 @@ sub _loadIds
 				if (defined $thisM->{'deleted'}->{'content'});
 			$_ => {
 				'rf' => @ref ? \@ref : undef,
-				'del' => $del,
+				'deleted' => $del,
 				'changes' => @change ? \@change : undef,
 				'form' => $thisM->{'form'}->{'content'},};
 		} (keys %{$sent->{'m'}}));
@@ -234,47 +234,54 @@ sub _loadIds
 	{
 		# Shortcut: current tree.
 		my $tree = $a->{'xml'}->{'trees'}->{'LM'}->{$treeId};
+		#print Dumper ($tree);
 		
 		# Map tree ID to sentence ID.
 		$tree->{'s.rf'}->{'content'} =~ /^m#(.*)$/;
 		$tree2mSent{$treeId} = $1;
 		
 		# Traverse tree and collect all nodes with links to morphology.
-		my %todoNodes = %{$tree->{'children'}};
+		my %todoNodes = ();
+		%todoNodes = %{$tree->{'children'}->{'node'}} if ($tree->{'children'}->{'node'});
+		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
+			if ($tree->{'children'}->{'pmcinfo'});
+		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
+			if ($tree->{'children'}->{'coordinfo'});
+		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'xinfo'}->{'children'}->{'node'}})
+			if ($tree->{'children'}->{'xinfo'});
+		
 		while (%todoNodes)
 		{
 			my $someKey = (keys %todoNodes)[0]; # Change to tied, if BFS is necessary.
 			my $value = $todoNodes{$someKey};
 			delete $todoNodes{$someKey};
-			# Process nodes without ID (pmcinfo/coordinfo/xinfo).
-			if ($someKey eq 'pmcinfo' or $someKey eq 'coordinfo' or $someKey eq 'xinfo')
+			
+			# Update result data structutures.
+			if ($value->{'m.rf'}->{'content'})
 			{
-				%todoNodes = (%todoNodes, %{$value->{'children'}->{'node'}});
+				# Map node ID to morpheme IDs.
+				$value->{'m.rf'}->{'content'} =~ /^m#(.*)$/;
+				$node2morpho{$someKey} = $1;
+				# Add node ID to list to which tree ID maps to.	
+				$tree2node{$treeId} = [] unless ($tree2node{$treeId});
+				push @{$tree2node{$treeId}}, $someKey;
 			}
-			else # Process nodes with ID.
-			{
-				# Update result data structutures.
-				if ($value->{'m.rf'}->{'content'})
-				{
-					# Map node ID to morpheme IDs.
-					$value->{'m.rf'}->{'content'} =~ /^m#(.*)$/;
-					$node2morpho{$someKey} = $1;
-					# Add node ID to list to which tree ID maps to.	
-					$tree2node{$treeId} = [] unless ($tree2node{$treeId});
-					push @{$tree2node{$treeId}}, $someKey;
-				}
 				
-				# Add children nodes to hashmap containing nodes yet to be
-				# processed.
-				if ($value->{'children'})
-				{
-					%todoNodes = (%todoNodes, %{$value->{'children'}});
-					if ($todoNodes{'node'})
-					{
-						%todoNodes = (%todoNodes, %{$todoNodes{'node'}});
-						delete $todoNodes{'node'};
-					}
-				}
+			# Add children nodes to hashmap containing nodes yet to be
+			# processed.
+			if ($value->{'children'})
+			{
+				%todoNodes = (%todoNodes, %{$value->{'children'}->{'node'}})
+					if ($value->{'children'}->{'node'});
+				%todoNodes = (%todoNodes,
+					%{$value->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
+					if ($value->{'children'}->{'pmcinfo'});
+				%todoNodes = (%todoNodes,
+					%{$value->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
+					if ($value->{'children'}->{'coordinfo'});
+				%todoNodes = (%todoNodes,
+					%{$value->{'children'}->{'xinfo'}->{'children'}->{'node'}})
+					if ($value->{'children'}->{'xinfo'});
 			}
 		}
 	}

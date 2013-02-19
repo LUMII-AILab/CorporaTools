@@ -17,6 +17,7 @@
       <form>Zēns</form>
       <lemma>zēns</lemma>
       <tag>ncmsn1</tag>
+	  <deleted>1</deleted>
     </m>
     <m id="m-zeens-p1s1w2">
       <src.rf>experimental</src.rf>
@@ -911,6 +912,11 @@
   <s id="m-zeens-p15s1">
     <m id="m-zeens-p15s1w1">
       <src.rf>experimental</src.rf>
+      <w.rf>
+		<LM>w#w-zeens-p15w1</LM>
+		<LM>w#w-zeens-p15w2</LM>
+		<LM>w#w-zeens-p15w3</LM>
+	  </w.rf>
       <form>17:40</form>
       <lemma>17:40</lemma>
       <tag>xn</tag>
