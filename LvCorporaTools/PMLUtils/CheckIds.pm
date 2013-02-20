@@ -210,7 +210,7 @@ sub _loadIds
 			$_ => {
 				'rf' => @ref ? \@ref : undef,
 				'deleted' => $del,
-				'changes' => @change ? \@change : undef,
+				'form_change' => @change ? \@change : undef,
 				'form' => $thisM->{'form'}->{'content'},};
 		} (keys %{$sent->{'m'}}));
 	}
