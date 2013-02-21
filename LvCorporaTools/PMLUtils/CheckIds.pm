@@ -395,7 +395,7 @@ sub _checkFormChange
 			$tok =~ /^\s*(.*?)\s*$/;
 			push @res, $m
 				unless ($1 eq $v->{'form'} or 
-					($v->{'form_change'} and @{$v->{'form_change'}} > 1));
+					($v->{'form_change'} and @{$v->{'form_change'}} > 0));
 		} else					# Verify m with multiple 'rf'.
 		{
 			my $contains = 0;
