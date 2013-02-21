@@ -67,7 +67,7 @@
       <choice> <!-- labojumu veidi: burta kļūda - OCR vai taml., ievietots vārds no jauna, w līmeni nepareizi saliktas atstarpes, mainīts skaitļu pieraksts.-->
         <value>spell</value>
         <value>insert</value>
-        <value>spacing</value>
+        <value>spacing</value> <!-- Lieto arī, ja vajag vienu tokenu sadalīt vairākās morfo vienībās. -->
         <value>num_normalization</value>
 		<value>union</value>
       </choice>
