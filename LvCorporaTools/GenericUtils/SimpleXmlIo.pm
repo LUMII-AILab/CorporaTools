@@ -74,7 +74,7 @@ sub printXml
 		'SuppressEmpty' => 1,
 		'NoSort' => 1,
 		'XMLDecl' => $header,
-		'NoEscape' => 1,
+#		'NoEscape' => 1,
 #		'GroupTags' => {},
 		);
 	$out->close();
