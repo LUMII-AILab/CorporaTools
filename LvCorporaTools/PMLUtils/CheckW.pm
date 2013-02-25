@@ -163,7 +163,7 @@ END
 		'SuppressEmpty' => 1,
 		'NoSort' => 1,
 		'XMLDecl' => $xmlHeader,
-		'NoEscape' => 1
+#		'NoEscape' => 1
 		);
 	$wOut->close();
 
