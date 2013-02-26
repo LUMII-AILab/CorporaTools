@@ -69,6 +69,7 @@ END
 	my $cpostag = (shift @_ or 'none');
 	my $postag = (shift @_ or 'full');
 	my $newName = (shift @_ or $oldName);
+	my $conll2009 = (shift @_ or 0);
 	
 	# Open output file.
 	File::Path::mkpath("$dirPrefix/res/");
@@ -126,30 +127,51 @@ END
 			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
 			$lemma =~ s/ /\Q$space_replacement\E/g;
 			print $out "$lemma\t"; #LEMMA
+
+			if ($conll2009)
+			{
+				print $out "$lemma\t"; #PLEMMA
+			}
 			
 			my $tag = ${$xpc->findnodes('pml:m.rf/pml:tag', $n)}[0]->textContent;
 			$tag =~ tr/][//d;
 			$tag =~ s#^N/A$#_#;
 			
-			if ($cpostag eq 'purify')
+			if (! $conll2009)
 			{
-				print $out purifyKamolsTag($tag); #CPOSTAG
-			} elsif ($cpostag eq 'first')
-			{
-				$tag =~/^(.)/;
-				print $out "$1"; #CPOSTAG
-			} else
-			{
-				print $out "_"; #CPOSTAG
+				if ($cpostag eq 'purify')
+				{
+					print $out purifyKamolsTag($tag); #CPOSTAG
+				} elsif ($cpostag eq 'first')
+				{
+					$tag =~/^(.)/;
+					print $out "$1"; #CPOSTAG
+				} else
+				{
+					print $out "_"; #CPOSTAG
+				}
+				print $out "\t"; #CPOSTAG
 			}
-			print $out "\t";
-			
+
 			if ($postag eq 'purify')
 			{
 				print $out purifyKamolsTag($tag); #POSTAG
 			} else
 			{
 				print $out "$tag"; #POSTAG
+			}
+			print $out "\t"; #POSTAG
+
+			if ($conll2009)
+			{
+				if ($postag eq 'purify')
+				{
+					print $out purifyKamolsTag($tag); #PPOS
+				} else
+				{
+					print $out "$tag"; #PPOS
+				}
+				print $out "\t"; #PPOS
 			}
 			
 			my $decoded = decodeTag($tag, $tagDecoder);
@@ -160,10 +182,22 @@ END
 				$feats = '_';
 				warn "Tag $tag was not decoded!";
 			}
-			print $out "\t$feats\t"; #FEATS
+			print $out "$feats\t"; #FEATS
+			if ($conll2009)
+			{
+				print $out "$feats\t"; #PFEATS
+			}
+
 			exists($n2id{$head->findvalue('@id')}) ?
 				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
 			print $out "\t";
+			if ($conll2009)
+			{
+				exists($n2id{$head->findvalue('@id')}) ?
+					print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#PHEAD
+				print $out "\t";
+			}
+
 			if ($printLabels)
 			{
 				print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #DEPREL
@@ -171,7 +205,25 @@ END
 			{
 				print $out "_"; #DEPREL
 			}
-			print $out "\t_\t_\n"; #PHEAD, PDEPREL
+			print $out "\t"; #DEPREL
+			if ($conll2009)
+			{
+				if ($printLabels)
+				{
+					print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #PDEPREL
+				} else
+				{
+					print $out "_"; #PDEPREL
+				}
+			}
+
+			if ($conll2009)
+			{
+				print $out "\t_\t_\n"; #FILLPRED, PRED, APRED1-6
+			} else 
+			{
+				print $out "\t_\t_\n"; #PHEAD, PDEPREL
+			}
 		}
 		print $out "\n";
 	}

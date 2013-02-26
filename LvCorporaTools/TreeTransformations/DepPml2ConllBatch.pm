@@ -25,12 +25,13 @@ use IO::Dir;
 ###############################################################################
 sub transformFileBatch
 {
-	if (@ARGV eq 4)
+	if (@ARGV eq 5)
 	{
 		my $mode = shift @ARGV;
 		my $dir_name = shift @ARGV;
 		my $cpostag = shift @ARGV;
 		my $postag = shift @ARGV;
+		my $conll2009 = shift @ARGV;
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 		my $infix = $mode ? "nored" : "unlabeled";
 		
@@ -39,7 +40,7 @@ sub transformFileBatch
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
 			{
 				transformFile ($mode, $dir_name, $in_file, $cpostag, $postag,
-					"$1-$infix.conll");
+					"$1-$infix.conll", $conll2009);
 			}
 		}
 
