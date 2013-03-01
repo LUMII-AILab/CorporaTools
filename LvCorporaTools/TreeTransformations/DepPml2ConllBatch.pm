@@ -13,9 +13,10 @@ use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing for LvCorporaTools::TreeTransformations::DepPml2Conll - if 4
-# arguments (mode, directory name, cpostag mode, postag mode) provided, treat
-# it as directory and process all files in it.
+# Batch processing for LvCorporaTools::TreeTransformations::DepPml2Conll - if 5
+# arguments (mode, directory name, cpostag mode, postag mode, whether do output
+# in CoNLL-2009 format) provided, treat it as directory and process all files
+# in it.
 # Otherwise pass all arguments to DepPml2Conll.
 #
 # Developed on Strawberry Perl 5.12.3.0

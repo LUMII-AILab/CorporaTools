@@ -57,6 +57,7 @@ Params:
    CPOSTAG mode [opt, 'purify' or 'first' (single letter) or 'none'(default)]
    POSTAG mode [opt, 'purify' or 'full' (default)]
    new file name [opt, current file name used otherwise]
+   use CoNLL-2009 format [opt, false by default]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
 END
