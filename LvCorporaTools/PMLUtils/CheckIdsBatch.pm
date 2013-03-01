@@ -35,7 +35,7 @@ sub checkIdsBatch
 		{
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
 			{
-				checkIds ($dir_name, $1, $1);
+				checkIds ($dir_name, $1, "$1-errors.txt");
 			}
 		}
 

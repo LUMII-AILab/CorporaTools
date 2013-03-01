@@ -206,7 +206,8 @@ END
 			{
 				print $out "_"; #DEPREL
 			}
-			print $out "\t"; #DEPREL
+			print $out "\t";
+			
 			if ($conll2009)
 			{
 				if ($printLabels)

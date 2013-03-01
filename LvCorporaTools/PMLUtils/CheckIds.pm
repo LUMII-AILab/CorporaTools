@@ -55,7 +55,7 @@ Script for checking references in the given PML dataset for following eroors:
 Params:
    directory prefix
    file name without extension
-   output file name [opt, "res.txt" used otherwise]
+   output file name [opt, "errors.txt" used otherwise]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -64,7 +64,7 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $inputName = shift @_;
-	my $resName = (shift @_ or 'res.txt');
+	my $resName = (shift @_ or "$inputName-errors.txt");
 
 	print "Starting...\n";
 	my $ids = &_loadIds($dirPrefix, $inputName);
