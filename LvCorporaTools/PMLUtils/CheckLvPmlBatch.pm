@@ -1,29 +1,29 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::PMLUtils::CheckIdsBatch;
+package LvCorporaTools::PMLUtils::CheckLvPmlBatch;
 
 use strict;
 use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(checkIdsBatch);
+our @EXPORT_OK = qw(checkLvPmlBatch);
 
-use LvCorporaTools::PMLUtils::CheckIds qw(checkIds);
+use LvCorporaTools::PMLUtils::CheckLvPml qw(checkLvPml);
 
 use IO::File;
 use IO::Dir;
 
 ###############################################################################
-# Batch processing for LvCorporaTools::PMLUtils::CheckIds - if single
+# Batch processing for LvCorporaTools::PMLUtils::CheckLvPml - if single
 # argument provided, treat it as directory and process all files in it.
-# Otherwise pass all arguments to CheckIds.
+# Otherwise pass all arguments to CheckLvPml.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Latvian Treebank project, 2012
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
-sub checkIdsBatch
+sub checkLvPmlBatch
 {
 	if (@ARGV eq 1)
 	{
@@ -35,14 +35,14 @@ sub checkIdsBatch
 		{
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
 			{
-				checkIds ($dir_name, $1, "$1-errors.txt");
+				checkLvPml ($dir_name, $1, "$1-errors.txt");
 			}
 		}
 
 	}
 	else
 	{
-		checkIds (@ARGV);
+		checkLvPml (@ARGV);
 	}
 }
 1;

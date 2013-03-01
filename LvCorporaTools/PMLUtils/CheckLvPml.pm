@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::PMLUtils::CheckIds;
+package LvCorporaTools::PMLUtils::CheckLvPml;
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(checkIds);
+our @EXPORT_OK = qw(checkLvPml);
 
 use Data::Dumper;
 use XML::Simple;  # XML handling library
@@ -23,8 +23,11 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 #	* IDs from m file linking to non-existing IDs in w file;
 #	* IDs from a file linking to non-existing IDs or elements marked for
 #	  deletion in m file;
-#	* trees in a file not corresponding to single sentence in m file.
-# TODO: check form_change.
+#	* trees in a file not corresponding to single sentence in m file;
+#	* multi-token m has "form_change" "union";
+#	* m with no reference to w has "form_change" "insert";
+#	* m with form different from what described in w has at least one more
+#	  "form_change".
 # Refferences to multiple files not supported. ID duplication are not checked.
 # (TrEd can be used for that)
 #
@@ -37,7 +40,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 # Licenced under GPL.
 ###############################################################################
 
-sub checkIds
+sub checkLvPml
 {
 
 	autoflush STDOUT 1;
