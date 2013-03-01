@@ -406,7 +406,7 @@ sub _checkFormChange
 			{
 				$contains = 1 if ($change eq 'union');
 			}
-			my $tok = join '', @{$v->{'rf'}};
+			my $tok = join '', (map {$w2token->{$_} ? $w2token->{$_} : ''} @{$v->{'rf'}});
 			$tok =~ s/^\s*(.*?)\s*$/$1/;
 			push @res, $m unless ($contains);
 			push @res, $m
