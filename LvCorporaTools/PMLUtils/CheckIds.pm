@@ -55,7 +55,7 @@ Script for checking references in the given PML dataset for following eroors:
 Params:
    directory prefix
    file name without extension
-   output file name [opt, "errors.txt" used otherwise]
+   output file name [opt, "file_name-errors.txt" used otherwise]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
