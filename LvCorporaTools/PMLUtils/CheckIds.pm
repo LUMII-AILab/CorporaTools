@@ -404,10 +404,10 @@ sub _checkFormChange
 				$contains = 1 if ($change eq 'union');
 			}
 			my $tok = join '', @{$v->{'rf'}};
-			$tok =~ /^\s*(.*?)\s*$/;
+			$tok =~ s/^\s*(.*?)\s*$/$1/;
 			push @res, $m unless ($contains);
 			push @res, $m
-				if ($contains and $1 ne $v->{'form'} and @{$v->{'rf'}} == 1);
+				if ($contains and $tok ne $v->{'form'} and @{$v->{'form_change'}} < 2);
 		}
 	}
 	

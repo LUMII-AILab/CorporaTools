@@ -735,7 +735,7 @@
 		<LM>w#w-zeens-p14w14</LM>
 	  </w.rf>
 	  <form_change>union</form_change>
-      <form>lai gan</form>
+      <form>laigan</form>
       <lemma>lai gan</lemma>
       <tag>csc</tag>
     </m>
