@@ -171,7 +171,7 @@ END
 	print "Added $addedSpaces spaces.\n";
 	print "Deleted $deletedSpaces spaces.\n";
 	print "Moved $movedPara paragraphs.\n";
-	print "CheckW has finished.\n";
+	print "CheckW has finished procesing \"$pml\".\n";
 
 	$errFile->close();
 }
