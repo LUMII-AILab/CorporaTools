@@ -101,7 +101,7 @@ END
 	print $out join("\n", @$badIds);
 
 	@$badIds = grep {$ids->{'m2w'}->{$_}->{'deleted'}} (values %{$ids->{'node2m'}});
-	print 'Found '.scalar @$badIds." m elements marked for deletion, but used in a file.\n";
+	print 'Found '.scalar @$badIds." m element(s) marked for deletion, but used in a file.\n";
 	print $out "\n\nM elements marked for deletion, but used in a file:\n";
 	print $out join("\n", @$badIds);
 	
@@ -117,18 +117,18 @@ END
 
 	$badIds = &_validateSentBound(
 		$ids->{'sent2tree'}, $ids->{'m2node'}, $ids->{'sent2m'}, $ids->{'node2tree'});
-	print 'Found '.scalar @$badIds." m nodes not reffered to in coressponding tree.\n";
+	print 'Found '.scalar @$badIds." m node(s) not reffered to in coressponding tree.\n";
 	print $out "\n\nM nodes not reffered from coressponding tree:\n";
 	print $out join("\n", @$badIds);
 
 	$badIds = &_validateSentBound(
 		$ids->{'tree2sent'}, $ids->{'node2m'}, $ids->{'tree2node'}, $ids->{'m2sent'});
-	print 'Found '.scalar @$badIds." a nodes not reffered to in coressponding sentence.\n";
+	print 'Found '.scalar @$badIds." a node(s) not reffered to in coressponding sentence.\n";
 	print $out "\n\nA nodes not reffered from coressponding sentence:\n";
 	print $out join("\n", @$badIds);
 
 	$badIds = &_checkFormChange($ids->{'m2w'}, $ids->{'w2token'});
-	print 'Found '.scalar @$badIds." m nodes whose \'form_change\' must be checked.\n";
+	print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
 	print $out "\n\nM nodes with incomplete \'form_change\':\n";
 	print $out join("\n", @$badIds);
 	
