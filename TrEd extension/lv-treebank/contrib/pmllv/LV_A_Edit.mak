@@ -536,7 +536,7 @@ sub _get_form_from_tokens
 #bind new_pmcinfo_node to p menu New PMC Node
 #bind new_coordinfo_node to c menu New Coordination Node
 #bind new_child_node to n menu New Ordinary Node
-#bind new_m_node to m menu New Node with Morphology (forces save, can't be undone)
+#insert new_m_node menu New Node with Morphology (forces save, can't be undone)
 #bind new_coordcl_struct to C menu New Coordination Construction
 
 #bind incorp_in_parent to Ctrl+Up menu Incorporate in Parent
