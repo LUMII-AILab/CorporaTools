@@ -356,7 +356,7 @@ sub new_child_node
 
 # Create new ordinary node with "place" for morphology.
 # Really hacky code, forces save on all files, can't be undone.
-#TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Kinda TODO - authors said, it can't be done much better with knitted files.
 sub new_m_node
 {
   my $context = CurrentContext();
@@ -477,14 +477,6 @@ sub _write_new_m
 }
 
 
-#Delete active node without affecting ORD values.
-#TODO
-sub delete_node
-{
-  $this->{'m/deleted'} = 1;
-  TredMacro::PlainDeleteNode($this);
-}
-
 #Supporting function: find first free id of given type. Types supported: x, w.
 sub _get_next_id
 {
@@ -529,6 +521,48 @@ sub _get_form_from_tokens
   return $result;
 }
 
+#Delete active node without affecting ORD values.
+#TODO
+sub delete_node
+{
+  $this->{'m/deleted'} = 1;
+  TredMacro::PlainDeleteNode($this);
+}
+
+#Rename to object passive voice subject if it is sibling of passive voice's
+#xPred.
+sub passive_subj_to_obj
+{
+  print 'Renaming passive voice subjects for all trees... ';
+  my $tree = CurrentTreeNumber;
+  for (my $i = 1; $i <= GetTrees(); $i++)
+  {
+    GotoTree($i);
+	# Find all passiive voice xPred.
+	my @nodes = $root->descendants;
+	my @passives = grep {
+		$_->attr('#name') eq 'xinfo' and $_->attr('xtype') eq 'xPred'
+		and $_->attr('tag') =~ /^v.*?\[pass/} @nodes;
+	# Process each passive.
+	for my $p (@passives)
+	{
+		# Find all related subjects.
+		my @sibs = $p->parent->children;
+		my @subjects = grep {
+			$_->attr('#name') eq 'node' and $_->attr('role') eq 'subj'}
+			@sibs;
+		# Rename each subject.
+		for my $subj (@subjects)
+		{
+			$subj->{'role'} = 'obj';
+		}
+	}
+  }
+  GotoTree($tree + 1);
+  print "Finished!\n"
+
+}
+
 #binding-context LV_A_Edit
 #bind GotoTree to Alt+g menu Goto Tree
 
@@ -536,7 +570,7 @@ sub _get_form_from_tokens
 #bind new_pmcinfo_node to p menu New PMC Node
 #bind new_coordinfo_node to c menu New Coordination Node
 #bind new_child_node to n menu New Ordinary Node
-#bind new_m_node to m menu New Node with Morphology (forces save, can't be undone)
+#insert new_m_node menu New Node with Morphology (forces save, can't be undone)
 #bind new_coordcl_struct to C menu New Coordination Construction
 
 #bind incorp_in_parent to Ctrl+Up menu Incorporate in Parent
@@ -552,6 +586,9 @@ sub _get_form_from_tokens
 #bind swich_styles_full to Alt+f menu Switch On/Off Full-info Layout
 #bind swich_styles_ord to Alt+o menu Switch On/Off Ordered Layout
 #bind switch_mode to Alt+m menu Switch to View Mode
+
+#insert passive_subj_to_obj menu Change Passive Voice subj to obj
+
 
 1;
 
