@@ -548,6 +548,16 @@ sub passive_subj_to_obj
 	{
 		# Find all related subjects.
 		my @sibs = $p->parent->children;
+		my $grandp = $p->parent->parent;
+		# Coordination or xParticle can be between subject and passive. Or
+		# multiple of them.
+		while ($grandp->attr('#name') eq 'xinfo'
+			and $grandp->attr('xtype') eq 'xParticle'
+			or $grandp->attr('#name') eq 'coordinfo')
+		{
+			@sibs = (@sibs, $grandp->parent->children);
+			$grandp = $grandp->parent->parent;
+		}
 		my @subjects = grep {
 			$_->attr('#name') eq 'node' and $_->attr('role') eq 'subj'}
 			@sibs;
