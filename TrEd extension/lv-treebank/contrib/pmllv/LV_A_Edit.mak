@@ -563,6 +563,41 @@ sub passive_subj_to_obj
 
 }
 
+#Remove namedEnt and phrasElem having only one child.
+sub remove_single_child_x
+{
+  print 'Removing namedEnt and phrasElem having 1 child from all trees... ';
+  my $tree = CurrentTreeNumber;
+  for (my $i = 1; $i <= GetTrees(); $i++)
+  {
+    GotoTree($i);
+	# Find all namedEnt and phrasElem with less than two children.
+	my @nodes = $root->descendants;
+	my @forRemove = grep {$_->attr('#name') eq 'xinfo' and
+		($_->attr('xtype') eq 'namedEnt' or $_->attr('xtype') eq 'phrasElem') and
+		not $_->parent->attr('m/id') and $_->children < 2} @nodes;
+	# Process each removable.
+	for my $n (@forRemove)
+	{
+		my $parent = $n->parent;
+		my $grandp = $parent->parent;
+		my @ch = $n->children;
+		if (@ch and @ch gt 0)
+		{
+			$ch[0]->{'role'} = $parent->{'role'};
+			my $tmp = $ch[0]->cut;
+			#print $parent->parent;
+			$ch[0]->cut->paste_before($parent);
+		}
+		TredMacro::PlainDeleteNode($n);
+		TredMacro::PlainDeleteNode($parent);
+	}
+  }
+  GotoTree($tree + 1);
+  print "Finished!\n"
+
+}
+
 #binding-context LV_A_Edit
 #bind GotoTree to Alt+g menu Goto Tree
 
@@ -588,7 +623,7 @@ sub passive_subj_to_obj
 #bind switch_mode to Alt+m menu Switch to View Mode
 
 #insert passive_subj_to_obj menu Change Passive Voice subj to obj
-
+#insert remove_single_child_x menu Remove Single-childed namedEnt and phrasElem
 
 1;
 
