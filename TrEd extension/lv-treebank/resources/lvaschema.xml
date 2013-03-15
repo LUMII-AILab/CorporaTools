@@ -2,11 +2,10 @@
 <pml_schema
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
-  <revision>2.12</revision>
+  <revision>2.13</revision>
   <description>Schema for Latvian Treebank syntax layer: dependency based
 	hybrid annotation style (default).</description>
   <reference name="mdata" readas="pml"/>
-  <reference name="wdata" readas="pml"/>
 
   <import schema="lvmschema.xml" type="m-node.type"/>
   <import schema="lvmschema.xml" type="bool.type"/>
