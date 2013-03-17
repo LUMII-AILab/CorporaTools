@@ -533,7 +533,8 @@ sub delete_node
 #xPred.
 sub passive_subj_to_obj
 {
-  print 'Renaming passive voice subjects for all trees... ';
+  print "Renaming passive voice subjects for all trees...\n";
+  my @changedIds = ();
   my $tree = CurrentTreeNumber;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
@@ -564,19 +565,26 @@ sub passive_subj_to_obj
 		# Rename each subject.
 		for my $subj (@subjects)
 		{
+			print $subj->{'id'}."\n";
+			push @changedIds, $subj->{'id'};
 			$subj->{'role'} = 'obj';
 		}
 	}
   }
   GotoTree($tree + 1);
-  print "Finished!\n"
+  print "Finished!\n";
+  my $mes = @changedIds ?
+	@changedIds." node(s) has changed:\n". join("\n", @changedIds):
+	"No nodes has changed!\n";
+  InfoMessage($mes);
 
 }
 
 #Remove namedEnt and phrasElem having only one child.
 sub remove_single_child_x
 {
-  print 'Removing namedEnt and phrasElem having 1 child from all trees... ';
+  print "Removing namedEnt and phrasElem having 1 child from all trees...\n";
+  my @changedIds = ();
   my $tree = CurrentTreeNumber;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
@@ -595,17 +603,26 @@ sub remove_single_child_x
 		if (@ch and @ch gt 0)
 		{
 			$ch[0]->{'role'} = $parent->{'role'};
-			my $tmp = $ch[0]->cut;
-			#print $parent->parent;
+			my @movables = grep {$_ != $ch[0]} $parent->children;
+			for my $m (@movables)
+			{
+				$m->cut->paste_on($ch[0]);
+			}
 			$ch[0]->cut->paste_before($parent);
 		}
 		TredMacro::PlainDeleteNode($n);
 		TredMacro::PlainDeleteNode($parent);
+		my $id = $grandp->{'id'} ? $grandp->{'id'} : $grandp->parent->{'id'};
+		print $id."\n";
+		push @changedIds, $id;
 	}
   }
   GotoTree($tree + 1);
-  print "Finished!\n"
-
+  print "Finished!\n";
+  my $mes = @changedIds ?
+	@changedIds." node(s) has changed:\n". join("\n", @changedIds):
+	"No nodes has changed!\n";
+  InfoMessage($mes);
 }
 
 #binding-context LV_A_Edit
