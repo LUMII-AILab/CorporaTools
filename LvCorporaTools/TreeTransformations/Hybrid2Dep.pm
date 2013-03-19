@@ -791,8 +791,12 @@ sub _defaultCoord
 			}
 		}
 		my $rootRole = &_getRole($xpc, $tmpRoot);
-		die "$phraseRole below ". $node->find('../../@id')." ends with $rootRole!"
-			if ($rootRole ne 'conj' and not @sorted);
+		if ($rootRole ne 'conj' and not @sorted)
+		{
+			print "$phraseRole ends with $rootRole.\n";
+			print $warnFile "$phraseRole below "
+				.$node->find('../../@id')." ends with $rootRole.\n";
+		}
 		my $nextRole = @sorted ? &_getRole($xpc, $sorted[0]) : '';
 		
 		# Deal with comma near  conjuction.
@@ -816,7 +820,7 @@ sub _defaultCoord
 			$chNode->appendChild($ch);
 		}
 
-		 # Set the pointer to the prhrase root, if this was first conj/punct.
+		# Set the pointer to the prhrase root, if this was first conj/punct.
 		if (not defined $prevRoot)
 		{
 			$newRoot = $tmpRoot;
