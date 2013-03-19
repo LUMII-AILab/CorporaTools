@@ -1,6 +1,8 @@
-It seems, that PML toolkit (pmltk) uses some modules from TrEd itself and probably something from TrEd package EasyTreex, too. To get everything working, correct paths must be set in perl @INC. It can be done either using perl -I /path/to/lib or by setting enviroment variable PERL5LIB or PERLLIB. (Windows)
+It seems, that PML toolkit (pmltk) uses some modules from TrEd itself and something from TrEd package EasyTreex, too. I got it working with TrEd and EasyTreex on my computer, but necessary modules should be available though CPAN, too (EasyTreex requires ton of prerequisites, it took for me 10 minutes or so to install them all). Also, correct paths must be set in perl @INC. It can be done either using perl -I /path/to/lib or by setting environment variable PERL5LIB or PERLLIB.
+On my Windows7 is enogh to invoke this right before knitter:
+set PERL5LIB=C:\Program Files (x86)\tred\dependencies\lib\perl5;C:\Program Files (x86)\tred\dependencies\lib\perl5\MSWin32-x86-multi-thread;C:\Program Files (x86)\tred\tredlib\libs\fslib;%PERL5LIB%
 
-No idea, why PML Toolkit kniter has a problem with $VERSION variable - only thing I managed to figure out was to change the source code to avoid using this variable. This is the only difference between this version of PML Toolkit and pmltk-1.1.5. distributed by UFAL.
+No idea, why PML Toolkit knitter has a problem with $VERSION variable - only thing I managed to figure out was to change the source code to avoid using this variable. This is the only difference between this version of PML Toolkit and pmltk-1.1.5. distributed by UFAL.
 
-2012-06-14 (2012-12-19 in English)
+2012-03-19
 
