@@ -91,7 +91,7 @@ sub load
 	print "W file loaded.\n";
 
 	# Load m-level.
-	my $m = loadXml ("$dirPrefix\\$oldName.m", ['s', 'm','reffile','schema']);
+	my $m = loadXml ("$dirPrefix\\$oldName.m", ['s', 'm','reffile','schema', 'LM']);
 	print "M file loaded.\n";
 		
 	# Load the a-level.
