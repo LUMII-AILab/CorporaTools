@@ -171,7 +171,7 @@ sub _loadIds
 	print "W file parsed.\n";
 	
 	# Load m-level.
-	my $m = loadXml ("$dirPrefix\\$inputName.m", ['s', 'm','reffile','schema'], ['id']);
+	my $m = loadXml ("$dirPrefix\\$inputName.m", ['s', 'm','reffile','schema', 'LM'], ['id']);
 	
 	# Map sentence IDs to lists of morpheme IDs.
 	my %mSent2morpho = map
