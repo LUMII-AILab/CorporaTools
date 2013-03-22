@@ -7,6 +7,9 @@ text:<? $${m/w/token}eq$${m/form} ?
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
 node:<? LV_A::is_unfinished($this) ? '#{red}!!!' : ''?>
 node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}???' ?>
+node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
+	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
+	? '#{red}???' : ''?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}<?
   ' ' if $${ord} and $${m/form} ?><?
