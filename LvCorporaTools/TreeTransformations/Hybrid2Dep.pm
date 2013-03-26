@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile transformTree recalculateOrds);
+our @EXPORT_OK = qw($COORD $PMC transformFile transformTree recalculateOrds);
 
 
 use File::Path;
@@ -34,11 +34,11 @@ use XML::LibXML;  # XML handling library
 # Global variables set, how to transform specific elements.
 # Unknown values cause fatal error.
 
-#our $coord = 'ROW';		# all coordination elements in a row
-our $coord = 'DEFAULT'; 	# conjunction or punctuation as root element
+#our $COORD = 'ROW';		# all coordination elements in a row
+our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
 
-#our $pmc = 'BASELEM';		# basElem as root element
-our $pmc = 'DEFAULT';		# first punct as root element
+#our $PMC = 'BASELEM';		# basElem as root element
+our $PMC = 'DEFAULT';		# first punct as root element
 
 # Process single XML file. This should be used as entry point, if this module
 # is used standalone.
@@ -416,67 +416,68 @@ sub crdGeneral
 
 sub sent
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(1, 0, @_) if ($pmc eq 'DEFAULT');
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(1, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub mainCl
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub subrCl
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub interj
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub spcPmc
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub insPmc
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub particle
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub dirSpPmc
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub address
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub quot
 {
-	return &_allBelowBasElem(@_) if ($pmc eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 
 sub utter
 {
-	if ($pmc eq 'BASELEM')
+	if ($PMC eq 'BASELEM')
 	{
 		my $xpc = shift @_; # XPath context
 		my $node = shift @_;
@@ -506,8 +507,8 @@ sub utter
 		$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
 		return $newRoot;
 	}
-	return &_allBelowPunct(1, 1, @_) if ($pmc eq 'DEFAULT');
-	die "Unknown value \'$pmc\' for global constant \$pmc ";
+	return &_allBelowPunct(1, 1, @_) if ($PMC eq 'DEFAULT');
+	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 
 ### What to do when don't know what to do #####################################
@@ -696,9 +697,9 @@ sub _allBelowBasElem
 #				 parent node, output flow for warnings)
 sub _defaultCoord
 {
-	return &_chainAllNodes(0, @_) if ($coord eq 'ROW');
-	return &_allBelowConjPunct(@_) if ($coord eq 'DEFAULT');
-	die "Unknown value \'$coord\' for global constant \$coord ";
+	return &_chainAllNodes(0, @_) if ($COORD eq 'ROW');
+	return &_allBelowConjPunct(@_) if ($COORD eq 'DEFAULT');
+	die "Unknown value \'$COORD\' for global constant \$COORD ";
 }	
 
 # _allBelowConjPunct (XPath context with set namespaces, DOM node, role of the
