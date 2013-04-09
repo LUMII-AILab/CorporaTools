@@ -111,7 +111,7 @@ sub _doOutput
 	
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
 		or die "Could not create file $resName: $!";
-	print $out "Lengh\tCount\n";
+	print $out "Length\tCount\n";
 	for (sort {$a <=> $b} keys(%$mapping))
 	{
 		print $out "$_\t$mapping->{$_}\n";
