@@ -12,15 +12,15 @@ Contents
 * LvCorporaTools - perl scripts and xslt-s for varios coprora data processing;
 * testdata - data samples for stuff in LvCorporaTools;
 * TrEd extension - development snapshot for lv-treebank module for TrEd tool
-* *.bat files - invocation examples for LvCorporaTools;
 (this enables TrEd to operate with lv-PML files);
+* *.bat files - invocation examples for LvCorporaTools;
 * MorphoVerificator - java written tool implementing various heuristics for
 searching human errors in morphological corpora.
 
 License
 -------
 
-(c) Institute of Mathematics and Computer Science, University of Latvia, 2010-2012
+(c) Institute of Mathematics and Computer Science, University of Latvia, 2010-2013
 
 This software is licensed under GNU General Public License.
 Commercial licensing is available if necessary, contact us at lauma@ailab.lv.
