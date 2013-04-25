@@ -9,11 +9,12 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw($COORD $PMC transformFile transformTree recalculateOrds);
 
-
 use File::Path;
 use IO::File;
 use List::Util qw(first);
 use XML::LibXML;  # XML handling library
+
+use LvCorporaTools::PMLUtils::AUtils qw(getRole setNodeRole getChildrenNode sortNodesByOrd);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -110,6 +111,7 @@ END
 # sequential. Remove ord for root node.
 # recalculateOrds (XPath context with set namespaces, DOM node for tree root
 #				   (usualy "LM"))
+# TODO - generalize and move to AUtils
 sub recalculateOrds
 {
 	my $xpc = shift @_; # XPath context
@@ -160,7 +162,7 @@ sub transformTree
 		
 
 		# Process PMC (probably) node.
-		my $chRole = &_getRole($xpc, $phrases[0]);
+		my $chRole = getRole($xpc, $phrases[0]);
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile);
 		# Reset dependents' roles.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
@@ -212,7 +214,7 @@ sub _transformSubtree
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $warnFile = shift @_;
-	my $role = &_getRole($xpc, $node);
+	my $role = getRole($xpc, $node);
 
 	# Reset dependents' roles.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
@@ -247,7 +249,7 @@ sub _transformSubtree
 		if (scalar @phrasePhrases gt 0);
 	
 	# Process phrase node.
-	my $phRole = &_getRole($xpc, $phrases[0]);
+	my $phRole = getRole($xpc, $phrases[0]);
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile);
 	&_moveAllChildren($xpc, $node, $newNode);
 	$node->replaceNode($newNode);
@@ -267,8 +269,8 @@ sub _renamePhraseChild
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $phraseRole = shift @_;
-	my $nodeRole = &_getRole($xpc, $node);
-	&_setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
+	my $nodeRole = getRole($xpc, $node);
+	setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
 }
 sub _renamePhraseSubroot
 {
@@ -276,16 +278,16 @@ sub _renamePhraseSubroot
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $phraseRole = shift @_;
-	my $nodeRole = &_getRole($xpc, $node);
-	&_setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
+	my $nodeRole = getRole($xpc, $node);
+	setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
 }
-
 sub _renameDependent
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
-	my $nodeRole = &_getRole($xpc, $node);
-	&_setNodeRole($xpc, $node, "dep:$nodeRole") if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+	my $nodeRole = getRole($xpc, $node);
+	setNodeRole($xpc, $node, "dep:$nodeRole")
+		if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
 }
 
 ###############################################################################
@@ -389,8 +391,8 @@ sub phrasElem
 	} else
 	{
 		# Change role for the subroot.
-		#my $oldRole = &_getRole($xpc, $ch[0]);
-		#&_setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
+		#my $oldRole = getRole($xpc, $ch[0]);
+		#setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
 		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'phrasElem');
 		$ch[0]->unbindNode();
 		return $ch[0];
@@ -483,7 +485,7 @@ sub utter
 		my $node = shift @_;
 		my $parentRole = shift @_;
 		my $warnFile = shift @_;
-		my $phraseRole = &_getRole($xpc, $node);
+		my $phraseRole = getRole($xpc, $node);
 		
 		# Find the new root ('subroot') for the current subtree.
 		my @res = $xpc->findnodes(
@@ -519,7 +521,7 @@ sub _defaultPhrase
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	# my $warnFile = shift @_; # Not used right now
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
 	my @basElems = $xpc->findnodes(
@@ -564,7 +566,7 @@ sub _allNodesBelowOne
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	# my $warnFile = shift @_; # Not used right now
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 	
 	# Find node with speciffied rootRole.
 	my @res = $xpc->findnodes("pml:children/pml:node[pml:role=\'$rootRole\']", $node);
@@ -587,13 +589,13 @@ sub _chainAllNodes
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	# my $warnFile = shift @_; # Not used right now
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 
 	# Find the children.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (@ch lt 1);
-	my @sorted = @{&_sortNodesByOrd($xpc, $invert, @ch)};
+	my @sorted = @{sortNodesByOrd($xpc, $invert, @ch)};
 	my $newRoot = $sorted[0];
 	my $tmpRoot = $sorted[0];
 	
@@ -607,7 +609,7 @@ sub _chainAllNodes
 		# Move to new parent.
 		$sorted[$ind]->unbindNode();
 		&_renamePhraseChild($xpc, $sorted[$ind], $phraseRole);
-		my $chNode = &_getChildrenNode($xpc, $tmpRoot);
+		my $chNode = getChildrenNode($xpc, $tmpRoot);
 		$chNode->appendChild($sorted[$ind]);
 		$tmpRoot = $sorted[$ind];
 	}
@@ -627,15 +629,15 @@ sub _allBelowPunct
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $warnFile = shift @_;
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'conj\']", $node);
-	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};
+	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
 	if (not @ch)
 	{
 		@ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'punct\']", $node);
-		@res = @{&_sortNodesByOrd($xpc, $invert, @ch)};
+		@res = @{sortNodesByOrd($xpc, $invert, @ch)};
 	}
 	if (not @ch)
 	{
@@ -650,7 +652,7 @@ sub _allBelowPunct
 			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
 				.(scalar @ch)." potential non-punct/conj/no rootnodes.\n";
 		}
-		@res = @{&_sortNodesByOrd($xpc, 0, @ch)};	
+		@res = @{sortNodesByOrd($xpc, 0, @ch)};	
 	}
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @ch);
@@ -668,13 +670,13 @@ sub _allBelowBasElem
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $warnFile = shift @_;
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 	
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes(
 		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
 		$node);
-	my @res = @{&_sortNodesByOrd($xpc, 0, @ch)};
+	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @res);
 	# Warning about suspective structure.
@@ -710,10 +712,10 @@ sub _allBelowConjPunct
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $warnFile = shift @_;
-	my $phraseRole = &_getRole($xpc, $node);
+	my $phraseRole = getRole($xpc, $node);
 
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	my @sorted = @{&_sortNodesByOrd($xpc, 0, @ch)};
+	my @sorted = @{sortNodesByOrd($xpc, 0, @ch)};
 	
 	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 		if (not @sorted);
@@ -724,7 +726,7 @@ sub _allBelowConjPunct
 		print $warnFile "$phraseRole below ". $node->find('../../@id')
 			.' has left only '.(scalar @sorted)." children.\n";
 	}
-	my $firstRole = &_getRole($xpc, $sorted[0]);
+	my $firstRole = getRole($xpc, $sorted[0]);
 	# Warning about suspective structure.
 	if ($firstRole eq 'punct')
 	{
@@ -737,14 +739,14 @@ sub _allBelowConjPunct
 	my $newRoot = undef;
 	for my $ind (0..$#sorted)
 	{
-		my $role = &_getRole($xpc, $sorted[$ind]);
+		my $role = getRole($xpc, $sorted[$ind]);
 		if ($role eq 'conj')
 		{
 			$newRoot = $sorted[$ind];
 			last;
 		} elsif ($role eq 'punct')
 		{
-			if ($ind < $#sorted and  &_getRole($xpc, $sorted[$ind+1]) eq 'conj')
+			if ($ind < $#sorted and  getRole($xpc, $sorted[$ind+1]) eq 'conj')
 			{
 				$newRoot = $sorted[$ind+1];
 			} else
@@ -784,10 +786,10 @@ sub _allBelowConjPunct
 #	my $node = shift @_;
 #	my $parentRole = shift @_;
 #	my $warnFile = shift @_;
-#	my $phraseRole = &_getRole($xpc, $node);
+#	my $phraseRole = getRole($xpc, $node);
 #
 #	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-#	my @sorted = @{&_sortNodesByOrd($xpc, 0, @ch)};
+#	my @sorted = @{sortNodesByOrd($xpc, 0, @ch)};
 #	
 #	die "$phraseRole below ". $node->find('../../@id').' has no children!'
 #		if (not @sorted);
@@ -798,7 +800,7 @@ sub _allBelowConjPunct
 #		print $warnFile "$phraseRole below ". $node->find('../../@id')
 #			.' has left only '.(scalar @sorted)." children.\n";
 #	}
-#	my $firstRole = &_getRole($xpc, $sorted[0]);
+#	my $firstRole = getRole($xpc, $sorted[0]);
 #	# Warning about suspective structure.
 #	if ($firstRole eq 'punct')
 #	{
@@ -834,7 +836,7 @@ sub _allBelowConjPunct
 #			if (not defined $tmp)
 #			{
 #				# Move last nodes.
-#				my $chNode = &_getChildrenNode($xpc, $prevRoot);
+#				my $chNode = getChildrenNode($xpc, $prevRoot);
 #				foreach my $ch (@postponed)
 #				{
 #					$ch->unbindNode();
@@ -845,7 +847,7 @@ sub _allBelowConjPunct
 #			}
 #			
 #			# Find next subroot.
-#			my $role = &_getRole($xpc, $tmp);
+#			my $role = getRole($xpc, $tmp);
 #			if ($role eq 'punct' or $role eq 'conj')
 #			{
 #				$tmpRoot = $tmp;
@@ -855,14 +857,14 @@ sub _allBelowConjPunct
 #				push @postponed, $tmp;
 #			}
 #		}
-#		my $rootRole = &_getRole($xpc, $tmpRoot);
+#		my $rootRole = getRole($xpc, $tmpRoot);
 #		if ($rootRole ne 'conj' and not @sorted)
 #		{
 #			print "$phraseRole ends with $rootRole.\n";
 #			print $warnFile "$phraseRole below "
 #				.$node->find('../../@id')." ends with $rootRole.\n";
 #		}
-#		my $nextRole = @sorted ? &_getRole($xpc, $sorted[0]) : '';
+#		my $nextRole = @sorted ? getRole($xpc, $sorted[0]) : '';
 #		
 #		# Deal with comma near  conjuction.
 #		if ($rootRole eq 'punct' and $nextRole eq 'conj')
@@ -877,7 +879,7 @@ sub _allBelowConjPunct
 #		
 #		# Rebuild tree fragment.
 #		$tmpRoot->unbindNode();
-#		my $chNode = &_getChildrenNode($xpc, $tmpRoot);
+#		my $chNode = getChildrenNode($xpc, $tmpRoot);
 #		foreach my $ch (@postponed)
 #		{
 #			$ch->unbindNode();
@@ -889,12 +891,12 @@ sub _allBelowConjPunct
 #		if (not defined $prevRoot)
 #		{
 #			$newRoot = $tmpRoot;
-#			$rootRole = &_getRole($xpc, $tmpRoot);
-#			#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+#			$rootRole = getRole($xpc, $tmpRoot);
+#			#setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
 #			&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 #		} else
 #		{
-#			&_getChildrenNode($xpc, $prevRoot)->appendChild($tmpRoot);
+#			getChildrenNode($xpc, $prevRoot)->appendChild($tmpRoot);
 #		}
 #	} continue
 #	{
@@ -924,10 +926,10 @@ sub _finshPhraseTransf
 	my $newRoot = shift @_;
 	my $parentRole = shift @_;
 	#my $phraseRole = shift @_;
-	my $phraseRole = &_getRole($xpc, $oldRoot);
+	my $phraseRole = getRole($xpc, $oldRoot);
 	
 	# Change role for node with speciffied rootRole.
-	#&_setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
+	#setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
 	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
 
 	# Rebuild subtree.
@@ -951,80 +953,13 @@ sub _moveAllChildren
 	my $oldRoot = shift @_;
 	my $newRoot = shift @_;
 	
-	my $chNode = &_getChildrenNode($xpc, $newRoot);
+	my $chNode = getChildrenNode($xpc, $newRoot);
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $oldRoot))
 	{
 		$ch->unbindNode();
 		$chNode->appendChild($ch);
 	}
 	return $newRoot;
-}
-
-# _getChildrenNode (XPath context with set namespaces, DOM node)
-# return "children" element below given node (creates one, if there was none)
-sub _getChildrenNode
-{
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my @bestTry = $xpc->findnodes('pml:children', $node);
-
-	return $bestTry[0] if (@bestTry);
-	
-	my $childrenNode = XML::LibXML::Element->new('children');
-	$childrenNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
-	$node->appendChild($childrenNode);
-	return $childrenNode;
-}
-
-# Set new role to the given node.
-# _setNodeRole (XPath context with set namespaces, DOM "node" node, new role value)
-sub _setNodeRole
-{
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my $newRole = shift @_;
-	die 'Can\'t set \"role\" for '.$node->nodeName."!\n"
-		unless ($node->nodeName eq 'node');
-		
-	my @roles = $xpc->findnodes('pml:role', $node);
-	my $newRoleNode = XML::LibXML::Element->new('role');
-	$newRoleNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
-	$newRoleNode->appendTextNode($newRole);
-	$roles[0]->replaceNode($newRoleNode);
-}
-
-# _getRole (XPath context with set namespaces, DOM "node" node, new role value)
-# return node's role or phrase role
-sub _getRole
-{
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my $tag = $node->nodeName();
-	
-	# Process dependency/constituent nodes.
-	return ${$xpc->findnodes('pml:role', $node)}[0]->textContent
-		if ($tag eq 'node');
-	# Process phrase roles.
-	$tag =~ s/info$/type/;
-	my $role = ${$xpc->findnodes("pml:$tag", $node)}[0]->textContent;
-	return $role;
-}
-
-# _sortNodesByOrd (XPath context with set namespaces, should array be sorted in
-#				   descending order?, [array with] DOM "node" nodes)
-# returns reference to sorted array (original array is not mutated)
-sub _sortNodesByOrd
-{
-	my $xpc = shift @_; # XPath context
-	my $desc = shift @_;
-	my @nodes = @_;
-	
-	my @res = sort {
-			${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc)
-			<=>
-			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
-		} @nodes;
-	return \@res;
 }
 
 # AUTOLOAD is called when someone tries to access nonexixting method through
