@@ -14,7 +14,7 @@ use IO::File;
 use List::Util qw(first);
 use XML::LibXML;  # XML handling library
 
-use LvCorporaTools::PMLUtils::AUtils qw(getRole setNodeRole getChildrenNode sortNodesByOrd);
+use LvCorporaTools::PMLUtils::AUtils qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -169,7 +169,7 @@ sub transformTree
 		{
 			&_renameDependent($xpc, $ch);
 		}
-		&_moveAllChildren($xpc, $tree, $newNode);
+		moveChildren($xpc, $tree, $newNode);
 		# Add reformed subtree to the main tree.
 		$phrases[0]->replaceNode($newNode);
 
@@ -251,7 +251,7 @@ sub _transformSubtree
 	# Process phrase node.
 	my $phRole = getRole($xpc, $phrases[0]);
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile);
-	&_moveAllChildren($xpc, $node, $newNode);
+	moveChildren($xpc, $node, $newNode);
 	$node->replaceNode($newNode);
 
 	# Process childen.
@@ -938,27 +938,8 @@ sub _finshPhraseTransf
 	{
 		&_renamePhraseChild($xpc, $ch, $phraseRole);
 	}
-	&_moveAllChildren($xpc, $oldRoot, $newRoot);
+	moveChildren($xpc, $oldRoot, $newRoot);
 
-	return $newRoot;
-}
-
-# Move children from one node to an other.
-# _moveAllChildren (XPath context with set namespaces, old parent of children
-#					to be moved, new parent)
-# return new parent
-sub _moveAllChildren
-{
-	my $xpc = shift @_; # XPath context
-	my $oldRoot = shift @_;
-	my $newRoot = shift @_;
-	
-	my $chNode = getChildrenNode($xpc, $newRoot);
-	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $oldRoot))
-	{
-		$ch->unbindNode();
-		$chNode->appendChild($ch);
-	}
 	return $newRoot;
 }
 

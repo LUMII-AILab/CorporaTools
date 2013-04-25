@@ -7,12 +7,13 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(getRole setNodeRole getChildrenNode sortNodesByOrd);
+our @EXPORT_OK = qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
 
 use XML::LibXML;
 
 ###############################################################################
 # Helper functions for processing Latvian Treebank analytical layer PML files.
+# Input data are supposed to be valid against coresponding PML schemas.
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
@@ -75,7 +76,7 @@ sub getChildrenNode
 }
 
 # sortNodesByOrd (XPath context with set namespaces, should array be sorted in
-#				   descending order?, [array with] DOM "node" nodes)
+#				   descending order?, [array with] DOM nodes)
 # returns reference to sorted array (original array is not mutated)
 sub sortNodesByOrd
 {
@@ -89,6 +90,25 @@ sub sortNodesByOrd
 			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
 		} @nodes;
 	return \@res;
+}
+
+# Move all children of type "node" from one node to an other.
+# moveChildren (XPath context with set namespaces, old parent of children
+#					to be moved, new parent)
+# return new parent
+sub moveChildren
+{
+	my $xpc = shift @_; # XPath context
+	my $oldRoot = shift @_;
+	my $newRoot = shift @_;
+	
+	my $chNode = getChildrenNode($xpc, $newRoot);
+	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $oldRoot))
+	{
+		$ch->unbindNode();
+		$chNode->appendChild($ch);
+	}
+	return $newRoot;
 }
 
 1;
