@@ -1,0 +1,3172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lvadepdata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+  <head>
+    <schema href="lvaschema-deponly.xml"/>
+    <references>
+      <reffile id="m" name="mdata" href="zeens.m"/>
+      <reffile id="w" name="wdata" href="zeens.w"/>
+    </references>
+  </head>
+  <meta>
+    <annotation_info>
+      <desc>Eksperimentāls anotācijas paraugs.</desc>
+    </annotation_info>
+  </meta>
+  <trees>
+    <LM id="a-zeens-p1s1">
+      <s.rf>m#m-zeens-p1s1</s.rf>
+      <children>
+        <node id="a-zeens-p1s1w5">
+          <m.rf>m#m-zeens-p1s1w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p1s1w2">
+              <m.rf>m#m-zeens-p1s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p1s1w1">
+                  <m.rf>m#m-zeens-p1s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p1s1w3">
+                  <m.rf>m#m-zeens-p1s1w3</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p1s1w4">
+                      <m.rf>m#m-zeens-p1s1w4</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p2s1">
+      <s.rf>m#m-zeens-p2s1</s.rf>
+      <children>
+        <node id="a-zeens-p2s1w4">
+          <m.rf>m#m-zeens-p2s1w4</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>4</ord>
+          <children>
+            <node id="a-zeens-p2s1w2">
+              <m.rf>m#m-zeens-p2s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p2s1w1">
+                  <m.rf>m#m-zeens-p2s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p2s1w3">
+                  <m.rf>m#m-zeens-p2s1w3</m.rf>
+                  <role>dep:obj</role>
+                  <ord>3</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p3s1">
+      <s.rf>m#m-zeens-p3s1</s.rf>
+      <children>
+        <node id="a-zeens-p3s1w4">
+          <m.rf>m#m-zeens-p3s1w4</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>4</ord>
+          <children>
+            <node id="a-zeens-p3s1w3">
+              <m.rf>m#m-zeens-p3s1w3</m.rf>
+              <role>sent:pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p3s1w1">
+                  <m.rf>m#m-zeens-p3s1w1</m.rf>
+                  <role>dep:adv</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p3s1w2">
+                  <m.rf>m#m-zeens-p3s1w2</m.rf>
+                  <role>dep:subj</role>
+                  <ord>2</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p4s1">
+      <s.rf>m#m-zeens-p4s1</s.rf>
+      <children>
+        <node id="a-zeens-p4s1w4">
+          <m.rf>m#m-zeens-p4s1w4</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>4</ord>
+          <children>
+            <node id="a-zeens-p4s1w3">
+              <m.rf>m#m-zeens-p4s1w3</m.rf>
+              <role>sent:pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p4s1w2">
+                  <m.rf>m#m-zeens-p4s1w2</m.rf>
+                  <role>dep:subj</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p4s1w1">
+                      <m.rf>m#m-zeens-p4s1w1</m.rf>
+                      <role>dep:attr</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p5s1">
+      <s.rf>m#m-zeens-p5s1</s.rf>
+      <children>
+        <node id="a-zeens-p5s1w4">
+          <m.rf>m#m-zeens-p5s1w4</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>4</ord>
+          <children>
+            <node id="a-zeens-p5s1w3">
+              <m.rf>m#m-zeens-p5s1w3</m.rf>
+              <role>sent:pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p5s1w1">
+                  <m.rf>m#m-zeens-p5s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p5s1w2">
+                  <m.rf>m#m-zeens-p5s1w2</m.rf>
+                  <role>dep:adv</role>
+                  <ord>2</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p6s1">
+      <s.rf>m#m-zeens-p6s1</s.rf>
+      <children>
+        <node id="a-zeens-p6s1w8">
+          <m.rf>m#m-zeens-p6s1w8</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>8</ord>
+          <children>
+            <node id="a-zeens-p6s1w5">
+              <m.rf>m#m-zeens-p6s1w5</m.rf>
+              <role>sent:pred</role>
+              <ord>5</ord>
+              <children>
+                <node id="a-zeens-p6s1w2">
+                  <m.rf>m#m-zeens-p6s1w2</m.rf>
+                  <role>dep:subj-crdParts:conj</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p6s1w1">
+                      <m.rf>m#m-zeens-p6s1w1</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>1</ord>
+                    </node>
+                    <node id="a-zeens-p6s1w4">
+                      <m.rf>m#m-zeens-p6s1w4</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>4</ord>
+                      <children>
+                        <node id="a-zeens-p6s1w3">
+                          <m.rf>m#m-zeens-p6s1w3</m.rf>
+                          <role>dep:attr</role>
+                          <ord>3</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p6s1w6">
+                  <m.rf>m#m-zeens-p6s1w6</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p6s1w7">
+                      <m.rf>m#m-zeens-p6s1w7</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>7</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p7s1">
+      <s.rf>m#m-zeens-p7s1</s.rf>
+      <children>
+        <node id="a-zeens-p7s1w11">
+          <m.rf>m#m-zeens-p7s1w11</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>11</ord>
+          <children>
+            <node id="a-zeens-p7s1w2">
+              <m.rf>m#m-zeens-p7s1w2</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p7s1w3">
+                  <m.rf>m#m-zeens-p7s1w3</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p7s1w1">
+                  <m.rf>m#m-zeens-p7s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p7s1w4">
+                  <m.rf>m#m-zeens-p7s1w4</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>4</ord>
+                  <children>
+                    <node id="a-zeens-p7s1w5">
+                      <m.rf>m#m-zeens-p7s1w5</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p7s1w6">
+                  <m.rf>m#m-zeens-p7s1w6</m.rf>
+                  <role>dep:adv</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p7s1w7">
+                      <m.rf>m#m-zeens-p7s1w7</m.rf>
+                      <role>dep:attrCl-subrCl:punct</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-zeens-p7s1w9">
+                          <m.rf>m#m-zeens-p7s1w9</m.rf>
+                          <role>subrCl:pred</role>
+                          <ord>9</ord>
+                          <children>
+                            <node id="a-zeens-p7s1w8">
+                              <m.rf>m#m-zeens-p7s1w8</m.rf>
+                              <role>dep:adv</role>
+                              <ord>8</ord>
+                            </node>
+                            <node id="a-zeens-p7s1w10">
+                              <m.rf>m#m-zeens-p7s1w10</m.rf>
+                              <role>dep:obj</role>
+                              <ord>10</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p8s1">
+      <s.rf>m#m-zeens-p8s1</s.rf>
+      <children>
+        <node id="a-zeens-p8s1w9">
+          <m.rf>m#m-zeens-p8s1w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p8s1w5">
+              <m.rf>m#m-zeens-p8s1w5</m.rf>
+              <role>sent:pred</role>
+              <ord>5</ord>
+              <children>
+                <node id="a-zeens-p8s1w3">
+                  <m.rf>m#m-zeens-p8s1w3</m.rf>
+                  <role>dep:subj-crdParts:conj</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p8s1w2">
+                      <m.rf>m#m-zeens-p8s1w2</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>2</ord>
+                    </node>
+                    <node id="a-zeens-p8s1w4">
+                      <m.rf>m#m-zeens-p8s1w4</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-zeens-p8s1w1">
+                      <m.rf>m#m-zeens-p8s1w1</m.rf>
+                      <role>dep:attr</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p8s1w6">
+                  <m.rf>m#m-zeens-p8s1w6</m.rf>
+                  <role>dep:spc-spcPmc:punct</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p8s1w8">
+                      <m.rf>m#m-zeens-p8s1w8</m.rf>
+                      <role>spcPmc:basElem</role>
+                      <ord>8</ord>
+                      <children>
+                        <node id="a-zeens-p8s1w7">
+                          <m.rf>m#m-zeens-p8s1w7</m.rf>
+                          <role>dep:adv</role>
+                          <ord>7</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p8s2">
+      <s.rf>m#m-zeens-p8s2</s.rf>
+      <children>
+        <node id="a-zeens-p8s2w5">
+          <m.rf>m#m-zeens-p8s2w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p8s2w3">
+              <m.rf>m#m-zeens-p8s2w3</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p8s2w4">
+                  <m.rf>m#m-zeens-p8s2w4</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>4</ord>
+                </node>
+                <node id="a-zeens-p8s2w2">
+                  <m.rf>m#m-zeens-p8s2w2</m.rf>
+                  <role>dep:subj</role>
+                  <ord>2</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p8s2w1">
+              <m.rf>m#m-zeens-p8s2w1</m.rf>
+              <role>dep:sit</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p9s1">
+      <s.rf>m#m-zeens-p9s1</s.rf>
+      <children>
+        <node id="a-zeens-p9s1w16">
+          <m.rf>m#m-zeens-p9s1w16</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>16</ord>
+          <children>
+            <node id="a-zeens-p9s1w6">
+              <m.rf>m#m-zeens-p9s1w6</m.rf>
+              <role>sent:basElem-crdClauses:conj</role>
+              <ord>6</ord>
+              <children>
+                <node id="a-zeens-p9s1w2">
+                  <m.rf>m#m-zeens-p9s1w2</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p9s1w1">
+                      <m.rf>m#m-zeens-p9s1w1</m.rf>
+                      <role>dep:subj</role>
+                      <ord>1</ord>
+                    </node>
+                    <node id="a-zeens-p9s1w3">
+                      <m.rf>m#m-zeens-p9s1w3</m.rf>
+                      <role>dep:adv-xPrep:prep</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p9s1w4">
+                          <m.rf>m#m-zeens-p9s1w4</m.rf>
+                          <role>xPrep:basElem</role>
+                          <ord>4</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p9s1w8">
+                  <m.rf>m#m-zeens-p9s1w8</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p9s1w7">
+                      <m.rf>m#m-zeens-p9s1w7</m.rf>
+                      <role>dep:subj</role>
+                      <ord>7</ord>
+                    </node>
+                    <node id="a-zeens-p9s1w9">
+                      <m.rf>m#m-zeens-p9s1w9</m.rf>
+                      <role>dep:adv</role>
+                      <ord>9</ord>
+                    </node>
+                    <node id="a-zeens-p9s1w10">
+                      <m.rf>m#m-zeens-p9s1w10</m.rf>
+                      <role>dep:spc-spcPmc:punct</role>
+                      <ord>10</ord>
+                      <children>
+                        <node id="a-zeens-p9s1w11">
+                          <m.rf>m#m-zeens-p9s1w11</m.rf>
+                          <role>spcPmc:basElem</role>
+                          <ord>11</ord>
+                          <children>
+                            <node id="a-zeens-p9s1w12">
+                              <m.rf>m#m-zeens-p9s1w12</m.rf>
+                              <role>dep:objCl-subrCl:punct</role>
+                              <ord>12</ord>
+                              <children>
+                                <node id="a-zeens-p9s1w15">
+                                  <m.rf>m#m-zeens-p9s1w15</m.rf>
+                                  <role>subrCl:pred</role>
+                                  <ord>15</ord>
+                                  <children>
+                                    <node id="a-zeens-p9s1w13">
+                                      <m.rf>m#m-zeens-p9s1w13</m.rf>
+                                      <role>dep:adv</role>
+                                      <ord>13</ord>
+                                    </node>
+                                    <node id="a-zeens-p9s1w14">
+                                      <m.rf>m#m-zeens-p9s1w14</m.rf>
+                                      <role>dep:subj</role>
+                                      <ord>14</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p9s1w5">
+                  <m.rf>m#m-zeens-p9s1w5</m.rf>
+                  <role>crdClauses:punct</role>
+                  <ord>5</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p10s1">
+      <s.rf>m#m-zeens-p10s1</s.rf>
+      <children>
+        <node id="a-zeens-p10s1w17">
+          <m.rf>m#m-zeens-p10s1w17</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>17</ord>
+          <children>
+            <node id="a-zeens-p10s1w13">
+              <m.rf>m#m-zeens-p10s1w13</m.rf>
+              <role>sent:basElem-crdClauses:conj</role>
+              <ord>13</ord>
+              <children>
+                <node id="a-zeens-p10s1w16">
+                  <m.rf>m#m-zeens-p10s1w16</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>16</ord>
+                  <children>
+                    <node id="a-zeens-p10s1w15">
+                      <m.rf>m#m-zeens-p10s1w15</m.rf>
+                      <role>dep:subj</role>
+                      <ord>15</ord>
+                    </node>
+                    <node id="a-zeens-p10s1w14">
+                      <m.rf>m#m-zeens-p10s1w14</m.rf>
+                      <role>dep:sit</role>
+                      <ord>14</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p10s1w7">
+                  <m.rf>m#m-zeens-p10s1w7</m.rf>
+                  <role>crdClauses:crdPart-crdGeneral:conj</role>
+                  <ord>7</ord>
+                  <children>
+                    <node id="a-zeens-p10s1w3">
+                      <m.rf>m#m-zeens-p10s1w3</m.rf>
+                      <role>crdGeneral:crdPart-mainCl:pred</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p10s1w2">
+                          <m.rf>m#m-zeens-p10s1w2</m.rf>
+                          <role>dep:subj</role>
+                          <ord>2</ord>
+                        </node>
+                        <node id="a-zeens-p10s1w4">
+                          <m.rf>m#m-zeens-p10s1w4</m.rf>
+                          <role>dep:adv-xPrep:prep</role>
+                          <ord>4</ord>
+                          <children>
+                            <node id="a-zeens-p10s1w5">
+                              <m.rf>m#m-zeens-p10s1w5</m.rf>
+                              <role>xPrep:basElem</role>
+                              <ord>5</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p10s1w9">
+                      <m.rf>m#m-zeens-p10s1w9</m.rf>
+                      <role>crdGeneral:crdPart-mainCl:pred</role>
+                      <ord>9</ord>
+                      <children>
+                        <node id="a-zeens-p10s1w10">
+                          <m.rf>m#m-zeens-p10s1w10</m.rf>
+                          <role>dep:adv-xPrep:prep</role>
+                          <ord>10</ord>
+                          <children>
+                            <node id="a-zeens-p10s1w11">
+                              <m.rf>m#m-zeens-p10s1w11</m.rf>
+                              <role>xPrep:basElem</role>
+                              <ord>11</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p10s1w8">
+                          <m.rf>m#m-zeens-p10s1w8</m.rf>
+                          <role>dep:subj</role>
+                          <ord>8</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p10s1w6">
+                      <m.rf>m#m-zeens-p10s1w6</m.rf>
+                      <role>crdGeneral:punct</role>
+                      <ord>6</ord>
+                    </node>
+                    <node id="a-zeens-p10s1w1">
+                      <m.rf>m#m-zeens-p10s1w1</m.rf>
+                      <role>dep:sit</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p10s1w12">
+                  <m.rf>m#m-zeens-p10s1w12</m.rf>
+                  <role>crdClauses:punct</role>
+                  <ord>12</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p11s1">
+      <s.rf>m#m-zeens-p11s1</s.rf>
+      <children>
+        <node id="a-zeens-p11s1w12">
+          <m.rf>m#m-zeens-p11s1w12</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>12</ord>
+          <children>
+            <node id="a-zeens-p11s1w4">
+              <m.rf>m#m-zeens-p11s1w4</m.rf>
+              <role>sent:basElem-crdClauses:conj</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p11s1w2">
+                  <m.rf>m#m-zeens-p11s1w2</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p11s1w1">
+                      <m.rf>m#m-zeens-p11s1w1</m.rf>
+                      <role>dep:sit</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p11s1w6">
+                  <m.rf>m#m-zeens-p11s1w6</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p11s1w8">
+                      <m.rf>m#m-zeens-p11s1w8</m.rf>
+                      <role>dep:motivCl-subrCl:conj</role>
+                      <ord>8</ord>
+                      <children>
+                        <node id="a-zeens-p11s1w7">
+                          <m.rf>m#m-zeens-p11s1w7</m.rf>
+                          <role>subrCl:punct</role>
+                          <ord>7</ord>
+                        </node>
+                        <node id="a-zeens-p11s1w10">
+                          <m.rf>m#m-zeens-p11s1w10</m.rf>
+                          <role>subrCl:pred-xPred:mod</role>
+                          <ord>10</ord>
+                          <children>
+                            <node id="a-zeens-p11s1w11">
+                              <m.rf>m#m-zeens-p11s1w11</m.rf>
+                              <role>xPred:basElem</role>
+                              <ord>11</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p11s1w9">
+                          <m.rf>m#m-zeens-p11s1w9</m.rf>
+                          <role>dep:sit</role>
+                          <ord>9</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p11s1w5">
+                      <m.rf>m#m-zeens-p11s1w5</m.rf>
+                      <role>dep:sit</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p11s1w3">
+                  <m.rf>m#m-zeens-p11s1w3</m.rf>
+                  <role>crdClauses:punct</role>
+                  <ord>3</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p12s1">
+      <s.rf>m#m-zeens-p12s1</s.rf>
+      <children>
+        <node id="a-zeens-p12s1w2">
+          <m.rf>m#m-zeens-p12s1w2</m.rf>
+          <role>ROOT-utter:punct</role>
+          <ord>2</ord>
+          <children>
+            <node id="a-zeens-p12s1w1">
+              <m.rf>m#m-zeens-p12s1w1</m.rf>
+              <role>utter:basElem</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p12s2">
+      <s.rf>m#m-zeens-p12s2</s.rf>
+      <children>
+        <node id="a-zeens-p12s2w10">
+          <m.rf>m#m-zeens-p12s2w10</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>10</ord>
+          <children>
+            <node id="a-zeens-p12s2w2">
+              <m.rf>m#m-zeens-p12s2w2</m.rf>
+              <role>sent:no-interj:punct</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p12s2w1">
+                  <m.rf>m#m-zeens-p12s2w1</m.rf>
+                  <role>interj:basElem</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p12s2w4">
+              <m.rf>m#m-zeens-p12s2w4</m.rf>
+              <role>sent:pred</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p12s2w3">
+                  <m.rf>m#m-zeens-p12s2w3</m.rf>
+                  <role>dep:subj</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p12s2w6">
+                  <m.rf>m#m-zeens-p12s2w6</m.rf>
+                  <role>dep:obj-quot:punct</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p12s2w8">
+                      <m.rf>m#m-zeens-p12s2w8</m.rf>
+                      <role>quot:basElem-namedEnt:basElem</role>
+                      <ord>8</ord>
+                      <children>
+                        <node id="a-zeens-p12s2w7">
+                          <m.rf>m#m-zeens-p12s2w7</m.rf>
+                          <role>dep:attr</role>
+                          <ord>7</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p12s2w9">
+                      <m.rf>m#m-zeens-p12s2w9</m.rf>
+                      <role>quot:punct</role>
+                      <ord>9</ord>
+                    </node>
+                    <node id="a-zeens-p12s2w5">
+                      <m.rf>m#m-zeens-p12s2w5</m.rf>
+                      <role>dep:attr</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p13s1">
+      <s.rf>m#m-zeens-p13s1</s.rf>
+      <children>
+        <node id="a-zeens-p13s1w2">
+          <m.rf>m#m-zeens-p13s1w2</m.rf>
+          <role>ROOT-sent:pred</role>
+          <ord>2</ord>
+          <children>
+            <node id="a-zeens-p13s1w1">
+              <m.rf>m#m-zeens-p13s1w1</m.rf>
+              <role>dep:subj</role>
+              <ord>1</ord>
+            </node>
+            <node id="a-zeens-p13s1w3">
+              <m.rf>m#m-zeens-p13s1w3</m.rf>
+              <role>dep:dirSp-dirSpPmc:punct</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p13s1w6">
+                  <m.rf>m#m-zeens-p13s1w6</m.rf>
+                  <role>dirSpPmc:basElem-sent:punct</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p13s1w5">
+                      <m.rf>m#m-zeens-p13s1w5</m.rf>
+                      <role>sent:pred</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p13s1w4">
+                  <m.rf>m#m-zeens-p13s1w4</m.rf>
+                  <role>dirSpPmc:punct</role>
+                  <ord>4</ord>
+                </node>
+                <node id="a-zeens-p13s1w7">
+                  <m.rf>m#m-zeens-p13s1w7</m.rf>
+                  <role>dirSpPmc:punct</role>
+                  <ord>7</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p13s2">
+      <s.rf>m#m-zeens-p13s2</s.rf>
+      <children>
+        <node id="a-zeens-p13s2w12">
+          <m.rf>m#m-zeens-p13s2w12</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>12</ord>
+          <children>
+            <node id="a-zeens-p13s2w11">
+              <m.rf>m#m-zeens-p13s2w11</m.rf>
+              <role>sent:pred</role>
+              <ord>11</ord>
+              <children>
+                <node id="a-zeens-p13s2w1">
+                  <m.rf>m#m-zeens-p13s2w1</m.rf>
+                  <role>dep:dirSp-dirSpPmc:punct</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p13s2w8">
+                      <m.rf>m#m-zeens-p13s2w8</m.rf>
+                      <role>dirSpPmc:basElem-sent:punct</role>
+                      <ord>8</ord>
+                      <children>
+                        <node id="a-zeens-p13s2w3">
+                          <m.rf>m#m-zeens-p13s2w3</m.rf>
+                          <role>sent:no-particle:punct</role>
+                          <ord>3</ord>
+                          <children>
+                            <node id="a-zeens-p13s2w2">
+                              <m.rf>m#m-zeens-p13s2w2</m.rf>
+                              <role>particle:basElem</role>
+                              <ord>2</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p13s2w6">
+                          <m.rf>m#m-zeens-p13s2w6</m.rf>
+                          <role>sent:pred</role>
+                          <ord>6</ord>
+                          <children>
+                            <node id="a-zeens-p13s2w4">
+                              <m.rf>m#m-zeens-p13s2w4</m.rf>
+                              <role>dep:adv</role>
+                              <ord>4</ord>
+                            </node>
+                            <node id="a-zeens-p13s2w5">
+                              <m.rf>m#m-zeens-p13s2w5</m.rf>
+                              <role>dep:adv</role>
+                              <ord>5</ord>
+                            </node>
+                            <node id="a-zeens-p13s2w7">
+                              <m.rf>m#m-zeens-p13s2w7</m.rf>
+                              <role>dep:adv</role>
+                              <ord>7</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p13s2w9">
+                      <m.rf>m#m-zeens-p13s2w9</m.rf>
+                      <role>dirSpPmc:punct</role>
+                      <ord>9</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p13s2w10">
+                  <m.rf>m#m-zeens-p13s2w10</m.rf>
+                  <role>dep:subj</role>
+                  <ord>10</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p14s1">
+      <s.rf>m#m-zeens-p14s1</s.rf>
+      <children>
+        <node id="a-zeens-p14s1w7">
+          <m.rf>m#m-zeens-p14s1w7</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>7</ord>
+          <children>
+            <node id="a-zeens-p14s1w3">
+              <m.rf>m#m-zeens-p14s1w3</m.rf>
+              <role>sent:punct</role>
+              <ord>3</ord>
+            </node>
+            <node id="a-zeens-p14s1w6">
+              <m.rf>m#m-zeens-p14s1w6</m.rf>
+              <role>sent:pred</role>
+              <ord>6</ord>
+              <children>
+                <node id="a-zeens-p14s1w1">
+                  <m.rf>m#m-zeens-p14s1w1</m.rf>
+                  <role>dep:dirSp-dirSpPmc:punct</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p14s1w20">
+                      <m.rf>m#m-zeens-p14s1w20</m.rf>
+                      <role>dirSpPmc:basElem-sent:punct</role>
+                      <ord>20</ord>
+                      <children>
+                        <node id="a-zeens-p14s1w13">
+                          <m.rf>m#m-zeens-p14s1w13</m.rf>
+                          <role>sent:basElem-crdClauses:conj</role>
+                          <ord>13</ord>
+                          <children>
+                            <node id="a-zeens-p14s1w10">
+                              <m.rf>m#m-zeens-p14s1w10</m.rf>
+                              <role>crdClauses:crdPart-mainCl:pred</role>
+                              <ord>10</ord>
+                              <children>
+                                <node id="a-zeens-p14s1w2">
+                                  <m.rf>m#m-zeens-p14s1w2</m.rf>
+                                  <role>dep:subj</role>
+                                  <ord>2</ord>
+                                </node>
+                                <node id="a-zeens-p14s1w9">
+                                  <m.rf>m#m-zeens-p14s1w9</m.rf>
+                                  <role>dep:adv</role>
+                                  <ord>9</ord>
+                                </node>
+                                <node id="a-zeens-p14s1w11">
+                                  <m.rf>m#m-zeens-p14s1w11</m.rf>
+                                  <role>dep:adv</role>
+                                  <ord>11</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p14s1w12">
+                              <m.rf>m#m-zeens-p14s1w12</m.rf>
+                              <role>crdClauses:punct</role>
+                              <ord>12</ord>
+                            </node>
+                            <node id="a-zeens-p14s1w18">
+                              <m.rf>m#m-zeens-p14s1w18</m.rf>
+                              <role>crdClauses:crdPart-mainCl:pred-xPred:mod</role>
+                              <ord>18</ord>
+                              <children>
+                                <node id="a-zeens-p14s1w19">
+                                  <m.rf>m#m-zeens-p14s1w19</m.rf>
+                                  <role>xPred:basElem</role>
+                                  <ord>19</ord>
+                                </node>
+                                <node id="a-zeens-p14s1w17">
+                                  <m.rf>m#m-zeens-p14s1w17</m.rf>
+                                  <role>dep:subj</role>
+                                  <ord>17</ord>
+                                </node>
+                                <node id="a-zeens-p14s1w14">
+                                  <m.rf>m#m-zeens-p14s1w14</m.rf>
+                                  <role>mainCl:no-address:punct</role>
+                                  <ord>14</ord>
+                                  <children>
+                                    <node id="a-zeens-p14s1w15">
+                                      <m.rf>m#m-zeens-p14s1w15</m.rf>
+                                      <role>address:basElem</role>
+                                      <ord>15</ord>
+                                    </node>
+                                    <node id="a-zeens-p14s1w16">
+                                      <m.rf>m#m-zeens-p14s1w16</m.rf>
+                                      <role>address:punct</role>
+                                      <ord>16</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p14s1w4">
+                      <m.rf>m#m-zeens-p14s1w4</m.rf>
+                      <role>dirSpPmc:punct</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-zeens-p14s1w8">
+                      <m.rf>m#m-zeens-p14s1w8</m.rf>
+                      <role>dirSpPmc:punct</role>
+                      <ord>8</ord>
+                    </node>
+                    <node id="a-zeens-p14s1w21">
+                      <m.rf>m#m-zeens-p14s1w21</m.rf>
+                      <role>dirSpPmc:punct</role>
+                      <ord>21</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p14s1w5">
+                  <m.rf>m#m-zeens-p14s1w5</m.rf>
+                  <role>dep:subj</role>
+                  <ord>5</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p14s2">
+      <s.rf>m#m-zeens-p14s2</s.rf>
+      <children>
+        <node id="a-zeens-p14s2w16">
+          <m.rf>m#m-zeens-p14s2w16</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>16</ord>
+          <children>
+            <node id="a-zeens-p14s2w13">
+              <m.rf>m#m-zeens-p14s2w13</m.rf>
+              <role>sent:pred-crdParts:conj</role>
+              <ord>13</ord>
+              <children>
+                <node id="a-zeens-p14s2w14">
+                  <m.rf>m#m-zeens-p14s2w14</m.rf>
+                  <role>crdParts:crdPart-xPred:mod</role>
+                  <ord>14</ord>
+                  <children>
+                    <node id="a-zeens-p14s2w15">
+                      <m.rf>m#m-zeens-p14s2w15</m.rf>
+                      <role>xPred:basElem</role>
+                      <ord>15</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p14s2w2">
+                  <m.rf>m#m-zeens-p14s2w2</m.rf>
+                  <role>crdParts:crdPart</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p14s2w3">
+                      <m.rf>m#m-zeens-p14s2w3</m.rf>
+                      <role>dep:dirSp-dirSpPmc:punct</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p14s2w11">
+                          <m.rf>m#m-zeens-p14s2w11</m.rf>
+                          <role>dirSpPmc:basElem-sent:punct</role>
+                          <ord>11</ord>
+                          <children>
+                            <node id="a-zeens-p14s2w10">
+                              <m.rf>m#m-zeens-p14s2w10</m.rf>
+                              <role>sent:pred</role>
+                              <ord>10</ord>
+                            </node>
+                            <node id="a-zeens-p14s2w9">
+                              <m.rf>m#m-zeens-p14s2w9</m.rf>
+                              <role>dep:sit</role>
+                              <ord>9</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p14s2w8">
+                          <m.rf>m#m-zeens-p14s2w8</m.rf>
+                          <role>dirSpPmc:basElem-sent:punct</role>
+                          <ord>8</ord>
+                          <children>
+                            <node id="a-zeens-p14s2w5">
+                              <m.rf>m#m-zeens-p14s2w5</m.rf>
+                              <role>sent:no</role>
+                              <ord>5</ord>
+                            </node>
+                            <node id="a-zeens-p14s2w6">
+                              <m.rf>m#m-zeens-p14s2w6</m.rf>
+                              <role>sent:pred-xPred:auxVerb</role>
+                              <ord>6</ord>
+                              <children>
+                                <node id="a-zeens-p14s2w7">
+                                  <m.rf>m#m-zeens-p14s2w7</m.rf>
+                                  <role>xPred:basElem</role>
+                                  <ord>7</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p14s2w4">
+                          <m.rf>m#m-zeens-p14s2w4</m.rf>
+                          <role>dirSpPmc:punct</role>
+                          <ord>4</ord>
+                        </node>
+                        <node id="a-zeens-p14s2w12">
+                          <m.rf>m#m-zeens-p14s2w12</m.rf>
+                          <role>dirSpPmc:punct</role>
+                          <ord>12</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p14s2w1">
+                  <m.rf>m#m-zeens-p14s2w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p15s1">
+      <s.rf>m#m-zeens-p15s1</s.rf>
+      <children>
+        <node id="a-zeens-p15s1w17">
+          <m.rf>m#m-zeens-p15s1w17</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>17</ord>
+          <children>
+            <node id="a-zeens-p15s1w9">
+              <m.rf>m#m-zeens-p15s1w9</m.rf>
+              <role>sent:pred-crdParts:conj</role>
+              <ord>9</ord>
+              <children>
+                <node id="a-zeens-p15s1w6">
+                  <m.rf>m#m-zeens-p15s1w6</m.rf>
+                  <role>crdParts:crdPart</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p15s1w8">
+                      <m.rf>m#m-zeens-p15s1w8</m.rf>
+                      <role>dep:obj</role>
+                      <ord>8</ord>
+                      <children>
+                        <node id="a-zeens-p15s1w7">
+                          <m.rf>m#m-zeens-p15s1w7</m.rf>
+                          <role>dep:attr</role>
+                          <ord>7</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p15s1w10">
+                  <m.rf>m#m-zeens-p15s1w10</m.rf>
+                  <role>crdParts:crdPart</role>
+                  <ord>10</ord>
+                  <children>
+                    <node id="a-zeens-p15s1w11">
+                      <m.rf>m#m-zeens-p15s1w11</m.rf>
+                      <role>dep:adv-xPrep:prep</role>
+                      <ord>11</ord>
+                      <children>
+                        <node id="a-zeens-p15s1w12">
+                          <m.rf>m#m-zeens-p15s1w12</m.rf>
+                          <role>xPrep:basElem</role>
+                          <ord>12</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p15s1w14">
+                      <m.rf>m#m-zeens-p15s1w14</m.rf>
+                      <role>dep:obj</role>
+                      <ord>14</ord>
+                      <children>
+                        <node id="a-zeens-p15s1w13">
+                          <m.rf>m#m-zeens-p15s1w13</m.rf>
+                          <role>dep:attr</role>
+                          <ord>13</ord>
+                        </node>
+                        <node id="a-zeens-p15s1w16">
+                          <m.rf>m#m-zeens-p15s1w16</m.rf>
+                          <role>dep:attr</role>
+                          <ord>16</ord>
+                          <children>
+                            <node id="a-zeens-p15s1w15">
+                              <m.rf>m#m-zeens-p15s1w15</m.rf>
+                              <role>dep:attr</role>
+                              <ord>15</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p15s1w1">
+                  <m.rf>m#m-zeens-p15s1w1</m.rf>
+                  <role>dep:adv</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p15s1w2">
+                  <m.rf>m#m-zeens-p15s1w2</m.rf>
+                  <role>dep:subj-xApp:basElem</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p15s1w3">
+                      <m.rf>m#m-zeens-p15s1w3</m.rf>
+                      <role>xApp:basElem-namedEnt:basElem</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p15s1w4">
+                          <m.rf>m#m-zeens-p15s1w4</m.rf>
+                          <role>namedEnt:basElem</role>
+                          <ord>4</ord>
+                        </node>
+                        <node id="a-zeens-p15s1w5">
+                          <m.rf>m#m-zeens-p15s1w5</m.rf>
+                          <role>namedEnt:basElem</role>
+                          <ord>5</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p16s1">
+      <s.rf>m#m-zeens-p16s1</s.rf>
+      <children>
+        <node id="a-zeens-p16s1w16">
+          <m.rf>m#m-zeens-p16s1w16</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>16</ord>
+          <children>
+            <node id="a-zeens-p16s1w12">
+              <m.rf>m#m-zeens-p16s1w12</m.rf>
+              <role>sent:pred</role>
+              <ord>12</ord>
+              <children>
+                <node id="a-zeens-p16s1w14">
+                  <m.rf>m#m-zeens-p16s1w14</m.rf>
+                  <role>dep:obj-xPrep:prep</role>
+                  <ord>14</ord>
+                  <children>
+                    <node id="a-zeens-p16s1w13">
+                      <m.rf>m#m-zeens-p16s1w13</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>13</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p16s1w1">
+                  <m.rf>m#m-zeens-p16s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p16s1w2">
+                      <m.rf>m#m-zeens-p16s1w2</m.rf>
+                      <role>dep:subjCl-subrCl:punct</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-zeens-p16s1w5">
+                          <m.rf>m#m-zeens-p16s1w5</m.rf>
+                          <role>subrCl:pred</role>
+                          <ord>5</ord>
+                          <children>
+                            <node id="a-zeens-p16s1w8">
+                              <m.rf>m#m-zeens-p16s1w8</m.rf>
+                              <role>dep:adv-crdParts:punct</role>
+                              <ord>8</ord>
+                              <children>
+                                <node id="a-zeens-p16s1w7">
+                                  <m.rf>m#m-zeens-p16s1w7</m.rf>
+                                  <role>crdParts:crdPart</role>
+                                  <ord>7</ord>
+                                </node>
+                                <node id="a-zeens-p16s1w9">
+                                  <m.rf>m#m-zeens-p16s1w9</m.rf>
+                                  <role>crdParts:crdPart</role>
+                                  <ord>9</ord>
+                                </node>
+                                <node id="a-zeens-p16s1w6">
+                                  <m.rf>m#m-zeens-p16s1w6</m.rf>
+                                  <role>dep:attr</role>
+                                  <ord>6</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p16s1w3">
+                              <m.rf>m#m-zeens-p16s1w3</m.rf>
+                              <role>dep:subj</role>
+                              <ord>3</ord>
+                            </node>
+                            <node id="a-zeens-p16s1w4">
+                              <m.rf>m#m-zeens-p16s1w4</m.rf>
+                              <role>dep:adv</role>
+                              <ord>4</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p16s1w10">
+                          <m.rf>m#m-zeens-p16s1w10</m.rf>
+                          <role>subrCl:punct</role>
+                          <ord>10</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p16s1w11">
+                  <m.rf>m#m-zeens-p16s1w11</m.rf>
+                  <role>dep:adv</role>
+                  <ord>11</ord>
+                </node>
+                <node id="a-zeens-p16s1w15">
+                  <m.rf>m#m-zeens-p16s1w15</m.rf>
+                  <role>dep:adv</role>
+                  <ord>15</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p17s1">
+      <s.rf>m#m-zeens-p17s1</s.rf>
+      <children>
+        <node id="a-zeens-p17s1w14">
+          <m.rf>m#m-zeens-p17s1w14</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>14</ord>
+          <children>
+            <node id="a-zeens-p17s1w11">
+              <m.rf>m#m-zeens-p17s1w11</m.rf>
+              <role>sent:pred</role>
+              <ord>11</ord>
+              <children>
+                <node id="a-zeens-p17s1w10">
+                  <m.rf>m#m-zeens-p17s1w10</m.rf>
+                  <role>dep:subj</role>
+                  <ord>10</ord>
+                </node>
+                <node id="a-zeens-p17s1w12">
+                  <m.rf>m#m-zeens-p17s1w12</m.rf>
+                  <role>dep:obj</role>
+                  <ord>12</ord>
+                </node>
+                <node id="a-zeens-p17s1w13">
+                  <m.rf>m#m-zeens-p17s1w13</m.rf>
+                  <role>dep:adv</role>
+                  <ord>13</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p17s1w4">
+              <m.rf>m#m-zeens-p17s1w4</m.rf>
+              <role>dep:condCl-crdClauses:conj</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p17s1w1">
+                  <m.rf>m#m-zeens-p17s1w1</m.rf>
+                  <role>crdClauses:crdPart-subrCl:conj</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p17s1w3">
+                      <m.rf>m#m-zeens-p17s1w3</m.rf>
+                      <role>subrCl:pred</role>
+                      <ord>3</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p17s1w5">
+                  <m.rf>m#m-zeens-p17s1w5</m.rf>
+                  <role>crdClauses:crdPart-subrCl:conj</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p17s1w7">
+                      <m.rf>m#m-zeens-p17s1w7</m.rf>
+                      <role>subrCl:pred-xPred:auxVerb</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-zeens-p17s1w8">
+                          <m.rf>m#m-zeens-p17s1w8</m.rf>
+                          <role>xPred:basElem</role>
+                          <ord>8</ord>
+                        </node>
+                        <node id="a-zeens-p17s1w6">
+                          <m.rf>m#m-zeens-p17s1w6</m.rf>
+                          <role>dep:subj</role>
+                          <ord>6</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p17s1w9">
+                      <m.rf>m#m-zeens-p17s1w9</m.rf>
+                      <role>subrCl:punct</role>
+                      <ord>9</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p17s1w2">
+              <m.rf>m#m-zeens-p17s1w2</m.rf>
+              <role>dep:sit</role>
+              <ord>2</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p18s1">
+      <s.rf>m#m-zeens-p18s1</s.rf>
+      <children>
+        <node id="a-zeens-p18s1w22">
+          <m.rf>m#m-zeens-p18s1w22</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>23</ord>
+          <children>
+            <node id="a-zeens-p18s1w16">
+              <m.rf>m#m-zeens-p18s1w16</m.rf>
+              <role>sent:basElem-crdClauses:punct</role>
+              <ord>16</ord>
+              <children>
+                <node id="a-zeens-p18s1w13">
+                  <m.rf>m#m-zeens-p18s1w13</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>13</ord>
+                  <children>
+                    <node id="a-zeens-p18s1w1">
+                      <m.rf>m#m-zeens-p18s1w1</m.rf>
+                      <role>dep:subj-quot:punct</role>
+                      <ord>1</ord>
+                      <children>
+                        <node id="a-zeens-p18s1w5">
+                          <m.rf>m#m-zeens-p18s1w5</m.rf>
+                          <role>quot:basElem-namedEnt:basElem</role>
+                          <ord>5</ord>
+                          <children>
+                            <node id="a-zeens-p18s1w3">
+                              <m.rf>m#m-zeens-p18s1w3</m.rf>
+                              <role>dep:attr-namedEnt:basElem</role>
+                              <ord>3</ord>
+                              <children>
+                                <node id="a-zeens-p18s1w2">
+                                  <m.rf>m#m-zeens-p18s1w2</m.rf>
+                                  <role>namedEnt:basElem</role>
+                                  <ord>2</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p18s1w4">
+                              <m.rf>m#m-zeens-p18s1w4</m.rf>
+                              <role>dep:attr</role>
+                              <ord>4</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p18s1w6">
+                          <m.rf>m#m-zeens-p18s1w6</m.rf>
+                          <role>quot:punct</role>
+                          <ord>6</ord>
+                        </node>
+                        <node id="a-zeens-p18s1w7">
+                          <m.rf>m#m-zeens-p18s1w7</m.rf>
+                          <role>dep:ins-insPmc:punct</role>
+                          <ord>7</ord>
+                          <children>
+                            <node id="a-zeens-p18s1w10">
+                              <m.rf>m#m-zeens-p18s1w10</m.rf>
+                              <reduction>vm0if003000</reduction>
+                              <role>insPmc:pred</role>
+                              <ord>10</ord>
+                              <children>
+                                <node id="a-zeens-p18s1w8">
+                                  <m.rf>m#m-zeens-p18s1w8</m.rf>
+                                  <role>dep:adv</role>
+                                  <ord>8</ord>
+                                </node>
+                                <node id="a-zeens-p18s1w9">
+                                  <m.rf>m#m-zeens-p18s1w9</m.rf>
+                                  <role>dep:adv</role>
+                                  <ord>9</ord>
+                                </node>
+                                <node id="a-zeens-p18s1w11">
+                                  <m.rf>m#m-zeens-p18s1w11</m.rf>
+                                  <role>dep:subj</role>
+                                  <ord>11</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p18s1w12">
+                              <m.rf>m#m-zeens-p18s1w12</m.rf>
+                              <role>insPmc:punct</role>
+                              <ord>12</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p18s1w15">
+                      <m.rf>m#m-zeens-p18s1w15</m.rf>
+                      <role>dep:obj</role>
+                      <ord>15</ord>
+                      <children>
+                        <node id="a-zeens-p18s1w14">
+                          <m.rf>m#m-zeens-p18s1w14</m.rf>
+                          <role>dep:attr</role>
+                          <ord>14</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p18s1w20">
+                  <m.rf>m#m-zeens-p18s1w20</m.rf>
+                  <reduction>vmnipt130an(pārtrauc)</reduction>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>20</ord>
+                  <children>
+                    <node id="a-zeens-p18s1x5">
+                      <reduction>ncfsa4(ražošanu)</reduction>
+                      <role>dep:obj</role>
+                      <ord>22</ord>
+                      <children>
+                        <node id="a-zeens-p18s1w21">
+                          <m.rf>m#m-zeens-p18s1w21</m.rf>
+                          <role>dep:attr</role>
+                          <ord>21</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p18s1w19">
+                      <m.rf>m#m-zeens-p18s1w19</m.rf>
+                      <role>dep:subj</role>
+                      <ord>19</ord>
+                      <children>
+                        <node id="a-zeens-p18s1w18">
+                          <m.rf>m#m-zeens-p18s1w18</m.rf>
+                          <role>dep:attr</role>
+                          <ord>18</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p18s1w17">
+                      <m.rf>m#m-zeens-p18s1w17</m.rf>
+                      <role>dep:sit</role>
+                      <ord>17</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p18s2">
+      <s.rf>m#m-zeens-p18s2</s.rf>
+      <children>
+        <node id="a-zeens-p18s2w6">
+          <m.rf>m#m-zeens-p18s2w6</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>6</ord>
+          <children>
+            <node id="a-zeens-p18s2w2">
+              <m.rf>m#m-zeens-p18s2w2</m.rf>
+              <reduction>vcnipii30an(ir)</reduction>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p18s2w5">
+                  <m.rf>m#m-zeens-p18s2w5</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p18s2w3">
+                      <m.rf>m#m-zeens-p18s2w3</m.rf>
+                      <role>dep:attr</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-zeens-p18s2w4">
+                      <m.rf>m#m-zeens-p18s2w4</m.rf>
+                      <role>dep:attr</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p18s2w1">
+                  <m.rf>m#m-zeens-p18s2w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p19s1">
+      <s.rf>m#m-zeens-p19s1</s.rf>
+      <children>
+        <node id="a-zeens-p19s1w12">
+          <m.rf>m#m-zeens-p19s1w12</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>12</ord>
+          <children>
+            <node id="a-zeens-p19s1w2">
+              <m.rf>m#m-zeens-p19s1w2</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p19s1w4">
+                  <m.rf>m#m-zeens-p19s1w4</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>4</ord>
+                  <children>
+                    <node id="a-zeens-p19s1w3">
+                      <m.rf>m#m-zeens-p19s1w3</m.rf>
+                      <role>dep:adv</role>
+                      <ord>3</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p19s1w1">
+                  <m.rf>m#m-zeens-p19s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p19s1w5">
+              <m.rf>m#m-zeens-p19s1w5</m.rf>
+              <role>dep:ins-insPmc:punct</role>
+              <ord>5</ord>
+              <children>
+                <node id="a-zeens-p19s1w10">
+                  <m.rf>m#m-zeens-p19s1w10</m.rf>
+                  <role>insPmc:basElem-mainCl:punct</role>
+                  <ord>10</ord>
+                  <children>
+                    <node id="a-zeens-p19s1w7">
+                      <m.rf>m#m-zeens-p19s1w7</m.rf>
+                      <role>mainCl:no</role>
+                      <ord>7</ord>
+                    </node>
+                    <node id="a-zeens-p19s1w9">
+                      <m.rf>m#m-zeens-p19s1w9</m.rf>
+                      <role>mainCl:pred</role>
+                      <ord>9</ord>
+                      <children>
+                        <node id="a-zeens-p19s1w6">
+                          <m.rf>m#m-zeens-p19s1w6</m.rf>
+                          <role>dep:obj</role>
+                          <ord>6</ord>
+                        </node>
+                        <node id="a-zeens-p19s1w8">
+                          <m.rf>m#m-zeens-p19s1w8</m.rf>
+                          <role>dep:subj</role>
+                          <ord>8</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p19s1w11">
+                  <m.rf>m#m-zeens-p19s1w11</m.rf>
+                  <role>insPmc:punct</role>
+                  <ord>11</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p20s1">
+      <s.rf>m#m-zeens-p20s1</s.rf>
+      <children>
+        <node id="a-zeens-p20s1w5">
+          <m.rf>m#m-zeens-p20s1w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>6</ord>
+          <children>
+            <node id="a-zeens-p20s1w2">
+              <m.rf>m#m-zeens-p20s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p20s1w3">
+                  <m.rf>m#m-zeens-p20s1w3</m.rf>
+                  <role>dep:objCl-subrCl:punct</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p20s1x2">
+                      <reduction>vm000000000</reduction>
+                      <role>subrCl:pred</role>
+                      <ord>5</ord>
+                      <children>
+                        <node id="a-zeens-p20s1w4">
+                          <m.rf>m#m-zeens-p20s1w4</m.rf>
+                          <role>dep:adv</role>
+                          <ord>4</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p20s1w1">
+                  <m.rf>m#m-zeens-p20s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p21s1">
+      <s.rf>m#m-zeens-p21s1</s.rf>
+      <children>
+        <node id="a-zeens-p21s1w2">
+          <m.rf>m#m-zeens-p21s1w2</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>2</ord>
+          <children>
+            <node id="a-zeens-p21s1w1">
+              <m.rf>m#m-zeens-p21s1w1</m.rf>
+              <role>sent:pred</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p22s1">
+      <s.rf>m#m-zeens-p22s1</s.rf>
+      <children>
+        <node id="a-zeens-p22s1w4">
+          <m.rf>m#m-zeens-p22s1w4</m.rf>
+          <role>ROOT-utter:punct</role>
+          <ord>4</ord>
+          <children>
+            <node id="a-zeens-p22s1w1">
+              <m.rf>m#m-zeens-p22s1w1</m.rf>
+              <role>utter:no</role>
+              <ord>1</ord>
+              <children>
+                <node id="a-zeens-p22s1w2">
+                  <m.rf>m#m-zeens-p22s1w2</m.rf>
+                  <role>dep:no-xPrep:prep</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p22s1w3">
+                      <m.rf>m#m-zeens-p22s1w3</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>3</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p23s1">
+      <s.rf>m#m-zeens-p23s1</s.rf>
+      <children>
+        <node id="a-zeens-p23s1w11">
+          <m.rf>m#m-zeens-p23s1w11</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>11</ord>
+          <children>
+            <node id="a-zeens-p23s1w9">
+              <m.rf>m#m-zeens-p23s1w9</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>9</ord>
+              <children>
+                <node id="a-zeens-p23s1w10">
+                  <m.rf>m#m-zeens-p23s1w10</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>10</ord>
+                </node>
+                <node id="a-zeens-p23s1w3">
+                  <m.rf>m#m-zeens-p23s1w3</m.rf>
+                  <role>dep:subj-crdGeneral:conj</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p23s1w5">
+                      <m.rf>m#m-zeens-p23s1w5</m.rf>
+                      <role>crdGeneral:genList-crdParts:punct</role>
+                      <ord>5</ord>
+                      <children>
+                        <node id="a-zeens-p23s1w4">
+                          <m.rf>m#m-zeens-p23s1w4</m.rf>
+                          <role>crdParts:crdPart</role>
+                          <ord>4</ord>
+                        </node>
+                        <node id="a-zeens-p23s1w6">
+                          <m.rf>m#m-zeens-p23s1w6</m.rf>
+                          <role>crdParts:crdPart</role>
+                          <ord>6</ord>
+                        </node>
+                        <node id="a-zeens-p23s1w7">
+                          <m.rf>m#m-zeens-p23s1w7</m.rf>
+                          <role>crdParts:conj</role>
+                          <ord>7</ord>
+                        </node>
+                        <node id="a-zeens-p23s1w8">
+                          <m.rf>m#m-zeens-p23s1w8</m.rf>
+                          <role>crdParts:crdPart</role>
+                          <ord>8</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p23s1w2">
+                      <m.rf>m#m-zeens-p23s1w2</m.rf>
+                      <role>crdGeneral:gen</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-zeens-p23s1w1">
+                          <m.rf>m#m-zeens-p23s1w1</m.rf>
+                          <role>dep:attr</role>
+                          <ord>1</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p24s1">
+      <s.rf>m#m-zeens-p24s1</s.rf>
+      <children>
+        <node id="a-zeens-p24s1w9">
+          <m.rf>m#m-zeens-p24s1w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p24s1w2">
+              <m.rf>m#m-zeens-p24s1w2</m.rf>
+              <role>sent:pred-xPred:mod</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p24s1w3">
+                  <m.rf>m#m-zeens-p24s1w3</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p24s1w1">
+                  <m.rf>m#m-zeens-p24s1w1</m.rf>
+                  <role>dep:obj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p24s1w8">
+                  <m.rf>m#m-zeens-p24s1w8</m.rf>
+                  <role>dep:obj</role>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p24s1w7">
+                      <m.rf>m#m-zeens-p24s1w7</m.rf>
+                      <role>dep:attr</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-zeens-p24s1w6">
+                          <m.rf>m#m-zeens-p24s1w6</m.rf>
+                          <role>dep:adv-subrAnal:basElem</role>
+                          <ord>6</ord>
+                          <children>
+                            <node id="a-zeens-p24s1w5">
+                              <m.rf>m#m-zeens-p24s1w5</m.rf>
+                              <role>subrAnal:basElem-xParticle:basElem</role>
+                              <ord>5</ord>
+                              <children>
+                                <node id="a-zeens-p24s1w4">
+                                  <m.rf>m#m-zeens-p24s1w4</m.rf>
+                                  <role>xParticle:no</role>
+                                  <ord>4</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p25s1">
+      <s.rf>m#m-zeens-p25s1</s.rf>
+      <children>
+        <node id="a-zeens-p25s1w8">
+          <m.rf>m#m-zeens-p25s1w8</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>8</ord>
+          <children>
+            <node id="a-zeens-p25s1w2">
+              <m.rf>m#m-zeens-p25s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p25s1w3">
+                  <m.rf>m#m-zeens-p25s1w3</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p25s1w7">
+                      <m.rf>m#m-zeens-p25s1w7</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-zeens-p25s1w6">
+                          <m.rf>m#m-zeens-p25s1w6</m.rf>
+                          <role>dep:attr</role>
+                          <ord>6</ord>
+                          <children>
+                            <node id="a-zeens-p25s1w4">
+                              <m.rf>m#m-zeens-p25s1w4</m.rf>
+                              <role>dep:adv-subrAnal:basElem</role>
+                              <ord>4</ord>
+                              <children>
+                                <node id="a-zeens-p25s1w5">
+                                  <m.rf>m#m-zeens-p25s1w5</m.rf>
+                                  <role>subrAnal:basElem</role>
+                                  <ord>5</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p25s1w1">
+                  <m.rf>m#m-zeens-p25s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p26s1">
+      <s.rf>m#m-zeens-p26s1</s.rf>
+      <children>
+        <node id="a-zeens-p26s1w10">
+          <m.rf>m#m-zeens-p26s1w10</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>10</ord>
+          <children>
+            <node id="a-zeens-p26s1w7">
+              <m.rf>m#m-zeens-p26s1w7</m.rf>
+              <role>sent:pred</role>
+              <ord>7</ord>
+              <children>
+                <node id="a-zeens-p26s1w1">
+                  <m.rf>m#m-zeens-p26s1w1</m.rf>
+                  <role>dep:adv</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p26s1w3">
+                      <m.rf>m#m-zeens-p26s1w3</m.rf>
+                      <role>dep:adv-xSimile:conj</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p26s1w5">
+                          <m.rf>m#m-zeens-p26s1w5</m.rf>
+                          <role>xSimile:basElem-subrAnal:basElem</role>
+                          <ord>5</ord>
+                          <children>
+                            <node id="a-zeens-p26s1w4">
+                              <m.rf>m#m-zeens-p26s1w4</m.rf>
+                              <role>subrAnal:basElem</role>
+                              <ord>4</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p26s1w2">
+                          <m.rf>m#m-zeens-p26s1w2</m.rf>
+                          <role>dep:adv</role>
+                          <ord>2</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p26s1w6">
+                  <m.rf>m#m-zeens-p26s1w6</m.rf>
+                  <role>dep:subj</role>
+                  <ord>6</ord>
+                </node>
+                <node id="a-zeens-p26s1w9">
+                  <m.rf>m#m-zeens-p26s1w9</m.rf>
+                  <role>dep:spc</role>
+                  <ord>9</ord>
+                  <children>
+                    <node id="a-zeens-p26s1w8">
+                      <m.rf>m#m-zeens-p26s1w8</m.rf>
+                      <role>dep:adv</role>
+                      <ord>8</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p27s1">
+      <s.rf>m#m-zeens-p27s1</s.rf>
+      <children>
+        <node id="a-zeens-p27s1w5">
+          <m.rf>m#m-zeens-p27s1w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p27s1w2">
+              <m.rf>m#m-zeens-p27s1w2</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p27s1w3">
+                  <m.rf>m#m-zeens-p27s1w3</m.rf>
+                  <role>xPred:auxVerb</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p27s1w4">
+                      <m.rf>m#m-zeens-p27s1w4</m.rf>
+                      <role>xPred:basElem</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p27s1w1">
+                  <m.rf>m#m-zeens-p27s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p27s2">
+      <s.rf>m#m-zeens-p27s2</s.rf>
+      <children>
+        <node id="a-zeens-p27s2w5">
+          <m.rf>m#m-zeens-p27s2w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p27s2w2">
+              <m.rf>m#m-zeens-p27s2w2</m.rf>
+              <role>sent:pred-xPred:mod</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p27s2w3">
+                  <m.rf>m#m-zeens-p27s2w3</m.rf>
+                  <role>xPred:auxVerb</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p27s2w4">
+                      <m.rf>m#m-zeens-p27s2w4</m.rf>
+                      <role>xPred:basElem</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p27s2w1">
+                  <m.rf>m#m-zeens-p27s2w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p28s1">
+      <s.rf>m#m-zeens-p28s1</s.rf>
+      <children>
+        <node id="a-zeens-p28s1w6">
+          <m.rf>m#m-zeens-p28s1w6</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>6</ord>
+          <children>
+            <node id="a-zeens-p28s1w2">
+              <m.rf>m#m-zeens-p28s1w2</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p28s1w4">
+                  <m.rf>m#m-zeens-p28s1w4</m.rf>
+                  <role>xPred:basElem-crdParts:conj</role>
+                  <ord>4</ord>
+                  <children>
+                    <node id="a-zeens-p28s1w3">
+                      <m.rf>m#m-zeens-p28s1w3</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-zeens-p28s1w5">
+                      <m.rf>m#m-zeens-p28s1w5</m.rf>
+                      <role>crdParts:crdPart</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p28s1w1">
+                  <m.rf>m#m-zeens-p28s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p29s1">
+      <s.rf>m#m-zeens-p29s1</s.rf>
+      <children>
+        <node id="a-zeens-p29s1w10">
+          <m.rf>m#m-zeens-p29s1w10</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>10</ord>
+          <children>
+            <node id="a-zeens-p29s1w5">
+              <m.rf>m#m-zeens-p29s1w5</m.rf>
+              <role>sent:basElem-crdClauses:conj</role>
+              <ord>5</ord>
+              <children>
+                <node id="a-zeens-p29s1w7">
+                  <m.rf>m#m-zeens-p29s1w7</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>7</ord>
+                  <children>
+                    <node id="a-zeens-p29s1w6">
+                      <m.rf>m#m-zeens-p29s1w6</m.rf>
+                      <role>dep:adv</role>
+                      <ord>6</ord>
+                    </node>
+                    <node id="a-zeens-p29s1w9">
+                      <m.rf>m#m-zeens-p29s1w9</m.rf>
+                      <role>dep:subj</role>
+                      <ord>9</ord>
+                      <children>
+                        <node id="a-zeens-p29s1w8">
+                          <m.rf>m#m-zeens-p29s1w8</m.rf>
+                          <role>dep:no</role>
+                          <ord>8</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p29s1w2">
+                  <m.rf>m#m-zeens-p29s1w2</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-zeens-p29s1w4">
+                      <m.rf>m#m-zeens-p29s1w4</m.rf>
+                      <role>dep:subj</role>
+                      <ord>4</ord>
+                      <children>
+                        <node id="a-zeens-p29s1w3">
+                          <m.rf>m#m-zeens-p29s1w3</m.rf>
+                          <role>dep:attr</role>
+                          <ord>3</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p29s1w1">
+                  <m.rf>m#m-zeens-p29s1w1</m.rf>
+                  <role>dep:det</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p29s2">
+      <s.rf>m#m-zeens-p29s2</s.rf>
+      <children>
+        <node id="a-zeens-p29s2w3">
+          <m.rf>m#m-zeens-p29s2w3</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>3</ord>
+          <children>
+            <node id="a-zeens-p29s2w2">
+              <m.rf>m#m-zeens-p29s2w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+            </node>
+            <node id="a-zeens-p29s2w1">
+              <m.rf>m#m-zeens-p29s2w1</m.rf>
+              <role>dep:det</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p30s1">
+      <s.rf>m#m-zeens-p30s1</s.rf>
+      <children>
+        <node id="a-zeens-p30s1w10">
+          <m.rf>m#m-zeens-p30s1w10</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>10</ord>
+          <children>
+            <node id="a-zeens-p30s1w7">
+              <m.rf>m#m-zeens-p30s1w7</m.rf>
+              <role>sent:basElem-crdClauses:conj</role>
+              <ord>7</ord>
+              <children>
+                <node id="a-zeens-p30s1w5">
+                  <m.rf>m#m-zeens-p30s1w5</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred-xPred:mod</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p30s1w6">
+                      <m.rf>m#m-zeens-p30s1w6</m.rf>
+                      <role>xPred:basElem</role>
+                      <ord>6</ord>
+                    </node>
+                    <node id="a-zeens-p30s1w4">
+                      <m.rf>m#m-zeens-p30s1w4</m.rf>
+                      <role>dep:subj</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p30s1w8">
+                  <m.rf>m#m-zeens-p30s1w8</m.rf>
+                  <role>crdClauses:crdPart-mainCl:pred-xPred:auxVerb</role>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p30s1w9">
+                      <m.rf>m#m-zeens-p30s1w9</m.rf>
+                      <role>xPred:basElem</role>
+                      <ord>9</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p30s1w3">
+                  <m.rf>m#m-zeens-p30s1w3</m.rf>
+                  <role>dep:spc-spcPmc:punct</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p30s1w2">
+                      <m.rf>m#m-zeens-p30s1w2</m.rf>
+                      <role>spcPmc:basElem</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-zeens-p30s1w1">
+                          <m.rf>m#m-zeens-p30s1w1</m.rf>
+                          <role>dep:subj</role>
+                          <ord>1</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p31s1">
+      <s.rf>m#m-zeens-p31s1</s.rf>
+      <children>
+        <node id="a-zeens-p31s1w17">
+          <m.rf>m#m-zeens-p31s1w17</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>17</ord>
+          <children>
+            <node id="a-zeens-p31s1w13">
+              <m.rf>m#m-zeens-p31s1w13</m.rf>
+              <role>sent:pred</role>
+              <ord>13</ord>
+              <children>
+                <node id="a-zeens-p31s1w1">
+                  <m.rf>m#m-zeens-p31s1w1</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p31s1w2">
+                      <m.rf>m#m-zeens-p31s1w2</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>2</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p31s1w8">
+                  <m.rf>m#m-zeens-p31s1w8</m.rf>
+                  <role>dep:spc-crdParts:conj</role>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p31s1w12">
+                      <m.rf>m#m-zeens-p31s1w12</m.rf>
+                      <role>crdParts:crdPart-spcPmc:punct</role>
+                      <ord>12</ord>
+                      <children>
+                        <node id="a-zeens-p31s1w9">
+                          <m.rf>m#m-zeens-p31s1w9</m.rf>
+                          <role>spcPmc:basElem</role>
+                          <ord>9</ord>
+                          <children>
+                            <node id="a-zeens-p31s1w11">
+                              <m.rf>m#m-zeens-p31s1w11</m.rf>
+                              <role>dep:obj</role>
+                              <ord>11</ord>
+                              <children>
+                                <node id="a-zeens-p31s1w10">
+                                  <m.rf>m#m-zeens-p31s1w10</m.rf>
+                                  <role>dep:attr</role>
+                                  <ord>10</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p31s1w3">
+                      <m.rf>m#m-zeens-p31s1w3</m.rf>
+                      <role>crdParts:crdPart-spcPmc:punct</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p31s1w7">
+                          <m.rf>m#m-zeens-p31s1w7</m.rf>
+                          <role>spcPmc:basElem</role>
+                          <ord>7</ord>
+                          <children>
+                            <node id="a-zeens-p31s1w5">
+                              <m.rf>m#m-zeens-p31s1w5</m.rf>
+                              <role>dep:subj</role>
+                              <ord>5</ord>
+                              <children>
+                                <node id="a-zeens-p31s1w4">
+                                  <m.rf>m#m-zeens-p31s1w4</m.rf>
+                                  <role>dep:attr</role>
+                                  <ord>4</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p31s1w6">
+                              <m.rf>m#m-zeens-p31s1w6</m.rf>
+                              <role>dep:adv</role>
+                              <ord>6</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p31s1w16">
+                  <m.rf>m#m-zeens-p31s1w16</m.rf>
+                  <role>dep:subj</role>
+                  <ord>16</ord>
+                  <children>
+                    <node id="a-zeens-p31s1w15">
+                      <m.rf>m#m-zeens-p31s1w15</m.rf>
+                      <role>dep:attr</role>
+                      <ord>15</ord>
+                      <children>
+                        <node id="a-zeens-p31s1w14">
+                          <m.rf>m#m-zeens-p31s1w14</m.rf>
+                          <role>dep:attr</role>
+                          <ord>14</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p31s2">
+      <s.rf>m#m-zeens-p31s2</s.rf>
+      <children>
+        <node id="a-zeens-p31s2w9">
+          <m.rf>m#m-zeens-p31s2w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p31s2w8">
+              <m.rf>m#m-zeens-p31s2w8</m.rf>
+              <role>sent:pred</role>
+              <ord>8</ord>
+              <children>
+                <node id="a-zeens-p31s2w5">
+                  <m.rf>m#m-zeens-p31s2w5</m.rf>
+                  <role>dep:spc-spcPmc:punct</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p31s2w2">
+                      <m.rf>m#m-zeens-p31s2w2</m.rf>
+                      <role>spcPmc:basElem-crdParts:conj</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-zeens-p31s2w1">
+                          <m.rf>m#m-zeens-p31s2w1</m.rf>
+                          <role>crdParts:crdPart</role>
+                          <ord>1</ord>
+                        </node>
+                        <node id="a-zeens-p31s2w3">
+                          <m.rf>m#m-zeens-p31s2w3</m.rf>
+                          <role>crdParts:crdPart</role>
+                          <ord>3</ord>
+                        </node>
+                        <node id="a-zeens-p31s2w4">
+                          <m.rf>m#m-zeens-p31s2w4</m.rf>
+                          <role>dep:obj</role>
+                          <ord>4</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p31s2w6">
+                  <m.rf>m#m-zeens-p31s2w6</m.rf>
+                  <role>dep:subj</role>
+                  <ord>6</ord>
+                </node>
+                <node id="a-zeens-p31s2w7">
+                  <m.rf>m#m-zeens-p31s2w7</m.rf>
+                  <role>dep:obj</role>
+                  <ord>7</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p32s1">
+      <s.rf>m#m-zeens-p32s1</s.rf>
+      <children>
+        <node id="a-zeens-p32s1w4">
+          <m.rf>m#m-zeens-p32s1w4</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p32s1w2">
+              <m.rf>m#m-zeens-p32s1w2</m.rf>
+              <role>sent:pred-xPred:basElem</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p32s1x2">
+                  <reduction>vcnipii30an(ir)</reduction>
+                  <role>xPred:auxVerb</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p32s1w1">
+                  <m.rf>m#m-zeens-p32s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p32s1w3">
+                  <m.rf>m#m-zeens-p32s1w3</m.rf>
+                  <role>dep:adv</role>
+                  <ord>4</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p33s1">
+      <s.rf>m#m-zeens-p33s1</s.rf>
+      <children>
+        <node id="a-zeens-p33s1w6">
+          <m.rf>m#m-zeens-p33s1w6</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>6</ord>
+          <children>
+            <node id="a-zeens-p33s1w3">
+              <m.rf>m#m-zeens-p33s1w3</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p33s1w4">
+                  <m.rf>m#m-zeens-p33s1w4</m.rf>
+                  <role>xPred:basElem-xPrep:prep</role>
+                  <ord>4</ord>
+                  <children>
+                    <node id="a-zeens-p33s1w5">
+                      <m.rf>m#m-zeens-p33s1w5</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p33s1w1">
+                  <m.rf>m#m-zeens-p33s1w1</m.rf>
+                  <role>dep:adv</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p33s1w2">
+                  <m.rf>m#m-zeens-p33s1w2</m.rf>
+                  <role>dep:subj</role>
+                  <ord>2</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p34s1">
+      <s.rf>m#m-zeens-p34s1</s.rf>
+      <children>
+        <node id="a-zeens-p34s1w12">
+          <m.rf>m#m-zeens-p34s1w12</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>13</ord>
+          <children>
+            <node id="a-zeens-p34s1w8">
+              <m.rf>m#m-zeens-p34s1w8</m.rf>
+              <role>sent:pred</role>
+              <ord>8</ord>
+              <children>
+                <node id="a-zeens-p34s1w9">
+                  <m.rf>m#m-zeens-p34s1w9</m.rf>
+                  <role>dep:objCl-subrCl:punct</role>
+                  <ord>9</ord>
+                  <children>
+                    <node id="a-zeens-p34s1x3">
+                      <reduction>vmnipii30an(ir)</reduction>
+                      <role>subrCl:pred</role>
+                      <ord>11</ord>
+                      <children>
+                        <node id="a-zeens-p34s1w10">
+                          <m.rf>m#m-zeens-p34s1w10</m.rf>
+                          <role>dep:obj-xPrep:prep</role>
+                          <ord>10</ord>
+                          <children>
+                            <node id="a-zeens-p34s1w11">
+                              <m.rf>m#m-zeens-p34s1w11</m.rf>
+                              <role>xPrep:basElem</role>
+                              <ord>12</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p34s1w6">
+                  <m.rf>m#m-zeens-p34s1w6</m.rf>
+                  <role>dep:objCl-subrCl:punct</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-zeens-p34s1w5">
+                      <m.rf>m#m-zeens-p34s1w5</m.rf>
+                      <role>subrCl:pred</role>
+                      <ord>5</ord>
+                      <children>
+                        <node id="a-zeens-p34s1w1">
+                          <m.rf>m#m-zeens-p34s1w1</m.rf>
+                          <role>dep:obj-xPrep:prep</role>
+                          <ord>1</ord>
+                          <children>
+                            <node id="a-zeens-p34s1w2">
+                              <m.rf>m#m-zeens-p34s1w2</m.rf>
+                              <role>xPrep:basElem</role>
+                              <ord>2</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p34s1w4">
+                          <m.rf>m#m-zeens-p34s1w4</m.rf>
+                          <role>dep:subj</role>
+                          <ord>4</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p34s1w3">
+                      <m.rf>m#m-zeens-p34s1w3</m.rf>
+                      <role>dep:det</role>
+                      <ord>3</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p34s1w7">
+                  <m.rf>m#m-zeens-p34s1w7</m.rf>
+                  <role>dep:subj</role>
+                  <ord>7</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p35s1">
+      <s.rf>m#m-zeens-p35s1</s.rf>
+      <children>
+        <node id="a-zeens-p35s1w9">
+          <m.rf>m#m-zeens-p35s1w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p35s1w2">
+              <m.rf>m#m-zeens-p35s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p35s1w5">
+                  <m.rf>m#m-zeens-p35s1w5</m.rf>
+                  <role>dep:subjCl-subrCl:conj</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p35s1w6">
+                      <m.rf>m#m-zeens-p35s1w6</m.rf>
+                      <role>subrCl:pred-xPred:mod</role>
+                      <ord>6</ord>
+                      <children>
+                        <node id="a-zeens-p35s1w7">
+                          <m.rf>m#m-zeens-p35s1w7</m.rf>
+                          <role>xPred:basElem</role>
+                          <ord>7</ord>
+                        </node>
+                        <node id="a-zeens-p35s1w8">
+                          <m.rf>m#m-zeens-p35s1w8</m.rf>
+                          <role>dep:obj</role>
+                          <ord>8</ord>
+                        </node>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p35s1w4">
+                      <m.rf>m#m-zeens-p35s1w4</m.rf>
+                      <role>subrCl:punct</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p35s1w3">
+                  <m.rf>m#m-zeens-p35s1w3</m.rf>
+                  <role>dep:adv</role>
+                  <ord>3</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p35s1w1">
+              <m.rf>m#m-zeens-p35s1w1</m.rf>
+              <role>dep:det</role>
+              <ord>1</ord>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p36s1">
+      <s.rf>m#m-zeens-p36s1</s.rf>
+      <children>
+        <node id="a-zeens-p36s1w5">
+          <m.rf>m#m-zeens-p36s1w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p36s1w2">
+              <m.rf>m#m-zeens-p36s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p36s1w3">
+                  <m.rf>m#m-zeens-p36s1w3</m.rf>
+                  <role>dep:spc-xPred:basElem</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-zeens-p36s1w4">
+                      <m.rf>m#m-zeens-p36s1w4</m.rf>
+                      <role>xPred:auxVerb</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p36s1w1">
+                  <m.rf>m#m-zeens-p36s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p37s1">
+      <s.rf>m#m-zeens-p37s1</s.rf>
+      <children>
+        <node id="a-zeens-p37s1w7">
+          <m.rf>m#m-zeens-p37s1w7</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>7</ord>
+          <children>
+            <node id="a-zeens-p37s1w4">
+              <m.rf>m#m-zeens-p37s1w4</m.rf>
+              <role>sent:pred</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p37s1w1">
+                  <m.rf>m#m-zeens-p37s1w1</m.rf>
+                  <role>dep:obj-xPrep:prep</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p37s1w3">
+                      <m.rf>m#m-zeens-p37s1w3</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-zeens-p37s1w2">
+                          <m.rf>m#m-zeens-p37s1w2</m.rf>
+                          <role>dep:attr</role>
+                          <ord>2</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p37s1w5">
+                  <m.rf>m#m-zeens-p37s1w5</m.rf>
+                  <role>dep:subj-subrAnal:basElem</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p37s1w6">
+                      <m.rf>m#m-zeens-p37s1w6</m.rf>
+                      <role>subrAnal:basElem</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p38s1">
+      <s.rf>m#m-zeens-p38s1</s.rf>
+      <children>
+        <node id="a-zeens-p38s1w6">
+          <m.rf>m#m-zeens-p38s1w6</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>6</ord>
+          <children>
+            <node id="a-zeens-p38s1w4">
+              <m.rf>m#m-zeens-p38s1w4</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p38s1w5">
+                  <m.rf>m#m-zeens-p38s1w5</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>5</ord>
+                </node>
+                <node id="a-zeens-p38s1w1">
+                  <m.rf>m#m-zeens-p38s1w1</m.rf>
+                  <role>dep:adv-xPrep:prep</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p38s1w2">
+                      <m.rf>m#m-zeens-p38s1w2</m.rf>
+                      <role>xPrep:basElem</role>
+                      <ord>2</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p38s1w3">
+                  <m.rf>m#m-zeens-p38s1w3</m.rf>
+                  <role>dep:adv</role>
+                  <ord>3</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p39s1">
+      <s.rf>m#m-zeens-p39s1</s.rf>
+      <children>
+        <node id="a-zeens-p39s1w9">
+          <m.rf>m#m-zeens-p39s1w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p39s1w3">
+              <m.rf>m#m-zeens-p39s1w3</m.rf>
+              <role>sent:pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p39s1w4">
+                  <m.rf>m#m-zeens-p39s1w4</m.rf>
+                  <role>dep:obj-xApp:basElem</role>
+                  <ord>4</ord>
+                  <children>
+                    <node id="a-zeens-p39s1w5">
+                      <m.rf>m#m-zeens-p39s1w5</m.rf>
+                      <role>xApp:basElem-xApp:basElem</role>
+                      <ord>5</ord>
+                      <children>
+                        <node id="a-zeens-p39s1w7">
+                          <m.rf>m#m-zeens-p39s1w7</m.rf>
+                          <role>xApp:basElem-crdParts:conj</role>
+                          <ord>7</ord>
+                          <children>
+                            <node id="a-zeens-p39s1w6">
+                              <m.rf>m#m-zeens-p39s1w6</m.rf>
+                              <role>crdParts:crdPart</role>
+                              <ord>6</ord>
+                            </node>
+                            <node id="a-zeens-p39s1w8">
+                              <m.rf>m#m-zeens-p39s1w8</m.rf>
+                              <role>crdParts:crdPart</role>
+                              <ord>8</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p39s1w1">
+                  <m.rf>m#m-zeens-p39s1w1</m.rf>
+                  <role>dep:adv</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p39s1w2">
+                  <m.rf>m#m-zeens-p39s1w2</m.rf>
+                  <role>dep:subj</role>
+                  <ord>2</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p40s1">
+      <s.rf>m#m-zeens-p40s1</s.rf>
+      <children>
+        <node id="a-zeens-p40s1w5">
+          <m.rf>m#m-zeens-p40s1w5</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>5</ord>
+          <children>
+            <node id="a-zeens-p40s1w3">
+              <m.rf>m#m-zeens-p40s1w3</m.rf>
+              <role>sent:pred</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p40s1w1">
+                  <m.rf>m#m-zeens-p40s1w1</m.rf>
+                  <role>dep:obj</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p40s1w2">
+                      <m.rf>m#m-zeens-p40s1w2</m.rf>
+                      <role>dep:spc</role>
+                      <ord>2</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p40s1w4">
+                  <m.rf>m#m-zeens-p40s1w4</m.rf>
+                  <role>dep:spc</role>
+                  <ord>4</ord>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p41s1">
+      <s.rf>m#m-zeens-p41s1</s.rf>
+      <children>
+        <node id="a-zeens-p41s1w7">
+          <m.rf>m#m-zeens-p41s1w7</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>7</ord>
+          <children>
+            <node id="a-zeens-p41s1w2">
+              <m.rf>m#m-zeens-p41s1w2</m.rf>
+              <role>sent:pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p41s1w1">
+                  <m.rf>m#m-zeens-p41s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p41s1w3">
+                  <m.rf>m#m-zeens-p41s1w3</m.rf>
+                  <role>dep:adv</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p41s1w5">
+                  <m.rf>m#m-zeens-p41s1w5</m.rf>
+                  <role>dep:adv</role>
+                  <ord>5</ord>
+                  <children>
+                    <node id="a-zeens-p41s1w4">
+                      <m.rf>m#m-zeens-p41s1w4</m.rf>
+                      <role>dep:attr</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-zeens-p41s1w6">
+                      <m.rf>m#m-zeens-p41s1w6</m.rf>
+                      <role>dep:adv</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p42s1">
+      <s.rf>m#m-zeens-p42s1</s.rf>
+      <children>
+        <node id="a-zeens-p42s1w8">
+          <m.rf>m#m-zeens-p42s1w8</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>8</ord>
+          <children>
+            <node id="a-zeens-p42s1w4">
+              <m.rf>m#m-zeens-p42s1w4</m.rf>
+              <role>sent:pred-xPred:basElem</role>
+              <ord>4</ord>
+              <children>
+                <node id="a-zeens-p42s1w5">
+                  <m.rf>m#m-zeens-p42s1w5</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>5</ord>
+                </node>
+                <node id="a-zeens-p42s1w1">
+                  <m.rf>m#m-zeens-p42s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p42s1w2">
+                      <m.rf>m#m-zeens-p42s1w2</m.rf>
+                      <role>dep:attr-xPrep:prep</role>
+                      <ord>2</ord>
+                      <children>
+                        <node id="a-zeens-p42s1w3">
+                          <m.rf>m#m-zeens-p42s1w3</m.rf>
+                          <role>xPrep:basElem</role>
+                          <ord>3</ord>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p42s1w7">
+                  <m.rf>m#m-zeens-p42s1w7</m.rf>
+                  <role>dep:obj</role>
+                  <ord>7</ord>
+                  <children>
+                    <node id="a-zeens-p42s1w6">
+                      <m.rf>m#m-zeens-p42s1w6</m.rf>
+                      <role>dep:attr</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p43s1">
+      <s.rf>m#m-zeens-p43s1</s.rf>
+      <children>
+        <node id="a-zeens-p43s1w9">
+          <m.rf>m#m-zeens-p43s1w9</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>9</ord>
+          <children>
+            <node id="a-zeens-p43s1w2">
+              <m.rf>m#m-zeens-p43s1w2</m.rf>
+              <role>sent:pred-xParticle:basElem-xPred:auxVerb</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-zeens-p43s1w3">
+                  <m.rf>m#m-zeens-p43s1w3</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-zeens-p43s1w1">
+                  <m.rf>m#m-zeens-p43s1w1</m.rf>
+                  <role>xParticle:no</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-zeens-p43s1w8">
+                  <m.rf>m#m-zeens-p43s1w8</m.rf>
+                  <role>dep:subj</role>
+                  <ord>8</ord>
+                  <children>
+                    <node id="a-zeens-p43s1w4">
+                      <m.rf>m#m-zeens-p43s1w4</m.rf>
+                      <role>dep:no</role>
+                      <ord>4</ord>
+                    </node>
+                    <node id="a-zeens-p43s1w7">
+                      <m.rf>m#m-zeens-p43s1w7</m.rf>
+                      <role>dep:attr-xNum:basElem</role>
+                      <ord>7</ord>
+                      <children>
+                        <node id="a-zeens-p43s1w6">
+                          <m.rf>m#m-zeens-p43s1w6</m.rf>
+                          <role>xNum:basElem</role>
+                          <ord>6</ord>
+                          <children>
+                            <node id="a-zeens-p43s1w5">
+                              <m.rf>m#m-zeens-p43s1w5</m.rf>
+                              <role>xNum:basElem</role>
+                              <ord>5</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p44s1">
+      <s.rf>m#m-zeens-p44s1</s.rf>
+      <children>
+        <node id="a-zeens-p44s1w8">
+          <m.rf>m#m-zeens-p44s1w8</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>8</ord>
+          <children>
+            <node id="a-zeens-p44s1w5">
+              <m.rf>m#m-zeens-p44s1w5</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>5</ord>
+              <children>
+                <node id="a-zeens-p44s1w7">
+                  <m.rf>m#m-zeens-p44s1w7</m.rf>
+                  <role>xPred:basElem-phrasElem:basElem</role>
+                  <ord>7</ord>
+                  <children>
+                    <node id="a-zeens-p44s1w6">
+                      <m.rf>m#m-zeens-p44s1w6</m.rf>
+                      <role>dep:attr</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p44s1w1">
+                  <m.rf>m#m-zeens-p44s1w1</m.rf>
+                  <role>dep:subj</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p44s1w4">
+                      <m.rf>m#m-zeens-p44s1w4</m.rf>
+                      <role>dep:obj</role>
+                      <ord>4</ord>
+                      <children>
+                        <node id="a-zeens-p44s1w3">
+                          <m.rf>m#m-zeens-p44s1w3</m.rf>
+                          <role>dep:attr-coordAnal:basElem</role>
+                          <ord>3</ord>
+                          <children>
+                            <node id="a-zeens-p44s1w2">
+                              <m.rf>m#m-zeens-p44s1w2</m.rf>
+                              <role>coordAnal:basElem</role>
+                              <ord>2</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+    <LM id="a-zeens-p45s1">
+      <s.rf>m#m-zeens-p45s1</s.rf>
+      <children>
+        <node id="a-zeens-p45s1w8">
+          <m.rf>m#m-zeens-p45s1w8</m.rf>
+          <role>ROOT-sent:punct</role>
+          <ord>8</ord>
+          <children>
+            <node id="a-zeens-p45s1w3">
+              <m.rf>m#m-zeens-p45s1w3</m.rf>
+              <role>sent:pred-xPred:auxVerb</role>
+              <ord>3</ord>
+              <children>
+                <node id="a-zeens-p45s1w4">
+                  <m.rf>m#m-zeens-p45s1w4</m.rf>
+                  <role>xPred:basElem</role>
+                  <ord>4</ord>
+                </node>
+                <node id="a-zeens-p45s1w1">
+                  <m.rf>m#m-zeens-p45s1w1</m.rf>
+                  <role>dep:subj-xApp:basElem</role>
+                  <ord>1</ord>
+                  <children>
+                    <node id="a-zeens-p45s1w2">
+                      <m.rf>m#m-zeens-p45s1w2</m.rf>
+                      <role>xApp:basElem</role>
+                      <ord>2</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-zeens-p45s1w7">
+                  <m.rf>m#m-zeens-p45s1w7</m.rf>
+                  <role>dep:adv</role>
+                  <ord>7</ord>
+                  <children>
+                    <node id="a-zeens-p45s1w5">
+                      <m.rf>m#m-zeens-p45s1w5</m.rf>
+                      <role>dep:attr</role>
+                      <ord>5</ord>
+                    </node>
+                    <node id="a-zeens-p45s1w6">
+                      <m.rf>m#m-zeens-p45s1w6</m.rf>
+                      <role>dep:attr</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </node>
+      </children>
+    </LM>
+  </trees>
+</lvadepdata>

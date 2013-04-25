@@ -14,7 +14,8 @@ use IO::File;
 use List::Util qw(first);
 use XML::LibXML;  # XML handling library
 
-use LvCorporaTools::PMLUtils::AUtils qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
+use LvCorporaTools::PMLUtils::AUtils
+	qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native

@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
+our @EXPORT_OK = qw(getRole setNodeRole getChildrenNode hasChildrenNode moveChildren sortNodesByOrd);
 
 use XML::LibXML;
 
@@ -59,7 +59,8 @@ sub setNodeRole
 	$roles[0]->replaceNode($newRoleNode);
 }
 
-# getChildrenNode (XPath context with set namespaces, DOM "node" node)
+# getChildrenNode (XPath context with set namespaces, DOM 
+#				   node/xinfo/coordinfo/pmcinfo node)
 # return "children" element below given node (creates one, if there was none)
 sub getChildrenNode
 {
@@ -75,21 +76,16 @@ sub getChildrenNode
 	return $childrenNode;
 }
 
-# sortNodesByOrd (XPath context with set namespaces, should array be sorted in
-#				   descending order?, [array with] DOM nodes)
-# returns reference to sorted array (original array is not mutated)
-sub sortNodesByOrd
+# hasChildrenNode (XPath context with set namespaces, DOM
+#				   node/xinfo/coordinfo/pmcinfo node)
+# return "children" element below given node if it has one, otherwise false.
+sub hasChildrenNode
 {
 	my $xpc = shift @_; # XPath context
-	my $desc = shift @_;
-	my @nodes = @_;
-	
-	my @res = sort {
-			${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc)
-			<=>
-			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
-		} @nodes;
-	return \@res;
+	my $node = shift @_;
+	my @bestTry = $xpc->findnodes('pml:children', $node);
+	return $bestTry[0] if (@bestTry);
+	return 0;
 }
 
 # Move all children of type "node" from one node to an other.
@@ -109,6 +105,23 @@ sub moveChildren
 		$chNode->appendChild($ch);
 	}
 	return $newRoot;
+}
+
+# sortNodesByOrd (XPath context with set namespaces, should array be sorted in
+#				   descending order?, [array with] DOM nodes)
+# returns reference to sorted array (original array is not mutated)
+sub sortNodesByOrd
+{
+	my $xpc = shift @_; # XPath context
+	my $desc = shift @_;
+	my @nodes = @_;
+	
+	my @res = sort {
+			${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc)
+			<=>
+			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
+		} @nodes;
+	return \@res;
 }
 
 1;
