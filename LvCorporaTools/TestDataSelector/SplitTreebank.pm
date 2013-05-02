@@ -13,7 +13,8 @@ our @EXPORT_OK = qw(splitCorpus);
 # less than 1, data will be splited in two data sets: development and test. If
 # argument is natural number n > 2, n different sets of cross-validation data
 # will be created, each consisting of approx. (n-1)/n * treebank_size sentences
-# in training set and approx. 1/n * treebank_size in validation set.
+# in training set and approx. 1/n * treebank_size in validation set. If
+# argument is equals to 1, data in all files are concatinated.
 # TODO: Add support for PML-A files.
 #
 # Developed on Strawberry Perl 5.12.3.0
@@ -33,8 +34,7 @@ sub splitCorpus
 {
 	autoflush STDOUT 1;
 	use POSIX;
-	if (not @_ or @_ le 1 or $_[1] <= 0 or ($_[1] >= 1 and $_[1] <= 2)
-		or ($_[1] > 2 and floor($_[1]) != $_[1] ))
+	if (not @_ or @_ le 1 or $_[1] <= 0 or ($_[1] >= 1 and floor($_[1]) != $_[1] ))
 	{
 		print <<END;
 Script for splitting Latvian Treebank files (CoNLL format) into datasets for
@@ -42,12 +42,14 @@ parser induction, depending on numerical argument provided. If argument is less
 than 1, data will be splited in two data sets: development and test. If
 argument is natural number n > 2, n different sets of cross-validation data
 will be created, each consisting of approx. (n-1)/n * treebank_size sentences
-in training set and approx. 1/n * treebank_size in validation set.
+in training set and approx. 1/n * treebank_size in validation set. If argument
+is equals to 1, data in all files are concatinated.
 Input files should be provided in UTF-8.
 
 Params:
    data directory
-   probability (0;1) or cross-validation part count {3; 4; 5;...}
+   probability (0;1), or cross-validation part count {3; 4; 5;...}, or 1 for
+       concatenating all files
    seed [optional]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
@@ -59,12 +61,14 @@ END
 	my $dirName = shift @_;
 	my $magicNumber = shift @_;
 	my $seed = shift @_;
-	# This boolean swithces on cross-validation preparing mode.
-	my $makeMultiple = ($magicNumber < 1);
 	
 	srand $seed;
 	mkpath("$dirName/res/");
-	if ($makeMultiple)
+	if ($magicNumber == 1)
+	{
+		&_unite($dirName);
+	}
+	elsif ($magicNumber < 1)
 	{
 		&_splitIn2($dirName, $magicNumber);
 	}
@@ -73,6 +77,46 @@ END
 		&_splitForCV($dirName, $magicNumber);
 	}
 	print "Processing treebank finished!\n";
+}
+
+# Concatenate all treebank in one data set.
+# _unite (data directory)
+sub _unite
+{
+	my $dirName = shift @_;
+
+	# Open output files.
+	my $dir = IO::Dir->new($dirName) or die "dir $dirName $!";
+	my $out = IO::File->new("$dirName/res/corpus.conll", "> :encoding(UTF-8)")
+		or die "Output file opening: $!";
+	my $count = 0;
+	
+	#Process data.
+	while (defined(my $file = $dir->read))
+	{
+		if (! -d "$dirName/$file")
+		{
+			my $in = IO::File->new("$dirName/$file", "< :encoding(UTF-8)")
+				or die "Input file opening: $!";
+			my $sent = &_readSentence($in);
+			while (defined $sent)
+			{
+				next if ($sent =~ /^\s*$/);
+				print $out "$sent\n";
+				$count++;
+			}
+			continue
+			{
+				$sent = &_readSentence($in);
+			}
+			$in->close();
+		}
+	}
+	
+	#Close output file.
+	$out->close();
+	print "Corpus contains $count sentences.\n"
+
 }
 
 # Splits treebank in two data sets - development and test set. Each sentence
