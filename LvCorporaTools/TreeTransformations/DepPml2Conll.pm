@@ -217,14 +217,15 @@ END
 				{
 					print $out "_"; #PDEPREL
 				}
+				print $out "\t";
 			}
 
 			if ($conll2009)
 			{
-				print $out "\t_\t_\n"; #FILLPRED, PRED, APRED1-6
+				print $out "_\t_\n"; #FILLPRED, PRED, APRED1-6
 			} else 
 			{
-				print $out "\t_\t_\n"; #PHEAD, PDEPREL
+				print $out "_\t_\n"; #PHEAD, PDEPREL
 			}
 		}
 		print $out "\n";
