@@ -522,6 +522,9 @@ sub utter
 			"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
 			$node);
 		@res = $xpc->findnodes(
+			"pml:children/pml:node[pml:role!=\'punct\' and pml:role!=\'conj\']", $node)
+			unless (@res);
+		@res = $xpc->findnodes(
 			"pml:children/pml:node[pml:role!=\'punct\']", $node) unless (@res);
 		die "utter below ". $node->find('../../@id').' has no children!'
 			if (not @res);
@@ -692,8 +695,8 @@ sub _allBelowPunct
 	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
-# _allBelowPunct (XPath context with set namespaces, DOM node, role of the
-#				  parent node, output flow for warnings)
+# _allBelowBasElem (XPath context with set namespaces, DOM node, role of the
+#					parent node, output flow for warnings)
 sub _allBelowBasElem
 {
 	my $xpc = shift @_; # XPath context
@@ -707,7 +710,8 @@ sub _allBelowBasElem
 		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
 		$node);
 	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
-	die "$phraseRole below ". $node->find('../../@id').' has no children!'
+	die "$phraseRole below ". $node->find('../../@id')
+		.' have only no/punct/conj children!'
 		if (not @res);
 	# Warning about suspective structure.
 	if (scalar @res ne 1)
