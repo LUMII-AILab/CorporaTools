@@ -6,9 +6,10 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile transformTree);
+our @EXPORT_OK = qw(transformFileBatch transformFile transformTree);
 
 use File::Path;
+use IO::Dir;
 use IO::File;
 use XML::LibXML;  # XML handling library
 use LvCorporaTools::PMLUtils::AUtils
@@ -33,7 +34,33 @@ use LvCorporaTools::PMLUtils::AUtils
 # Licenced under GPL.
 ###############################################################################
 
-# Process single XML file. This should be used as entry point, if this module
+# If single argument provided, treat it as directory and process all .a files
+# in it. Otherwise pass all arguments to transformFile. This can be used as
+# entry point, if this module is used standalone.
+sub transformFileBatch
+{
+	if (@ARGV eq 1)
+	{
+		my $dir_name = $ARGV[0];
+		my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+		while (defined(my $in_file = $dir->read))
+		{
+			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+			{
+				transformFile ($dir_name, $in_file, "$1-nored.a");
+			}
+		}
+
+	}
+	else
+	{
+		transformFile (@ARGV);
+	}
+}
+
+
+# Process single XML file. This can be used as entry point, if this module
 # is used standalone.
 sub transformFile
 {
