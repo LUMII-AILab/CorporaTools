@@ -8,6 +8,8 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(transformFileBatch transformFile transformTree);
 
+use Carp::Always;	# Print stack trace on die.
+
 use File::Path;
 use IO::Dir;
 use IO::File;
@@ -89,7 +91,7 @@ END
 	#mkpath("$dirPrefix/warnings/");
 	#my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
 	#	or die "$newName-warnings.txt: $!";
-	print "Processing $oldName started...\n";
+	#print "Processing $oldName started...\n";
 
 	# Load the XML.
 	my $parser = XML::LibXML->new('no_blanks' => 1);
@@ -142,12 +144,18 @@ sub transformTree
 				$redTag->unbindNode();
 			}
 			
-		} else		# Node doesn't have token.
+		}
+		else		# Node doesn't have token.
 		{
 			my $pmlParent = $red->parentNode->parentNode; #pml parent <-> children <-> this
-			my $role = getRole($xpc, $pmlParent);
-			setNodeRole($xpc, $pmlParent, "$role-red:child")
-				unless ($role =~ /-red:child$/);
+			if ($pmlParent->nodeName() ne 'LM') # Parent is not the root of the tree.
+			{
+				my $role = getRole($xpc, $pmlParent);
+				setNodeRole($xpc, $pmlParent, "$role-red:child")
+					unless ($role =~ /-red:child$/);
+			}
+			
+			# Node have children.
 			if (hasChildrenNode($xpc, $red))
 			{
 				my $children = getChildrenNode($xpc, $red);
@@ -161,7 +169,6 @@ sub transformTree
 			$red->unbindNode();
 		}
 	}
-
 }
 
 1;

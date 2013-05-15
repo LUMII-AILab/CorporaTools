@@ -33,6 +33,9 @@ sub getRole
 	my $node = shift @_;
 	my $tag = $node->nodeName();
 	
+	# Process root.
+	return 'ROOT' if ($tag eq 'LM');
+	
 	# Process dependency/constituent nodes.
 	return ${$xpc->findnodes('pml:role', $node)}[0]->textContent
 		if ($tag eq 'node');
@@ -49,7 +52,7 @@ sub setNodeRole
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $newRole = shift @_;
-	die 'Can\'t set \"role\" for '.$node->nodeName."!\n"
+	die 'Can\'t set \"role\" for '.$node->nodeName.": $!"
 		unless ($node->nodeName eq 'node');
 		
 	my @roles = $xpc->findnodes('pml:role', $node);
@@ -116,11 +119,11 @@ sub sortNodesByOrd
 	my $desc = shift @_;
 	my @nodes = @_;
 	
-	my @res = sort {
-			${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc)
-			<=>
-			${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
-		} @nodes;
+	my @res = sort
+	{
+		${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc) <=>
+		${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
+	} @nodes;
 	return \@res;
 }
 
