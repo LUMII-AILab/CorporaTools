@@ -8,7 +8,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(transformFileBatch transformFile transformTree);
 
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Path;
 use IO::Dir;
