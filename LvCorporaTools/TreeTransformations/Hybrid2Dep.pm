@@ -337,19 +337,19 @@ sub _renameDependent
 ### X-words ###################################################################
 sub xPrep
 {
-	return &_allNodesBelowOne(['prep'], 1, @_);
+	return &_allBelowOne(['prep'], 1, @_);
 }
 sub xSimile
 {
-	return &_allNodesBelowOne(['conj'], 1, @_);
+	return &_allBelowOne(['conj'], 1, @_);
 }
 sub xParticle
 {
-	return &_allNodesBelowOne(['basElem'], 1, @_);
+	return &_allBelowOne(['basElem'], 1, @_);
 }
 sub subrAnal
 {
-	return &_allNodesBelowOne(['basElem'], 0, @_);
+	return &_allBelowOne(['basElem'], 0, @_);
 	#return &_defaultPhrase(@_);
 }
 sub coordAnal
@@ -367,23 +367,23 @@ sub coordAnal
 		print $warnFile "$parentRole below ". $node->find('../../@id').' has '
 				.(scalar @ch)." children.\n";
 	}
-	return &_chainAllNodes(0, @_);
+	return &_chainAll(0, @_);
 }
 sub xNum
 {
-	return &_chainAllNodes(1, @_);
+	return &_chainAll(1, @_);
 }
 sub xPred
 {
-	return &_allNodesBelowOne(['basElem'], 1, @_) if ($XPRED eq 'BASELEM');
-	return &_allNodesBelowOne(['mod', 'auxVerb'], 0, @_)
+	return &_allBelowOne(['basElem'], 1, @_) if ($XPRED eq 'BASELEM');
+	return &_allBelowOne(['mod', 'auxVerb'], 0, @_)
 		if ($XPRED eq 'DEFAULT');
 	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
-	#return &_chainAllNodes(0, @_);
+	#return &_chainAll(0, @_);
 }
 sub xApp
 {
-	return &_chainAllNodes(0, @_);
+	return &_chainAll(0, @_);
 }
 
 sub namedEnt
@@ -461,61 +461,61 @@ sub crdGeneral
 
 sub sent
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(1, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub mainCl
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub subrCl
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub interj
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub spcPmc
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub insPmc
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub particle
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub dirSpPmc
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub address
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
 sub quot
 {
-	return &_allBelowBasElem(@_) if ($PMC eq 'BASELEM');
+	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
 	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
 }
@@ -602,11 +602,11 @@ sub _defaultPhrase
 
 # Finds child element with specified role and makes ir parent of children
 # nodes.
-# _allNodesBelowOne (pointer to array with roles determining node to become
-#					 root, warn if multiple potential roots?, XPath context with
-#					 set namespaces, DOM node, role of the parent node, output
-#					 flow for warnings)
-sub _allNodesBelowOne
+# _allBelowOne (pointer to array with roles determining node to become root,
+#				warn if multiple potential roots?, XPath context with set
+#				namespaces, DOM node, role of the parent node, output flow for
+#				warnings)
+sub _allBelowOne
 {
 	my $rootRoles = shift @_;
 	my $warn = shift @_;
@@ -640,10 +640,9 @@ sub _allNodesBelowOne
 	return $newRoot;
 }
 # Makes parent-child chain of all node's children.
-# _chainAllNodes (should start with last node, XPath context with set
-#				  namespaces, DOM node, role of the parent node, output flow
-#				  for warnings)
-sub _chainAllNodes
+# _chainAll (should start with last node, XPath context with set namespaces,
+#			 DOM node, role of the parent node, output flow for warnings)
+sub _chainAll
 {
 	my $invert = shift @_;
 	my $xpc = shift @_; # XPath context
@@ -724,9 +723,9 @@ sub _allBelowPunct
 	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
-# _allBelowBasElem (XPath context with set namespaces, DOM node, role of the
+# _allBelowPmcBase (XPath context with set namespaces, DOM node, role of the
 #					parent node, output flow for warnings)
-sub _allBelowBasElem
+sub _allBelowPmcBase
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -762,7 +761,7 @@ sub _allBelowBasElem
 #				 parent node, output flow for warnings)
 sub _defaultCoord
 {
-	return &_chainAllNodes(0, @_) if ($COORD eq 'ROW');
+	return &_chainAll(0, @_) if ($COORD eq 'ROW');
 	return &_allBelowConjPunct(@_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 }	
@@ -840,141 +839,6 @@ sub _allBelowConjPunct
 	return $newRoot;
 }
 
-
-
-# _defaultCoord (XPath context with set namespaces, DOM node, role of the
-#				 parent node, output flow for warnings)
-# This was used for Nodalida2013 experiments. Obselote now.
-#sub _defaultCoord
-#{
-#	my $xpc = shift @_; # XPath context
-#	my $node = shift @_;
-#	my $parentRole = shift @_;
-#	my $warnFile = shift @_;
-#	my $phraseRole = getRole($xpc, $node);
-#
-#	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-#	my @sorted = @{sortNodesByOrd($xpc, 0, @ch)};
-#	
-#	die "$phraseRole below ". $node->find('../../@id').' has no children!'
-#		if (not @sorted);
-#	# Warning about suspective structure.
-#	if (scalar @sorted < 3)
-#	{
-#		print "$phraseRole has left only ".(scalar @sorted)." children.\n";
-#		print $warnFile "$phraseRole below ". $node->find('../../@id')
-#			.' has left only '.(scalar @sorted)." children.\n";
-#	}
-#	my $firstRole = getRole($xpc, $sorted[0]);
-#	# Warning about suspective structure.
-#	if ($firstRole eq 'punct')
-#	{
-#		print "$phraseRole starts with $firstRole.\n";
-#		print $warnFile "$phraseRole below ". $node->find('../../@id')
-#			." starts with $firstRole.\n";
-#	}
-#		
-#	# If this coordination contained no node appropriate to be coordination
-#	# head ("punct" or "conj"), it is analized as coordination anague
-#	my @validRootRoles = $xpc->findnodes(
-#		'pml:children/pml:node[pml:role=\'conj\' or pml:role=\'punct\']', $node);
-#	if (not @validRootRoles or @validRootRoles lt 1)
-#	{
-#		# Warning about suspective structure.
-#		print "$phraseRole contains not enough conj and punct.\n";
-#		print $warnFile "$phraseRole below ". $node->find('../../@id')
-#			." contains not enough conj and punct.\n";
-#		return  &coordAnal ($xpc, $node, $parentRole, $warnFile);
-#	}
-#		
-#	my ($newRoot, $prevRoot, $tmpRoot);
-#	my @postponed = ();
-#	while (@sorted) # Loop through all potential 'subroots'.
-#	{
-#		# Find next subroot.
-#		while (not defined $tmpRoot)
-#		{
-#			my $tmp = shift @sorted;
-#			
-#			# All coordination constituents have been traversed, no new
-#			# subroots can be found: process last postponed nodes and exit.
-#			if (not defined $tmp)
-#			{
-#				# Move last nodes.
-#				my $chNode = getChildrenNode($xpc, $prevRoot);
-#				foreach my $ch (@postponed)
-#				{
-#					$ch->unbindNode();
-#					&_renamePhraseChild($xpc, $ch, $phraseRole);
-#					$chNode->appendChild($ch);
-#				}
-#				return $newRoot;
-#			}
-#			
-#			# Find next subroot.
-#			my $role = getRole($xpc, $tmp);
-#			if ($role eq 'punct' or $role eq 'conj')
-#			{
-#				$tmpRoot = $tmp;
-#				last;
-#			}
-#			else
-#			{
-#				push @postponed, $tmp;
-#			}
-#		}
-#		my $rootRole = getRole($xpc, $tmpRoot);
-#		if ($rootRole ne 'conj' and not @sorted)
-#		{
-#			print "$phraseRole ends with $rootRole.\n";
-#			print $warnFile "$phraseRole below "
-#				.$node->find('../../@id')." ends with $rootRole.\n";
-#		}
-#		my $nextRole = @sorted ? getRole($xpc, $sorted[0]) : '';
-#		
-#		# Deal with comma near  conjuction.
-#		if ($rootRole eq 'punct' and $nextRole eq 'conj')
-#		{
-#			push @postponed, $tmpRoot;
-#			$tmpRoot = shift @sorted;
-#		}
-#		if ($rootRole eq 'conj' and $nextRole eq 'punct')
-#		{
-#			push @postponed, shift @ch;
-#		}
-#		
-#		# Rebuild tree fragment.
-#		$tmpRoot->unbindNode();
-#		my $chNode = getChildrenNode($xpc, $tmpRoot);
-#		foreach my $ch (@postponed)
-#		{
-#			$ch->unbindNode();
-#			&_renamePhraseChild($xpc, $ch, $phraseRole);
-#			$chNode->appendChild($ch);
-#		}
-#
-#		# Set the pointer to the prhrase root, if this was first conj/punct.
-#		if (not defined $prevRoot)
-#		{
-#			$newRoot = $tmpRoot;
-#			$rootRole = getRole($xpc, $tmpRoot);
-#			#setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
-#			&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
-#		}
-#		else
-#		{
-#			getChildrenNode($xpc, $prevRoot)->appendChild($tmpRoot);
-#		}
-#	} continue
-#	{
-#		$prevRoot = $tmpRoot;
-#		$tmpRoot = undef;
-#		@postponed = ();
-#	}
-#	
-#	# This is imposible exit.
-#	return $newRoot;
-#}
 
 ###############################################################################
 # Techsupport functions
