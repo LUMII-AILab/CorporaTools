@@ -349,7 +349,8 @@ sub xParticle
 }
 sub subrAnal
 {
-	return &_defaultPhrase(@_);
+	return &_allNodesBelowOne(['basElem'], 0, @_);
+	#return &_defaultPhrase(@_);
 }
 sub coordAnal
 {
@@ -366,7 +367,7 @@ sub coordAnal
 		print $warnFile "$parentRole below ". $node->find('../../@id').' has '
 				.(scalar @ch)." children.\n";
 	}
-	return &_chainAllNodes(1, @_);
+	return &_chainAllNodes(0, @_);
 }
 sub xNum
 {
@@ -378,7 +379,6 @@ sub xPred
 	return &_allNodesBelowOne(['mod', 'auxVerb'], 0, @_)
 		if ($XPRED eq 'DEFAULT');
 	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
-
 	#return &_chainAllNodes(0, @_);
 }
 sub xApp
