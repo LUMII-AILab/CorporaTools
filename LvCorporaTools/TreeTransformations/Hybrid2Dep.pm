@@ -8,7 +8,9 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$COORD $PMC transformFile transformFileBatch transformTree recalculateOrds);
+	$XPRED $COORD $PMC transformFile transformFileBatch transformTree recalculateOrds);
+	
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Path;
 use IO::File;
@@ -30,13 +32,16 @@ use LvCorporaTools::PMLUtils::AUtils
 # Input files - utf8.
 #
 # Developed on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2012
+# Latvian Treebank project, 2012-2013
 # Lauma Pretkalniņa, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
 
 # Global variables set, how to transform specific elements.
 # Unknown values cause fatal error.
+
+#our $XPRED = 'BASELEM';	# auxverbs and modals below basElem
+our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
 
 #our $COORD = 'ROW';		# all coordination elements in a row
 our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
@@ -160,7 +165,8 @@ sub recalculateOrds
 		if ($parName ne 'node')
 		{
 			$parent->removeChild($o);
-		} else
+		}
+		else
 		{
 			warn "recalculateOrds warns: Multiple textnodes below ord node\n"
 				if (@{$o->childNodes()} gt 1); # This should not happen.
@@ -331,15 +337,15 @@ sub _renameDependent
 ### X-words ###################################################################
 sub xPrep
 {
-	return &_allNodesBelowOne('prep', @_);
+	return &_allNodesBelowOne(['prep'], 1, @_);
 }
 sub xSimile
 {
-	return &_allNodesBelowOne('conj', @_);
+	return &_allNodesBelowOne(['conj'], 1, @_);
 }
 sub xParticle
 {
-	return &_allNodesBelowOne('basElem', @_);
+	return &_allNodesBelowOne(['basElem'], 1, @_);
 }
 sub subrAnal
 {
@@ -368,7 +374,12 @@ sub xNum
 }
 sub xPred
 {
-	return &_chainAllNodes(0, @_);
+	return &_allNodesBelowOne(['basElem'], 1, @_) if ($XPRED eq 'BASELEM');
+	return &_allNodesBelowOne(['mod', 'auxVerb'], 0, @_)
+		if ($XPRED eq 'DEFAULT');
+	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
+
+	#return &_chainAllNodes(0, @_);
 }
 sub xApp
 {
@@ -390,7 +401,8 @@ sub namedEnt
 	if (@ch gt 1)
 	{
 		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
-	} else
+	}
+	else
 	{
 		# Change role for the subroot.
 		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt');
@@ -418,7 +430,8 @@ sub phrasElem
 		print $warnFile 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
 			." children.\n";
 		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
-	} else
+	}
+	else
 	{
 		# Change role for the subroot.
 		#my $oldRole = getRole($xpc, $ch[0]);
@@ -589,22 +602,37 @@ sub _defaultPhrase
 
 # Finds child element with specified role and makes ir parent of children
 # nodes.
-# _allNodesBelowOne (role determining node to become root, XPath context with
+# _allNodesBelowOne (pointer to array with roles determining node to become
+#					 root, warn if multiple potential roots?, XPath context with
 #					 set namespaces, DOM node, role of the parent node, output
 #					 flow for warnings)
 sub _allNodesBelowOne
 {
-	my $rootRole = shift @_;
+	my $rootRoles = shift @_;
+	my $warn = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
-	# my $warnFile = shift @_; # Not used right now
+	my $warnFile = shift @_;
 	my $phraseRole = getRole($xpc, $node);
 	
-	# Find node with speciffied rootRole.
-	my @res = $xpc->findnodes("pml:children/pml:node[pml:role=\'$rootRole\']", $node);
-	die "$phraseRole below ". $node->find('../../@id').' has '.(scalar @res)." \"$rootRole\"!"
-		if (scalar @res ne 1);
+	# Find node with speciffied rootRoles.
+	my $query = join '\' or pml:role=\'', @$rootRoles;
+	$query = "pml:children/pml:node[pml:role=\'$query\']";
+	my @res = $xpc->findnodes($query, $node);
+	if (not @res)
+	{
+		my $roles = join '/', @$rootRoles;
+		die "$phraseRole below ". $node->find('../../@id')
+			." have no $roles children!"
+	}
+	if (scalar @res ne 1 and $warn)
+	{
+		my $roles = join '/', @$rootRoles;
+		print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+			.(scalar @res)." potential rootnodes $roles.\n";
+	}
 	my $newRoot = $res[0];
 	
 	# Rebuild subtree.
@@ -679,7 +707,8 @@ sub _allBelowPunct
 			'pml:children/pml:node[pml:role!=\'no\']';
 		@ch = $xpc->findnodes($searchString, $node);
 		# Warning about suspective structure.
-		if (scalar @ch ne 1){
+		if (scalar @ch ne 1)
+		{
 			print "$phraseRole has ".(scalar @ch)
 				." potential non-punct/conj/no rootnodes.\n";
 			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
@@ -778,12 +807,14 @@ sub _allBelowConjPunct
 		{
 			$newRoot = $sorted[$ind];
 			last;
-		} elsif ($role eq 'punct')
+		}
+		elsif ($role eq 'punct')
 		{
 			if ($ind < $#sorted and  getRole($xpc, $sorted[$ind+1]) eq 'conj')
 			{
 				$newRoot = $sorted[$ind+1];
-			} else
+			}
+			else
 			{
 				$newRoot = $sorted[$ind];
 			}
@@ -886,7 +917,8 @@ sub _allBelowConjPunct
 #			{
 #				$tmpRoot = $tmp;
 #				last;
-#			} else
+#			}
+#			else
 #			{
 #				push @postponed, $tmp;
 #			}
@@ -928,7 +960,8 @@ sub _allBelowConjPunct
 #			$rootRole = getRole($xpc, $tmpRoot);
 #			#setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
 #			&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
-#		} else
+#		}
+#		else
 #		{
 #			getChildrenNode($xpc, $prevRoot)->appendChild($tmpRoot);
 #		}
