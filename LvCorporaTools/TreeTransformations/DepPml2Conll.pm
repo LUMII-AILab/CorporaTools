@@ -6,11 +6,12 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile space_replacement);
+our @EXPORT_OK = qw(transformFile transformFileBatch space_replacement);
 
 use Data::Dumper;
 use File::Path;
 use IO::File;
+use IO::Dir;
 use XML::LibXML;  # XML handling library
 
 use LvCorporaTools::TagTransformations::TagPurifier qw(purifyKamolsTag);
@@ -38,8 +39,40 @@ our $space_replacement = "_";
 # What cpostag to use?
 #our $cpostag = 'first'; #'purify' or 'first' (single letter) or 'none', default is none;
 
-# Process single XML file. This should be used as entry point, if this module
-# is used standalone.
+# If 5 arguments (mode, directory name, cpostag mode, postag mode, whether do
+# output in CoNLL-2009 format) provided, treat it as directory and process all
+# files in it. Otherwise pass all arguments to transformFile. This can be used
+# as entry point, if this module is used standalone.
+sub transformFileBatch
+{
+	if (@ARGV eq 5)
+	{
+		my $mode = shift @ARGV;
+		my $dir_name = shift @ARGV;
+		my $cpostag = shift @ARGV;
+		my $postag = shift @ARGV;
+		my $conll2009 = shift @ARGV;
+		my $dir = IO::Dir->new($dir_name) or die "dir $!";
+		my $infix = $mode ? "nored" : "unlabeled";
+		
+		while (defined(my $in_file = $dir->read))
+		{
+			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
+			{
+				transformFile ($mode, $dir_name, $in_file, $cpostag, $postag,
+					"$1-$infix.conll", $conll2009);
+			}
+		}
+
+	}
+	else
+	{
+		transformFile (@ARGV);
+	}
+}
+
+# Process single XML file. This can be used as entry point, if this module is
+# used standalone.
 sub transformFile
 {
 	autoflush STDOUT 1;
