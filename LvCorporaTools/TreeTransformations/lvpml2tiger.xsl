@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<!-- Lauma Pretkalniņa, AIlab, UL IMCS, 2012-01-11.
-	Stylesheet for transforming data from Latvian Treebank PML (a - vers. 2.9.,
-	m - vers. 1.0., w - vers. 1.0 ) to Tiger XML. PML data must be "knited-in".
+<!-- Lauma Pretkalniņa, AIlab, UL IMCS, 2013-05-27.
+	Stylesheet for transforming data from Latvian Treebank PML (a - vers. 2.14,
+	m - vers. 1.0, w - vers. 1.0) to Tiger XML. PML data must be "knited-in".
 	You can use PML-toolkit from http://ufal.mff.cuni.cz/jazz/pml/ to obtain
 	knited file. It is suggested that PML data contains "ord" values only for
 	nodes coresponding tokens, otherwise resulting TigerXML will look a bit
@@ -243,7 +243,7 @@
 							<xsl:value-of select="./pml:children/pml:xinfo/pml:tag"/>
 						</xsl:when>
 						<xsl:when test="./pml:children/pml:coordinfo/pml:tag">
-							<xsl:value-of select="./pml:children/pml:xinfo/pml:tag"/>
+							<xsl:value-of select="./pml:children/pml:coordinfo/pml:tag"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:text>--</xsl:text>
