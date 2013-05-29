@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(runPmltkKnitterBatch);
+our @EXPORT_OK = qw(processDir);
 
 use IO::File;
 use IO::Dir;
@@ -23,7 +23,7 @@ use IO::Dir;
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
-sub runPmltkKnitterBatch
+sub processDir
 {
 	autoflush STDOUT 1;
 	if (not @_ or @_ lt 1)
@@ -41,8 +41,8 @@ Latvian Treebank project, LUMII, 2012, provided under GPL
 END
 		exit 1;
 	}
-	my $dir_name = shift @ARGV;
-	my $pmltk_path = shift @ARGV;
+	my $dir_name = shift @_;
+	my $pmltk_path = shift @_;
 	$pmltk_path = 'pmltk-1.1.5' if (not $pmltk_path);
 	my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
