@@ -41,9 +41,9 @@ use LvCorporaTools::PMLUtils::AUtils
 # entry point, if this module is used standalone.
 sub transformFileBatch
 {
-	if (@ARGV eq 1)
+	if (@_ eq 1)
 	{
-		my $dir_name = $ARGV[0];
+		my $dir_name = $_[0];
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
 		while (defined(my $in_file = $dir->read))
@@ -57,7 +57,7 @@ sub transformFileBatch
 	}
 	else
 	{
-		transformFile (@ARGV);
+		transformFile (@_);
 	}
 }
 
@@ -109,7 +109,7 @@ END
 	}
 		
 	# Print the XML.
-	File::Path::mkpath("$dirPrefix/res/");
+	#File::Path::mkpath("$dirPrefix/res/");
 	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
 		or die "Output file opening: $!";	
 	print $outFile $doc->toString(1);

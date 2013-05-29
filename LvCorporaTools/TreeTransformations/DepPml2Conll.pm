@@ -45,13 +45,13 @@ our $space_replacement = "_";
 # as entry point, if this module is used standalone.
 sub transformFileBatch
 {
-	if (@ARGV eq 5)
+	if (@_ eq 5)
 	{
-		my $mode = shift @ARGV;
-		my $dir_name = shift @ARGV;
-		my $cpostag = shift @ARGV;
-		my $postag = shift @ARGV;
-		my $conll2009 = shift @ARGV;
+		my $mode = shift @_;
+		my $dir_name = shift @_;
+		my $cpostag = shift @_;
+		my $postag = shift @_;
+		my $conll2009 = shift @_;
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 		my $infix = $mode ? "nored" : "unlabeled";
 		
@@ -63,11 +63,10 @@ sub transformFileBatch
 					"$1-$infix.conll", $conll2009);
 			}
 		}
-
 	}
 	else
 	{
-		transformFile (@ARGV);
+		transformFile (@_);
 	}
 }
 

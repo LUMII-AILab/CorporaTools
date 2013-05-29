@@ -54,10 +54,10 @@ our $PMC = 'DEFAULT';		# first punct as root element
 # entry point, if this module is used standalone.
 sub transformFileBatch
 {
-	if (@ARGV eq 1)
+	if (@_ eq 1)
 	{
 
-		my $dir_name = $ARGV[0];
+		my $dir_name = $_[0];
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
 		while (defined(my $in_file = $dir->read))
@@ -71,7 +71,7 @@ sub transformFileBatch
 	}
 	else
 	{
-		transformFile (@ARGV);
+		transformFile (@_);
 	}
 }
 
