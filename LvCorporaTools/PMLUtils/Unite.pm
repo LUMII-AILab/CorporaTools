@@ -46,8 +46,8 @@ END
 		exit 1;
 	}
 	
-	my $dirName = shift @ARGV;
-	my $fileName = shift @ARGV;
+	my $dirName = shift @_;
+	my $fileName = shift @_;
 	
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
