@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile transformFileBatch space_replacement);
+our @EXPORT_OK = qw(transformFile transformFileBatch SPACE_SUBST POSTAG CPOSTAG);
 
 use Data::Dumper;
 use File::Path;
@@ -27,30 +27,34 @@ use LvCorporaTools::TagTransformations::Tag2FeatureList qw(parseTagSet decodeTag
 # Input files - utf8.
 #
 # Developed on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2012
+# Latvian Treebank project, 2012-2013
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
 
+# Global variables - transformation settings.
 # If form or token contains space, it will be replaced with this string.
-our $space_replacement = "_";
+our $SPACE_SUBST = "_";
 # What postag to use?
-#our $postag = 'purify'; #'full' or 'purify', default is full.
+our $POSTAG = 'FULL';		# All SemTi-Kamols tagset features, this is default.
+#our $POSTAG = 'PURIFY';	# No lexical features included.
 # What cpostag to use?
-#our $cpostag = 'first'; #'purify' or 'first' (single letter) or 'none', default is none;
+our $CPOSTAG = 'NONE';		# No CPOSTAG, this is default.
+#our $CPOSTAG = 'FIRST';	# CPOSTAG is POS.
+#our $CPOSTAG = 'PURIFY';	# No lexical features included in CPOSTAG.
 
-# If 5 arguments (mode, directory name, cpostag mode, postag mode, whether do
-# output in CoNLL-2009 format) provided, treat it as directory and process all
-# files in it. Otherwise pass all arguments to transformFile. This can be used
-# as entry point, if this module is used standalone.
+# If 3 arguments (directory name, include arc labels, whether do output in
+# CoNLL-2009 format) provided, treat second as directory and process all files
+# in it. Otherwise pass all arguments to transformFile. This can be used as
+# entry point, if this module is used standalone.
 sub transformFileBatch
 {
-	if (@_ eq 5)
+	if (@_ eq 3)
 	{
-		my $mode = shift @_;
 		my $dir_name = shift @_;
-		my $cpostag = shift @_;
-		my $postag = shift @_;
+		my $mode = shift @_;
+		#my $cpostag = shift @_;
+		#my $postag = shift @_;
 		my $conll2009 = shift @_;
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 		my $infix = $mode ? "nored" : "unlabeled";
@@ -59,8 +63,8 @@ sub transformFileBatch
 		{
 			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
 			{
-				transformFile ($mode, $dir_name, $in_file, $cpostag, $postag,
-					"$1-$infix.conll", $conll2009);
+				transformFile (
+					$dir_name, $in_file, $mode, "$1-$infix.conll", $conll2009);
 			}
 		}
 	}
@@ -80,14 +84,18 @@ sub transformFile
 		print <<END;
 Script for transfoming dependency-only Latvian Treebank files from knited-in
 PML format to CoNLL format. 
+Global variables:
+   CPOSTAG - CPOSTAG mode: 'PURIFY' (no lexical features) / 'FIRST' (single
+             letter) / 'NONE'(no CPOSTAG, default value)
+   POSTAG - POSTAG mode 'PURIFY' (no lexical features) / 'FULL' (all
+            SemTi-Kamols features, default value)
+   SPACE_SUBST 
 Input files should be provided as UTF-8.
 
 Params:
-   0/1 - print labeled output (if true, trees with reductions will be ommited)
    directory prefix
    file name
-   CPOSTAG mode [opt, 'purify' or 'first' (single letter) or 'none'(default)]
-   POSTAG mode [opt, 'purify' or 'full' (default)]
+   0/1 - print labeled output (if true, trees with reductions will be ommited)
    new file name [opt, current file name used otherwise]
    use CoNLL-2009 format [opt, false by default]
 
@@ -96,11 +104,11 @@ END
 		exit 1;
 	}
 	# Input paramaters.
-	my $printLabels = shift @_;
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $cpostag = (shift @_ or 'none');
-	my $postag = (shift @_ or 'full');
+	my $printLabels = shift @_;
+	#my $cpostag = (shift @_ or 'NONE');
+	#my $postag = (shift @_ or 'FULL');
 	my $newName = (shift @_ or $oldName);
 	my $conll2009 = (shift @_ or 0);
 	
@@ -155,10 +163,10 @@ END
 			}
 			print $out "$n2id{$n->findvalue('@id')}\t"; #ID
 			my $form = ${$xpc->findnodes('pml:m.rf/pml:form', $n)}[0]->textContent;
-			$form =~ s/ /\Q$space_replacement\E/g;
+			$form =~ s/ /\Q$SPACE_SUBST\E/g;
 			print $out "$form\t"; #FORM
 			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
-			$lemma =~ s/ /\Q$space_replacement\E/g;
+			$lemma =~ s/ /\Q$SPACE_SUBST\E/g;
 			print $out "$lemma\t"; #LEMMA
 
 			if ($conll2009)
@@ -172,10 +180,10 @@ END
 			
 			if (! $conll2009)
 			{
-				if ($cpostag eq 'purify')
+				if ($CPOSTAG eq 'PURIFY')
 				{
 					print $out purifyKamolsTag($tag); #CPOSTAG
-				} elsif ($cpostag eq 'first')
+				} elsif ($CPOSTAG eq 'FIRST')
 				{
 					$tag =~/^(.)/;
 					print $out "$1"; #CPOSTAG
@@ -186,7 +194,7 @@ END
 				print $out "\t"; #CPOSTAG
 			}
 
-			if ($postag eq 'purify')
+			if ($POSTAG eq 'PURIFY')
 			{
 				print $out purifyKamolsTag($tag); #POSTAG
 			} else
@@ -197,7 +205,7 @@ END
 
 			if ($conll2009)
 			{
-				if ($postag eq 'purify')
+				if ($POSTAG eq 'PURIFY')
 				{
 					print $out purifyKamolsTag($tag); #PPOS
 				} else
