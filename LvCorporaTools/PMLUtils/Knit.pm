@@ -55,6 +55,9 @@ END
 	$Treex::PML::Instance::Writer::KEEP_KNIT = 1;
 	$pml->save({ 'filename' => $outFile, 'refs_save' => {}});
 	#$pml->save({ 'filename' => $outFile, 'refs_save' => {}, 'no_knit' => 1});
+	
+	$inFile =~ m#^.*[\\/](.*?)$#;
+	print "Processing $1 finished!\n";
 
 }
 
