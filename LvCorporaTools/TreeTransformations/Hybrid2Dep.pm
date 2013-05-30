@@ -37,7 +37,7 @@ use LvCorporaTools::PMLUtils::AUtils
 # Licenced under GPL.
 ###############################################################################
 
-# Global variables set, how to transform specific elements.
+# Global variables set how to transform specific elements.
 # Unknown values cause fatal error.
 
 #our $XPRED = 'BASELEM';	# auxverbs and modals below basElem

@@ -44,7 +44,7 @@ our $CPOSTAG = 'NONE';		# No CPOSTAG, this is default.
 #our $CPOSTAG = 'PURIFY';	# No lexical features included in CPOSTAG.
 
 # If 3 arguments (directory name, include arc labels, whether do output in
-# CoNLL-2009 format) provided, treat second as directory and process all files
+# CoNLL-2009 format) provided, treat first as directory and process all files
 # in it. Otherwise pass all arguments to transformFile. This can be used as
 # entry point, if this module is used standalone.
 sub transformFileBatch
