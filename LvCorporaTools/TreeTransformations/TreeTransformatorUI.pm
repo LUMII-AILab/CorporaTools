@@ -93,150 +93,180 @@ sub processDir
 	}
 	my $dirPrefix = $params{'--dir'}[0];
 	my $source = $params{'--dir'}[0];
-	
-	my $prevStep;	# Currently not used.
-	
-	# Collect data recursively
+		
+	# Collecting data recursively.
 	if ($params{'--collect'})
 	{
-		print "\n==== Recursive data collecting ===========================\n";
-		
-		my $fileCounter = 0;
-		my @todoDirs = ();
-		my $current = $source;
-		mkpath ("$dirPrefix/collected");
-		
-		# Traverse subdirectories.
-		while ($current)
-		{
-			my $dir = IO::Dir->new($current) or die "Can't open folder $!";
-			
-			while (defined(my $item = $dir->read))
-			{
-				# Treebank file
-				if ((-f "$current/$item") and ($item =~ /.[amw]$/))
-				{
-					copy("$current/$item", "$dirPrefix/collected/");
-					$fileCounter++;
-				}
-				elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
-				{
-					push @todoDirs, "$current/$item";
-				}
-			}
-		}
-		continue
-		{
-			$current = shift @todoDirs;
-		}
-		
-		# Update statuss variables.		
-		$prevStep = '--collect';
-		$source = "$dirPrefix/collected";
-		$dirPrefix .= '/collected';
-		
-		print "Found $fileCounter files.\n";
+		$source = &_collect($source, $dirPrefix);
+		$dirPrefix = $source;
 	}
 	
-	# Converting to dependencies
-	if ($params{'--dep'})
-	{
-		print "\n==== Converting to dependencies ==========================\n";
-		# Set parameters.
-		$LvCorporaTools::TreeTransformations::Hybrid2Dep::XPRED =
-			$params{'--dep'}[0] if ($params{'--dep'}[0]);
-		$LvCorporaTools::TreeTransformations::Hybrid2Dep::COORD =
-			$params{'--dep'}[1] if ($params{'--dep'}[1]);
-		$LvCorporaTools::TreeTransformations::Hybrid2Dep::PMC =
-			$params{'--dep'}[2] if ($params{'--dep'}[2]);
-		
-		# Convert.
-		LvCorporaTools::TreeTransformations::Hybrid2Dep::transformFileBatch($source);
-		
-		# Move files to correct places.
-		move("$source/res", "$dirPrefix/dep");
-		move("$source/warnings", "$dirPrefix/dep/warnings");
-		my @files = glob("$source/*.m $source/*.w");
-		for (@files)
-		{
-			copy($_, "$dirPrefix/dep/");
-		}
-		
-		# Update statuss variables.
-		$prevStep = '--dep';
-		$source = "$dirPrefix/dep";
-	}
+	# Converting to dependencies.
+	$source = &_dep($source, $dirPrefix, $params{'--dep'})
+		if ($params{'--dep'});
 	
-	# Remove reductions.
-	if ($params{'--red'})
-	{
-		print "\n==== Removing reductions =================================\n";
-		# Convert.
-		LvCorporaTools::TreeTransformations::RemoveReduction::transformFileBatch($source);
-		
-		# Move files to correct places.
-		move("$source/res", "$dirPrefix/red");
-		#move("$source/warnings", "$dirPrefix/red/warnings");
-		my @files = glob("$source/*.m $source/*.w");
-		for (@files)
-		{
-			copy($_, "$dirPrefix/red/");
-		}
-		
-		# Update statuss variables.
-		$prevStep = '--red';
-		$source = "$dirPrefix/red";
-	}
+	# Removing reductions.
+	$source = &_red($source, $dirPrefix)
+		if ($params{'--red'});
 	
 	# Knitting-in.
-	if ($params{'--knit'})
-	{
-		print "\n==== Knitting-in =========================================\n";
-		my $schemaDir = $params{'--dep'}[0];
-		$schemaDir = 'TrEd extension/lv-treebank/resources' unless $schemaDir;
-		#LvCorporaTools::PMLUtils::PmltkKnitterBatch::processDir($source, $schemaDir);
-		LvCorporaTools::PMLUtils::Knit::processDir($source, 'a', $schemaDir);
-		move("$source/res", "$dirPrefix/knitted");
+	$source = &_knit($source, $dirPrefix, $params{'--knit'})
+		if ($params{'--knit'});
 		
-		# Update statuss variables.
-		$prevStep = '--knit';
-		$source = "$dirPrefix/knitted";
-	}
-		
-	# Converting to conll.
-	if ($params{'--conll'})
-	{
-		print "\n==== Converting to CoNLL =================================\n";
-		# Set parameters.
-		$LvCorporaTools::TreeTransformations::DepPml2Conll::CPOSTAG =
-			$params{'--conll'}[1] if ($params{'--conll'}[1]);
-		$LvCorporaTools::TreeTransformations::DepPml2Conll::POSTAG =
-			$params{'--conll'}[2] if ($params{'--conll'}[2]);
-		# Convert.
-		LvCorporaTools::TreeTransformations::DepPml2Conll::transformFileBatch(
-			$source, $params{'--conll'}[0], $params{'--conll'}[3]);
-		move("$source/res", "$dirPrefix/conll");
-		
-		# Update statuss variables.
-		$prevStep = '--conll';
-		$source = "$dirPrefix/conll";
-	}
+	# Converting to CoNLL.
+	$source = &_conll($source, $dirPrefix, $params{'--conll'})
+		if ($params{'--conll'});
 	
-	# Folding in data sets for training.
-	if ($params{'--fold'})
-	{
-		print "\n==== Folding datasets ====================================\n";
-		# Convert.
-		LvCorporaTools::TestDataSelector::SplitTreebank::splitCorpus(
-			$source, @{$params{'--fold'}});
-		move("$source/res", "$dirPrefix/fold");
-
-		# Update statuss variables.
-		$prevStep = '--fold';
-		$source = "$dirPrefix/fold";
-	}
+	# Folding data sets for training.
+	$source = &_fold($source, $dirPrefix, $params{'--fold'})
+		if ($params{'--fold'});
 	
 	print "\n==== Successful finish ===================================\n";
+}
+
+# Collect data recursively.
+# return adress to step results.
+sub _collect
+{
+	my ($source, $dirPrefix) = @_;
+	print "\n==== Recursive data collecting ===========================\n";
+		
+	my $fileCounter = 0;
+	my @todoDirs = ();
+	my $current = $source;
+	mkpath ("$dirPrefix/collected");
+		
+	# Traverse subdirectories.
+	while ($current)
+	{
+		my $dir = IO::Dir->new($current) or die "Can't open folder $!";
+			
+		while (defined(my $item = $dir->read))
+		{
+			# Treebank file
+			if ((-f "$current/$item") and ($item =~ /.[amw]$/))
+			{
+				copy("$current/$item", "$dirPrefix/collected/");
+				$fileCounter++;
+			}
+			elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
+			{
+				push @todoDirs, "$current/$item";
+			}
+		}
+	}
+	continue
+	{
+		$current = shift @todoDirs;
+	}
+		
+		print "Found $fileCounter files.\n";
+		return "$dirPrefix/collected";
+}
+
+# Convert to dependencies.
+# return adress to step results.
+sub _dep
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Converting to dependencies ==========================\n";
+		
+	# Set parameters.
+	$LvCorporaTools::TreeTransformations::Hybrid2Dep::XPRED = $params->[0]
+		if ($params->[0]);
+	$LvCorporaTools::TreeTransformations::Hybrid2Dep::COORD = $params->[1]
+		if ($params->[1]);
+	$LvCorporaTools::TreeTransformations::Hybrid2Dep::PMC = $params->[2]
+		if ($params->[2]);
+		
+	# Convert.
+	LvCorporaTools::TreeTransformations::Hybrid2Dep::transformFileBatch($source);
+		
+	# Move files to correct places.
+	move("$source/res", "$dirPrefix/dep");
+	move("$source/warnings", "$dirPrefix/dep/warnings");
+	my @files = glob("$source/*.m $source/*.w");
+	for (@files)
+	{
+		copy($_, "$dirPrefix/dep/");
+	}
+		
+	return "$dirPrefix/dep";
+}
+
+# Remove reductions.
+# return adress to step results.
+sub _red
+{
+	my ($source, $dirPrefix) = @_;
+	print "\n==== Removing reductions =================================\n";
+		
+	# Convert.
+	LvCorporaTools::TreeTransformations::RemoveReduction::transformFileBatch($source);
+		
+	# Move files to correct places.
+	move("$source/res", "$dirPrefix/red");
+	my @files = glob("$source/*.m $source/*.w");
+	for (@files)
+	{
+		copy($_, "$dirPrefix/red/");
+	}
+		
+	return "$dirPrefix/red";
+}
+
+# Knit-in.
+# return adress to step results.
+sub _knit
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Knitting-in =========================================\n";
+	
+	# Set parameters.
+	my $schemaDir = $params->[0];
+	$schemaDir = 'TrEd extension/lv-treebank/resources' unless $schemaDir;
+	
+	# Convert.
+	LvCorporaTools::PMLUtils::Knit::processDir($source, 'a', $schemaDir);
+	move("$source/res", "$dirPrefix/knitted");
+		
+	return "$dirPrefix/knitted";
+}
+
+# Convert to CoNLL format.
+# return adress to step results.
+sub _conll
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Converting to CoNLL =================================\n";
+	
+	# Set parameters.
+	$LvCorporaTools::TreeTransformations::DepPml2Conll::CPOSTAG = 
+		$params->[1] if ($params->[1]);
+	$LvCorporaTools::TreeTransformations::DepPml2Conll::POSTAG =
+		$params->[2] if ($params->[2]);
+		
+	# Convert.
+	LvCorporaTools::TreeTransformations::DepPml2Conll::transformFileBatch(
+		$source, $params->[0], $params->[3]);
+	move("$source/res", "$dirPrefix/conll");
+		
+	return "$dirPrefix/conll";
+}
+
+# Fold data sets for training.
+# return adress to step results.
+sub _fold
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Folding datasets ====================================\n";
+	
+	LvCorporaTools::TestDataSelector::SplitTreebank::splitCorpus(
+		$source, @{$params});
+	move("$source/res", "$dirPrefix/fold");
+
+	return "$dirPrefix/fold";
+	
 }
 
 # This ensures that when module is called from shell (and only then!)
