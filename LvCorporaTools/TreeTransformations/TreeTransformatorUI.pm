@@ -36,6 +36,7 @@ Usage
   
 Params:
      --dir       input directory (single value)
+	 --collect   collect all .w + .m + .a from data directory
      --dep       convert to dependencies (values: (*) x-Pred mode, (*) Coord
                  mode, (*) PMC mode)
      --red       remove reductions (no values)
@@ -94,6 +95,48 @@ sub processDir
 	my $source = $params{'--dir'}[0];
 	
 	my $prevStep;	# Currently not used.
+	
+	# Collect data recursively
+	if ($params{'--collect'})
+	{
+		print "\n==== Recursive data collecting ===========================\n";
+		
+		my $fileCounter = 0;
+		my @todoDirs = ();
+		my $current = $source;
+		mkpath ("$dirPrefix/collected");
+		
+		# Traverse subdirectories.
+		while ($current)
+		{
+			my $dir = IO::Dir->new($current) or die "Can't open folder $!";
+			
+			while (defined(my $item = $dir->read))
+			{
+				# Treebank file
+				if ((-f "$current/$item") and ($item =~ /.[amw]$/))
+				{
+					copy("$current/$item", "$dirPrefix/collected/");
+					$fileCounter++;
+				}
+				elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
+				{
+					push @todoDirs, "$current/$item";
+				}
+			}
+		}
+		continue
+		{
+			$current = shift @todoDirs;
+		}
+		
+		# Update statuss variables.		
+		$prevStep = '--collect';
+		$source = "$dirPrefix/collected";
+		$dirPrefix .= '/collected';
+		
+		print "Found $fileCounter files.\n";
+	}
 	
 	# Converting to dependencies
 	if ($params{'--dep'})
