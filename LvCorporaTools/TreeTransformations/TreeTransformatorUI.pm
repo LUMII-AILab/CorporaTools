@@ -15,6 +15,7 @@ use File::Path;
 use IO::Dir;
 use IO::File;
 
+use LvCorporaTools::PMLUtils::AUtils;
 use LvCorporaTools::TreeTransformations::Hybrid2Dep;
 use LvCorporaTools::TreeTransformations::RemoveReduction;
 use LvCorporaTools::PMLUtils::Knit;
@@ -35,20 +36,29 @@ Usage
   --dir and at least one processing step is mandatory
   
 Params:
-     --dir       input directory (single value)
-	 --collect   collect all .w + .m + .a from data directory
-     --dep       convert to dependencies (values: (*) x-Pred mode, (*) Coord
-                 mode, (*) PMC mode)
-     --red       remove reductions (no values)
-     --knit      convert .w + .m + .a to a single .pml file (value: directory
-                 of PML schemas)
-     --conll     convert .pml to conll (values: (*) label output tree arcs
-                 [0/1], (*) CPOSTAG mode [purify/first/none], (*) POSTAG mode
-                 [full/purify], (*) is "large" CoNLL-2009 output needed)
-     --fold      create development/test or cross-validation datasets (values:
-                 (*) probability (0;1), or cross-validation part count
-                 {3; 4; 5;...}, or 1 for concatenating all files, (*) seed)
-				 
+  General
+    --dir      input directory (single value)
+
+  Preprocessing
+	--collect  collect all .w + .m + .a from input directory (no values)
+
+  Main flow
+    --dep      convert to dependencies (values: (*) x-Pred mode, (*) Coord
+               mode, (*) PMC mode)
+    --red      remove reductions (no values)
+    --knit     convert .w + .m + .a to a single .pml file (value: directory of
+               PML schemas)
+    --conll    convert .pml to conll (values: (*) label output tree arcs
+               [0/1], (*) CPOSTAG mode [purify/first/none], (*) POSTAG mode
+               [full/purify], (*) is "large" CoNLL-2009 output needed)
+    --fold     create development/test or cross-validation datasets (values:
+               (*) probability (0;1), or cross-validation part count {3; 4;
+               5; ...}, or 1 for concatenating all files, (*) seed)
+
+  Additional stand-alone transformations
+	--ord      recalculate 'ord' fields (value: (*) reordering mode -
+               TOKEN/NODE)
+
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 }
@@ -58,7 +68,6 @@ sub processDir
 	autoflush STDOUT 1;
 	if (not @_ or @_ < 3)
 	{
-		#print 1;
 		&_printMan;
 		exit 1;
 	}
@@ -78,7 +87,6 @@ sub processDir
 			$params{$lastFlag} = [@{$params{$lastFlag}}, $f];
 		} else
 		{
-			#print 2;
 			&_printMan;
 			exit 1;
 		}
@@ -87,7 +95,6 @@ sub processDir
 	# Get directories.
 	unless ($params{'--dir'} or @{$params{'--dir'}} > 1)
 	{
-		#print 3;
 		&_printMan;
 		exit 1;
 	}
@@ -100,6 +107,11 @@ sub processDir
 		$source = &_collect($source, $dirPrefix);
 		$dirPrefix = $source;
 	}
+	
+	# Recalculating ord fields.
+	$source = &_ord($source, $dirPrefix, $params{'--ord'})
+		if ($params{'--ord'});
+	
 	
 	# Converting to dependencies.
 	$source = &_dep($source, $dirPrefix, $params{'--dep'})
@@ -121,7 +133,7 @@ sub processDir
 	$source = &_fold($source, $dirPrefix, $params{'--fold'})
 		if ($params{'--fold'});
 	
-	print "\n==== Successful finish ===================================\n";
+	print "\n==== Successful finish =======================================\n";
 }
 
 # Collect data recursively.
@@ -164,12 +176,61 @@ sub _collect
 		return "$dirPrefix/collected";
 }
 
+# Recalculate ord fields.
+# return adress to step results.
+sub _ord
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Recalculating ord fields ================================\n";
+	die "Invalid argument ".$params->[0]." for --ord $!"
+		if ($params->[0] ne 'TOKEN' and $params->[0] ne 'NODE');
+	
+	my $dir = IO::Dir->new($source) or die "dir $!";
+	mkpath("$dirPrefix/ord");
+	
+	# Process each file.
+	while (defined(my $inFile = $dir->read))
+	{
+		if (-f "$source/$inFile" and ($inFile =~ /^(.+)\.a$/))
+		{
+			my $newName = "$1-ord\.a";
+			my $parser = XML::LibXML->new('no_blanks' => 1);
+			my $doc = $parser->parse_file("$source/$inFile");
+			my $xpc = XML::LibXML::XPathContext->new();
+			$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
+			$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
+	
+			# Process each tree.
+			foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
+			{
+				$params->[0] eq 'NODE' ?
+					LvCorporaTools::PMLUtils::AUtils::renumberNodes($xpc, $tree):
+					LvCorporaTools::PMLUtils::AUtils::renumberTokens($xpc, $tree);
+					
+			}
+			my $outFile = IO::File->new("$dirPrefix/ord/$newName", ">")
+				or die "Output file opening: $!";	
+			print $outFile $doc->toString(1);
+			$outFile->close();
+			print "Processing $inFile finished!\n";
+		}
+	}
+	
+	# Add .m and .w files.
+	my @files = glob("$source/*.m $source/*.w");
+	for (@files)
+	{
+		copy($_, "$dirPrefix/ord/");
+	}
+	return "$dirPrefix/ord";
+}
+
 # Convert to dependencies.
 # return adress to step results.
 sub _dep
 {
 	my ($source, $dirPrefix, $params) = @_;
-	print "\n==== Converting to dependencies ==========================\n";
+	print "\n==== Converting to dependencies ==============================\n";
 		
 	# Set parameters.
 	$LvCorporaTools::TreeTransformations::Hybrid2Dep::XPRED = $params->[0]
@@ -199,7 +260,7 @@ sub _dep
 sub _red
 {
 	my ($source, $dirPrefix) = @_;
-	print "\n==== Removing reductions =================================\n";
+	print "\n==== Removing reductions =====================================\n";
 		
 	# Convert.
 	LvCorporaTools::TreeTransformations::RemoveReduction::transformFileBatch($source);
@@ -220,7 +281,7 @@ sub _red
 sub _knit
 {
 	my ($source, $dirPrefix, $params) = @_;
-	print "\n==== Knitting-in =========================================\n";
+	print "\n==== Knitting-in =============================================\n";
 	
 	# Set parameters.
 	my $schemaDir = $params->[0];
@@ -238,7 +299,7 @@ sub _knit
 sub _conll
 {
 	my ($source, $dirPrefix, $params) = @_;
-	print "\n==== Converting to CoNLL =================================\n";
+	print "\n==== Converting to CoNLL =====================================\n";
 	
 	# Set parameters.
 	$LvCorporaTools::TreeTransformations::DepPml2Conll::CPOSTAG = 
@@ -259,7 +320,7 @@ sub _conll
 sub _fold
 {
 	my ($source, $dirPrefix, $params) = @_;
-	print "\n==== Folding datasets ====================================\n";
+	print "\n==== Folding datasets ========================================\n";
 	
 	LvCorporaTools::TestDataSelector::SplitTreebank::splitCorpus(
 		$source, @{$params});

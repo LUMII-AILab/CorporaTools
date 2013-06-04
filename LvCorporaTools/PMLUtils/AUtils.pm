@@ -7,7 +7,9 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(getRole setNodeRole getChildrenNode hasChildrenNode moveChildren sortNodesByOrd);
+our @EXPORT_OK = qw(
+	renumberTokens renumberNodes getOrd setOrd getRole setNodeRole
+	getChildrenNode hasChildrenNode moveChildren sortNodesByOrd);
 
 use XML::LibXML;
 
@@ -23,6 +25,189 @@ use XML::LibXML;
 # Lauma Pretkalniņa, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
+
+# Renumber nodes with links to tokens based on node ordering already in tree.
+# TODO: renumbering based on m IDs?
+# renumberTokens (XPath context with set namespaces, DOM node for tree root
+#				  (usualy "LM"))
+sub renumberTokens
+{
+	my $xpc = shift @_; # XPath context
+	my $tree = shift @_;
+
+	# Remove 'ord' from root.
+	my @rootOrds = $xpc->findnodes('./pml:ord', $tree);
+	for (@rootOrds)
+	{
+		$tree->removeChild($_);
+	}
+	
+	# Find nodes with ords and remove unneeded ords.
+	my @noMorphoNodes = $xpc->findnodes(
+		'.//*[pml:ord and not(pml:m.rf) and not(pml:m)]', $tree);
+	for my $n (@noMorphoNodes)
+	{
+		#print &getRole ($xpc, $n);
+		my @ords = $xpc->findnodes('pml:ord', $n);
+		for (@ords)
+		{
+			#$n->removeChild($_);
+			$_->unbindNode();
+		}
+	}
+	
+	# Find reminding nodes with ords and recalculate ords.
+	my @morphoNodes = $xpc->findnodes('.//*[pml:ord]', $tree);
+	my @sorted = @{&sortNodesByOrd($xpc, 0, @morphoNodes)};
+	my $nextOrd = 1;
+	for my $n (@sorted)
+	{
+		&setOrd($xpc, $n, $nextOrd);
+		#my @ords = $xpc->findnodes('pml:ord', $n);
+		#my $newOrdNode = XML::LibXML::Element->new('ord');
+		#$newOrdNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
+		#$newOrdNode->appendTextNode($nextOrd);
+		#$ords[0]->replaceNode($newOrdNode);
+		$nextOrd++;
+	}
+	return $tree;
+}
+
+# renumberNodes (XPath context with set namespaces, DOM node for tree root
+#				 (usualy "LM"))
+# NB! Essentially this ir the same as in LV_A_Edit.mak
+sub renumberNodes
+{
+	my $xpc = shift @_; # XPath context
+	my $tree = shift @_;
+	
+	&renumberTokens($xpc, $tree);
+	
+	&_renumberNodesSubtree($xpc, $tree, $tree);
+	
+	return $tree;
+}
+
+sub _renumberNodesSubtree
+{
+	my $xpc = shift @_; # XPath context
+	my $root = shift @_;
+	my $tree = shift @_;
+	my $smallerSibOrd = (shift or 0);
+
+	# Currently best found ID for root node.
+	my $newId = 0;
+	
+	# Process children.
+	if (&hasChildrenNode($xpc, $root))
+	{
+		# At first we process those children who have nonzero ord somewhere
+		# below them. After that - all other children.
+	
+		# Seperate children with nonzero ords.
+		# TODO: Rewrite this with sort?
+		my (@processFirst, @postponed) = ((), ());
+		my $chNode = &getChildrenNode($xpc, $root);
+		for my $ch ($chNode->childNodes())
+		{
+			#my @ordChildren = $xpc->findnodes('.//pml:ord', $ch);
+			my @mChildren = $xpc->findnodes('.//pml:m.rf|.//pml:m', $ch);
+			if (@mChildren and @mChildren > 0)
+			{
+				push @processFirst, $ch;
+			}
+			else
+			{
+				push @postponed, $ch;
+			}
+		}
+		
+		# Process children recursively.
+		push @processFirst, @postponed;
+		for my $ch (@processFirst)
+		{
+			# Find smallest sibling ord.
+			my @sibOrds = sort {$a <=> $b } (
+				map {$_->textContent} ($xpc->findnodes('pml:children/*/pml:ord', $root)));
+			&_renumberNodesSubtree($xpc, $ch, $tree, $sibOrds[0]);
+			my $tmpOrd = &getOrd($xpc, $ch);
+			$newId = $tmpOrd
+				if ($tmpOrd and ($tmpOrd < $newId or $newId <= 0));
+			
+		}
+	}
+	#return if (${$xpc->findnodes('pml:ord', $root)}[0]->textContent > 0);
+	return if (&getOrd($xpc, $root));
+	
+	# Obtain new id if given node has no children.
+	$newId = $smallerSibOrd if ($newId <= 0);
+	
+	# Obtain new id if given node has no children and no siblings.	
+	if ($newId <= 0)
+	{
+		warn "No ord could be calculated $!";
+	}
+	$newId++;
+
+	#if ($newId <= 0)
+	#{
+	#	my $follower = $tree->following;
+	#	while ($follower and $follower->attr('ord') <= 0)
+	#	{
+	#		$follower = $follower->following;
+	#	}
+	#	$newId = $follower->attr('ord') if ($follower);
+	#} else
+	#{
+	#	$newId++;
+	#}
+	
+	# Shift by one all ords greater or equal $newId so that $newId can be used
+	# for root of the subtree.
+	for my $node ($xpc->findnodes('.//*[pml:ord]', $tree))
+	{
+		my $ord = &getOrd($xpc, $node);
+		&setOrd ($xpc, $node, $ord + 1)
+			if ($ord and $ord >= $newId);
+	}
+	
+	# Give ord to root of the subtree.	
+	&setOrd($xpc, $root, $newId);
+}
+
+# getOrd (XPath context with set namespaces, DOM node)
+# return ord value, if there is one, undef otherwise.
+sub getOrd
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my @ords = $xpc->findnodes('pml:ord', $node);
+	return $ords[0]->textContent
+		if (@ords and @ords > 0);
+	return undef;
+}
+
+# Set new ord to the given node.
+# setOrd (XPath context with set namespaces, DOM node, new ord value)
+sub setOrd
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $newOrd = shift @_;
+	
+	my @ords = $xpc->findnodes('pml:ord', $node);
+	my $newOrdNode = XML::LibXML::Element->new('ord');
+	$newOrdNode->setNamespace('http://ufal.mff.cuni.cz/pdt/pml/');
+	$newOrdNode->appendTextNode($newOrd);
+	if (@ords and @ords > 0)
+	{
+		$ords[0]->replaceNode($newOrdNode);
+	}
+	else
+	{
+		$node->addChild($newOrdNode);
+	}
+}
 
 # getRole (XPath context with set namespaces, DOM node/xinfo/coordinfo/pmcinfo
 #		   node)
@@ -121,8 +306,9 @@ sub sortNodesByOrd
 	
 	my @res = sort
 	{
-		${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc) <=>
-		${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
+		#${$xpc->findnodes('pml:ord', $a)}[0]->textContent * (1 - 2*$desc) <=>
+		#${$xpc->findnodes('pml:ord', $b)}[0]->textContent * (1 - 2*$desc)
+		&getOrd($xpc, $a) <=> &getOrd($xpc, $b)
 	} @nodes;
 	return \@res;
 }
