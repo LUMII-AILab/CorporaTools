@@ -6,9 +6,9 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transfromDir);
+our @EXPORT_OK = qw(processDir);
 
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Copy;
 use File::Path;
@@ -24,8 +24,18 @@ use LvCorporaTools::TestDataSelector::SplitTreebank;
 
 use Data::Dumper;
 
-# TODO: renumuration
-
+###############################################################################
+# Interface for Latvian Treebank PML transformations. See documentation in
+# &_printMan().
+#
+# Works with A level schema v.2.14.
+# Input files - utf8.
+#
+# Developed on Strawberry Perl 5.12.3.0
+# Latvian Treebank project, 2013
+# Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
+# Licenced under GPL.
+###############################################################################
 sub _printMan
 {
 	print <<END;
@@ -63,6 +73,8 @@ Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 }
 
+# Process treebank folder. This should be used as entry point, if this module
+# is used standalone.
 sub processDir
 {
 	autoflush STDOUT 1;

@@ -23,7 +23,7 @@ use LvCorporaTools::TagTransformations::Tag2FeatureList qw(parseTagSet decodeTag
 # except the root node for each tree. Invalid features like multiple ords per
 # single node are not checked.
 #
-# Works with A level schema v.2.12.
+# Works with A level schema v.2.14.
 # Input files - utf8.
 #
 # Developed on Strawberry Perl 5.12.3.0
