@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TagTransformations::TagTransformator;
+package LvCorporaTools::TagTransf::TagTransformator;
 use utf8;
 use strict;
 

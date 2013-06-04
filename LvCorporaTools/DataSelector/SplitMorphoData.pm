@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TestDataSelector::SplitMorphoData;
+package LvCorporaTools::DataSelector::SplitMorphoData;
 use utf8;
 use strict;
 use 5.010;  # so filetest ops can stack

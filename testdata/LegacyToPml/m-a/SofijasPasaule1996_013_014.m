@@ -7,7 +7,7 @@
 	</head>
 	<meta>
 		<lang>lv</lang>
-		<annotation_info id="semi-automatic">m un a līmeņa automātiskais konvertors, 0.4,  Tue Jun 19 18:19:36 2012</annotation_info>
+		<annotation_info id="semi-automatic">m un a līmeņa automātiskais konvertors, 0.4,  Tue Jun  4 17:52:42 2013</annotation_info>
 	</meta>
 
 	<s id="m-SofijasPasaule1996_013_014-p1s1">

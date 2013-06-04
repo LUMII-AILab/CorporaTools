@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TestDataSelector::OneFromEachMorpho;
+package LvCorporaTools::DataSelector::OneFromEachMorpho;
 
 use utf8;
 use strict;

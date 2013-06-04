@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TagTransformations::Tag2FeatureList;
+package LvCorporaTools::TagTransf::Tag2FeatureList;
 use utf8;
 use strict;
 

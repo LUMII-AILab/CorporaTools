@@ -3,7 +3,7 @@
 	<head>
 		<schema href="lvwschema.xml"/>
 	</head>
-	<meta>Eksperimentālais fails, automātiski marķēts (w līmeņa auto-marķētājs, 0.2), Mon Jun 18 18:09:34 2012</meta>
+	<meta>Eksperimentālais fails, automātiski marķēts (w līmeņa auto-marķētājs, 0.2), Tue Jun  4 17:52:47 2013</meta>
 	<doc id="SofijasPasaule1996_013_014" source_id="SofijasPasaule1996_013_014.txt">
 		<docmeta>Justeins Gordens "Sofijas pasaule", 1996.g., Zvaigzne ABC</docmeta>
 		<para>

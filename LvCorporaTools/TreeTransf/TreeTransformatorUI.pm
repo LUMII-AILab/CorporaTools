@@ -1,4 +1,4 @@
-package LvCorporaTools::TreeTransformations::TreeTransformatorUI;
+package LvCorporaTools::TreeTransf::TreeTransformatorUI;
 
 use strict;
 use warnings;
@@ -16,11 +16,11 @@ use IO::Dir;
 use IO::File;
 
 use LvCorporaTools::PMLUtils::AUtils;
-use LvCorporaTools::TreeTransformations::Hybrid2Dep;
-use LvCorporaTools::TreeTransformations::RemoveReduction;
+use LvCorporaTools::TreeTransf::Hybrid2Dep;
+use LvCorporaTools::TreeTransf::RemoveReduction;
 use LvCorporaTools::PMLUtils::Knit;
-use LvCorporaTools::TreeTransformations::DepPml2Conll;
-use LvCorporaTools::TestDataSelector::SplitTreebank;
+use LvCorporaTools::FormatTransf::DepPml2Conll;
+use LvCorporaTools::DataSelector::SplitTreebank;
 
 use Data::Dumper;
 
@@ -245,15 +245,15 @@ sub _dep
 	print "\n==== Converting to dependencies ==============================\n";
 		
 	# Set parameters.
-	$LvCorporaTools::TreeTransformations::Hybrid2Dep::XPRED = $params->[0]
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::XPRED = $params->[0]
 		if ($params->[0]);
-	$LvCorporaTools::TreeTransformations::Hybrid2Dep::COORD = $params->[1]
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::COORD = $params->[1]
 		if ($params->[1]);
-	$LvCorporaTools::TreeTransformations::Hybrid2Dep::PMC = $params->[2]
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::PMC = $params->[2]
 		if ($params->[2]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransformations::Hybrid2Dep::transformFileBatch($source);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::transformFileBatch($source);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
@@ -275,7 +275,7 @@ sub _red
 	print "\n==== Removing reductions =====================================\n";
 		
 	# Convert.
-	LvCorporaTools::TreeTransformations::RemoveReduction::transformFileBatch($source);
+	LvCorporaTools::TreeTransf::RemoveReduction::transformFileBatch($source);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/red");
@@ -314,13 +314,13 @@ sub _conll
 	print "\n==== Converting to CoNLL =====================================\n";
 	
 	# Set parameters.
-	$LvCorporaTools::TreeTransformations::DepPml2Conll::CPOSTAG = 
+	$LvCorporaTools::FormatTransf::DepPml2Conll::CPOSTAG = 
 		$params->[1] if ($params->[1]);
-	$LvCorporaTools::TreeTransformations::DepPml2Conll::POSTAG =
+	$LvCorporaTools::FormatTransf::DepPml2Conll::POSTAG =
 		$params->[2] if ($params->[2]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransformations::DepPml2Conll::transformFileBatch(
+	LvCorporaTools::FormatTransf::DepPml2Conll::transformFileBatch(
 		$source, $params->[0], $params->[3]);
 	move("$source/res", "$dirPrefix/conll");
 		
@@ -334,7 +334,7 @@ sub _fold
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Folding datasets ========================================\n";
 	
-	LvCorporaTools::TestDataSelector::SplitTreebank::splitCorpus(
+	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
 		$source, @{$params});
 	move("$source/res", "$dirPrefix/fold");
 

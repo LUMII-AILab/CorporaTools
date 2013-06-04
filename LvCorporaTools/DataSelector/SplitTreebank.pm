@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TestDataSelector::SplitTreebank;
+package LvCorporaTools::DataSelector::SplitTreebank;
 use utf8;
 use strict;
 

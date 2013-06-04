@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TagTransformations::TagPurifier;
+package LvCorporaTools::TagTransf::TagPurifier;
 
 use strict;
 use warnings;

@@ -9,12 +9,12 @@ fi
 
 echo "Converting $pmlFolder"
 
-perl -e "use LvCorporaTools::TestDataSelector::SplitMorphoData; LvCorporaTools::TestDataSelector::SplitMorphoData::splitCorpus(@ARGV)" "$pmlFolder" 0.2 0
+perl -e "use LvCorporaTools::DataSelector::SplitMorphoData; LvCorporaTools::DataSelector::SplitMorphoData::splitCorpus(@ARGV)" "$pmlFolder" 0.2 0
 
 mv "$pmlFolder/dev" "$pmlFolder/train"
 mv "$pmlFolder/test" "$pmlFolder/devtest"
 
-perl -e "use LvCorporaTools::TestDataSelector::SplitMorphoData; LvCorporaTools::TestDataSelector::SplitMorphoData::splitCorpus(@ARGV)" "$pmlFolder/devtest" 0.5 0
+perl -e "use LvCorporaTools::DataSelector::SplitMorphoData; LvCorporaTools::DataSelector::SplitMorphoData::splitCorpus(@ARGV)" "$pmlFolder/devtest" 0.5 0
 
 mv "$pmlFolder/devtest/dev" "$pmlFolder/"
 mv "$pmlFolder/devtest/test" "$pmlFolder/"

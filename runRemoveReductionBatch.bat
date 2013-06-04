@@ -1,3 +1,3 @@
-perl -e "use LvCorporaTools::TreeTransformations::RemoveReduction qw(transformFileBatch); transformFileBatch(@ARGV)" testdata\RemoveReduction
+perl -e "use LvCorporaTools::TreeTransf::RemoveReduction qw(transformFileBatch); transformFileBatch(@ARGV)" testdata\RemoveReduction
 
 pause

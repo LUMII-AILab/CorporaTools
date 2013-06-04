@@ -1,4 +1,4 @@
-package LvCorporaTools::TreeTransformations::RemoveReduction;
+package LvCorporaTools::TreeTransf::RemoveReduction;
 
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 ﻿#!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::PlainToPML::MakeMA;
+package LvCorporaTools::FormatTransf::LegacyToPML::MakeMA;
 
 use utf8;
 use strict;

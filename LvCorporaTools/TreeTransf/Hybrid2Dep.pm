@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TreeTransformations::Hybrid2Dep;
+package LvCorporaTools::TreeTransf::Hybrid2Dep;
 
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::TreeTransformations::DepPml2Conll;
+package LvCorporaTools::FormatTransf::DepPml2Conll;
 
 use strict;
 use warnings;
@@ -14,8 +14,8 @@ use IO::File;
 use IO::Dir;
 use XML::LibXML;  # XML handling library
 
-use LvCorporaTools::TagTransformations::TagPurifier qw(purifyKamolsTag);
-use LvCorporaTools::TagTransformations::Tag2FeatureList qw(parseTagSet decodeTag);
+use LvCorporaTools::TagTransf::TagPurifier qw(purifyKamolsTag);
+use LvCorporaTools::TagTransf::Tag2FeatureList qw(parseTagSet decodeTag);
 
 ###############################################################################
 # This program transforms Latvian Treebank files in dependency-only form from
