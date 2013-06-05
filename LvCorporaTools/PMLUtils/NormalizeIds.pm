@@ -7,13 +7,15 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(normalizeIds load process doOutput);
+our @EXPORT_OK = qw(normalizeIds processDir load process doOutput);
 
 use Data::Dumper;
-use XML::Simple;  # XML handling library
-use Tie::IxHash; # This class provides analogue to java's LinkedHashMap
+use IO::Dir;
 use IO::File;
 use File::Path;
+use Tie::IxHash; # This class provides analogue to java's LinkedHashMap
+use XML::Simple;  # XML handling library
+
 use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 
 ###############################################################################
@@ -30,6 +32,42 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
+
+# Recalculate IDs in multiple datasets. This can be used as entry point, if
+# this module is used standalone.
+sub processDir
+{
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
+	{
+		print <<END;
+Script for recalculating IDs in given PML datasets (all .w + .m + .a in the
+given wolder). This should be used before concatenating multiple files, but
+after the checkW is used.
+Input files should be provided as UTF-8.
+
+Params:
+   data directory
+
+Latvian Treebank project, LUMII, 2011, provided under GPL
+END
+		exit 1;
+	}
+
+	my $dir_name = $_[0];
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+	while (defined(my $in_file = $dir->read))
+	{
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
+		{
+			normalizeIds ($dir_name, $1, $1);
+		}
+	}
+}
+
+# Recalculate IDs in single dataset. This can be used as entry point, if this
+# module is used standalone.
 sub normalizeIds
 {
 	autoflush STDOUT 1;
