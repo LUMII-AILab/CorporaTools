@@ -33,7 +33,7 @@ use LvCorporaTools::TagTransf::Tag2FeatureList qw(parseTagSet decodeTag);
 ###############################################################################
 
 # Global variables - transformation settings.
-# If form or token contains space, it will be replaced with this string.
+# If lemma or token contains space, it will be replaced with this string.
 our $SPACE_SUBST = "_";
 # What postag to use?
 our $POSTAG = 'FULL';		# All SemTi-Kamols tagset features, this is default.
@@ -58,7 +58,8 @@ Global variables:
              letter) / 'NONE'(no CPOSTAG, default value)
    POSTAG - POSTAG mode 'PURIFY' (no lexical features) / 'FULL' (all
             SemTi-Kamols features, default value)
-   SPACE_SUBST 
+   SPACE_SUBST - nonspace symbol to substitute spaces that are not allowed in
+                 CoNLL formats
 Input files should be provided as UTF-8.
 
 Params:

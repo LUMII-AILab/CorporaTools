@@ -27,6 +27,9 @@ use Data::Dumper;
 ###############################################################################
 # Interface for Latvian Treebank PML transformations. See documentation in
 # &_printMan().
+# Invocation example for Windows:
+#perl LvCorporaTools/TreeTransf/TreeTransformatorUI.pm --dir data --collect --ord NODE --dep --red --knit --conll 0 FIRST FULL 0 --fold 1
+#
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
@@ -53,21 +56,25 @@ Params:
 	--collect  collect all .w + .m + .a from input directory (no values)
 
   Main flow
-    --dep      convert to dependencies (values: (*) x-Pred mode, (*) Coord
-               mode, (*) PMC mode, (*) do input data have all nodes ordered)
+    --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
+               DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
+               (*) PMC mode [BASELEM / DEFAULT (default)], (*) do input data
+               have all nodes ordered [0 / 1 (default)])
     --red      remove reductions (no values)
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
-               PML schemas)
+               PML schemas [default = 'TrEd extension/lv-treebank/resources'])
     --conll    convert .pml to conll (values: (*) label output tree arcs
-               [0/1], (*) CPOSTAG mode [purify/first/none], (*) POSTAG mode
-               [full/purify], (*) is "large" CoNLL-2009 output needed)
+               [0/1], (*) CPOSTAG mode [PURIFY / FIRST / NONE (default)],
+               (*) POSTAG mode [FULL (default) / PURIFY], (*) is "large"
+               CoNLL-2009 output needed [0 (default) / 1])
     --fold     create development/test or cross-validation datasets (values:
                (*) probability (0;1), or cross-validation part count {3; 4;
-               5; ...}, or 1 for concatenating all files, (*) seed)
+               5; ...}, or 1 for concatenating all files, (*) seed [default =
+               nothing pased to srand])
 
   Additional stand-alone transformations
-	--ord      recalculate 'ord' fields (value: (*) reordering mode -
-               TOKEN/NODE)
+	--ord      recalculate 'ord' fields (value: (*) reordering mode
+               [TOKEN/NODE])
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END

@@ -60,10 +60,21 @@ sub processDir
 		print <<END;
 Script for batch transfoming Latvian Treebank .a files from native hybrid
 format to dependency-only format.
+Global variables:
+   XPRED - xPred transformation: 'BASELEM' (auxverbs and modals become
+           dependents of basElem) / 'DEFAULT' (everything become dependent of
+           first auxverb/modal, default value)
+   COORD - coordinated elements' transformation: 'ROW' (all coordination
+           elements in a row) / 'DEFAULT' (conjunction or punctuation as root
+           element, default value)
+   PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
+         becomes root element) / 'DEFAULT' (first punct becomes root element,
+         default value)
+Input files should be provided as UTF-8.
 
 Params:
    data directory 
-   input data have all nodes ordered [opt, 0/1]
+   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -94,12 +105,22 @@ sub transformFile
 		print <<END;
 Script for transfoming Latvian Treebank .a files from native hybrid format to
 dependency-only format.
+Global variables:
+   XPRED - xPred transformation: 'BASELEM' (auxverbs and modals become
+           dependents of basElem) / 'DEFAULT' (everything become dependent of
+           first auxverb/modal, default value)
+   COORD - coordinated elements' transformation: 'ROW' (all coordination
+           elements in a row) / 'DEFAULT' (conjunction or punctuation as root
+           element, default value)
+   PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
+         becomes root element) / 'DEFAULT' (first punct becomes root element,
+         default value)
 Input files should be provided as UTF-8.
 
 Params:
    directory prefix
    file name
-   input data have all nodes ordered [opt, 0/1]
+   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
    new file name [opt, current file name used otherwise]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
