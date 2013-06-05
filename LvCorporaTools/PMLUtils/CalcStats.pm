@@ -25,9 +25,11 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
+
+# Calculate statistics in single file. This can be used as entry point, if this
+# module is used standalone.
 sub calcStats
 {
-
 	autoflush STDOUT 1;
 	if (not @_ or @_ < 1)
 	{
@@ -53,30 +55,38 @@ END
 	print "CalcStats has finished procesing \"$inputName\".\n";
 }
 
+# Calculate statistics in all files in given folder. This can be used as entry
+# point, if this module is used standalone.
 sub calcStatsBatch
 {
-	if (@_ == 1)
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
 	{
+		print <<END;
+Script for calculating sentence length statistics from LV-PML .m files in
+given data directory.
 
-		my $dirPrefix = $_[0];
-		my $dir = IO::Dir->new($dirPrefix) or die "dir $!";
-		my %mapping = ();
+Params:
+   data directory 
 
-		while (defined(my $inputName = $dir->read))
+Latvian Treebank project, LUMII, 2013, provided under GPL
+END
+		exit 1;
+	}
+	my $dirPrefix = $_[0];
+	my $dir = IO::Dir->new($dirPrefix) or die "dir $!";
+	my %mapping = ();
+
+	while (defined(my $inputName = $dir->read))
+	{
+		if ((! -d "$dirPrefix/$inputName") and ($inputName =~ /^(.+)\.m$/))
 		{
-			if ((! -d "$dirPrefix/$inputName") and ($inputName =~ /^(.+)\.m$/))
-			{
-				#checkLvPml ($dir_name, $1, "$1-errors.txt");
-				%mapping = %{&_processM($dirPrefix, $inputName, \%mapping)};
-				print "calcStatsBatch has finished procesing \"$inputName\".\n";
-			}
+			#checkLvPml ($dir_name, $1, "$1-errors.txt");
+			%mapping = %{&_processM($dirPrefix, $inputName, \%mapping)};
+			print "calcStatsBatch has finished procesing \"$inputName\".\n";
 		}
-		&_doOutput($dirPrefix, "stats.txt", \%mapping);
 	}
-	else
-	{
-		checkLvPml (@_);
-	}
+	&_doOutput($dirPrefix, "stats.txt", \%mapping);
 }
 
 
