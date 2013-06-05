@@ -3,7 +3,7 @@ package LvCorporaTools::PMLUtils::Knit;
 use strict;
 use warnings;
 
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Path;
 use IO::Dir;
