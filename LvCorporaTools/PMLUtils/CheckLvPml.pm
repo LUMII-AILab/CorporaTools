@@ -7,11 +7,12 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(checkLvPml);
+our @EXPORT_OK = qw(checkLvPml processDir);
 
 use Data::Dumper;
 use XML::Simple;  # XML handling library
 use IO::File;
+use IO::Dir;
 use File::Path;
 use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 
@@ -40,6 +41,45 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 # Licenced under GPL.
 ###############################################################################
 
+# Perform error-chacking in multiple datasets. This can be used as entry point,
+# if this module is used standalone.
+sub processDir
+{
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
+	{
+		print <<END;
+Script for checking references in the given PML datasets (all .w + .m + .a in
+the given wolder) for following eroors:
+* IDs from w file that are not refferenced in m file;
+* IDs from m file that are not refferenced in a file (morphemes with "deleted"
+  element are listed separately from others);
+* IDs from m file linking to non-existing IDs in w file;
+* IDs from a file linking to non-existing IDs in m file;
+* trees in a file not corresponding to single sentence in m file.
+
+Params:
+   data directory
+
+Latvian Treebank project, LUMII, 2013, provided under GPL
+END
+		exit 1;
+	}
+
+	my $dir_name = $_[0];
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+	while (defined(my $in_file = $dir->read))
+	{
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
+		{
+			checkLvPml ($dir_name, $1, "$1-errors.txt");
+		}
+	}
+}
+
+# Perform error-chacking in single dataset. This can be used as entry point, if
+# this module is used standalone.
 sub checkLvPml
 {
 
@@ -47,7 +87,8 @@ sub checkLvPml
 	if (not @_ or @_ < 2)
 	{
 		print <<END;
-Script for checking references in the given PML dataset for following eroors:
+Script for checking references in the given PML dataset (.w + .m + .a) for
+following eroors:
 * IDs from w file that are not refferenced in m file;
 * IDs from m file that are not refferenced in a file (morphemes with "deleted"
   element are listed separately from others);
