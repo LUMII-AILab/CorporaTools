@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(calcStats calcStatsBatch);
+our @EXPORT_OK = qw(calcStats processDir);
 
 use Data::Dumper;
 use IO::File;
@@ -57,7 +57,7 @@ END
 
 # Calculate statistics in all files in given folder. This can be used as entry
 # point, if this module is used standalone.
-sub calcStatsBatch
+sub processDir
 {
 	autoflush STDOUT 1;
 	if (not @_ or @_ < 1)
