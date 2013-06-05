@@ -7,15 +7,16 @@ use utf8;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(checkW);
+our @EXPORT_OK = qw(checkW processDir);
 
 #use Data::Dumper;
-use XML::Simple;  # XML handling library
+use IO::Dir;
 use IO::File;
 use File::Path;
+use XML::Simple;  # XML handling library
 
 ###############################################################################
-# This programm checks PML W file agaist the original TXT file. Spaces and
+# This programm checks PML W file agaist the original .txt file. Spaces and
 # paragraph placement are adjusted automaticaly. If one of the files contains
 # some alphanumeric sequence the other one does not, fatal error arrises.
 #
@@ -29,10 +30,40 @@ use File::Path;
 # Licenced under GPL.
 ###############################################################################
 
+# Perform error-chacking in multiple files. This can be used as entry point, if
+# this module is used standalone.
+sub processDir
+{
+	if (not @_ or @_ < 1)
+	{
+		print <<END;
+Script verifies .w files against original plain-text and adds mising spaces
+and paragraph borders, if necessary. Input files should be provided as UTF-8.
 
+Params:
+   data directory
+
+Latvian Treebank project, LUMII, 2011, provided under GPL
+END
+		exit 1;
+	}
+
+	my $dir_name = $_[0];
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+	while (defined(my $in_file = $dir->read))
+	{
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
+		{
+			checkW ($dir_name, "$1.w", "$1.txt");
+		}
+	}
+}
+
+# Perform error-chacking in single file. This can be used as entry point, if
+# this module is used standalone.
 sub checkW
 {
-	#my $errFile = IO::File->new('err.txt', ">");
 	autoflush STDOUT 1;
 	if (not @_ or @_ < 2)
 	{
