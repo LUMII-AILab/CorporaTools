@@ -8,7 +8,7 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC transformFile processDir transformTree recalculateOrds);
+	$XPRED $COORD $PMC transformFile processDir transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -18,8 +18,9 @@ use IO::Dir;
 use List::Util qw(first);
 use XML::LibXML;  # XML handling library
 
-use LvCorporaTools::PMLUtils::AUtils
-	qw(getRole setNodeRole getChildrenNode sortNodesByOrd moveChildren);
+use LvCorporaTools::PMLUtils::AUtils qw(
+	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
+	sortNodesByOrd moveChildren);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -62,20 +63,22 @@ format to dependency-only format.
 
 Params:
    data directory 
+   input data have all nodes ordered [opt, 0/1]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
 
-	my $dir_name = $_[0];
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $dirName = shift @_;
+	my $numberedNodes = (shift @_ or 1);
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
-	while (defined(my $in_file = $dir->read))
+	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
 		{
-			transformFile ($dir_name, $in_file, "$1-dep.a");
+			&transformFile ($dirName, $inFile, $numberedNodes, "$1-dep.a");
 		}
 	}
 }
@@ -96,6 +99,7 @@ Input files should be provided as UTF-8.
 Params:
    directory prefix
    file name
+   input data have all nodes ordered [opt, 0/1]
    new file name [opt, current file name used otherwise]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
@@ -105,6 +109,7 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
+	my $numberedNodes = (shift @_ or 1);
 	my $newName = (shift @_ or $oldName);
 
 	mkpath("$dirPrefix/res/");
@@ -125,8 +130,8 @@ END
 	# process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
+		renumberNodes($xpc, $tree) unless ($numberedNodes);
 		&transformTree($xpc, $tree, $warnFile);
-		&recalculateOrds($xpc, $tree);
 	}
 	
 	# ... and update the schema information and root name.
@@ -145,41 +150,6 @@ END
 	print "Processing $oldName finished!\n";
 	print $warnFile "Processing $oldName finished!\n";
 	$warnFile->close();
-}
-
-# Recalculate values for "ord" fields - make them start with 1 and be
-# sequential. Remove ord for root node.
-# recalculateOrds (XPath context with set namespaces, DOM node for tree root
-#				   (usualy "LM"))
-# TODO - generalize and move to AUtils
-sub recalculateOrds
-{
-	my $xpc = shift @_; # XPath context
-	my $tree = shift @_;
-
-	# Find ord nodes and sort them.
-	my @ords = $xpc->findnodes('.//pml:ord', $tree);
-	my @sorted = sort {$a->textContent <=> $b->textContent} @ords;
-	
-	# Renumber ord nodes.
-	my $nextId = 1;
-	foreach my $o (@sorted)
-	{
-		my $parent = $o->parentNode;
-		my $parName = $parent->nodeName;
-		if ($parName ne 'node')
-		{
-			$parent->removeChild($o);
-		}
-		else
-		{
-			warn "recalculateOrds warns: Multiple textnodes below ord node\n"
-				if (@{$o->childNodes()} gt 1); # This should not happen.
-			$o->removeChild($o->firstChild);
-			$o->appendText($nextId);
-			$nextId++;
-		}
-	}
 }
 
 # Transform single tee (LM element in most tree files).
@@ -223,8 +193,45 @@ sub transformTree
 
 	}
 	
+	#&_recalculateOrds($xpc, $tree);
+	renumberTokens($xpc, $tree);
+
 	# &_finishRoles($xpc, $tree);
 }
+
+# Recalculate values for "ord" fields - make them start with 1 and be
+# sequential. Remove ord for root node.
+# _recalculateOrds (XPath context with set namespaces, DOM node for tree root
+#				    (usualy "LM"))
+#sub _recalculateOrds
+#{
+#	my $xpc = shift @_; # XPath context
+#	my $tree = shift @_;
+#
+#	# Find ord nodes and sort them.
+#	my @ords = $xpc->findnodes('.//pml:ord', $tree);
+#	my @sorted = sort {$a->textContent <=> $b->textContent} @ords;
+#	
+#	# Renumber ord nodes.
+#	my $nextId = 1;
+#	foreach my $o (@sorted)
+#	{
+#		my $parent = $o->parentNode;
+#		my $parName = $parent->nodeName;
+#		if ($parName ne 'node')
+#		{
+#			$parent->removeChild($o);
+#		}
+#		else
+#		{
+#			warn "recalculateOrds warns: Multiple textnodes below ord node\n"
+#				if (@{$o->childNodes()} > 1); # This should not happen.
+#			$o->removeChild($o->firstChild);
+#			$o->appendText($nextId);
+#			$nextId++;
+#		}
+#	}
+#}
 
 # Transform roles in form "someRole" to "someRole-0-0". Leave roles in form
 # "firstRole-secondRole-thirdRole" intact.
@@ -241,7 +248,7 @@ sub _finishRoles
 		my $oldRole = $r->textContent;
 		next if $oldRole =~/-.*-/;
 		warn "_finishRoles warns: Multiple textnodes below role node\n"
-			if (@{$r->childNodes()} gt 1); # This should not happen.
+			if (@{$r->childNodes()} > 1); # This should not happen.
 		$r->removeChild($r->firstChild);
 		$r->appendText("$oldRole-0-0");
 	}

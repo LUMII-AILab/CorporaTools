@@ -27,6 +27,7 @@ use XML::LibXML;
 ###############################################################################
 
 # Renumber nodes with links to tokens based on node ordering already in tree.
+# Remove ords for other nodes.
 # TODO: renumbering based on m IDs?
 # renumberTokens (XPath context with set namespaces, DOM node for tree root
 #				  (usualy "LM"))
@@ -72,10 +73,11 @@ sub renumberTokens
 	}
 	return $tree;
 }
-
+# Asign ord numbers to all nodes in tree, but preserve the order of the nodes
+# with corresponding tokens.
+# NB! Essentially this ir the same as in LV_A_Edit.mak
 # renumberNodes (XPath context with set namespaces, DOM node for tree root
 #				 (usualy "LM"))
-# NB! Essentially this ir the same as in LV_A_Edit.mak
 sub renumberNodes
 {
 	my $xpc = shift @_; # XPath context

@@ -54,7 +54,7 @@ Params:
 
   Main flow
     --dep      convert to dependencies (values: (*) x-Pred mode, (*) Coord
-               mode, (*) PMC mode)
+               mode, (*) PMC mode, (*) do input data have all nodes ordered)
     --red      remove reductions (no values)
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
                PML schemas)
@@ -253,7 +253,7 @@ sub _dep
 		if ($params->[2]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[3]);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
