@@ -25,10 +25,10 @@ use IO::Dir;
 ###############################################################################
 sub checkWBatch
 {
-	if (@ARGV eq 1)
+	if (@_ == 1)
 	{
 
-		my $dir_name = $ARGV[0];
+		my $dir_name = $_[0];
 		my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
 		while (defined(my $in_file = $dir->read))
@@ -42,7 +42,7 @@ sub checkWBatch
 	}
 	else
 	{
-		checkW (@ARGV);
+		checkW (@_);
 	}
 }
 1;

@@ -31,7 +31,7 @@ our @EXPORT_OK = qw(knit processDir);
 sub knit
 {
 	autoflush STDOUT 1;
-	if (@_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for knitting arbitrary PML file.
@@ -66,7 +66,7 @@ END
 sub processDir
 {
 	autoflush STDOUT 1;
-	if (@_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for batch knitting arbitrary PML files.

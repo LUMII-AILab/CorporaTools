@@ -29,7 +29,7 @@ sub calcStats
 {
 
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 1)
+	if (not @_ or @_ < 1)
 	{
 		print <<END;
 Script for calculating sentence length statistics from given LV-PML .m file.
@@ -55,7 +55,7 @@ END
 
 sub calcStatsBatch
 {
-	if (@_ eq 1)
+	if (@_ == 1)
 	{
 
 		my $dirPrefix = $_[0];

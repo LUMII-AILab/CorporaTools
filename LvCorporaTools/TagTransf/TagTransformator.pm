@@ -117,7 +117,7 @@ sub VeestnesisDirToKamols
 # Input parameters: pointer to transformator funtion, data dir, output dir.
 sub _ioShell
 {
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for converting tags between varios tagsets in PML M file (or any other

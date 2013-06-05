@@ -25,7 +25,7 @@ our $progname = "w līmeņa auto-marķētājs, $vers";
 ###############################################################################
 sub makeW
 {
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for creating PML W file from the original text file.

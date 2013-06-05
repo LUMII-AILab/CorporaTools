@@ -253,7 +253,7 @@ sub _dep
 		if ($params->[2]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::transformFileBatch($source);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
@@ -275,7 +275,7 @@ sub _red
 	print "\n==== Removing reductions =====================================\n";
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::RemoveReduction::transformFileBatch($source);
+	LvCorporaTools::TreeTransf::RemoveReduction::processDir($source);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/red");
@@ -320,7 +320,7 @@ sub _conll
 		$params->[2] if ($params->[2]);
 		
 	# Convert.
-	LvCorporaTools::FormatTransf::DepPml2Conll::transformFileBatch(
+	LvCorporaTools::FormatTransf::DepPml2Conll::processDir(
 		$source, $params->[0], $params->[3]);
 	move("$source/res", "$dirPrefix/conll");
 		

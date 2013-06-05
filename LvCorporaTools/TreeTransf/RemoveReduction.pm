@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFileBatch transformFile transformTree);
+our @EXPORT_OK = qw(processDir transformFile transformTree);
 
 #use Carp::Always;	# Print stack trace on die.
 
@@ -39,25 +39,31 @@ use LvCorporaTools::PMLUtils::AUtils
 # If single argument provided, treat it as directory and process all .a files
 # in it. Otherwise pass all arguments to transformFile. This can be used as
 # entry point, if this module is used standalone.
-sub transformFileBatch
+sub processDir
 {
-	if (@_ eq 1)
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
 	{
-		my $dir_name = $_[0];
-		my $dir = IO::Dir->new($dir_name) or die "dir $!";
+		print <<END;
+Script for batch removing reduction nodes from Latvian Treebank .a files.
+Input files should be provided as UTF-8.
 
-		while (defined(my $in_file = $dir->read))
-		{
-			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
-			{
-				transformFile ($dir_name, $in_file, "$1-nored.a");
-			}
-		}
+Params:
+   data directory 
 
+Latvian Treebank project, LUMII, 2013, provided under GPL
+END
+		exit 1;
 	}
-	else
+	my $dir_name = $_[0];
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+	while (defined(my $in_file = $dir->read))
 	{
-		transformFile (@_);
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+		{
+			transformFile ($dir_name, $in_file, "$1-nored.a");
+		}
 	}
 }
 
@@ -67,7 +73,7 @@ sub transformFileBatch
 sub transformFile
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 3)
 	{
 		print <<END;
 Script for removing reduction nodes from Latvian Treebank .a files.

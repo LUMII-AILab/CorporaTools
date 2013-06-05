@@ -22,7 +22,7 @@ our @EXPORT_OK = qw(simpleSentBreaker);
 ###############################################################################
 sub simpleSentBreaker
 {
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for performing simple sentence breaking. This is not a valid Latvian

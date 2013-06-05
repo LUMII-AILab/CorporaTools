@@ -24,7 +24,7 @@ use IO::Dir;
 sub selectOneFromEach
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 1)
+	if (not @_ or @_ < 1)
 	{
 		print <<END;
 Script for choosing one sentence from each data file.

@@ -8,7 +8,7 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC transformFile transformFileBatch transformTree recalculateOrds);
+	$XPRED $COORD $PMC transformFile processDir transformTree recalculateOrds);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -49,29 +49,34 @@ our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
 #our $PMC = 'BASELEM';		# basElem as root element
 our $PMC = 'DEFAULT';		# first punct as root element
 
-# If single argument provided, treat it as directory and process all .a files
-# in it. Otherwise pass all arguments to transformFile. This can be used as
-# entry point, if this module is used standalone.
-sub transformFileBatch
+# Process all .a files in given folder. This can be used as entry point, if
+# this module is used standalone.
+sub processDir
 {
-	if (@_ eq 1)
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
 	{
+		print <<END;
+Script for batch transfoming Latvian Treebank .a files from native hybrid
+format to dependency-only format.
 
-		my $dir_name = $_[0];
-		my $dir = IO::Dir->new($dir_name) or die "dir $!";
+Params:
+   data directory 
 
-		while (defined(my $in_file = $dir->read))
-		{
-			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
-			{
-				transformFile ($dir_name, $in_file, "$1-dep.a");
-			}
-		}
-
+Latvian Treebank project, LUMII, 2013, provided under GPL
+END
+		exit 1;
 	}
-	else
+
+	my $dir_name = $_[0];
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+
+	while (defined(my $in_file = $dir->read))
 	{
-		transformFile (@_);
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+		{
+			transformFile ($dir_name, $in_file, "$1-dep.a");
+		}
 	}
 }
 

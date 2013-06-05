@@ -34,7 +34,7 @@ sub checkW
 {
 	#my $errFile = IO::File->new('err.txt', ">");
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 1)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script verifies .w file against original plain-text and adds mising spaces and

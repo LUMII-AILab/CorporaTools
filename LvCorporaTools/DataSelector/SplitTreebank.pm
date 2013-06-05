@@ -34,7 +34,7 @@ sub splitCorpus
 {
 	autoflush STDOUT 1;
 	use POSIX;
-	if (not @_ or @_ le 1 or $_[1] <= 0 or ($_[1] >= 1 and floor($_[1]) != $_[1] ))
+	if (not @_ or @_ < 2 or $_[1] <= 0 or ($_[1] >= 1 and floor($_[1]) != $_[1] ))
 	{
 		print <<END;
 Script for splitting Latvian Treebank files (CoNLL format) into datasets for

@@ -30,7 +30,7 @@ use XML::LibXML;
 sub splitCorpus
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 1)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for splitting each PML M file in given directory into two data sets,
@@ -63,7 +63,7 @@ END
 sub splitFile
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 3)
 	{
 		print <<END;
 Script for splitting PML M file into two data sets, whose size depends on given

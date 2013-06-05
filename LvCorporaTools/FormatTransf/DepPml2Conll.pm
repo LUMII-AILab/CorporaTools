@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile transformFileBatch SPACE_SUBST POSTAG CPOSTAG);
+our @EXPORT_OK = qw(transformFile processDir SPACE_SUBST POSTAG CPOSTAG);
 
 use Data::Dumper;
 use File::Path;
@@ -43,34 +43,49 @@ our $CPOSTAG = 'NONE';		# No CPOSTAG, this is default.
 #our $CPOSTAG = 'FIRST';	# CPOSTAG is POS.
 #our $CPOSTAG = 'PURIFY';	# No lexical features included in CPOSTAG.
 
-# If 3 arguments (directory name, include arc labels, whether do output in
-# CoNLL-2009 format) provided, treat first as directory and process all files
-# in it. Otherwise pass all arguments to transformFile. This can be used as
-# entry point, if this module is used standalone.
-sub transformFileBatch
+# Process all .pml and .xml files in given folder. This can be used as entry
+# point, if this module is used standalone.
+sub processDir
 {
-	if (@_ eq 3)
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 2)
 	{
-		my $dir_name = shift @_;
-		my $mode = shift @_;
-		#my $cpostag = shift @_;
-		#my $postag = shift @_;
-		my $conll2009 = shift @_;
-		my $dir = IO::Dir->new($dir_name) or die "dir $!";
-		my $infix = $mode ? "nored" : "unlabeled";
-		
-		while (defined(my $in_file = $dir->read))
-		{
-			if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
-			{
-				transformFile (
-					$dir_name, $in_file, $mode, "$1-$infix.conll", $conll2009);
-			}
-		}
+		print <<END;
+Script for batch transfoming dependency-only Latvian Treebank files from
+knited-in PML format to CoNLL format. 
+Global variables:
+   CPOSTAG - CPOSTAG mode: 'PURIFY' (no lexical features) / 'FIRST' (single
+             letter) / 'NONE'(no CPOSTAG, default value)
+   POSTAG - POSTAG mode 'PURIFY' (no lexical features) / 'FULL' (all
+            SemTi-Kamols features, default value)
+   SPACE_SUBST 
+Input files should be provided as UTF-8.
+
+Params:
+   data directory
+   0/1 - print labeled output (if true, trees with reductions will be ommited)
+   use CoNLL-2009 format [opt, false by default]
+
+Latvian Treebank project, LUMII, 2012, provided under GPL
+END
+		exit 1;
 	}
-	else
+	# Input paramaters.
+	my $dir_name = shift @_;
+	my $mode = shift @_;
+	#my $cpostag = shift @_;
+	#my $postag = shift @_;
+	my $conll2009 = (shift @_ or 0);
+	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $infix = $mode ? "nored" : "unlabeled";
+	
+	while (defined(my $in_file = $dir->read))
 	{
-		transformFile (@_);
+		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
+		{
+			transformFile (
+				$dir_name, $in_file, $mode, "$1-$infix.conll", $conll2009);
+		}
 	}
 }
 
@@ -79,7 +94,7 @@ sub transformFileBatch
 sub transformFile
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 3)
 	{
 		print <<END;
 Script for transfoming dependency-only Latvian Treebank files from knited-in

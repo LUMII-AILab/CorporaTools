@@ -51,7 +51,7 @@ our %roles = ('teikuma priekšmets' => 'subj',
 ###############################################################################
 sub makeMA
 {
-	if (not @_ or @_ le 4)
+	if (not @_ or @_ < 4)
 	{
 		print <<END;
 Script for creating PML M and A files, if data containing sentence boundries

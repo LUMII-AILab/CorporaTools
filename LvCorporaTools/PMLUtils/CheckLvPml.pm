@@ -44,7 +44,7 @@ sub checkLvPml
 {
 
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 1)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for checking references in the given PML dataset for following eroors:

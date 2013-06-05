@@ -33,7 +33,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 sub normalizeIds
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for recalculating IDs in given PML dataset (.w + .m + .a). This should

@@ -28,7 +28,7 @@ use Data::Dumper;
 # Licenced under GPL.
 sub unite
 {
-	if (@_ le 1)
+	if (@_ < 2)
 	{
 		print <<END;
 Script for uniting multiple PML dataset. To do this, IDs are recalculated if
