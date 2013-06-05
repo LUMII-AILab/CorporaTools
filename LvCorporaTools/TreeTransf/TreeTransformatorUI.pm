@@ -30,6 +30,7 @@ use Data::Dumper;
 # Invocation example for Windows:
 #perl LvCorporaTools/TreeTransf/TreeTransformatorUI.pm --dir data --collect --ord NODE --dep --red --knit --conll 0 FIRST FULL 0 --fold 1
 #
+# TODO: control sentence omiting, when converting to conll.
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
