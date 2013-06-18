@@ -14,7 +14,8 @@ use IO::Dir;
 use XML::LibXML;
 
 ###############################################################################
-# Script for normalizing spaces in PML .m file acording to .w file
+# Script for normalizing spaces in PML .m file acording to .w file. Only m
+# elements with multiple w.rf are tested for changes.
 #
 # Developed on Strawberry Perl 5.12.3.0
 # Latvian Treebank project, 2013
