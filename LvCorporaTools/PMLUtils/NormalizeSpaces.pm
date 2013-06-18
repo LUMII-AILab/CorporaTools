@@ -52,7 +52,7 @@ END
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.m$/))
 		{
-			&transformFile ($dirName, $1, $doLemmas);
+			&processFile ($dirName, $1, $doLemmas);
 		}
 	}
 }
