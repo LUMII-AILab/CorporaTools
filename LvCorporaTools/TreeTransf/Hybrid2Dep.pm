@@ -100,7 +100,7 @@ END
 sub transformFile
 {
 	autoflush STDOUT 1;
-	if (not @_ or @_ le 2)
+	if (not @_ or @_ < 2)
 	{
 		print <<END;
 Script for transfoming Latvian Treebank .a files from native hybrid format to
@@ -162,7 +162,7 @@ END
 	$doc->documentElement->setNodeName('lvadepdata');
 	
 	# Print the XML.
-	File::Path::mkpath("$dirPrefix/res/");
+	#File::Path::mkpath("$dirPrefix/res/");
 	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
 		or die "Output file opening: $!";	
 	print $outFile $doc->toString(1);
