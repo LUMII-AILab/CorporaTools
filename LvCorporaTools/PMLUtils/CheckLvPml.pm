@@ -123,107 +123,102 @@ END
 	my $resName = (shift @_ or "$inputName-errors.txt");
 
 	print "Starting...\n";
-	my $ids = &_loadAMW($dirPrefix, $inputName);
+
+	# Load PML data.
+	my $wData = &_loadW($dirPrefix, $inputName);
+	print "W file parsed.\n";
+	my $mData = &_loadM($dirPrefix, $inputName);
+	print "M file parsed.\n";
+	my $aData = &_loadA($dirPrefix, $inputName);
+	print "A file parsed.\n";
 
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
 		or die "Could not create file $resName: $!";
 
-	my $badIds = &_findUnusedIds($ids->{'w2token'}, $ids->{'w2m'});
-	print 'Found '.scalar @$badIds." w ID(s) never referenced in m file.\n";
-	print $out "W IDs never referenced in m file:\n";
-	print $out join("\n", @$badIds);
+	# Test conformity of w and m file.
+	&_testMW({%$wData, %$mData}, $out);
 	
-	$badIds = &_findUnusedIds($ids->{'w2m'}, $ids->{'w2token'});
-	print 'Found '.scalar @$badIds." non-existing w reference(s) in m file.\n";
-	print $out "\n\nNon-existing w references in m file:\n";
-	print $out join("\n", @$badIds);
-	
-	$badIds = &_findUnusedIds($ids->{'m2w'}, $ids->{'m2node'});
-	my @notDel = grep {not $ids->{'m2w'}->{$_}->{'deleted'}} @$badIds;
-	print 'Found '.scalar @$badIds.' m ID(s) never referenced in a file, '.
-		(+@$badIds - @notDel)." of them are marked for deletion.\n";
-	print $out "\n\nM IDs never referenced in a file:\n";
-	print $out join("\n", @notDel);
-	print $out "\nmarked for deletion:\n";
-	my @del = grep {$ids->{'m2w'}->{$_}->{'deleted'}} @$badIds;
-	print $out join("\n", @del);
-	
-	$badIds = &_findUnusedIds($ids->{'m2node'}, $ids->{'m2w'});
-	print 'Found '.scalar @$badIds." non-existing m reference(s) in a file.\n";
-	print $out "\n\nNon-existing m references in a file:\n";
-	print $out join("\n", @$badIds);
-
-	@$badIds = grep {$ids->{'m2w'}->{$_}->{'deleted'}} (values %{$ids->{'node2m'}});
-	print 'Found '.scalar @$badIds." m element(s) marked for deletion, but used in a file.\n";
-	print $out "\n\nM elements marked for deletion, but used in a file:\n";
-	print $out join("\n", @$badIds);
-	
-	$badIds = &_findUnusedIds($ids->{'sent2m'}, $ids->{'sent2tree'});
-	print 'Found '.scalar @$badIds." s ID(s) never referenced in a file.\n";
-	print $out "\n\nS IDs never referenced in a file:\n";
-	print $out join("\n", @$badIds);
-	
-	$badIds = &_findUnusedIds($ids->{'sent2tree'}, $ids->{'sent2m'});
-	print 'Found '.scalar @$badIds." non-existing s reference(s) in a file.\n";
-	print $out "\n\nNon-existing s references in a file:\n";
-	print $out join("\n", @$badIds);
-
-	$badIds = &_validateSentBound(
-		$ids->{'sent2tree'}, $ids->{'m2node'}, $ids->{'sent2m'}, $ids->{'node2tree'});
-	print 'Found '.scalar @$badIds." m node(s) not reffered to in coressponding tree.\n";
-	print $out "\n\nM nodes not reffered from coressponding tree:\n";
-	print $out join("\n", @$badIds);
-
-	$badIds = &_validateSentBound(
-		$ids->{'tree2sent'}, $ids->{'node2m'}, $ids->{'tree2node'}, $ids->{'m2sent'});
-	print 'Found '.scalar @$badIds." a node(s) not reffered to in coressponding sentence.\n";
-	print $out "\n\nA nodes not reffered from coressponding sentence:\n";
-	print $out join("\n", @$badIds);
-
-	$badIds = &_checkFormChange($ids->{'m2w'}, $ids->{'w2token'});
-	print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
-	print $out "\n\nM nodes with incomplete \'form_change\':\n";
-	print $out join("\n", @$badIds);
+	# Test conformity of m and a file. 
+	&_testAM({%$mData, %$aData}, $out);
 	
 	$out->close;
 	print "CheckIds has finished procesing \"$inputName\".\n";
 }
 
-# _loadAMW (source directory, file name without extension)
-# returns hash refernece:
-#		'w2token' => hash from w IDs to tokens and spaces (source: w layer),
-#		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
-#				 of form changes (source: m layer),
-#		'w2m' => hash from w IDs to m IDs (source: m layer),
-#		'sent2m' => hash from sentence IDs to lists of m IDs (source: m layer),
-#		'm2sent' => hash from m IDs to sentence IDs (source: m layer),
-#		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
-#		'node2tree' => hash from node IDs to tree IDs (source: a layer),
-#		'tree2sent' => hash from tree IDs to sentence IDs (source: a layer),
-#		'sent2tree' => hash from sentence IDs to tree IDs (source: a layer),
-#		'node2m' => hash from node IDs to m IDs (source: a layer),
-#		'm2node' => has from m IDs to node IDs (source: a layer).
-# see &loadXML
-sub _loadAMW
+# _testMW (data hashmap with keys 'w2token', 'm2w', 'w2m'; something where to
+#		   print output, e.g., opened file)
+# Checks errors related to links between w and m file.
+sub _testMW
 {
-	# Input paramaters.
-	my $dirPrefix = shift @_;
-	my $inputName = shift @_;
+	my $data = shift @_;
+	my $out = shift @_;
+
+	my $badIds = &_findUnusedIds($data->{'w2token'}, $data->{'w2m'});
+	print 'Found '.scalar @$badIds." w ID(s) never referenced in m file.\n";
+	print $out "W IDs never referenced in m file:\n";
+	print $out join("\n", @$badIds);
 	
-	# Load w-level data.
-	my $wData = &_loadW($dirPrefix, $inputName);
-	print "W file parsed.\n";
-
-	# Load m-level data.
-	my $mData = &_loadM($dirPrefix, $inputName);
-	print "M file parsed.\n";
-
-	# Load m-level data.
-	my $aData = &_loadA($dirPrefix, $inputName);
-	print "A file parsed.\n";
+	$badIds = &_findUnusedIds($data->{'w2m'}, $data->{'w2token'});
+	print 'Found '.scalar @$badIds." non-existing w reference(s) in m file.\n";
+	print $out "\n\nNon-existing w references in m file:\n";
+	print $out join("\n", @$badIds);
 	
-	return {%$wData, %$mData, %$aData};
+	$badIds = &_checkFormChange($data->{'m2w'}, $data->{'w2token'});
+	print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
+	print $out "\n\nM nodes with incomplete \'form_change\':\n";
+	print $out join("\n", @$badIds);
+}
 
+# _testAM (data hashmap with keys 'tree2node', 'node2tree', 'tree2sent',
+#		   'sent2tree', 'node2m', 'm2node'; something where to print output,
+#		   e.g., opened file)
+# Checks errors related to links between m and a file.
+sub _testAM
+{
+	my $data = shift @_;
+	my $out = shift @_;
+	
+	my $badIds = &_findUnusedIds($data->{'m2w'}, $data->{'m2node'});
+	my @notDel = grep {not $data->{'m2w'}->{$_}->{'deleted'}} @$badIds;
+	print 'Found '.scalar @$badIds.' m ID(s) never referenced in a file, '.
+		(+@$badIds - @notDel)." of them are marked for deletion.\n";
+	print $out "\n\nM IDs never referenced in a file:\n";
+	print $out join("\n", @notDel);
+	print $out "\nmarked for deletion:\n";
+	my @del = grep {$data->{'m2w'}->{$_}->{'deleted'}} @$badIds;
+	print $out join("\n", @del);
+	
+	$badIds = &_findUnusedIds($data->{'m2node'}, $data->{'m2w'});
+	print 'Found '.scalar @$badIds." non-existing m reference(s) in a file.\n";
+	print $out "\n\nNon-existing m references in a file:\n";
+	print $out join("\n", @$badIds);
+
+	@$badIds = grep {$data->{'m2w'}->{$_}->{'deleted'}} (values %{$data->{'node2m'}});
+	print 'Found '.scalar @$badIds." m element(s) marked for deletion, but used in a file.\n";
+	print $out "\n\nM elements marked for deletion, but used in a file:\n";
+	print $out join("\n", @$badIds);
+	
+	$badIds = &_findUnusedIds($data->{'sent2m'}, $data->{'sent2tree'});
+	print 'Found '.scalar @$badIds." s ID(s) never referenced in a file.\n";
+	print $out "\n\nS IDs never referenced in a file:\n";
+	print $out join("\n", @$badIds);
+	
+	$badIds = &_findUnusedIds($data->{'sent2tree'}, $data->{'sent2m'});
+	print 'Found '.scalar @$badIds." non-existing s reference(s) in a file.\n";
+	print $out "\n\nNon-existing s references in a file:\n";
+	print $out join("\n", @$badIds);
+
+	$badIds = &_validateSentBound(
+		$data->{'sent2tree'}, $data->{'m2node'}, $data->{'sent2m'}, $data->{'node2tree'});
+	print 'Found '.scalar @$badIds." m node(s) not reffered to in coressponding tree.\n";
+	print $out "\n\nM nodes not reffered from coressponding tree:\n";
+	print $out join("\n", @$badIds);
+
+	$badIds = &_validateSentBound(
+		$data->{'tree2sent'}, $data->{'node2m'}, $data->{'tree2node'}, $data->{'m2sent'});
+	print 'Found '.scalar @$badIds." a node(s) not reffered to in coressponding sentence.\n";
+	print $out "\n\nA nodes not reffered from coressponding sentence:\n";
+	print $out join("\n", @$badIds);
 }
 
 # _loadW (source directory, file name without extension)
