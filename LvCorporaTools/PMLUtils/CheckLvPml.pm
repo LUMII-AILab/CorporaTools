@@ -17,7 +17,7 @@ use File::Path;
 use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 
 ###############################################################################
-# This program checks references in the given PML dataset for following things:
+# This program checks the given PML dataset for following things:
 #	* IDs from w file that are not refferenced in m file;
 #	* IDs from m file that are not refferenced in a file (morphemes with
 #	  "deleted" element are listed separately from others);
@@ -28,9 +28,10 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 #	* multi-token m has "form_change" "union";
 #	* m with no reference to w has "form_change" "insert";
 #	* m with form different from what described in w has at least one more
-#	  "form_change".
-# Refferences to multiple files not supported. ID duplication are not checked.
-# (TrEd can be used for that)
+#	  "form_change";
+#   * (TODO) multiple m refering to single w has "form_change" "spacing".
+# Refferences to multiple files not supported. ID duplication are not checked
+# (TODO).
 #
 # Input files - utf8.
 # Output file - list with problematic IDs.
@@ -50,13 +51,19 @@ sub processDir
 	{
 		print <<END;
 Script for checking references in the given PML datasets (all .w + .m + .a in
-the given wolder) for following eroors:
+the given folder) for following eroors:
 * IDs from w file that are not refferenced in m file;
 * IDs from m file that are not refferenced in a file (morphemes with "deleted"
   element are listed separately from others);
 * IDs from m file linking to non-existing IDs in w file;
 * IDs from a file linking to non-existing IDs in m file;
-* trees in a file not corresponding to single sentence in m file.
+* trees in a file not corresponding to single sentence in m file;
+* multi-token m having no "form_change" "union";
+* m with no reference to w having no "form_change" "insert";
+* m with form different from what described in w must have at least one more
+  "form_change";
+* (TODO) multiple m refering to single w must have "form_change" "spacing".
+
 
 Params:
    data directory
@@ -94,7 +101,12 @@ following eroors:
   element are listed separately from others);
 * IDs from m file linking to non-existing IDs in w file;
 * IDs from a file linking to non-existing IDs in m file;
-* trees in a file not corresponding to single sentence in m file.
+* trees in a file not corresponding to single sentence in m file;
+* multi-token m having no "form_change" "union";
+* m with no reference to w having no "form_change" "insert";
+* m with form different from what described in w must have at least one more
+  "form_change";
+* (TODO) multiple m refering to single w must have "form_change" "spacing".
 
 Params:
    directory prefix
@@ -111,7 +123,7 @@ END
 	my $resName = (shift @_ or "$inputName-errors.txt");
 
 	print "Starting...\n";
-	my $ids = &_loadIds($dirPrefix, $inputName);
+	my $ids = &_loadAMW($dirPrefix, $inputName);
 
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
 		or die "Could not create file $resName: $!";
@@ -177,26 +189,54 @@ END
 	print "CheckIds has finished procesing \"$inputName\".\n";
 }
 
-# load (source directory, file name without extension)
+# _loadAMW (source directory, file name without extension)
 # returns hash refernece:
 #		'w2token' => hash from w IDs to tokens and spaces (source: w layer),
 #		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
 #				 of form changes (source: m layer),
 #		'w2m' => hash from w IDs to m IDs (source: m layer),
 #		'sent2m' => hash from sentence IDs to lists of m IDs (source: m layer),
+#		'm2sent' => hash from m IDs to sentence IDs (source: m layer),
+#		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
+#		'node2tree' => hash from node IDs to tree IDs (source: a layer),
 #		'tree2sent' => hash from tree IDs to sentence IDs (source: a layer),
 #		'sent2tree' => hash from sentence IDs to tree IDs (source: a layer),
-#		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
 #		'node2m' => hash from node IDs to m IDs (source: a layer),
 #		'm2node' => has from m IDs to node IDs (source: a layer).
 # see &loadXML
-sub _loadIds
+sub _loadAMW
+{
+	# Input paramaters.
+	my $dirPrefix = shift @_;
+	my $inputName = shift @_;
+	
+	# Load w-level data.
+	my $wData = &_loadW($dirPrefix, $inputName);
+	print "W file parsed.\n";
+
+	# Load m-level data.
+	my $mData = &_loadM($dirPrefix, $inputName);
+	print "M file parsed.\n";
+
+	# Load m-level data.
+	my $aData = &_loadA($dirPrefix, $inputName);
+	print "A file parsed.\n";
+	
+	return {%$wData, %$mData, %$aData};
+
+}
+
+# _loadW (source directory, file name without extension)
+# returns hash refernece:
+#		'w2token' => hash from w IDs to tokens and spaces (source: w layer).
+# see &loadXML
+sub _loadW
 {
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $inputName = shift @_;
 
-	# Load w-level.
+	# Load w-file.
 	my $w = loadXml ("$dirPrefix\\$inputName.w", ['para', 'w', 'schema'], ['id']);
 	
 	# Map token IDs to tokens.
@@ -209,9 +249,26 @@ sub _loadIds
 			$tok .= ' ' unless ($tmpw->{'no_space_after'}->{'content'});
 			$_ => $tok} (keys %{$para->{'w'}}));
 	}
-	print "W file parsed.\n";
-	
-	# Load m-level.
+	return {
+		'w2token' => \%wIds,
+	};
+}
+
+# _loadM (source directory, file name without extension)
+# returns hash refernece:
+#		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
+#				 of form changes (source: m layer),
+#		'w2m' => hash from w IDs to m IDs (source: m layer),
+#		'sent2m' => hash from sentence IDs to lists of m IDs (source: m layer),
+#		'm2sent' => hash from m IDs to sentence IDs (source: m layer).
+# see &loadXML
+sub _loadM
+{
+	# Input paramaters.
+	my $dirPrefix = shift @_;
+	my $inputName = shift @_;
+
+	# Load m-file.
 	my $m = loadXml ("$dirPrefix\\$inputName.m", ['s', 'm','reffile','schema', 'LM'], ['id']);
 	
 	# Map sentence IDs to lists of morpheme IDs.
@@ -266,9 +323,32 @@ sub _loadIds
 		my $refs = $m2w{$morpho}->{'rf'};
 		%w2m = (%w2m, map {$_ => $morpho} @$refs) if (defined $refs);
 	}
-	print "M file parsed.\n";
-		
-	# Load the a-level.
+
+	return {
+		'm2w' => \%m2w,
+		'w2m' => \%w2m,
+		'sent2m' => \%mSent2morpho,
+		'm2sent' => \%morpho2mSent,
+	};
+}
+
+
+# _loadA (source directory, file name without extension)
+# returns hash refernece:
+#		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
+#		'node2tree' => hash from node IDs to tree IDs (source: a layer),
+#		'tree2sent' => hash from tree IDs to sentence IDs (source: a layer),
+#		'sent2tree' => hash from sentence IDs to tree IDs (source: a layer),
+#		'node2m' => hash from node IDs to m IDs (source: a layer),
+#		'm2node' => has from m IDs to node IDs (source: a layer).
+# see &loadXML
+sub _loadA
+{
+	# Input paramaters.
+	my $dirPrefix = shift @_;
+	my $inputName = shift @_;
+
+	# Load the a-file.
 	my $a = loadXml ("$dirPrefix\\$inputName.a", ['node', 'LM','reffile','schema'], ['id']);
 	my %tree2node = ();
 	my %tree2mSent = ();
@@ -345,16 +425,8 @@ sub _loadIds
 	# Map morpheme IDs to node IDs.	
 	my %morpho2node = map {$node2morpho{$_} => $_} (keys %node2morpho);
 
-	print "A file parsed.\n";
-	
-	#print Dumper (\%w2m);
-
 	return {
-		'w2token' => \%wIds,
-		'm2w' => \%m2w,
-		'w2m' => \%w2m,
-		'sent2m' => \%mSent2morpho,
-		'm2sent' => \%morpho2mSent,
+		#%$resultAccu,
 		'tree2node' => \%tree2node,
 		'node2tree' => \%node2tree,
 		'tree2sent' => \%tree2mSent,
