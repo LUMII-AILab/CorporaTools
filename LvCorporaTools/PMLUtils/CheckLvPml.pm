@@ -67,20 +67,23 @@ the given folder) for following eroors:
 
 Params:
    data directory
+   file type [M (.m + .w files will be checked) / A (.a + .m + .w files will
+   be checked)]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
 
-	my $dir_name = $_[0];
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $dirName = shift @_;
+	my $mode = shift @_;
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
-	while (defined(my $in_file = $dir->read))
+	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
+		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
-			checkLvPml ($dir_name, $1, "$1-errors.txt");
+			checkLvPml ($dirName, $1, $mode, "$1-errors.txt");
 		}
 	}
 }
@@ -111,6 +114,8 @@ following eroors:
 Params:
    directory prefix
    file name without extension
+   file type [M (.m + .w files will be checked) / A (.a + .m + .w files will
+   be checked)]
    output file name [opt, "file_name-errors.txt" used otherwise]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
@@ -120,7 +125,11 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $inputName = shift @_;
+	my $mode = shift @_;
 	my $resName = (shift @_ or "$inputName-errors.txt");
+	
+	die "Invalid file processing type $mode, use A/a/M/m instead.\n"
+		unless ($mode =~ /^[aAmM]$/);
 
 	print "Starting...\n";
 
@@ -129,17 +138,23 @@ END
 	print "W file parsed.\n";
 	my $mData = &_loadM($dirPrefix, $inputName);
 	print "M file parsed.\n";
-	my $aData = &_loadA($dirPrefix, $inputName);
-	print "A file parsed.\n";
-
+	my $aData;
+	if ($mode =~ /^[aA]$/)
+	{
+		$aData = &_loadA($dirPrefix, $inputName);
+		print "A file parsed.\n";
+	}
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
 		or die "Could not create file $resName: $!";
 
 	# Test conformity of w and m file.
 	&_testMW({%$wData, %$mData}, $out);
 	
-	# Test conformity of m and a file. 
-	&_testAM({%$mData, %$aData}, $out);
+	if ($mode =~ /^[aA]$/)
+	{
+		# Test conformity of m and a file. 
+		&_testAM({%$mData, %$aData}, $out);
+	}
 	
 	$out->close;
 	print "CheckIds has finished procesing \"$inputName\".\n";
