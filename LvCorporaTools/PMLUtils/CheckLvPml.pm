@@ -29,7 +29,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
 #	* m with no reference to w has "form_change" "insert";
 #	* m with form different from what described in w has at least one more
 #	  "form_change";
-#   * (TODO) multiple m refering to single w has "form_change" "spacing".
+#   * multiple m refering to single w has "form_change" "spacing".
 # Refferences to multiple files not supported. ID duplication are not checked
 # (TODO).
 #
@@ -62,7 +62,7 @@ the given folder) for following eroors:
 * m with no reference to w having no "form_change" "insert";
 * m with form different from what described in w must have at least one more
   "form_change";
-* (TODO) multiple m refering to single w must have "form_change" "spacing".
+* multiple m refering to single w must have "form_change" "spacing".
 
 
 Params:
@@ -178,7 +178,7 @@ sub _testMW
 	print $out "\n\nNon-existing w references in m file:\n";
 	print $out join("\n", @$badIds);
 	
-	$badIds = &_checkFormChange($data->{'m2w'}, $data->{'w2token'});
+	$badIds = &_checkFormChange($data->{'m2w'}, $data->{'w2m'}, $data->{'w2token'});
 	print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
 	print $out "\n\nM nodes with incomplete \'form_change\':\n";
 	print $out join("\n", @$badIds);
@@ -268,7 +268,7 @@ sub _loadW
 # returns hash refernece:
 #		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
 #				 of form changes (source: m layer),
-#		'w2m' => hash from w IDs to m IDs (source: m layer),
+#		'w2m' => hash from w IDs to lists of m IDs (source: m layer),
 #		'sent2m' => hash from sentence IDs to lists of m IDs (source: m layer),
 #		'm2sent' => hash from m IDs to sentence IDs (source: m layer).
 # see &loadXML
@@ -331,9 +331,10 @@ sub _loadM
 	for my $morpho (keys %m2w)
 	{
 		my $refs = $m2w{$morpho}->{'rf'};
-		%w2m = (%w2m, map {$_ => $morpho} @$refs) if (defined $refs);
+		%w2m = (%w2m, map {$_ => [$w2m{$_} ? @{$w2m{$_}} : (), $morpho]} @$refs)
+			if (defined $refs);
 	}
-
+	
 	return {
 		'm2w' => \%m2w,
 		'w2m' => \%w2m,
@@ -498,6 +499,7 @@ sub _findUnusedIds
 sub _checkFormChange
 {
 	my $m2w = shift @_;
+	my $w2m = shift @_;
 	my $w2token = shift @_;
 	
 	my @res = ();
@@ -534,6 +536,24 @@ sub _checkFormChange
 			push @res, $m unless ($contains);
 			push @res, $m
 				if ($contains and $tok ne $v->{'form'} and @{$v->{'form_change'}} < 2);
+		}
+	}
+	
+	# Verify cases when mutiple m reference single w.
+	for my $w (keys %$w2m)
+	{
+		if (@{$w2m->{$w}} > 1)
+		{
+			for my $m (@{$w2m->{$w}})
+			{
+				my $v = $m2w->{$m};
+				my $contains = 0;
+				for my $change (@{$v->{'form_change'}})
+				{
+					$contains = 1 if ($change eq 'spacing');
+				}
+				push @res, $m unless ($contains);
+			}
 		}
 	}
 	

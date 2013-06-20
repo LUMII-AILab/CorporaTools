@@ -21,7 +21,10 @@
     </m>
     <m id="m-zeens-p1s1w2">
       <src.rf>experimental</src.rf>
-      <w.rf>w#w-zeens-p1w2</w.rf>
+      <w.rf>
+		<LM>w#w-zeens-p1w2</LM>
+		<LM>w#w-zeens-p1w3</LM>
+	  </w.rf>
       <form>gāja</form>
       <lemma>iet</lemma>
       <tag>vmnisii30an</tag>
