@@ -184,6 +184,7 @@ sub _collect
 			}
 			elsif (-d "$current/$item" and $item !~ /^\.\.?$/ and $item ne "collected")
 			{
+				# If copy source and dest is the same, result under Unix is empty file.
 				push @todoDirs, "$current/$item";
 			}
 		}
