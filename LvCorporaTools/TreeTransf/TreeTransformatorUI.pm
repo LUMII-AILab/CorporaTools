@@ -54,7 +54,9 @@ Params:
     --dir      input directory (single value)
 
   Preprocessing
-	--collect  collect all .w + .m + .a from input directory (no values)
+	--collect  collect all .w + .m + .a from input folder and it's
+               folder - use this if data files are given in some subfolder
+               structure (no values)
 
   Main flow
     --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
