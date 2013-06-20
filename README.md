@@ -17,6 +17,18 @@ Contents
 * MorphoVerificator - java written tool implementing various heuristics for
 searching human errors in morphological corpora.
 
+Main work-flows
+--------------
+
+* Converting treebank to CONLL format: TreeTransformatorUI with steps --dep
+--red --knit --conll
+* Converting treebank to TigerXML: Unite (if needed), TreeTransformatorUI with
+step --ord TOKEN, apply lvpml2tiger.xsl
+* Preprocessing treebank files before putting in repository: Unite (if needed),
+CheckW, NormalizeIds, CheckLvPml with param A
+* Preprocessing morphocorpus files before putting in repository: CheckLvPml
+with param M
+
 License
 -------
 
