@@ -519,7 +519,7 @@ sub _checkFormChange
 		elsif (@{$v->{'rf'}} == 1) 	# Verify m with single 'rf'.
 		{
 			my $wId = $v->{'rf'}[0];
-			my $tok = $w2token->{$wId} ? $w2token->{$wId} : '';
+			my $tok = defined($w2token->{$wId}) ? $w2token->{$wId} : '';
 			$tok =~ /^\s*(.*?)\s*$/;
 			push @res, $m
 				unless ($1 eq $v->{'form'} or 
@@ -531,7 +531,7 @@ sub _checkFormChange
 			{
 				$contains = 1 if ($change eq 'union');
 			}
-			my $tok = join '', (map {$w2token->{$_} ? $w2token->{$_} : ''} @{$v->{'rf'}});
+			my $tok = join '', (map {defined($w2token->{$_}) ? $w2token->{$_} : ''} @{$v->{'rf'}});
 			$tok =~ s/^\s*(.*?)\s*$/$1/;
 			push @res, $m unless ($contains);
 			push @res, $m
