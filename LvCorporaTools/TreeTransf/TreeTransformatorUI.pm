@@ -174,7 +174,6 @@ sub _collect
 	while ($current)
 	{
 		my $dir = IO::Dir->new($current) or die "Can't open folder $!";
-			
 		while (defined(my $item = $dir->read))
 		{
 			# Treebank file
@@ -183,7 +182,7 @@ sub _collect
 				copy("$current/$item", "$dirPrefix/collected/");
 				$fileCounter++;
 			}
-			elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
+			elsif (-d "$current/$item" and $item !~ /^\.\.?$/ and $item ne "collected")
 			{
 				push @todoDirs, "$current/$item";
 			}
