@@ -18,7 +18,7 @@ Contents
 searching human errors in morphological corpora.
 
 Main work-flows
---------------
+---------------
 
 * Converting treebank to CONLL format: TreeTransformatorUI with steps --dep
 --red --knit --conll
