@@ -488,7 +488,7 @@ sub _findUnusedIds
 	
 	for my $id (keys %{$source})
 	{
-		push (@res, $id) unless ($target->{$id});
+		push (@res, $id) unless (defined $target->{$id});
 	}
 	
 	return \@res;
