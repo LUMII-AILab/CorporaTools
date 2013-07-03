@@ -21,7 +21,11 @@ Main work-flows
 ---------------
 
 * Converting treebank to CONLL format: TreeTransformatorUI with steps --dep
---red --knit --conll
+--red --knit --conll (application example [current folder is CorporaTools]:
+perl LvCorporaTools/TreeTransf/TreeTransformatorUI.pm --dir data_folder
+--collect --dep BASELEM ROW BASELEM 0 --red --knit --conll 1 FIRST FULL 0
+--fold 1, for more information see TreeTransformatorUI.pm or launch it without
+parameters).
 * Converting treebank to TigerXML: Unite (if needed), TreeTransformatorUI with
 step --ord TOKEN, apply lvpml2tiger.xsl
 * Preprocessing treebank files before putting in repository: Unite (if needed),
