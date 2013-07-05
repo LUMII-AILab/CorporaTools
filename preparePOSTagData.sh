@@ -2,10 +2,17 @@
 set -o nounset
 set -o errexit
 
-if test "$1"
-then pmlFolder="$1"
-else pmlFolder="testdata/SplitMorphoData"
+if [ $# -ge 1 ]
+then sourceFolder="$1"
+else sourceFolder="/Users/pet/Documents/Morfotageris/Morphocorpus/Corpora"
 fi
+
+pmlFolder="$sourceFolder/Merged"
+rm -rf $pmlFolder
+mkdir $pmlFolder
+cp $sourceFolder/Balanseetais/Jaunaakais/*.m $pmlFolder
+cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.m $pmlFolder
+cp $sourceFolder/Treebank/*.m $pmlFolder
 
 echo "Converting $pmlFolder"
 
@@ -41,6 +48,7 @@ find "$pmlFolder/test" -type f -name "*.txt" -exec cat {} > "$pmlFolder/test.txt
 rm -rf "$pmlFolder/train"
 rm -rf "$pmlFolder/dev"
 rm -rf "$pmlFolder/test"
+rm $pmlFolder/*.m
 
 cat "$pmlFolder/train.txt" "$pmlFolder/dev.txt" "$pmlFolder/test.txt" > "$pmlFolder/all.txt"
 
