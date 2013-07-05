@@ -115,7 +115,7 @@ sub processDir
 	}
 	
 	# Get directories.
-	unless ($params{'--dir'} or @{$params{'--dir'}} > 1)
+	if (not $params{'--dir'} or @{$params{'--dir'}} > 1)
 	{
 		&_printMan;
 		exit 1;
