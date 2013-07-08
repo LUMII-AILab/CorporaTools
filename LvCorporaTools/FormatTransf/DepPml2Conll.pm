@@ -78,7 +78,7 @@ END
 	#my $postag = shift @_;
 	my $conll2009 = (shift @_ or 0);
 	my $dir = IO::Dir->new($dir_name) or die "dir $!";
-	my $infix = $mode ? "nored" : "unlabeled";
+	my $infix = $mode ? "lab" : "unlab";
 	
 	while (defined(my $in_file = $dir->read))
 	{

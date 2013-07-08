@@ -127,7 +127,7 @@ sub processDir
 	if ($params{'--collect'})
 	{
 		$source = &_collect($source, $dirPrefix);
-		$dirPrefix = $source;
+		#$dirPrefix = $source;
 	}
 	
 	# Recalculating ord fields.
