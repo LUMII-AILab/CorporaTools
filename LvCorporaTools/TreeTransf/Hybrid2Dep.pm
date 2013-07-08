@@ -20,7 +20,7 @@ use XML::LibXML;  # XML handling library
 
 use LvCorporaTools::PMLUtils::AUtils qw(
 	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
-	sortNodesByOrd moveChildren);
+	sortNodesByOrd moveChildren getOrd);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -220,60 +220,26 @@ sub transformTree
 	# &_finishRoles($xpc, $tree);
 }
 
-# Recalculate values for "ord" fields - make them start with 1 and be
-# sequential. Remove ord for root node.
-# _recalculateOrds (XPath context with set namespaces, DOM node for tree root
-#				    (usualy "LM"))
-#sub _recalculateOrds
-#{
-#	my $xpc = shift @_; # XPath context
-#	my $tree = shift @_;
-#
-#	# Find ord nodes and sort them.
-#	my @ords = $xpc->findnodes('.//pml:ord', $tree);
-#	my @sorted = sort {$a->textContent <=> $b->textContent} @ords;
-#	
-#	# Renumber ord nodes.
-#	my $nextId = 1;
-#	foreach my $o (@sorted)
-#	{
-#		my $parent = $o->parentNode;
-#		my $parName = $parent->nodeName;
-#		if ($parName ne 'node')
-#		{
-#			$parent->removeChild($o);
-#		}
-#		else
-#		{
-#			warn "recalculateOrds warns: Multiple textnodes below ord node\n"
-#				if (@{$o->childNodes()} > 1); # This should not happen.
-#			$o->removeChild($o->firstChild);
-#			$o->appendText($nextId);
-#			$nextId++;
-#		}
-#	}
-#}
-
 # Transform roles in form "someRole" to "someRole-0-0". Leave roles in form
 # "firstRole-secondRole-thirdRole" intact.
 # _finishRoles (XPath context with set namespaces, DOM node for tree root
 #				 (usualy "LM"))
-sub _finishRoles
-{
-	my $xpc = shift @_; # XPath context
-	my $tree = shift @_;
-	my @roles = $xpc->findnodes('.//pml:role', $tree);
-	
-	foreach my $r (@roles)
-	{
-		my $oldRole = $r->textContent;
-		next if $oldRole =~/-.*-/;
-		warn "_finishRoles warns: Multiple textnodes below role node\n"
-			if (@{$r->childNodes()} > 1); # This should not happen.
-		$r->removeChild($r->firstChild);
-		$r->appendText("$oldRole-0-0");
-	}
-}
+#sub _finishRoles
+#{
+#	my $xpc = shift @_; # XPath context
+#	my $tree = shift @_;
+#	my @roles = $xpc->findnodes('.//pml:role', $tree);
+#	
+#	foreach my $r (@roles)
+#	{
+#		my $oldRole = $r->textContent;
+#		next if $oldRole =~/-.*-/;
+#		warn "_finishRoles warns: Multiple textnodes below role node\n"
+#			if (@{$r->childNodes()} > 1); # This should not happen.
+#		$r->removeChild($r->firstChild);
+#		$r->appendText("$oldRole-0-0");
+#	}
+#}
 
 # Traversal function for procesing any subtree except "the big Tree" starting
 # _transformSubtree (XPath context with set namespaces, DOM "node" node for
@@ -474,6 +440,11 @@ sub phrasElem
 		return $ch[0];
 	}
 }
+sub unstruct
+{
+	return &_defaultPhrase(@_);
+}
+
 
 ### Coordination ##############################################################
 
@@ -633,7 +604,7 @@ sub _defaultPhrase
 
 ### ...for X-words ############################################################
 
-# Finds child element with specified role and makes ir parent of children
+# Finds child element with specified role and makes ir parent of other children
 # nodes.
 # _allBelowOne (pointer to array with roles determining node to become root,
 #				warn if multiple potential roots?, XPath context with set
@@ -666,12 +637,87 @@ sub _allBelowOne
 		print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
 			.(scalar @res)." potential rootnodes $roles.\n";
 	}
-	my $newRoot = $res[0];
+	
+	my @sorted = @{sortNodesByOrd($xpc, 0, @res)};
+	my $newRoot = $sorted[0];
 	
 	# Rebuild subtree.
 	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
+# Finds child element with specified role and makes ir parent of other children
+# nodes before given element. All children nodes after that element are
+# combined into parent-child chain.
+# _allBelowOne (pointer to array with roles determining node to become root,
+#				XPath context with set namespaces, DOM node, role of the parent
+#				node, output flow for warnings)
+sub _chainStartingFrom
+{
+	my $rootRoles = shift @_;
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $warnFile = shift @_; #
+	my $phraseRole = getRole($xpc, $node);
+	
+	# Find node with speciffied rootRoles.
+	my $query = join '\' or pml:role=\'', @$rootRoles;
+	$query = "pml:children/pml:node[pml:role=\'$query\']";
+	my @res = $xpc->findnodes($query, $node);
+	if (not @res)
+	{
+		my $roles = join '/', @$rootRoles;
+		print "$phraseRole have no $roles children.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id')
+			." have no $roles children.\n";
+		return &_chainAll(0, $xpc, $node, $parentRole, $warnFile);
+	}
+	# In case of multiple roots choose first.
+	@res = @{sortNodesByOrd($xpc, 0, @res)};
+	
+	# Root for children before $newRoot.
+	my $newRoot = $res[0];
+	# Ever-changing root for children after $newRoot.
+	my $newSubRoot = $res[0];
+	
+	my $rootOrd = getOrd($xpc, $newRoot);
+
+	# Process new root.
+	$newRoot->unbindNode();
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);	
+	
+	# Find the children.
+	my @children = $xpc->findnodes('pml:children/pml:node', $node);
+	die "$phraseRole below ". $node->find('../../@id').' has les than 2 children!'
+		if (@children lt 1);
+	@children = @{sortNodesByOrd($xpc, 0, @children)};
+	
+	for my $ch (@children)
+	{
+		my $chOrd = getOrd($xpc, $ch);
+		if ($chOrd < $rootOrd)
+		{
+			# Move to new parent - $newRoot.
+			$ch->unbindNode();
+			&_renamePhraseChild($xpc, $ch, $phraseRole);
+			my $chNode = getChildrenNode($xpc, $newRoot);
+			$chNode->appendChild($ch);
+		}
+		else
+		{
+			# Move to new parent - $newSubRoot.
+			$ch->unbindNode();
+			&_renamePhraseChild($xpc, $ch, $phraseRole);
+			my $chNode = getChildrenNode($xpc, $newSubRoot);
+			$chNode->appendChild($ch);
+			# Reset $newSubRoot (so the chain is formed).
+			$newSubRoot = $ch;
+		}
+	}
+	
+	return $newRoot;
+}
+
 # Makes parent-child chain of all node's children.
 # _chainAll (should start with last node, XPath context with set namespaces,
 #			 DOM node, role of the parent node, output flow for warnings)
@@ -794,7 +840,8 @@ sub _allBelowPmcBase
 #				 parent node, output flow for warnings)
 sub _defaultCoord
 {
-	return &_chainAll(0, @_) if ($COORD eq 'ROW');
+	#return &_chainAll(0, @_) if ($COORD eq 'ROW');
+	return &_chainStartingFrom(['crdPart', 'gen'], @_) if ($COORD eq 'ROW');
 	return &_allBelowConjPunct(@_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 }	

@@ -159,9 +159,8 @@ sub processDir
 }
 
 # Collect data recursively.
+# _collect(source data directory, global working directory)
 # return adress to step results.
-# $source -> which folder to collect
-# $dirPrefix -> where to put results
 sub _collect
 {
 	my ($source, $dirPrefix) = @_;
