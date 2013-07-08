@@ -18,6 +18,8 @@
 					<xsl:value-of select="./pml:tag"/>
 					<xsl:text>&#09;</xsl:text>
 					<xsl:value-of select="./pml:lemma"/>
+					<xsl:text>&#09;</xsl:text>
+					<xsl:value-of select=".@id"/>
 					<xsl:text>&#10;</xsl:text>
 				</xsl:for-each>
 				<xsl:text>&lt;/s&gt;&#10;</xsl:text>
