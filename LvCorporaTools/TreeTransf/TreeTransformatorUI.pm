@@ -62,7 +62,8 @@ Params:
     --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
                DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
                (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
-               with distinct label [0 / 1 (default)], (*) do input data have
+               with distinct label [0 / 1 (default)], (*) allow 'N/A' to be
+               part of longer labels [0 (default) / 1], (*) do input data have
                all nodes ordered [0 / 1 (default)])
     --red      remove reductions (value: label ommisions of empty nodes
                [0 / 1 (default)])
@@ -266,9 +267,11 @@ sub _dep
 		if ($params->[2]);
 	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_ROOT = $params->[3]
 		if (defined $params->[3]);
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_DETAIL_NA = $params->[4]
+		if (defined $params->[4]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[4]);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[5]);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");

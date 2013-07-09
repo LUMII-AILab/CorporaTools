@@ -8,7 +8,8 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC $LABEL_ROOT transformFile processDir transformTree);
+	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_DETAIL_NA transformFile processDir
+	transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -52,6 +53,10 @@ our $PMC = 'DEFAULT';		# first punct as root element
 
 our $LABEL_ROOT = 1;		# Label tree's empty root node 'ROOT'.
 #our $LABEL_ROOT = 0;		# Do not label root node.
+
+#our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
+							# of longer role)
+our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 
 # Process all .a files in given folder. This can be used as entry point, if
 # this module is used standalone.
@@ -288,7 +293,10 @@ sub _renamePhraseChild
 	my $node = shift @_;
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
-	setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
+	
+	my $newRole = "$phraseRole:$nodeRole";
+	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);
+	setNodeRole($xpc, $node, $newRole);
 }
 sub _renamePhraseSubroot
 {
@@ -297,22 +305,22 @@ sub _renamePhraseSubroot
 	my $parentRole = shift @_;
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
-	if ($parentRole)
-	{
-		setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
-	}
-	else 
-	{
-		setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
-	}
+	
+	my $newRole = "$phraseRole:$nodeRole";
+	$newRole = "$parentRole-$newRole" if ($parentRole);
+	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
+	setNodeRole($xpc, $node, $newRole);
 }
 sub _renameDependent
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $nodeRole = getRole($xpc, $node);
-	setNodeRole($xpc, $node, "dep:$nodeRole")
-		if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+	
+	my $newRole = $nodeRole;
+	$newRole = "dep:$newRole" if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
+	setNodeRole($xpc, $node, $newRole);
 }
 
 ###############################################################################
