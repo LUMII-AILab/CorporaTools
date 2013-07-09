@@ -78,6 +78,11 @@ Global variables:
    PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
          becomes root element) / 'DEFAULT' (first punct becomes root element,
          default value)
+   LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
+                default value)
+   LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
+                     all such roles are renamed just 'N/A', default value), 1
+                     (yes, label 'N/A' is procesed as every other label)
 Input files should be provided as UTF-8.
 
 Params:
@@ -123,6 +128,11 @@ Global variables:
    PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
          becomes root element) / 'DEFAULT' (first punct becomes root element,
          default value)
+   LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
+                default value)
+   LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
+                     all such roles are renamed just 'N/A', default value), 1
+                     (yes, label 'N/A' is procesed as every other label)
 Input files should be provided as UTF-8.
 
 Params:
