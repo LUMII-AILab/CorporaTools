@@ -8,7 +8,7 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC transformFile processDir transformTree);
+	$XPRED $COORD $PMC $LABEL_ROOT transformFile processDir transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -49,6 +49,9 @@ our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
 
 #our $PMC = 'BASELEM';		# basElem as root element
 our $PMC = 'DEFAULT';		# first punct as root element
+
+our $LABEL_ROOT = 1;		# Label tree's empty root node 'ROOT'.
+#our $LABEL_ROOT = 0;		# Do not label root node.
 
 # Process all .a files in given folder. This can be used as entry point, if
 # this module is used standalone.
@@ -181,7 +184,8 @@ sub transformTree
 	my $xpc = shift @_; # XPath context
 	my $tree = shift @_;
 	my $warnFile = shift @_;
-	my $role = 'ROOT';
+	my $role = '';
+	$role = 'ROOT' if ($LABEL_ROOT);
 	
 	# Well, actually, for valid trees there should be only one children node.
 	foreach my $childrenWrap ($xpc->findnodes('pml:children', $tree))
@@ -219,27 +223,6 @@ sub transformTree
 
 	# &_finishRoles($xpc, $tree);
 }
-
-# Transform roles in form "someRole" to "someRole-0-0". Leave roles in form
-# "firstRole-secondRole-thirdRole" intact.
-# _finishRoles (XPath context with set namespaces, DOM node for tree root
-#				 (usualy "LM"))
-#sub _finishRoles
-#{
-#	my $xpc = shift @_; # XPath context
-#	my $tree = shift @_;
-#	my @roles = $xpc->findnodes('.//pml:role', $tree);
-#	
-#	foreach my $r (@roles)
-#	{
-#		my $oldRole = $r->textContent;
-#		next if $oldRole =~/-.*-/;
-#		warn "_finishRoles warns: Multiple textnodes below role node\n"
-#			if (@{$r->childNodes()} > 1); # This should not happen.
-#		$r->removeChild($r->firstChild);
-#		$r->appendText("$oldRole-0-0");
-#	}
-#}
 
 # Traversal function for procesing any subtree except "the big Tree" starting
 # _transformSubtree (XPath context with set namespaces, DOM "node" node for
@@ -314,7 +297,14 @@ sub _renamePhraseSubroot
 	my $parentRole = shift @_;
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
-	setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
+	if ($parentRole)
+	{
+		setNodeRole($xpc, $node, "$parentRole-$phraseRole:$nodeRole");
+	}
+	else 
+	{
+		setNodeRole($xpc, $node, "$phraseRole:$nodeRole");
+	}
 }
 sub _renameDependent
 {

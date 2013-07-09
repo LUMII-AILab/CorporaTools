@@ -61,9 +61,11 @@ Params:
   Main flow
     --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
                DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
-               (*) PMC mode [BASELEM / DEFAULT (default)], (*) do input data
-               have all nodes ordered [0 / 1 (default)])
-    --red      remove reductions (no values)
+               (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
+               with distinct label [0 / 1 (default)], (*) do input data have
+               all nodes ordered [0 / 1 (default)])
+    --red      remove reductions (value: label ommisions of empty nodes
+               [0 / 1 (default)])
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
                PML schemas [default = 'TrEd extension/lv-treebank/resources'])
     --conll    convert .pml to conll (values: (*) label output tree arcs
@@ -140,7 +142,7 @@ sub processDir
 		if ($params{'--dep'});
 	
 	# Removing reductions.
-	$source = &_red($source, $dirPrefix)
+	$source = &_red($source, $dirPrefix, $params{'--red'})
 		if ($params{'--red'});
 	
 	# Knitting-in.
@@ -262,9 +264,11 @@ sub _dep
 		if ($params->[1]);
 	$LvCorporaTools::TreeTransf::Hybrid2Dep::PMC = $params->[2]
 		if ($params->[2]);
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_ROOT = $params->[3]
+		if (defined $params->[3]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[3]);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[4]);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
@@ -282,8 +286,12 @@ sub _dep
 # return adress to step results.
 sub _red
 {
-	my ($source, $dirPrefix) = @_;
+	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Removing reductions =====================================\n";
+		
+	# Set parameters.
+	$LvCorporaTools::TreeTransf::RemoveReduction::LABEL_EMPTY = $params->[0]
+		if (defined $params->[0]);
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::RemoveReduction::processDir($source);

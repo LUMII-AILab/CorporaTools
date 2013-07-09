@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(processDir transformFile transformTree);
+our @EXPORT_OK = qw($LABEL_EMPTY processDir transformFile transformTree);
 
 #use Carp::Always;	# Print stack trace on die.
 
@@ -35,6 +35,14 @@ use LvCorporaTools::PMLUtils::AUtils
 # Lauma Pretkalniņa, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
+
+# Global variables set how to transform specific elements.
+# Unknown values cause fatal error.
+
+our $LABEL_EMPTY = 1; 	# Roles red:child and red:parent are appended when
+						# empty node is removed.
+#our $LABEL_EMPTY = 0; 	# Roles red:child and red:parent are not appended. 
+
 
 # If single argument provided, treat it as directory and process all .a files
 # in it. Otherwise pass all arguments to transformFile. This can be used as
@@ -153,12 +161,15 @@ sub transformTree
 		}
 		else		# Node doesn't have token.
 		{
+			
+			#die "Unknown value \'$LABEL_EMPTY\' for global constant \$LABEL_EMPTY "
+			#	if ($LABEL_EMPTY ne 'YES' and $LABEL_EMPTY ne 'NO');
 			my $pmlParent = $red->parentNode->parentNode; #pml parent <-> children <-> this
 			if ($pmlParent->nodeName() ne 'LM') # Parent is not the root of the tree.
 			{
 				my $role = getRole($xpc, $pmlParent);
 				setNodeRole($xpc, $pmlParent, "$role-red:child")
-					unless ($role =~ /-red:child$/);
+					unless ($role =~ /-red:child$/ or not $LABEL_EMPTY);
 			}
 			
 			# Node have children.
@@ -168,7 +179,8 @@ sub transformTree
 				for my $ch ($children->childNodes)
 				{
 					my $chRole = getRole($xpc, $ch);
-					setNodeRole($xpc, $ch, "$chRole-red:parent");
+					setNodeRole($xpc, $ch, "$chRole-red:parent")
+						if ($LABEL_EMPTY);
 				}
 				moveChildren ($xpc, $red, $pmlParent);
 			}
