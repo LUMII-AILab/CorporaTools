@@ -14,14 +14,14 @@ use File::Path;
 use IO::Dir;
 use IO::File;
 use XML::LibXML;  # XML handling library
-use LvCorporaTools::PMLUtils::AUtils qw(getRole sortNodesByOrd getChildrenNode);
+use LvCorporaTools::PMLUtils::AUtils qw(
+	getRole sortNodesByOrd getChildrenNode renumberNodes);
 
 ###############################################################################
 # This program transforms multi-level coordination constructions into single
 # level. This ir done only when levels are of the same type. Constructions with
 # generalizing word are not transformed.
-# Input files are supposed to be valid against coresponding PML schemas. To
-# obtain results, input files files must have all nodes numbered.
+# Input files are supposed to be valid against coresponding PML schemas. 
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
@@ -48,19 +48,21 @@ Input files should be provided as UTF-8.
 
 Params:
    data directory 
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
-	my $dir_name = $_[0];
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $dirName = $_[0];
+	my $numberedNodes = (shift @_ or 0);
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
-	while (defined(my $in_file = $dir->read))
+	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
 		{
-			transformFile ($dir_name, $in_file, "$1-flatCoord.a");
+			transformFile ($dirName, $inFile, "$1-flatCoord.a", $numberedNodes);
 		}
 	}
 }
@@ -80,6 +82,7 @@ Params:
    directory prefix
    file name
    new file name [opt, current file name used otherwise]
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -89,6 +92,7 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
+	my $numberedNodes = (shift @_ or 0);
 
 	mkpath("$dirPrefix/res/");
 	#mkpath("$dirPrefix/warnings/");
@@ -102,11 +106,12 @@ END
 	
 	my $xpc = XML::LibXML::XPathContext->new();
 	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
-	$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
+	#$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
 	
 	# Process XML: process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
+		renumberNodes($xpc, $tree) unless ($numberedNodes);
 		&transformTree($xpc, $tree);#, $warnFile);
 	}
 		
