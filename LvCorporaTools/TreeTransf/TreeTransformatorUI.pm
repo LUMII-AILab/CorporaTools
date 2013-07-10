@@ -16,6 +16,7 @@ use IO::Dir;
 use IO::File;
 
 use LvCorporaTools::PMLUtils::AUtils;
+use LvCorporaTools::TreeTransf::UnnestCoord;
 use LvCorporaTools::TreeTransf::Hybrid2Dep;
 use LvCorporaTools::TreeTransf::RemoveReduction;
 use LvCorporaTools::PMLUtils::Knit;
@@ -54,33 +55,46 @@ Params:
     --dir      input directory (single value)
 
   Preprocessing
-	--collect  collect all .w + .m + .a from input folder and it's
+    --collect  collect all .w + .m + .a from input folder and it's
                folder - use this if data files are given in some subfolder
                structure (no values)
 
   Main flow
-    --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
-               DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
-               (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
-               with distinct label [0 / 1 (default)], (*) allow 'N/A' to be
-               part of longer labels [0 (default) / 1], (*) do input data have
-               all nodes ordered [0 / 1 (default)])
-    --red      remove reductions (value: label ommisions of empty nodes
-               [0 / 1 (default)])
-    --knit     convert .w + .m + .a to a single .pml file (value: directory of
-               PML schemas [default = 'TrEd extension/lv-treebank/resources'])
-    --conll    convert .pml to conll (values: (*) label output tree arcs
-               [0/1], (*) CPOSTAG mode [PURIFY / FIRST / NONE (default)],
-               (*) POSTAG mode [FULL (default) / PURIFY], (*) is "large"
-               CoNLL-2009 output needed [0 (default) / 1])
-    --fold     create development/test or cross-validation datasets (values:
-               (*) probability (0;1), or cross-validation part count {3; 4;
-               5; ...}, or 1 for concatenating all files, (*) seed [default =
-               nothing pased to srand])
+    --coord    un-nest coordinations so that 
+    --dep      convert to dependencies
+               args: (*) x-Pred mode [BASELEM / DEFAULT (default)]
+                     (*) Coord mode [ROW / DEFAULT (default)]
+                     (*) PMC mode [BASELEM / DEFAULT (default)]
+                     (*) label root node with distinct label [0 / 1 (default)]
+                     (*) allow 'N/A' to be part of longer labels
+                         [0 (default) / 1]
+                     (*) input data have all nodes ordered [0 / 1 (default)]
+               no later than before: --knit
+    --red      remove reductions
+               args: (*) label ommisions of empty nodes [0 / 1 (default)]
+               pre-req: --dep
+               no later than before: --knit
+    --knit     convert .w + .m + .a to a single .pml file
+               args: (*) directory of PML schemas [default =
+                     'TrEd extension/lv-treebank/resources']
+               no later than before: --conll
+    --conll    convert .pml to conll
+               args: (*) label output tree arcs [0/1]
+                     (*) CPOSTAG mode [PURIFY / FIRST / NONE (default)]
+                     (*) POSTAG mode [FULL (default) / PURIFY]
+                     (*) is "large" CoNLL-2009 output needed [0 (default) / 1]
+               pre-req: --knit
+               no later than before: --fold
+    --fold     create development/test or cross-validation datasets
+               args: (*) probability (0;1), or cross-validation part count {3; 4;
+                         {3; 4; 5; ...}, or 1 for concatenating all files
+                     (*) seed [default = nothing pased to srand]
+               pre-req: --conll
 
   Additional stand-alone transformations
-	--ord      recalculate 'ord' fields (value: (*) reordering mode
-               [TOKEN/NODE])
+    --ord      recalculate 'ord' fields
+               args: (*) reordering mode[TOKEN/NODE]
+               no later than before: --knit
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -227,7 +241,7 @@ sub _ord
 			$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
 	
 			# Process each tree.
-			foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
+			foreach my $tree ($xpc->findnodes('//pml:trees/pml:LM', $doc))
 			{
 				$params->[0] eq 'NODE' ?
 					LvCorporaTools::PMLUtils::AUtils::renumberNodes($xpc, $tree):
@@ -235,7 +249,7 @@ sub _ord
 					
 			}
 			my $outFile = IO::File->new("$dirPrefix/ord/$newName", ">")
-				or die "Output file opening: $!";	
+				or die "Output file opening: $!";
 			print $outFile $doc->toString(1);
 			$outFile->close();
 			print "Processing $inFile finished!\n";

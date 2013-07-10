@@ -83,11 +83,11 @@ Global variables:
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value), 1
                      (yes, label 'N/A' is procesed as every other label)
-Input files should be provided as UTF-8.
+Input files should be provided as UTF-8. Input files files must have all nodes
+numbered.
 
 Params:
    data directory 
-   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -95,14 +95,14 @@ END
 	}
 
 	my $dirName = shift @_;
-	my $numberedNodes = (shift @_ or 1);
+	#my $numberedNodes = (shift @_ or 1);
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
 	while (defined(my $inFile = $dir->read))
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
 		{
-			&transformFile ($dirName, $inFile, $numberedNodes, "$1-dep.a");
+			&transformFile ($dirName, $inFile, "$1-dep.a");
 		}
 	}
 }
@@ -133,12 +133,12 @@ Global variables:
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value), 1
                      (yes, label 'N/A' is procesed as every other label)
-Input files should be provided as UTF-8.
+Input files should be provided as UTF-8. Input files files must have all nodes
+numbered.
 
 Params:
    directory prefix
    file name
-   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
    new file name [opt, current file name used otherwise]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
@@ -148,7 +148,7 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $numberedNodes = (shift @_ or 1);
+	#my $numberedNodes = (shift @_ or 1);
 	my $newName = (shift @_ or $oldName);
 
 	mkpath("$dirPrefix/res/");
@@ -169,7 +169,7 @@ END
 	# process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
-		renumberNodes($xpc, $tree) unless ($numberedNodes);
+		#renumberNodes($xpc, $tree) unless ($numberedNodes);
 		&transformTree($xpc, $tree, $warnFile);
 	}
 	
