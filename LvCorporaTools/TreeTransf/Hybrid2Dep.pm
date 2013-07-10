@@ -28,7 +28,7 @@ use LvCorporaTools::PMLUtils::AUtils qw(
 # hybrid format to dependency-only simplification. Input files are supposed to
 # be valid against coresponding PML schemas. Invalid features like multiple
 # roles, ords per single node are not checked. To obtain results, input files
-# files must have all nodes numbered (TODO: fix this).
+# files must have all nodes numbered.
 #
 # Works with A level schema v.2.12.
 # Input files - utf8.

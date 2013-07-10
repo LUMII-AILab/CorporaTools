@@ -24,8 +24,7 @@ use LvCorporaTools::PMLUtils::AUtils
 # augumented with "red:parent". If reduction node has token, its role is
 # augumented with "red:self".
 # Input files are supposed to be valid against coresponding PML schemas. To
-# obtain results, input files files must have all nodes numbered (TODO: fix
-# this).
+# obtain results, input files files must have all nodes numbered.
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
@@ -44,9 +43,8 @@ our $LABEL_EMPTY = 1; 	# Roles red:child and red:parent are appended when
 #our $LABEL_EMPTY = 0; 	# Roles red:child and red:parent are not appended. 
 
 
-# If single argument provided, treat it as directory and process all .a files
-# in it. Otherwise pass all arguments to transformFile. This can be used as
-# entry point, if this module is used standalone.
+# Process all .a files in given folder. This can be used as entry point, if
+# this module is used standalone.
 sub processDir
 {
 	autoflush STDOUT 1;
@@ -151,7 +149,7 @@ sub transformTree
 	my $tree = shift @_;
 	#my $warnFile = shift @_;
 	
-	my @reds = $xpc->findnodes('//pml:node[./pml:reduction]', $tree);
+	my @reds = $xpc->findnodes('.//pml:node[./pml:reduction]', $tree);
 	
 	for my $red (@reds)
 	{
