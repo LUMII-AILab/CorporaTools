@@ -15,7 +15,8 @@ use IO::Dir;
 use IO::File;
 use XML::LibXML;  # XML handling library
 use LvCorporaTools::PMLUtils::AUtils
-	qw(getRole setNodeRole moveChildren hasChildrenNode getChildrenNode);
+	qw(getRole setNodeRole moveChildren hasChildrenNode getChildrenNode
+	   renumberNodes);
 
 ###############################################################################
 # This program removes reduction nodes from Latvian Treebank analytical layer
@@ -23,8 +24,7 @@ use LvCorporaTools::PMLUtils::AUtils
 # removed, parent's role is augumented with "red:child", children roles is
 # augumented with "red:parent". If reduction node has token, its role is
 # augumented with "red:self".
-# Input files are supposed to be valid against coresponding PML schemas. To
-# obtain results, input files files must have all nodes numbered.
+# Input files are supposed to be valid against coresponding PML schemas.
 #
 # Works with A level schema v.2.14.
 # Input files - utf8.
@@ -60,19 +60,21 @@ Global variables:
 
 Params:
    data directory 
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
-	my $dir_name = $_[0];
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $dirName = $_[0];
+	my $numberedNodes = (shift @_ or 0);
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
-	while (defined(my $in_file = $dir->read))
+	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.a$/))
+		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
 		{
-			transformFile ($dir_name, $in_file, "$1-nored.a");
+			transformFile ($dirName, $inFile, "$1-nored.a", $numberedNodes);
 		}
 	}
 }
@@ -97,6 +99,7 @@ Params:
    directory prefix
    file name
    new file name [opt, current file name used otherwise]
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -106,6 +109,7 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
+	my $numberedNodes = (shift @_ or 0);
 
 	mkpath("$dirPrefix/res/");
 	#mkpath("$dirPrefix/warnings/");
@@ -124,8 +128,8 @@ END
 	# Process XML: process each tree...
 	foreach my $tree ($xpc->findnodes('/pml:lvadepdata/pml:trees/pml:LM', $doc))
 	{
+		renumberNodes($xpc, $tree) unless ($numberedNodes);
 		&transformTree($xpc, $tree);#, $warnFile);
-		#&recalculateOrds($xpc, $tree); #TODO
 	}
 		
 	# Print the XML.

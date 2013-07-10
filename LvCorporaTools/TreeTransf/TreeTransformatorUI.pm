@@ -66,7 +66,8 @@ Params:
                part of longer labels [0 (default) / 1], (*) do input data have
                all nodes ordered [0 (default) / 1])
     --red      remove reductions (value: label ommisions of empty nodes
-               [0 / 1 (default)])
+               [0 / 1 (default)], (*) do input data have all nodes ordered
+               [0 (default) / 1])
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
                PML schemas [default = 'TrEd extension/lv-treebank/resources'])
     --conll    convert .pml to conll (values: (*) label output tree arcs
@@ -297,7 +298,8 @@ sub _red
 		if (defined $params->[0]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::RemoveReduction::processDir($source);
+	LvCorporaTools::TreeTransf::RemoveReduction::processDir(
+		$source, $params->[1]);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/red");
