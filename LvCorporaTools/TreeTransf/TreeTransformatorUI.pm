@@ -16,6 +16,7 @@ use IO::Dir;
 use IO::File;
 
 use LvCorporaTools::PMLUtils::AUtils;
+use LvCorporaTools::TreeTransf::UnnestCoord;
 use LvCorporaTools::TreeTransf::Hybrid2Dep;
 use LvCorporaTools::TreeTransf::RemoveReduction;
 use LvCorporaTools::PMLUtils::Knit;
@@ -59,13 +60,15 @@ Params:
                structure (no values)
 
   Main flow
+    --unnest   convert multi-level coordinations to single level (value:
+               (*) do input data have all nodes ordered [0 (default) / 1])
     --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
                DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
                (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
                with distinct label [0 / 1 (default)], (*) allow 'N/A' to be
                part of longer labels [0 (default) / 1], (*) do input data have
                all nodes ordered [0 (default) / 1])
-    --red      remove reductions (value: label ommisions of empty nodes
+    --red      remove reductions (value: (*) label ommisions of empty nodes
                [0 / 1 (default)], (*) do input data have all nodes ordered
                [0 (default) / 1])
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
@@ -137,6 +140,10 @@ sub processDir
 	# Recalculating ord fields.
 	$source = &_ord($source, $dirPrefix, $params{'--ord'})
 		if ($params{'--ord'});
+		
+	# Unnest coordinations.
+	$source = &_unnest($source, $dirPrefix, $params{'--ord'})
+		if ($params{'--unnest'});
 	
 	
 	# Converting to dependencies.
@@ -251,6 +258,29 @@ sub _ord
 	}
 	return "$dirPrefix/ord";
 }
+
+# Unnest coordinations.
+# return adress to step results.
+sub _unnest
+{
+	my ($source, $dirPrefix, $params) = @_;
+	print "\n==== Unnesting to coordinations ==============================\n";
+		
+	# Convert.
+	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->[0]);
+		
+	# Move files to correct places.
+	move("$source/res", "$dirPrefix/unnest");
+	move("$source/warnings", "$dirPrefix/unnest/warnings");
+	my @files = glob("$source/*.m $source/*.w");
+	for (@files)
+	{
+		copy($_, "$dirPrefix/unnest/");
+	}
+		
+	return "$dirPrefix/unnest";
+}
+
 
 # Convert to dependencies.
 # return adress to step results.
