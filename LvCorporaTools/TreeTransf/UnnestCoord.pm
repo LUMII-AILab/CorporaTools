@@ -44,8 +44,7 @@ sub processDir
 		print <<END;
 Script for batch flattening multi-level coordinations in Latvian Treebank .a
 files.
-Input files should be provided as UTF-8. Input files files must have all nodes
-numbered.
+Input files should be provided as UTF-8.
 
 Params:
    data directory 
@@ -75,8 +74,7 @@ sub transformFile
 	{
 		print <<END;
 Script for flattening multi-level coordinations in Latvian Treebank .a files.
-Input files should be provided as UTF-8. Input files files must have all nodes
-numbered.
+Input files should be provided as UTF-8.
 
 Params:
    directory prefix

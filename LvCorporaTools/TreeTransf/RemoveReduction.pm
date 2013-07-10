@@ -52,12 +52,11 @@ sub processDir
 	{
 		print <<END;
 Script for batch removing reduction nodes from Latvian Treebank .a files.
+Input files should be provided as UTF-8.
 Global variables:
    LABEL_EMPTY - add aditional labels where empty reduction nodes are removed:
                0 (no) / 1 (yes, red:parent for parent node and red:child for
                children, default value)
-Input files should be provided as UTF-8. Input files files must have all nodes
-numbered.
 
 Params:
    data directory 
@@ -88,12 +87,11 @@ sub transformFile
 	{
 		print <<END;
 Script for removing reduction nodes from Latvian Treebank .a files.
+Input files should be provided as UTF-8.
 Global variables:
    LABEL_EMPTY - add aditional labels where empty reduction nodes are removed:
                0 (no) / 1 (yes, red:parent for parent node and red:child for
                children, default value)
-Input files should be provided as UTF-8. Input files files must have all nodes
-numbered.
 
 Params:
    directory prefix
