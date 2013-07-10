@@ -27,8 +27,7 @@ use LvCorporaTools::PMLUtils::AUtils qw(
 # This program transforms Latvian Treebank analytical layer files from native
 # hybrid format to dependency-only simplification. Input files are supposed to
 # be valid against coresponding PML schemas. Invalid features like multiple
-# roles, ords per single node are not checked. To obtain results, input files
-# files must have all nodes numbered.
+# roles, ords per single node are not checked.
 #
 # Works with A level schema v.2.12.
 # Input files - utf8.
@@ -87,7 +86,7 @@ Input files should be provided as UTF-8.
 
 Params:
    data directory 
-   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -95,14 +94,14 @@ END
 	}
 
 	my $dirName = shift @_;
-	my $numberedNodes = (shift @_ or 1);
+	my $numberedNodes = (shift @_ or 0);
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
 	while (defined(my $inFile = $dir->read))
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
 		{
-			&transformFile ($dirName, $inFile, $numberedNodes, "$1-dep.a");
+			&transformFile ($dirName, $inFile, "$1-dep.a", $numberedNodes);
 		}
 	}
 }
@@ -138,18 +137,18 @@ Input files should be provided as UTF-8.
 Params:
    directory prefix
    file name
-   input data have all nodes ordered [opt, 0/1, 1(yes) assumed by default]
    new file name [opt, current file name used otherwise]
+   input data have all nodes ordered [opt, 0/1, 0 (no) assumed by default]
 
-Latvian Treebank project, LUMII, 2012, provided under GPL
+Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $numberedNodes = (shift @_ or 1);
 	my $newName = (shift @_ or $oldName);
+	my $numberedNodes = (shift @_ or 0);
 
 	mkpath("$dirPrefix/res/");
 	mkpath("$dirPrefix/warnings/");

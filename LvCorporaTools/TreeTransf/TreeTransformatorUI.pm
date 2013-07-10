@@ -64,7 +64,7 @@ Params:
                (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
                with distinct label [0 / 1 (default)], (*) allow 'N/A' to be
                part of longer labels [0 (default) / 1], (*) do input data have
-               all nodes ordered [0 / 1 (default)])
+               all nodes ordered [0 (default) / 1])
     --red      remove reductions (value: label ommisions of empty nodes
                [0 / 1 (default)])
     --knit     convert .w + .m + .a to a single .pml file (value: directory of
