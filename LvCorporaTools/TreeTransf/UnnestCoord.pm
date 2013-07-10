@@ -95,9 +95,9 @@ END
 	my $numberedNodes = (shift @_ or 0);
 
 	mkpath("$dirPrefix/res/");
-	#mkpath("$dirPrefix/warnings/");
-	#my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
-	#	or die "$newName-warnings.txt: $!";
+	mkpath("$dirPrefix/warnings/");
+	my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
+		or die "$newName-warnings.txt: $!";
 	#print "Processing $oldName started...\n";
 
 	# Load the XML.
@@ -112,7 +112,7 @@ END
 	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
 	{
 		renumberNodes($xpc, $tree) unless ($numberedNodes);
-		&transformTree($xpc, $tree);#, $warnFile);
+		&transformTree($xpc, $tree, $warnFile);
 	}
 		
 	# Print the XML.
@@ -123,8 +123,8 @@ END
 	$outFile->close();
 	
 	print "Processing $oldName finished!\n";
-	#print $warnFile "Processing $oldName finished!\n";
-	#$warnFile->close();
+	print $warnFile "Processing $oldName finished!\n";
+	$warnFile->close();
 }
 
 # Remove reductions from single tee (LM element in most tree files).
@@ -133,7 +133,7 @@ sub transformTree
 {
 	my $xpc = shift @_; # XPath context
 	my $tree = shift @_;
-	#my $warnFile = shift @_;
+	my $warnFile = shift @_;
 	
 	my $xPath = './/pml:coordinfo[./pml:coordtype=\'crdClauses\' and '.
 		'./pml:children/pml:node/pml:children/pml:coordinfo/pml:coordtype=\'crdClauses\''.
@@ -152,11 +152,25 @@ sub transformTree
 		# Process each node that should be "unnested". More than one is rare.
 		for my $node (@lowerCrdNode)
 		{
-			my @dependants = $xpc->findnodes('pml:children/pml:node', $node); 
+			my @dependants = $xpc->findnodes('pml:children/pml:node', $node);
 			my @constituents = $xpc->findnodes(
-				'pml:children/pml:coordinfo/pml:children/pml:node', $node);
-			die "$parRole below ". $node->find('@id').' has no children!'
-				unless (@constituents);
+				'pml:children/pml:coordinfo/pml:children/pml:node[./pml:role=\'crdPart\']',
+				$node);
+				
+			# Warning about suspective structure.
+			if (not @constituents)
+			{
+				print "$parRole has no crdPart children.\n";
+				print $warnFile "$parRole below ". $node->find('@id')
+					." has no children.\n";
+				
+				@constituents = $xpc->findnodes(
+					'pml:children/pml:coordinfo/pml:children/pml:node',
+					$node);
+				die "$parRole below ". $node->find('@id').' has no children!'
+					unless (@constituents);
+			}
+				
 			@constituents = @{sortNodesByOrd($xpc, 0, @constituents)};
 			
 			# Dependants of the lower coordination is transfered to first
@@ -170,6 +184,8 @@ sub transformTree
 			
 			# Dependants of the lower coordination is transfered to the upper
 			# coordination.
+			@constituents = $xpc->findnodes(
+				'pml:children/pml:coordinfo/pml:children/pml:node', $node);
 			for my $c (@constituents)
 			{
 				$c->unbindNode();

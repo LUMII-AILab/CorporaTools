@@ -54,7 +54,7 @@ Params:
     --dir      input directory (single value)
 
   Preprocessing
-	--collect  collect all .w + .m + .a from input folder and it's
+    --collect  collect all .w + .m + .a from input folder and it's
                folder - use this if data files are given in some subfolder
                structure (no values)
 
@@ -80,7 +80,7 @@ Params:
                nothing pased to srand])
 
   Additional stand-alone transformations
-	--ord      recalculate 'ord' fields (value: (*) reordering mode
+    --ord      recalculate 'ord' fields (value: (*) reordering mode
                [TOKEN/NODE])
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
