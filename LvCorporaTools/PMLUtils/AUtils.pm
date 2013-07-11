@@ -82,7 +82,6 @@ sub renumberNodes
 {
 	my $xpc = shift @_; # XPath context
 	my $tree = shift @_;
-	
 	&renumberTokens($xpc, $tree);
 	
 	&_renumberNodesSubtree($xpc, $tree, $tree);
@@ -147,7 +146,24 @@ sub _renumberNodesSubtree
 	# Obtain new id if given node has no children and no siblings.	
 	if ($newId <= 0)
 	{
-		warn "No ord could be calculated $!";
+		if ($root->find('@id'))
+		{
+			warn 'No ord could be calculated for '.$root->find('@id').".\n";
+		}
+		elsif ($root->find('../@id'))
+		{
+			warn 'No ord could be calculated for node 1 step below '
+				.$root->find('../@id').".\n";
+		}
+		elsif ($root->find('../../@id'))
+		{
+			warn 'No ord could be calculated for node 2 steps below '
+				.$root->find('../../@id').".\n";
+		}
+		else
+		{
+			warn "No ord could be calculated $!";
+		}
 	}
 	$newId++;
 

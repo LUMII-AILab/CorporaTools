@@ -48,7 +48,7 @@ END
 		exit 1;
 	}
 
-	my $dir_name = $_[0];
+	my $dir_name = shift @_;
 	my $dir = IO::Dir->new($dir_name) or die "dir $!";
 
 	while (defined(my $in_file = $dir->read))

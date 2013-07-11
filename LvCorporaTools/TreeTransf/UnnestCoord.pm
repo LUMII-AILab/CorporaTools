@@ -54,7 +54,7 @@ Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
-	my $dirName = $_[0];
+	my $dirName = shift @_;
 	my $numberedNodes = (shift @_ or 0);
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
