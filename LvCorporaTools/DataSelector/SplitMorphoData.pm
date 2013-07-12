@@ -49,7 +49,7 @@ END
 	}
 	
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&splitFile, "^.+\\.m\$", '', 0, @_);
+		\&splitFile, "^.+\\.m\$", '', 0, 0, @_);
 }
 
 ###############################################################################

@@ -88,6 +88,6 @@ END
 	my $ext = shift @_;
 	my $schemaDir = (shift @_ or 0);
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&knit, "^.+\\.\Q$ext\E\$", '.pml', 1, $dirName, $schemaDir);
+		\&knit, "^.+\\.\Q$ext\E\$", '.pml', 1, 0, $dirName, $schemaDir);
 }
 
