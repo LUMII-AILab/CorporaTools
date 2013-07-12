@@ -66,17 +66,9 @@ Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
-	my $dirName = shift @_;
-	my $numberedNodes = (shift @_ or 0);
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
-
-	while (defined(my $inFile = $dir->read))
-	{
-		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
-		{
-			transformFile ($dirName, $inFile, "$1-nored.a", $numberedNodes);
-		}
-	}
+	
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&transformFile, "^(.+)\\.a\$", '-nored.a', @_);
 }
 
 
