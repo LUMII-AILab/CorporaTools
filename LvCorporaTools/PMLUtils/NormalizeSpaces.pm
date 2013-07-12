@@ -13,6 +13,8 @@ use IO::File;
 use IO::Dir;
 use XML::LibXML;
 
+use LvCorporaTools::GenericUtils::UIWrapper;
+
 ###############################################################################
 # Script for normalizing spaces in PML .m file acording to .w file. Only m
 # elements with multiple w.rf are tested for changes.
@@ -43,18 +45,8 @@ Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
-
-	my $dirName = shift @_;
-	my $doLemmas = (shift @_ or 1);
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
-
-	while (defined(my $inFile = $dir->read))
-	{
-		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.m$/))
-		{
-			&processFile ($dirName, $1, $doLemmas);
-		}
-	}
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&processFile, "^.+\\.m\$", '', 0, 1, @_);
 }
 
 # Process single PML m file consulting w file. This can be used as entry point,
