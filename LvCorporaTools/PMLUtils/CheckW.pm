@@ -14,6 +14,7 @@ use IO::Dir;
 use IO::File;
 use File::Path;
 use XML::Simple;  # XML handling library
+use LvCorporaTools::GenericUtils::UIWrapper;
 
 ###############################################################################
 # This programm checks PML W file agaist the original .txt file. Spaces and
@@ -47,17 +48,8 @@ Latvian Treebank project, LUMII, 2011, provided under GPL
 END
 		exit 1;
 	}
-
-	my $dir_name = shift @_;
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
-
-	while (defined(my $in_file = $dir->read))
-	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
-		{
-			checkW ($dir_name, "$1.w", "$1.txt");
-		}
-	}
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&checkW, "^.+\\.w\$", '', 0);
 }
 
 # Perform error-chacking in single file. This can be used as entry point, if
