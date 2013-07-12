@@ -68,7 +68,7 @@ END
 	}
 	
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&transformFile, "^(.+)\\.a\$", '-nored.a', @_);
+		\&transformFile, "^(.+)\\.a\$", '-nored.a', 1, @_);
 }
 
 

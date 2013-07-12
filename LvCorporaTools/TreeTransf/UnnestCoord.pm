@@ -57,7 +57,7 @@ END
 	}
 	
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&transformFile, "^(.+)\\.a\$", '-flatCoord.a', @_);
+		\&transformFile, "^(.+)\\.a\$", '-flatCoord.a', 1, @_);
 }
 
 # Process single XML file. This can be used as entry point, if this module

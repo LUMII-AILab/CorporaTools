@@ -95,7 +95,7 @@ END
 	}
 
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&transformFile, "^(.+)\\.a\$", '-dep.a', @_);
+		\&transformFile, "^(.+)\\.a\$", '-dep.a', 1, @_);
 #	my $dirName = shift @_;
 #	my $numberedNodes = (shift @_ or 0);
 #	my $dir = IO::Dir->new($dirName) or die "dir $!";
