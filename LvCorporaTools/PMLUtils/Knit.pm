@@ -10,6 +10,7 @@ use IO::Dir;
 use Treex::PML;
 use Treex::PML::Instance;
 use Treex::PML::Instance::Writer;
+use LvCorporaTools::GenericUtils::UIWrapper;
 
 use Exporter();
 our @ISA = qw(Exporter);
@@ -37,6 +38,7 @@ sub knit
 Script for knitting arbitrary PML file.
 
 Params:
+   directory prefix
    input file name
    output file name
    directory with PML schema/-s are [opt]
@@ -46,18 +48,19 @@ END
 		exit 1;
 	}
 
+	my $dirPrefix = shift @_;
 	my $inFile = shift @_;
 	my $outFile = shift @_;
 	my $schemaDir = shift @_;
 	
+	mkpath("$dirPrefix/res/");
 	Treex::PML::AddResourcePath( $schemaDir ) if ($schemaDir);
-	my $pml = Treex::PML::Instance->load({ 'filename' => $inFile });
+	my $pml = Treex::PML::Instance->load({ 'filename' => "$dirPrefix/$inFile" });
 	$Treex::PML::Instance::Writer::KEEP_KNIT = 1;
-	$pml->save({ 'filename' => $outFile, 'refs_save' => {}});
-	#$pml->save({ 'filename' => $outFile, 'refs_save' => {}, 'no_knit' => 1});
+	$pml->save({ 'filename' => "$dirPrefix/res/$outFile", 'refs_save' => {}});
 	
-	$inFile =~ m#^.*[\\/](.*?)$#;
-	print "Processing $1 finished!\n";
+	#$inFile =~ m#^.*[\\/](.*?)$#;
+	print "Processing $inFile finished!\n";
 
 }
 
@@ -84,16 +87,7 @@ END
 	my $dirName = shift @_;
 	my $ext = shift @_;
 	my $schemaDir = (shift @_ or 0);
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
-	mkpath("$dirName/res/");
-
-	while (defined(my $inFile = $dir->read))
-	{
-		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\Q.$ext\E$/))
-		{
-			&knit("$dirName/$inFile", "$dirName/res/$1.pml", $schemaDir);
-		}
-	}
-
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&knit, "^.+\\.\Q$ext\E\$", '.pml', 1, $dirName, $schemaDir);
 }
 
