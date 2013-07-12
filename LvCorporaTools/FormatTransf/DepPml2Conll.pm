@@ -16,6 +16,8 @@ use XML::LibXML;  # XML handling library
 
 use LvCorporaTools::TagTransf::TagPurifier qw(purifyKamolsTag);
 use LvCorporaTools::TagTransf::Tag2FeatureList qw(parseTagSet decodeTag);
+use LvCorporaTools::GenericUtils::UIWrapper;
+
 
 ###############################################################################
 # This program transforms Latvian Treebank files in dependency-only form from
@@ -71,23 +73,10 @@ Latvian Treebank project, LUMII, 2012, provided under GPL
 END
 		exit 1;
 	}
-	# Input paramaters.
-	my $dir_name = shift @_;
-	my $mode = shift @_;
-	#my $cpostag = shift @_;
-	#my $postag = shift @_;
-	my $conll2009 = (shift @_ or 0);
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
-	my $infix = $mode ? "lab" : "unlab";
 	
-	while (defined(my $in_file = $dir->read))
-	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.(pml|xml)$/))
-		{
-			transformFile (
-				$dir_name, $in_file, $mode, "$1-$infix.conll", $conll2009);
-		}
-	}
+	my $infix = $_[1] ? "lab" : "unlab";
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&transformFile, "^(.+)\\.(pml|xml)\$", '-$infix.conll', @_);
 }
 
 # Process single XML file. This can be used as entry point, if this module is
@@ -111,8 +100,9 @@ Input files should be provided as UTF-8.
 Params:
    directory prefix
    file name
-   0/1 - print labeled output (if true, trees with reductions will be ommited)
    new file name [opt, current file name used otherwise]
+   0/1 - print labeled output - if true, trees with reductions will be ommited
+         [opt. false by default]
    use CoNLL-2009 format [opt, false by default]
 
 Latvian Treebank project, LUMII, 2012, provided under GPL
@@ -122,10 +112,8 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $printLabels = shift @_;
-	#my $cpostag = (shift @_ or 'NONE');
-	#my $postag = (shift @_ or 'FULL');
 	my $newName = (shift @_ or $oldName);
+	my $printLabels = (shift @_ or 0);
 	my $conll2009 = (shift @_ or 0);
 	
 	# Open output file.
