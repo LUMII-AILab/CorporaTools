@@ -74,7 +74,7 @@ paragraph borders, if necessary. Input files should be provided as UTF-8.
 Params:
    directory prefix
    .w file
-   plain text file [opt, "original.txt" used otherwise]
+   plain text file [opt, file_name.txt used otherwise]
 
 Latvian Treebank project, LUMII, 2011, provided under GPL
 END
@@ -84,7 +84,11 @@ END
 	# Input paramaters. 
 	my $dirPrefix = shift @_;
 	my $pml = shift @_;
-	my $txt = (shift @_ or 'original.txt');
+	my $txt = shift @_;
+	unless ($txt)
+	{
+		$txt = $pml =~ /^(.+)\.w$/ ? "$1.txt" : "$pml.txt";
+	}
 	
 	# Statistics.
 	my $addedSpaces = 0;

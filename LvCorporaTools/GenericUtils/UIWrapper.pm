@@ -34,7 +34,7 @@ sub processDir
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /$filter/))
 		{
-			my $outFile = $inFile =~ /^(.*)\.[^.]*$/ ? "$1$ext" : $inFile;
+			my $outFile = $inFile =~ /^(.*)\.[^.]*$/ ? "$1$ext" : "$inFile$ext";
 			
 			&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
 		}
