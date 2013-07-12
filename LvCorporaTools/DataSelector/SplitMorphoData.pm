@@ -23,6 +23,7 @@ use File::Path;
 use IO::Dir;
 use IO::File;
 use XML::LibXML;
+use LvCorporaTools::GenericUtils::UIWrapper;
 
 ###############################################################################
 # Split directory with M files.
@@ -46,15 +47,9 @@ Latvian Treebank project, LUMII, 2012, provided under GPL
 END
 		exit 1;
 	}
-
-	my $dirName = shift @_;
-	my @args = @_;
 	
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
-	while (defined(my $file = $dir->read))
-	{
-		&splitFile ($dirName, $file, @args) if ((not -d "$dirName/$file") && $file =~ m/.*\.m/);
-	}
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		\&splitFile, "^.+\\.m\$", '', 1, @_);
 }
 
 ###############################################################################
