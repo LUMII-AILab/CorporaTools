@@ -14,6 +14,8 @@ use File::Path;
 use IO::Dir;
 use IO::File;
 use XML::LibXML;  # XML handling library
+
+use LvCorporaTools::GenericUtils::UIWrapper;
 use LvCorporaTools::PMLUtils::AUtils
 	qw(getRole setNodeRole moveChildren hasChildrenNode getChildrenNode
 	   renumberNodes);
@@ -97,43 +99,22 @@ Latvian Treebank project, LUMII, 2013, provided under GPL
 END
 		exit 1;
 	}
+	
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
 	my $numberedNodes = (shift @_ or 0);
-
-	mkpath("$dirPrefix/res/");
-	#mkpath("$dirPrefix/warnings/");
-	#my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
-	#	or die "$newName-warnings.txt: $!";
-	#print "Processing $oldName started...\n";
-
-	# Load the XML.
-	my $parser = XML::LibXML->new('no_blanks' => 1);
-	my $doc = $parser->parse_file("$dirPrefix/$oldName");
 	
-	my $xpc = XML::LibXML::XPathContext->new();
-	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
-	#$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
+	# This is how each tree sould be processed.
+	my $treeProc = sub {
+		renumberNodes(@_) unless ($numberedNodes);
+		&transformTree(@_);
+	};
 	
-	# Process XML: process each tree...
-	foreach my $tree ($xpc->findnodes('/pml:lvadepdata/pml:trees/pml:LM', $doc))
-	{
-		renumberNodes($xpc, $tree) unless ($numberedNodes);
-		&transformTree($xpc, $tree);#, $warnFile);
-	}
-		
-	# Print the XML.
-	#File::Path::mkpath("$dirPrefix/res/");
-	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
-		or die "Output file opening: $!";	
-	print $outFile $doc->toString(1);
-	$outFile->close();
-	
-	print "Processing $oldName finished!\n";
-	#print $warnFile "Processing $oldName finished!\n";
-	#$warnFile->close();
+	# File procesing wrapper customised with tree processing instructions.
+	LvCorporaTools::GenericUtils::UIWrapper::transformAFile(
+		$treeProc, 0, 0, '', '', $dirPrefix, $oldName, $newName);
 }
 
 

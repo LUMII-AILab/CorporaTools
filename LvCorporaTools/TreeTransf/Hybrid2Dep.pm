@@ -19,10 +19,10 @@ use IO::Dir;
 use List::Util qw(first);
 use XML::LibXML;  # XML handling library
 
+use LvCorporaTools::GenericUtils::UIWrapper;
 use LvCorporaTools::PMLUtils::AUtils qw(
 	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
 	sortNodesByOrd moveChildren getOrd);
-use LvCorporaTools::GenericUtils::UIWrapper;
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -152,45 +152,56 @@ END
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
 	my $numberedNodes = (shift @_ or 0);
+	
+	# This is how each tree sould be processed.
+	my $treeProc = sub {
+		renumberNodes(@_) unless ($numberedNodes);
+		&transformTree(@_);
+	};
+	
+	# File procesing wrapper customised with tree processing instructions.
+	LvCorporaTools::GenericUtils::UIWrapper::transformAFile(
+		$treeProc, 1, 1, 'lvaschema-deponly.xml', 'lvadepdata', $dirPrefix,
+		$oldName, $newName);
 
-	mkpath("$dirPrefix/res/");
-	mkpath("$dirPrefix/warnings/");
-	my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
-		or die "$newName-warnings.txt: $!";
-	print "Processing $oldName started...\n";
+#	mkpath("$dirPrefix/res/");
+#	mkpath("$dirPrefix/warnings/");
+#	my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
+#		or die "$newName-warnings.txt: $!";
+#	print "Processing $oldName started...\n";
 
 	# Load the XML.
-	my $parser = XML::LibXML->new('no_blanks' => 1);
-	my $doc = $parser->parse_file("$dirPrefix/$oldName");
+#	my $parser = XML::LibXML->new('no_blanks' => 1);
+#	my $doc = $parser->parse_file("$dirPrefix/$oldName");
 	
-	my $xpc = XML::LibXML::XPathContext->new();
-	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
-	$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
+#	my $xpc = XML::LibXML::XPathContext->new();
+#	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
+#	$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
 	
 	# Process XML:
 	# process each tree...
-	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
-	{
-		renumberNodes($xpc, $tree) unless ($numberedNodes);
-		&transformTree($xpc, $tree, $warnFile);
-	}
+#	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
+#	{
+#		renumberNodes($xpc, $tree) unless ($numberedNodes);
+#		&transformTree($xpc, $tree, $warnFile);
+#	}
 	
 	# ... and update the schema information and root name.
-	my @schemas = $xpc->findnodes(
-		'pml:lvadata/pml:head/pml:schema[@href=\'lvaschema.xml\']', $doc);
-	$schemas[0]->setAttribute('href', 'lvaschema-deponly.xml');
-	$doc->documentElement->setNodeName('lvadepdata');
+#	my @schemas = $xpc->findnodes(
+#		'pml:lvadata/pml:head/pml:schema[@href=\'lvaschema.xml\']', $doc);
+#	$schemas[0]->setAttribute('href', 'lvaschema-deponly.xml');
+#	$doc->documentElement->setNodeName('lvadepdata');
 	
 	# Print the XML.
 	#File::Path::mkpath("$dirPrefix/res/");
-	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
-		or die "Output file opening: $!";	
-	print $outFile $doc->toString(1);
-	$outFile->close();
+#	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
+#		or die "Output file opening: $!";	
+#	print $outFile $doc->toString(1);
+#	$outFile->close();
 	
-	print "Processing $oldName finished!\n";
-	print $warnFile "Processing $oldName finished!\n";
-	$warnFile->close();
+#	print "Processing $oldName finished!\n";
+#	print $warnFile "Processing $oldName finished!\n";
+#	$warnFile->close();
 }
 
 # Transform single tee (LM element in most tree files).
