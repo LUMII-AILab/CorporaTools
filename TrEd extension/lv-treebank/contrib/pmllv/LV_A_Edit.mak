@@ -122,19 +122,8 @@ sub _give_ord_everybody
 	
 	# Obtain new id if given node has no children.
 	$new_id = $smallerSibOrd if ($new_id <= 0);
-	print "moo!\n" if ($new_id <= 0);
-#	if ($new_id <= 0)
-#	{
-#		my $follower = $tree->following;
-#		while ($follower and $follower->attr('ord') <= 0)
-#		{
-#			$follower = $follower->following;
-#		}
-#		$new_id = $follower->attr('ord') if ($follower);
-#	} else
-#	{
+	print "Node ID was not obtained from other nodes.\n" if ($new_id <= 0);
 		$new_id++;
-#	}
 	
 	# Give ord to root of the subtree.
 	&_rise_ords($new_id);
