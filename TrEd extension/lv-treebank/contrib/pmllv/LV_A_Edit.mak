@@ -109,7 +109,8 @@ sub _give_ord_everybody
 	#		sort (
 	#			grep {$_ > 0} (
 	#				map {$_->attr('ord') or 0}  $tree->children));
-		&_give_ord_everybody($ch, $sibOrds[0]);
+		my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
+		&_give_ord_everybody($ch, $min);
 		my $tmp_ord = $ch->attr('ord');
 		$new_id = $tmp_ord
 			if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));

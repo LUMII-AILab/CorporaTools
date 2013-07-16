@@ -129,8 +129,10 @@ sub _renumberNodesSubtree
 		{
 			# Find smallest sibling ord.
 			my @sibOrds = sort {$a <=> $b } (
-				map {$_->textContent} ($xpc->findnodes('pml:children/*/pml:ord', $root)));
-			&_renumberNodesSubtree($xpc, $ch, $tree, $sibOrds[0]);
+				grep {$_ > 0} (
+				map {$_->textContent} ($xpc->findnodes('pml:children/*/pml:ord', $root))));
+			my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
+			&_renumberNodesSubtree($xpc, $ch, $tree, $min);
 			my $tmpOrd = &getOrd($xpc, $ch);
 			$newId = $tmpOrd
 				if ($tmpOrd and ($tmpOrd < $newId or $newId <= 0));
