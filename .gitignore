@@ -18,3 +18,14 @@
 /testdata/Unite/res
 
 /testdata/UnnestCoord/warnings
+/testdata/MakeFilelist/TestList.fl
+/testdata/CheckLvPml/zeens-errors.txt
+
+/testdata/RoleCounter/counts.txt
+/testdata/CalcStats/stats.txt
+
+/testdata/CalcStats/zeens.m-stats.txt
+
+/testdata/UnnestCoord/zeens.m
+
+/testdata/UnnestCoord/zeens.w
