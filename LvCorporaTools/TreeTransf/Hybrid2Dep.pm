@@ -8,8 +8,8 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_DETAIL_NA transformFile processDir
-	transformTree);
+	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_DETAIL_NA
+	transformFile processDir transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -54,6 +54,18 @@ our $PMC = 'DEFAULT';		# first punct as root element
 our $LABEL_ROOT = 1;		# Label tree's empty root node 'ROOT'.
 #our $LABEL_ROOT = 0;		# Do not label root node.
 
+our $LABEL_SUBROOT = 1;		# Default setting - both phrase name and child role
+							# is added to the child in the root of the phrase
+							# representing subtree for all phrase types.
+#our $LABEL_SUBROOT = 0;	# Leave out phrase name and child role for the
+							# child in the root of the phrase representing
+							# subtree. This done for selected phrase types
+							# only: xParticle, subrAnal, coordAnal, xNum, xPred
+							# (if $XPRED='BASELEM'), xApp, namedEnt,
+							# [phrasElem,] unstruct; crdParts, srdClauses,
+							# crdGeneral; spcPmc (if $PMC='BASELEM'), quot (if
+							# $PMC='BASELEM').
+
 #our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
 							# of longer role)
 our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
@@ -80,6 +92,11 @@ Global variables:
          default value)
    LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
                 default value)
+   LABEL_SUBROOT - leave out phrase name and child role for the child in the
+                   root of the phrase representing subtree (this done for
+                   selected phrase types only): 0 / both phrase name and child
+                   role is added to the child in the root of the phrase
+                   representing subtree for all phrase types: 1
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value), 1
                      (yes, label 'N/A' is procesed as every other label)
@@ -357,20 +374,23 @@ sub _renameDependent
 ### X-words ###################################################################
 sub xPrep
 {
-	return &_allBelowOne(['prep'], 1, @_);
+	return &_allBelowOne(['prep'], 1, 1, @_);
+	# Root is labeled always.
 }
 sub xSimile
 {
-	return &_allBelowOne(['conj'], 1, @_);
+	return &_allBelowOne(['conj'], 1, 1, @_);
+	# Root is labeled always.
 }
 sub xParticle
 {
-	return &_allBelowOne(['basElem'], 1, @_);
+	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 1, @_);
+	# Root is labeled according to settings.
 }
 sub subrAnal
 {
-	return &_allBelowOne(['basElem'], 0, @_);
-	#return &_defaultPhrase(@_);
+	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 0, @_);
+	# Root is labeled according to settings.
 }
 sub coordAnal
 {
@@ -387,23 +407,26 @@ sub coordAnal
 		print $warnFile "$parentRole below ". $node->find('../../@id').' has '
 				.(scalar @ch)." children.\n";
 	}
-	return &_chainAll(0, @_);
+	return &_chainAll(0, $LABEL_SUBROOT, @_);
+	# Root is labeled according to settings.
 }
 sub xNum
 {
-	return &_chainAll(1, @_);
+	return &_chainAll(1, $LABEL_SUBROOT, @_);
+	# Root is labeled according to settings.
 }
 sub xPred
 {
-	return &_allBelowOne(['basElem'], 1, @_) if ($XPRED eq 'BASELEM');
-	return &_allBelowOne(['mod', 'auxVerb'], 0, @_)
+	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 1, @_) if ($XPRED eq 'BASELEM');
+	return &_allBelowOne(['mod', 'auxVerb'], 1, 0, @_)
 		if ($XPRED eq 'DEFAULT');
 	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
-	#return &_chainAll(0, @_);
+	# Root is labeled according to settings, if baseElem in root.
 }
 sub xApp
 {
-	return &_chainAll(0, @_);
+	return &_chainAll(0, $LABEL_SUBROOT, @_);
+	# Root is labeled according to settings.
 }
 
 sub namedEnt
@@ -420,14 +443,22 @@ sub namedEnt
 
 	if (@ch gt 1)
 	{
-		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
+		return &_defaultTransform(
+			$LABEL_SUBROOT, $xpc, $node, $parentRole, $warnFile);
+		# Root is labeled according to settings.
 	}
-	else
+	else	
 	{
+		# According to current methodology 1-child named entities is not used.
+		print "namedEnt has 1 child.\n";
+		print $warnFile "namedEnt below ". $node->find('../../@id')
+			." has 1 child.\n";
 		# Change role for the subroot.
-		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt');
+		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt')
+			if ($LABEL_SUBROOT);
 		$ch[0]->unbindNode();
 		return $ch[0];
+		# Root is labeled according to settings.
 	}
 }
 
@@ -437,6 +468,10 @@ sub phrasElem
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $warnFile = shift @_;
+	
+	# Warning about deprecated constuction.
+	print "Deprecated constuction: phrasElem.\n";
+	print $warnFile 'phrasElem below '. $node->find('../../@id').".\n";
 
 	# Find the new root ('subroot') for the current subtree.
 	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
@@ -447,23 +482,26 @@ sub phrasElem
 	{
 		# Warning about suspective structure.
 		print 'phrasElem has '.(scalar @ch)." children.\n";
-		print $warnFile 'phrasElem below '. $node->find('../../@id').' has '.(scalar @ch)
-			." children.\n";
-		return &_defaultPhrase($xpc, $node, $parentRole, $warnFile);
+		print $warnFile 'phrasElem below '. $node->find('../../@id').' has '
+			.(scalar @ch)." children.\n";
+		return &_defaultTransform(
+			$LABEL_SUBROOT, $xpc, $node, $parentRole, $warnFile);
+		# Root is labeled according to settings.
 	}
 	else
 	{
 		# Change role for the subroot.
-		#my $oldRole = getRole($xpc, $ch[0]);
-		#setNodeRole($xpc, $ch[0], "$parentRole-phrasElem-$oldRole");
-		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'phrasElem');
+		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'phrasElem')
+			if ($LABEL_SUBROOT);
 		$ch[0]->unbindNode();
 		return $ch[0];
+		# Root is labeled according to settings.
 	}
 }
 sub unstruct
 {
-	return &_defaultPhrase(@_);
+	return &_defaultTransform($LABEL_SUBROOT, @_);
+	# Root is labeled according to settings.
 }
 
 
@@ -471,78 +509,100 @@ sub unstruct
 
 sub crdParts
 {
-	return &_defaultCoord(@_);
+	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW');
+	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
+	die "Unknown value \'$COORD\' for global constant \$COORD ";
+	# Root is labeled according to settings if elements are chained.
 }
 sub crdClauses
 {
-	return &_defaultCoord(@_);
+	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW');
+	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
+	die "Unknown value \'$COORD\' for global constant \$COORD ";
+	# Root is labeled according to settings if elements are chained.
 }
 sub crdGeneral
 {
-	return &_defaultCoord(@_);
+	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW');
+	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
+	die "Unknown value \'$COORD\' for global constant \$COORD ";
+	# Root is labeled according to settings if elements are chained.
 }
 
 ### PMC #######################################################################
 
 sub sent
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(1, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(1, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub mainCl
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub subrCl
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub interj
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub spcPmc
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase($LABEL_SUBROOT, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled according to settings, if baseElem in root.
 }
 sub insPmc
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub particle
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub dirSpPmc
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub address
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase(1, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 sub quot
 {
-	return &_allBelowPmcBase(@_) if ($PMC eq 'BASELEM');
-	return &_allBelowPunct(0, 0, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPmcBase($LABEL_SUBROOT, @_) if ($PMC eq 'BASELEM');
+	return &_allBelowPunct(0, 0, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled according to settings, if baseElem in root.
 }
 
 sub utter
@@ -577,17 +637,44 @@ sub utter
 		my $newRoot = $res[0];
 		
 		# Rebuild subtree.
-		$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
+		$newRoot = &_finshPhraseTransf(1, $xpc, $node, $newRoot, $parentRole);
 		return $newRoot;
 	}
-	return &_allBelowPunct(1, 1, @_) if ($PMC eq 'DEFAULT');
+	return &_allBelowPunct(1, 1, 1, @_) if ($PMC eq 'DEFAULT');
 	die "Unknown value \'$PMC\' for global constant \$PMC ";
+	# Root is labeled always.
 }
 
+
 ### What to do when don't know what to do #####################################
-# Put everrything below last basElem or last constituent.
-sub _defaultPhrase
+# AUTOLOAD is called when someone tries to access nonexixting method through
+# this package. See perl documentation.
+# This is used for handling unknown PMC/X-word/coordination types.
+sub AUTOLOAD
 {
+	our $AUTOLOAD;
+	my $name = $AUTOLOAD;
+	$name =~ s/.*::(.*?)$/$1/;
+	my $warnFile = $_[3];
+	
+	print "Don't know how to process \"$name\", will use default rule.\n";
+	print $warnFile "Don't know how to process \"$name\" below "
+		.$_[1]->find('../../@id').", will use default rule.\n";
+	return &_defaultTransform(1, @_);
+}
+
+###############################################################################
+# Aditional functions for phrase handling
+###############################################################################
+
+# Put everrything below last basElem or last constituent.
+# _defaultTransform (relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#					 ignored and root will be renamed anyway), XPath context
+#					 with set namespaces, DOM node, role of the parent node,
+#					 output flow for warnings)
+sub _defaultTransform
+{
+	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
@@ -615,25 +702,24 @@ sub _defaultPhrase
 	}
 
 	# Rebuild subtree.
-	$lastBasElem = &_finshPhraseTransf($xpc, $node, $lastBasElem, $parentRole);
+	$lastBasElem = &_finshPhraseTransf(($labelNewRoot or $LABEL_SUBROOT), $xpc,
+		$node, $lastBasElem, $parentRole);
 	return $lastBasElem;
 }
-
-###############################################################################
-# Aditional functions for phrase handling
-###############################################################################
 
 ### ...for X-words ############################################################
 
 # Finds child element with specified role and makes ir parent of other children
 # nodes.
 # _allBelowOne (pointer to array with roles determining node to become root,
-#				warn if multiple potential roots?, XPath context with set
-#				namespaces, DOM node, role of the parent node, output flow for
-#				warnings)
+#				relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#				ignored and root will be renamed anyway),  warn if multiple
+#				potential roots (0/1), XPath context with set namespaces, DOM
+#				node, role of the parent node, output flow for warnings)
 sub _allBelowOne
 {
 	my $rootRoles = shift @_;
+	my $labelNewRoot = shift @_;
 	my $warn = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -663,18 +749,66 @@ sub _allBelowOne
 	my $newRoot = $sorted[0];
 	
 	# Rebuild subtree.
-	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
+	$newRoot = &_finshPhraseTransf(
+		$labelNewRoot, $xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
+
+# Makes parent-child chain of all node's children.
+# _chainAll (should start with last node, relabel new root (0/1; if
+#			 $LABEL_SUBROOT=1, this will be ignored and root will be renamed
+#			 anyway), XPath context with set namespaces, DOM node, role of the
+#			 parent node, output flow for warnings)
+sub _chainAll
+{
+	my $invert = shift @_;
+	my $labelNewRoot = shift @_;
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	# my $warnFile = shift @_; # Not used right now
+	my $phraseRole = getRole($xpc, $node);
+
+	# Find the children.
+	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
+		if (@ch lt 1);
+	my @sorted = @{sortNodesByOrd($xpc, $invert, @ch)};
+	my $newRoot = $sorted[0];
+	my $tmpRoot = $sorted[0];
+	
+	# Process new root.
+	$newRoot->unbindNode();
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
+		if ($labelNewRoot or $LABEL_SUBROOT);
+	
+	# Process other nodes.
+	for (my $ind = 1; $ind lt @sorted; $ind++)
+	{
+		# Move to new parent.
+		$sorted[$ind]->unbindNode();
+		&_renamePhraseChild($xpc, $sorted[$ind], $phraseRole);
+		my $chNode = getChildrenNode($xpc, $tmpRoot);
+		$chNode->appendChild($sorted[$ind]);
+		$tmpRoot = $sorted[$ind];
+	}
+	return $newRoot;
+}
+
+### ...for coordination #######################################################
+
 # Finds child element with specified role and makes ir parent of other children
 # nodes before given element. All children nodes after that element are
 # combined into parent-child chain.
-# _allBelowOne (pointer to array with roles determining node to become root,
-#				XPath context with set namespaces, DOM node, role of the parent
-#				node, output flow for warnings)
+# _chainStartingFrom (pointer to array with roles determining node to become
+#					  root, relabel new root (0/1; if $LABEL_SUBROOT=1, this
+#					  will be ignored and root will be renamed anyway), XPath
+#					  context with set namespaces, DOM node, role of the parent
+#					  node, output flow for warnings)
 sub _chainStartingFrom
 {
 	my $rootRoles = shift @_;
+	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
@@ -691,7 +825,7 @@ sub _chainStartingFrom
 		print "$phraseRole have no $roles children.\n";
 		print $warnFile "$phraseRole below ". $node->find('../../@id')
 			." have no $roles children.\n";
-		return &_chainAll(0, $xpc, $node, $parentRole, $warnFile);
+		return &_chainAll(0, 1, $xpc, $node, $parentRole, $warnFile);
 	}
 	# In case of multiple roots choose first.
 	@res = @{sortNodesByOrd($xpc, 0, @res)};
@@ -705,7 +839,8 @@ sub _chainStartingFrom
 
 	# Process new root.
 	$newRoot->unbindNode();
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);	
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
+		if ($labelNewRoot or $LABEL_SUBROOT);	
 	
 	# Find the children.
 	my @children = $xpc->findnodes('pml:children/pml:node', $node);
@@ -739,138 +874,16 @@ sub _chainStartingFrom
 	return $newRoot;
 }
 
-# Makes parent-child chain of all node's children.
-# _chainAll (should start with last node, XPath context with set namespaces,
-#			 DOM node, role of the parent node, output flow for warnings)
-sub _chainAll
+# Put everything below first conjuction or punctuation. Excetpion: if
+# punctuation is followed by conjunction with no other elements between those
+# two, conjunction is used as root.
+# _allBelowCoordSep (relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#					 ignored and root will be renamed anyway), XPath context
+#					 with set namespaces, DOM node, role of the parent node,
+#					 output flow for warnings)
+sub _allBelowCoordSep
 {
-	my $invert = shift @_;
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my $parentRole = shift @_;
-	# my $warnFile = shift @_; # Not used right now
-	my $phraseRole = getRole($xpc, $node);
-
-	# Find the children.
-	my @ch = $xpc->findnodes('pml:children/pml:node', $node);
-	die "$phraseRole below ". $node->find('../../@id').' has no children!'
-		if (@ch lt 1);
-	my @sorted = @{sortNodesByOrd($xpc, $invert, @ch)};
-	my $newRoot = $sorted[0];
-	my $tmpRoot = $sorted[0];
-	
-	# Process new root.
-	$newRoot->unbindNode();
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
-	
-	# Process other nodes.
-	for (my $ind = 1; $ind lt @sorted; $ind++)
-	{
-		# Move to new parent.
-		$sorted[$ind]->unbindNode();
-		&_renamePhraseChild($xpc, $sorted[$ind], $phraseRole);
-		my $chNode = getChildrenNode($xpc, $tmpRoot);
-		$chNode->appendChild($sorted[$ind]);
-		$tmpRoot = $sorted[$ind];
-	}
-	return $newRoot;
-}
-
-### ...for PMC ################################################################
-
-# _allBelowPunct (should start with last 'punct', treat 'no' as 'basElem',
-#				  XPath context with set namespaces, DOM node, role of the
-#				  parent node, output flow for warnings)
-sub _allBelowPunct
-{
-	my $invert = shift @_;
-	my $useNo = shift @_;
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my $parentRole = shift @_;
-	my $warnFile = shift @_;
-	my $phraseRole = getRole($xpc, $node);
-	
-	# Find the new root ('subroot') for the current subtree.
-	my @ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'conj\']", $node);
-	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
-	if (not @ch)
-	{
-		@ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'punct\']", $node);
-		@res = @{sortNodesByOrd($xpc, $invert, @ch)};
-	}
-	if (not @ch)
-	{
-		my $searchString = $useNo ?
-			'pml:children/pml:node' :
-			'pml:children/pml:node[pml:role!=\'no\']';
-		@ch = $xpc->findnodes($searchString, $node);
-		# Warning about suspective structure.
-		if (scalar @ch ne 1)
-		{
-			print "$phraseRole has ".(scalar @ch)
-				." potential non-punct/conj/no rootnodes.\n";
-			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
-				.(scalar @ch)." potential non-punct/conj/no rootnodes.\n";
-		}
-		@res = @{sortNodesByOrd($xpc, 0, @ch)};	
-	}
-	die "$phraseRole below ". $node->find('../../@id').' has no children!'
-		if (not @ch);
-	my $newRoot = $res[0];
-	
-	# Rebuild subtree.
-	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
-	return $newRoot;
-}
-# _allBelowPmcBase (XPath context with set namespaces, DOM node, role of the
-#					parent node, output flow for warnings)
-sub _allBelowPmcBase
-{
-	my $xpc = shift @_; # XPath context
-	my $node = shift @_;
-	my $parentRole = shift @_;
-	my $warnFile = shift @_;
-	my $phraseRole = getRole($xpc, $node);
-	
-	# Find the new root ('subroot') for the current subtree.
-	my @ch = $xpc->findnodes(
-		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
-		$node);
-	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
-	die "$phraseRole below ". $node->find('../../@id')
-		.' have only no/punct/conj children!'
-		if (not @res);
-	# Warning about suspective structure.
-	if (scalar @res ne 1)
-	{
-		print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
-		print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
-			.(scalar @res)." potential rootnodes.\n";
-	}
-	
-	my $newRoot = $res[0];
-	
-	# Rebuild subtree.
-	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
-	return $newRoot;
-}
-
-### ...for coordination #######################################################
-# _defaultCoord (XPath context with set namespaces, DOM node, role of the
-#				 parent node, output flow for warnings)
-sub _defaultCoord
-{
-	#return &_chainAll(0, @_) if ($COORD eq 'ROW');
-	return &_chainStartingFrom(['crdPart', 'gen'], @_) if ($COORD eq 'ROW');
-	return &_allBelowConjPunct(@_) if ($COORD eq 'DEFAULT');
-	die "Unknown value \'$COORD\' for global constant \$COORD ";
-}	
-
-# _allBelowConjPunct (XPath context with set namespaces, DOM node, role of the
-#					  parent node, output flow for warnings)
-sub _allBelowConjPunct
-{
+	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
@@ -936,10 +949,100 @@ sub _allBelowConjPunct
 	}
 	
 	# Rebuild subtree.
-	$newRoot = &_finshPhraseTransf($xpc, $node, $newRoot, $parentRole);
+	$newRoot = &_finshPhraseTransf(
+		$labelNewRoot, $xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
 
+### ...for PMC ################################################################
+# Put everything below first conjuction, if there is no conjunctions, then
+# below first/last (1st param) punctuatuation, if no punctuation, then below 
+# first basElem/no/etc (using 'no' for root is regulated by 2nd param). 
+# _allBelowPunct (should start with last 'punct', treat 'no' as 'basElem',
+#				  relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#				  ignored and root will be renamed anyway), XPath context with
+#				  set namespaces, DOM node, role of the parent node, output
+#				  flow for warnings)
+sub _allBelowPunct
+{
+	my $invert = shift @_;
+	my $useNo = shift @_;
+	my $labelNewRoot = shift @_;	
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $warnFile = shift @_;
+	my $phraseRole = getRole($xpc, $node);
+	
+	# Find the new root ('subroot') for the current subtree.
+	my @ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'conj\']", $node);
+	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
+	if (not @ch)
+	{
+		@ch = $xpc->findnodes("pml:children/pml:node[pml:role=\'punct\']", $node);
+		@res = @{sortNodesByOrd($xpc, $invert, @ch)};
+	}
+	if (not @ch)
+	{
+		my $searchString = $useNo ?
+			'pml:children/pml:node' :
+			'pml:children/pml:node[pml:role!=\'no\']';
+		@ch = $xpc->findnodes($searchString, $node);
+		# Warning about suspective structure.
+		if (scalar @ch ne 1)
+		{
+			print "$phraseRole has ".(scalar @ch)
+				." potential non-punct/conj/no rootnodes.\n";
+			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+				.(scalar @ch)." potential non-punct/conj/no rootnodes.\n";
+		}
+		@res = @{sortNodesByOrd($xpc, 0, @ch)};	
+	}
+	die "$phraseRole below ". $node->find('../../@id').' has no children!'
+		if (not @ch);
+	my $newRoot = $res[0];
+	
+	# Rebuild subtree.
+	$newRoot = &_finshPhraseTransf(
+		($labelNewRoot or $LABEL_SUBROOT), $xpc, $node, $newRoot, $parentRole);
+	return $newRoot;
+}
+# _allBelowPmcBase (relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#					ignored and root will be renamed anyway), XPath context
+#					with set namespaces, DOM node, role of the parent node,
+#					output flow for warnings)
+sub _allBelowPmcBase
+{
+	my $labelNewRoot = shift @_;	
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $warnFile = shift @_;
+	my $phraseRole = getRole($xpc, $node);
+	
+	# Find the new root ('subroot') for the current subtree.
+	my @ch = $xpc->findnodes(
+		"pml:children/pml:node[pml:role!=\'no\' and pml:role!=\'punct\' and pml:role!=\'conj\']",
+		$node);
+	my @res = @{sortNodesByOrd($xpc, 0, @ch)};
+	die "$phraseRole below ". $node->find('../../@id')
+		.' have only no/punct/conj children!'
+		if (not @res);
+	# Warning about suspective structure.
+	if (scalar @res ne 1)
+	{
+		print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+			.(scalar @res)." potential rootnodes.\n";
+	}
+	
+	my $newRoot = $res[0];
+	
+	# Rebuild subtree.
+	$newRoot = &_finshPhraseTransf(
+		($labelNewRoot or $LABEL_SUBROOT), $xpc, $node, $newRoot, $parentRole);
+	return $newRoot;
+}
 
 ###############################################################################
 # Techsupport functions
@@ -947,12 +1050,13 @@ sub _allBelowConjPunct
 
 # Final step in handling phrese node (PMC/coordination/x-word) - move old
 # parent children to new parent, change roles for children and new parent.
-# _finshPhraseTransf (XPath context with set namespaces, old parent of children
-#					  to be moved, new parent, role of the old parent's parent
-#					  node)
-#
+# _finshPhraseTransf (relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#					  ignored and root will be renamed anyway), XPath context
+#					  with set namespaces, old parent of children to be moved,
+#					  new parent, role of the old parent's parent node)
 sub _finshPhraseTransf
 {
+	my $labelNewRoot = shift @_;
 	my $xpc = shift @_;
 	my $oldRoot = shift @_;
 	my $newRoot = shift @_;
@@ -961,8 +1065,8 @@ sub _finshPhraseTransf
 	my $phraseRole = getRole($xpc, $oldRoot);
 	
 	# Change role for node with speciffied rootRole.
-	#setNodeRole($xpc, $newRoot, "$parentRole-$phraseRole-$rootRole");
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole);
+	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
+		if ($labelNewRoot or $LABEL_SUBROOT);
 
 	# Rebuild subtree.
 	$newRoot->unbindNode();
@@ -975,19 +1079,4 @@ sub _finshPhraseTransf
 	return $newRoot;
 }
 
-# AUTOLOAD is called when someone tries to access nonexixting method through
-# this package. See perl documentation.
-# This is used for handling unknown PMC/X-word/coordination types.
-sub AUTOLOAD
-{
-	our $AUTOLOAD;
-	my $name = $AUTOLOAD;
-	$name =~ s/.*::(.*?)$/$1/;
-	my $warnFile = $_[3];
-	
-	print "Don't know how to process \"$name\", will use default rule.\n";
-	print $warnFile "Don't know how to process \"$name\" below ".$_[1]->find('../../@id')
-		.", will use default rule.\n";
-	return &_defaultPhrase;
-}
 1;
