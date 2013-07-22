@@ -340,14 +340,16 @@ sub _renamePhraseChild
 }
 sub _renamePhraseSubroot
 {
+	my $labelSubroot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
 	
-	my $newRole = "$phraseRole:$nodeRole";
-	$newRole = "$parentRole-$newRole" if ($parentRole);
+	my $newRole = ($labelSubroot or $LABEL_SUBROOT) ? "$phraseRole:$nodeRole" : '';
+	$newRole = "-$newRole" if ($parentRole and $newRole);
+	$newRole = "$parentRole$newRole" if ($parentRole);
 	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
 	setNodeRole($xpc, $node, $newRole);
 }
@@ -454,8 +456,8 @@ sub namedEnt
 		print $warnFile "namedEnt below ". $node->find('../../@id')
 			." has 1 child.\n";
 		# Change role for the subroot.
-		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'namedEnt')
-			if ($LABEL_SUBROOT);
+		&_renamePhraseSubroot(
+			$LABEL_SUBROOT, $xpc, $ch[0], $parentRole, 'namedEnt');
 		$ch[0]->unbindNode();
 		return $ch[0];
 		# Root is labeled according to settings.
@@ -491,8 +493,8 @@ sub phrasElem
 	else
 	{
 		# Change role for the subroot.
-		&_renamePhraseSubroot($xpc, $ch[0], $parentRole, 'phrasElem')
-			if ($LABEL_SUBROOT);
+		&_renamePhraseSubroot(
+			$LABEL_SUBROOT, $xpc, $ch[0], $parentRole, 'phrasElem');
 		$ch[0]->unbindNode();
 		return $ch[0];
 		# Root is labeled according to settings.
@@ -779,8 +781,8 @@ sub _chainAll
 	
 	# Process new root.
 	$newRoot->unbindNode();
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
-		if ($labelNewRoot or $LABEL_SUBROOT);
+	&_renamePhraseSubroot(
+		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Process other nodes.
 	for (my $ind = 1; $ind lt @sorted; $ind++)
@@ -825,7 +827,7 @@ sub _chainStartingFrom
 		print "$phraseRole have no $roles children.\n";
 		print $warnFile "$phraseRole below ". $node->find('../../@id')
 			." have no $roles children.\n";
-		return &_chainAll(0, 1, $xpc, $node, $parentRole, $warnFile);
+		return &_chainAll(0, $labelNewRoot, $xpc, $node, $parentRole, $warnFile);
 	}
 	# In case of multiple roots choose first.
 	@res = @{sortNodesByOrd($xpc, 0, @res)};
@@ -839,8 +841,8 @@ sub _chainStartingFrom
 
 	# Process new root.
 	$newRoot->unbindNode();
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
-		if ($labelNewRoot or $LABEL_SUBROOT);	
+	&_renamePhraseSubroot(
+		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Find the children.
 	my @children = $xpc->findnodes('pml:children/pml:node', $node);
@@ -1065,8 +1067,8 @@ sub _finshPhraseTransf
 	my $phraseRole = getRole($xpc, $oldRoot);
 	
 	# Change role for node with speciffied rootRole.
-	&_renamePhraseSubroot($xpc, $newRoot, $parentRole, $phraseRole)
-		if ($labelNewRoot or $LABEL_SUBROOT);
+	&_renamePhraseSubroot(
+		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
 
 	# Rebuild subtree.
 	$newRoot->unbindNode();
