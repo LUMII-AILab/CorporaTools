@@ -23,6 +23,8 @@ use LvCorporaTools::PMLUtils::Knit;
 use LvCorporaTools::FormatTransf::DepPml2Conll;
 use LvCorporaTools::DataSelector::SplitTreebank;
 
+use LvCorporaTools::GenericUtils::UIWrapper;
+
 use Data::Dumper;
 
 ###############################################################################
@@ -219,43 +221,33 @@ sub _ord
 	die "Invalid argument ".$params->[0]." for --ord $!"
 		if ($params->[0] ne 'TOKEN' and $params->[0] ne 'NODE');
 	
-	my $dir = IO::Dir->new($source) or die "dir $!";
-	mkpath("$dirPrefix/ord");
-	
-	# Process each file.
-	while (defined(my $inFile = $dir->read))
+	# Definition how to process a single tree.
+	my $treeProc = sub
 	{
-		if (-f "$source/$inFile" and ($inFile =~ /^(.+)\.a$/))
-		{
-			my $newName = "$1-ord\.a";
-			my $parser = XML::LibXML->new('no_blanks' => 1);
-			my $doc = $parser->parse_file("$source/$inFile");
-			my $xpc = XML::LibXML::XPathContext->new();
-			$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
-			$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
+		$params->[0] eq 'NODE' ?
+			LvCorporaTools::PMLUtils::AUtils::renumberNodes(@_):
+			LvCorporaTools::PMLUtils::AUtils::renumberTokens(@_);
+	};
 	
-			# Process each tree.
-			foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
-			{
-				$params->[0] eq 'NODE' ?
-					LvCorporaTools::PMLUtils::AUtils::renumberNodes($xpc, $tree):
-					LvCorporaTools::PMLUtils::AUtils::renumberTokens($xpc, $tree);
-					
-			}
-			my $outFile = IO::File->new("$dirPrefix/ord/$newName", ">")
-				or die "Output file opening: $!";	
-			print $outFile $doc->toString(1);
-			$outFile->close();
-			print "Processing $inFile finished!\n";
-		}
-	}
+	# Definition how to process a single file.
+	my $fileProc = sub
+	{
+		LvCorporaTools::GenericUtils::UIWrapper::transformAFile(
+			$treeProc, 0, 0, '', '', @_);
+	};
 	
-	# Add .m and .w files.
+	# Process contents of source folder.
+	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+		$fileProc, "^.+\\.a\$", '-ord.a', 1, 0, $source);
+	
+	# Move files to correct places.
+	move("$source/res", "$dirPrefix/ord");
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
 		copy($_, "$dirPrefix/ord/");
 	}
+	
 	return "$dirPrefix/ord";
 }
 
