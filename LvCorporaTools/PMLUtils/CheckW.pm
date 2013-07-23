@@ -49,7 +49,7 @@ END
 		exit 1;
 	}
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&checkW, "^.+\\.w\$", '', 0, 0);
+		\&checkW, "^.+\\.w\$", '', 0, 0, @_);
 }
 
 # Perform error-chacking in single file. This can be used as entry point, if
