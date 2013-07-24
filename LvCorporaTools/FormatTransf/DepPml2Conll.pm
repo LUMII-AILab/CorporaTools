@@ -74,9 +74,9 @@ END
 		exit 1;
 	}
 	
-	my $infix = $_[1] ? "lab" : "unlab";
+	my $infix = $_[1] ? 'lab' : 'unlab';
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		\&transformFile, "^.+\\.(pml|xml)\$", '-$infix.conll', 1, 0, @_);
+		\&transformFile, "^.+\\.(pml|xml)\$", "-$infix.conll", 1, 0, @_);
 }
 
 # Process single XML file. This can be used as entry point, if this module is
