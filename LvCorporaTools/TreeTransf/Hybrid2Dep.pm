@@ -62,9 +62,10 @@ our $LABEL_SUBROOT = 1;		# Default setting - both phrase name and child role
 							# subtree. This done for selected phrase types
 							# only: xParticle, subrAnal, coordAnal, xNum, xPred
 							# (if $XPRED='BASELEM'), xApp, namedEnt,
-							# [phrasElem,] unstruct; crdParts, srdClauses,
-							# crdGeneral; spcPmc (if $PMC='BASELEM'), quot (if
-							# $PMC='BASELEM').
+							# [phrasElem,] unstruct; crdParts (if
+							# $COORD='ROW'), srdClauses (if $COORD='ROW'),
+							# crdGeneral (if $COORD='ROW'); spcPmc (if
+							# $PMC='BASELEM'), quot (if $PMC='BASELEM').
 
 #our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
 							# of longer role)
