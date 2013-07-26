@@ -49,7 +49,7 @@ END
 			if ((-f "$current/$item") and ($item =~ /.a$/))
 			{
 				my $link = "$current/$item";
-				$link =~ s#^$dirName[\\/]*##;
+				$link =~ s#^\Q$dirName\E[\\/]*##;
 				print $out "$link\n";
 			}
 			elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
