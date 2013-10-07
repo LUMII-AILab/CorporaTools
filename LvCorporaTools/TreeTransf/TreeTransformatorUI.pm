@@ -257,7 +257,7 @@ sub _ord
 sub _unnest
 {
 	my ($source, $dirPrefix, $params) = @_;
-	print "\n==== Unnesting to coordinations ==============================\n";
+	print "\n==== Unnesting coordinations =================================\n";
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->[0]);
