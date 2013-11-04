@@ -67,10 +67,12 @@ Params:
     --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
                DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
                (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
-               with distinct label [0 / 1 (default)], (*) allow 'N/A' to be
-               part of longer labels [0 (default) / 1], (*) label new roots of
-               all phrases [0 (only some) / 1 (default)], (*) do input data
-               have all nodes ordered [0 (default) / 1])
+               with distinct label [0 / 1 (default)], (*) label phrase
+               dependents with different role prefix [0 (default) / 1],
+               (*) allow 'N/A' to be part of longer labels [0 (default) / 1],
+               (*) label new roots of all phrases as members of corresponding
+               phrases [0 (only some) / 1 (default)], (*) do input data have
+               all nodes ordered [0 (default) / 1])
     --red      remove reductions (value: (*) label ommisions of empty nodes
                [0 / 1 (default)], (*) do input data have all nodes ordered
                [0 (default) / 1])
@@ -291,10 +293,12 @@ sub _dep
 		if ($params->[2]);
 	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_ROOT = $params->[3]
 		if (defined $params->[3]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_DETAIL_NA = $params->[4]
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_PHRASE_DEP = $params->[4]
 		if (defined $params->[4]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_SUBROOT = $params->[5]
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_DETAIL_NA = $params->[5]
 		if (defined $params->[5]);
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_SUBROOT = $params->[6]
+		if (defined $params->[6]);
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[6]);

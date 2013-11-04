@@ -9,7 +9,8 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
 	renumberTokens renumberNodes getOrd setOrd getRole setNodeRole
-	getChildrenNode hasChildrenNode moveChildren sortNodesByOrd);
+	getChildrenNode hasChildrenNode moveChildren hasPhraseChild
+	sortNodesByOrd);
 
 use XML::LibXML;
 
@@ -313,6 +314,22 @@ sub moveChildren
 		$chNode->appendChild($ch);
 	}
 	return $newRoot;
+}
+
+# hasPhraseChild (XPath context with set namespaces, DOM
+#				  node/xinfo/coordinfo/pmcinfo node)
+# return phrase node below "children" element below given node if it has one,
+# otherwise false.
+sub hasPhraseChild
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my @bestTry = $xpc->findnodes(
+		'pml:children/pml:xinfo|pml:children/pml:coordinfo|pml:children/pml:pmcinfo',
+		$node);
+	return $bestTry[0] if (@bestTry);
+	return 0;
+
 }
 
 # sortNodesByOrd (XPath context with set namespaces, should array be sorted in

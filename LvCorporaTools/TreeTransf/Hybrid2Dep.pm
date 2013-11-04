@@ -22,7 +22,7 @@ use XML::LibXML;  # XML handling library
 use LvCorporaTools::GenericUtils::UIWrapper;
 use LvCorporaTools::PMLUtils::AUtils qw(
 	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
-	sortNodesByOrd moveChildren getOrd);
+	moveChildren getOrd sortNodesByOrd hasPhraseChild);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -67,9 +67,13 @@ our $LABEL_SUBROOT = 1;		# Default setting - both phrase name and child role
 							# crdGeneral (if $COORD='ROW'); spcPmc (if
 							# $PMC='BASELEM'), quot (if $PMC='BASELEM').
 
+our $LABEL_PHRASE_DEP = 0;	# Use one prefix for all dependency roles. 
+#our $LABEL_PHRASE_DEP = 1;	# Asign different role prefix to dependencies whose
+							# head is phase.
+
+our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 #our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
 							# of longer role)
-our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 
 # Process all .a files in given folder. This can be used as entry point, if
 # this module is used standalone.
@@ -98,8 +102,11 @@ Global variables:
                    selected phrase types only): 0 / both phrase name and child
                    role is added to the child in the root of the phrase
                    representing subtree for all phrase types: 1
+   LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
+                      is phase: 0 (use one prefix for all dependency roles,
+                      default value) / 1
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
-                     all such roles are renamed just 'N/A', default value), 1
+                     all such roles are renamed just 'N/A', default value) / 1
                      (yes, label 'N/A' is procesed as every other label)
 Input files should be provided as UTF-8.
 
@@ -150,6 +157,12 @@ Global variables:
          default value)
    LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
                 default value)
+   LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
+                      is phase: 0 (use one prefix for all dependency roles) /
+                      1 (default value)
+   LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
+                      is phase: 0 (use one prefix for all dependency roles,
+                      default value) / 1
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value), 1
                      (yes, label 'N/A' is procesed as every other label)
@@ -182,44 +195,6 @@ END
 		$treeProc, 1, 1, 'lvaschema-deponly.xml', 'lvadepdata', $dirPrefix,
 		$oldName, $newName);
 
-#	mkpath("$dirPrefix/res/");
-#	mkpath("$dirPrefix/warnings/");
-#	my $warnFile = IO::File->new("$dirPrefix/warnings/$newName-warnings.txt", ">")
-#		or die "$newName-warnings.txt: $!";
-#	print "Processing $oldName started...\n";
-
-	# Load the XML.
-#	my $parser = XML::LibXML->new('no_blanks' => 1);
-#	my $doc = $parser->parse_file("$dirPrefix/$oldName");
-	
-#	my $xpc = XML::LibXML::XPathContext->new();
-#	$xpc->registerNs('pml', 'http://ufal.mff.cuni.cz/pdt/pml/');
-#	$xpc->registerNs('fn', 'http://www.w3.org/2005/xpath-functions/');
-	
-	# Process XML:
-	# process each tree...
-#	foreach my $tree ($xpc->findnodes('/pml:lvadata/pml:trees/pml:LM', $doc))
-#	{
-#		renumberNodes($xpc, $tree) unless ($numberedNodes);
-#		&transformTree($xpc, $tree, $warnFile);
-#	}
-	
-	# ... and update the schema information and root name.
-#	my @schemas = $xpc->findnodes(
-#		'pml:lvadata/pml:head/pml:schema[@href=\'lvaschema.xml\']', $doc);
-#	$schemas[0]->setAttribute('href', 'lvaschema-deponly.xml');
-#	$doc->documentElement->setNodeName('lvadepdata');
-	
-	# Print the XML.
-	#File::Path::mkpath("$dirPrefix/res/");
-#	my $outFile = IO::File->new("$dirPrefix/res/$newName", ">")
-#		or die "Output file opening: $!";	
-#	print $outFile $doc->toString(1);
-#	$outFile->close();
-	
-#	print "Processing $oldName finished!\n";
-#	print $warnFile "Processing $oldName finished!\n";
-#	$warnFile->close();
 }
 
 # Transform single tee (LM element in most tree files).
@@ -245,11 +220,12 @@ sub transformTree
 
 		# Process PMC (probably) node.
 		my $chRole = getRole($xpc, $phrases[0]);
-		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile);
+		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile); # Function call by role name.
 		# Reset dependents' roles.
+		my $hasPhChild = hasPhraseChild($xpc, $tree); # This should always be true.
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $tree))
 		{
-			&_renameDependent($xpc, $ch);
+			&_renameDependent($xpc, $ch, $hasPhChild);
 		}
 		moveChildren($xpc, $tree, $newNode);
 		# Add reformed subtree to the main tree.
@@ -281,9 +257,10 @@ sub _transformSubtree
 	my $role = getRole($xpc, $node);
 
 	# Reset dependents' roles.
+	my $hasPhChild = hasPhraseChild($xpc, $node); 
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
-		&_renameDependent($xpc, $ch);
+		&_renameDependent($xpc, $ch, $hasPhChild);
 	}
 
 	# Find phrase nodes.
@@ -314,7 +291,7 @@ sub _transformSubtree
 	
 	# Process phrase node.
 	my $phRole = getRole($xpc, $phrases[0]);
-	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile);
+	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile); #Function call by role name.
 	moveChildren($xpc, $node, $newNode);
 	$node->replaceNode($newNode);
 
@@ -358,10 +335,13 @@ sub _renameDependent
 {
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
+	my $isParentPhrase = shift @_;
 	my $nodeRole = getRole($xpc, $node);
 	
+	my $prefix = ($isParentPhrase and $isParentPhrase) ? 'phdep' : 'dep';
 	my $newRole = $nodeRole;
-	$newRole = "dep:$newRole" if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+	$newRole = "$prefix:$newRole"
+		if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
 	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
 	setNodeRole($xpc, $node, $newRole);
 }
