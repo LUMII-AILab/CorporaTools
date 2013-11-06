@@ -80,16 +80,10 @@ our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 #our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
 							# of longer role)
 
-# Process all .a files in given folder. This can be used as entry point, if
-# this module is used standalone.
-sub processDir
+# Print information about all global variables.
+sub _printFlagDesc
 {
-	autoflush STDOUT 1;
-	if (not @_ or @_ < 1)
-	{
-		print <<END;
-Script for batch transfoming Latvian Treebank .a files from native hybrid
-format to dependency-only format.
+	print <<END;
 Global variables:
    XPRED - xPred transformation: 'BASELEM' (auxverbs and modals become
            dependents of basElem) / 'DEFAULT' (everything become dependent of
@@ -114,6 +108,23 @@ Global variables:
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value) / 1
                      (yes, label 'N/A' is procesed as every other label)
+					 
+END
+}
+# Process all .a files in given folder. This can be used as entry point, if
+# this module is used standalone.
+sub processDir
+{
+	autoflush STDOUT 1;
+	if (not @_ or @_ < 1)
+	{
+		print <<END;
+Script for batch transfoming Latvian Treebank .a files from native hybrid
+format to dependency-only format.
+
+END
+		&_printFlagDesc;
+		print <<END;
 Input files should be provided as UTF-8.
 
 Params:
@@ -140,30 +151,10 @@ sub transformFile
 		print <<END;
 Script for transfoming Latvian Treebank .a files from native hybrid format to
 dependency-only format.
-Global variables:
-   XPRED - xPred transformation: 'BASELEM' (auxverbs and modals become
-           dependents of basElem) / 'DEFAULT' (everything become dependent of
-           first auxverb/modal, default value)
-   COORD - coordinated elements' transformation: 'ROW' (all coordination
-           elements in a row) / ROW_NO_CONJ (all conjuncts in a row,
-           conjunctions and punctuation under following conjunct / 'DEFAULT'
-           (conjunction or punctuation as root element, default value)
-   PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
-         becomes root element) / 'DEFAULT' (first punct becomes root element,
-         default value)
-   LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
-                default value)
-   LABEL_SUBROOT - leave out phrase name and child role for the child in the
-                   root of the phrase representing subtree (this done for
-                   selected phrase types only): 0 / both phrase name and child
-                   role is added to the child in the root of the phrase
-                   representing subtree for all phrase types: 1
-   LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
-                      is phase: 0 (use one prefix for all dependency roles,
-                      default value) / 1
-   LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
-                     all such roles are renamed just 'N/A', default value) / 1
-                     (yes, label 'N/A' is procesed as every other label)
+
+END
+		&_printFlagDesc;
+		print <<END;
 Input files should be provided as UTF-8.
 
 Params:
