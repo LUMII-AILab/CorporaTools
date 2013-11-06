@@ -57,9 +57,9 @@ our $PMC = 'DEFAULT';		# first punct as root element
 our $LABEL_ROOT = 1;		# Label tree's empty root node 'ROOT'.
 #our $LABEL_ROOT = 0;		# Do not label root node.
 
-our $LABEL_SUBROOT = 1;		# Default setting - both phrase name and child role
-							# is added to the child in the root of the phrase
-							# representing subtree for all phrase types.
+our $LABEL_SUBROOT = 1;		# Both phrase name and child role is added to the
+							# child in the root of the phrase representing
+							# subtree for all phrase types.
 #our $LABEL_SUBROOT = 0;	# Leave out phrase name and child role for the
 							# child in the root of the phrase representing
 							# subtree. This done for selected phrase types
@@ -773,10 +773,7 @@ sub _chainAll
 	for (my $ind = 1; $ind lt @sorted; $ind++)
 	{
 		# Move to new parent.
-		$sorted[$ind]->unbindNode();
-		&_renamePhraseChild($xpc, $sorted[$ind], $phraseRole);
-		my $chNode = getChildrenNode($xpc, $tmpRoot);
-		$chNode->appendChild($sorted[$ind]);
+		&_movePhraseChild($sorted[$ind], $tmpRoot, $phraseRole, $xpc);
 		$tmpRoot = $sorted[$ind];
 	}
 	return $newRoot;
@@ -841,19 +838,12 @@ sub _chainStartingFrom
 		if ($chOrd < $rootOrd)
 		{
 			# Move to new parent - $newRoot.
-			$ch->unbindNode();
-			&_renamePhraseChild($xpc, $ch, $phraseRole);
-			my $chNode = getChildrenNode($xpc, $newRoot);
-			$chNode->appendChild($ch);
+			&_movePhraseChild($ch, $newRoot, $phraseRole, $xpc);
 		}
 		else
 		{
-			# Move to new parent - $newSubRoot.
-			$ch->unbindNode();
-			&_renamePhraseChild($xpc, $ch, $phraseRole);
-			my $chNode = getChildrenNode($xpc, $newSubRoot);
-			$chNode->appendChild($ch);
-			# Reset $newSubRoot (so the chain is formed).
+			# Move to new parent - $newSubRoot and then reset $newSubRoot.
+			&_movePhraseChild($ch, $newSubRoot, $phraseRole, $xpc);
 			$newSubRoot = $ch;
 		}
 	}
@@ -910,10 +900,7 @@ sub _chainSpecified
 	while (@other and (getOrd($xpc, $other[0]) <= $subRootOrd))
 	{
 		my $toBeMoved = shift @other;
-		$toBeMoved->unbindNode();
-		&_renamePhraseChild($xpc, $toBeMoved, $phraseRole);
-		my $chNode = getChildrenNode($xpc, $newRoot);
-		$chNode->appendChild($toBeMoved);
+		&_movePhraseChild($toBeMoved, $newRoot, $phraseRole, $xpc);
 	}
 
 	# Process the rest of chain elements.	
@@ -924,18 +911,11 @@ sub _chainSpecified
 		while (@other and (getOrd($xpc, $other[0]) <= $chOrd))
 		{
 			my $toBeMoved = shift @other;
-			$toBeMoved->unbindNode();
-			&_renamePhraseChild($xpc, $toBeMoved, $phraseRole);
-			my $chNode = getChildrenNode($xpc, $ch);
-			$chNode->appendChild($toBeMoved);
+			&_movePhraseChild($toBeMoved, $ch, $phraseRole, $xpc);
 		}
 		
 		# Move chain element.
-		$ch->unbindNode();
-		&_renamePhraseChild($xpc, $ch, $phraseRole);
-		my $subrootChNode = getChildrenNode($xpc, $newSubRoot);
-		$subrootChNode->appendChild($ch);
-		
+		&_movePhraseChild($ch, $newSubRoot, $phraseRole, $xpc);
 		$newSubRoot = $ch;
 	}
 
@@ -1145,6 +1125,25 @@ sub _finshPhraseTransf
 	moveChildren($xpc, $oldRoot, $newRoot);
 
 	return $newRoot;
+}
+
+# Move phrase children (type: node) to new parent (type: supposed to be node,
+# but nothing should break if type is xinfo/coordinfo/pmcinfo). This includes
+# relabeling with &getChildrenNode.
+# movePhraseChild (node to be moved, new parent, label of
+#				   x-word/coordination/pmc this node is part of, XPath context
+#				   with set namespaces)
+sub _movePhraseChild
+{
+	my $node = shift @_;
+	my $newParent = shift @_;
+	my $phraseRole = shift @_;
+	my $xpc = shift @_;
+
+		$node->unbindNode();
+		&_renamePhraseChild($xpc, $node, $phraseRole);
+		my $chNode = getChildrenNode($xpc, $newParent);
+		$chNode->appendChild($node);
 }
 
 1;
