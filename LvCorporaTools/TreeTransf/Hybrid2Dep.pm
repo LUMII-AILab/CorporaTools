@@ -8,10 +8,10 @@ use warnings;
 use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
-	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_DETAIL_NA
-	transformFile processDir transformTree);
+	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_PHRASE_DEP
+	$LABEL_DETAIL_NA transformFile processDir transformTree);
 	
-#use Carp::Always;	# Print stack trace on die.
+use Carp::Always;	# Print stack trace on die.
 
 use File::Path;
 use IO::File;
@@ -45,7 +45,10 @@ use LvCorporaTools::PMLUtils::AUtils qw(
 #our $XPRED = 'BASELEM';	# auxverbs and modals below basElem
 our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
 
-#our $COORD = 'ROW';		# all coordination elements in a row
+#our $COORD = 'ROW';		# all coordination elements in a row except conj
+							# before first conjunct
+#our $COORD = 'ROW_NO_CONJ';# conjuncts in a row, conjunctions and punctuatuon
+							# below following conjunct
 our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
 
 #our $PMC = 'BASELEM';		# basElem as root element
@@ -63,8 +66,10 @@ our $LABEL_SUBROOT = 1;		# Default setting - both phrase name and child role
 							# only: xParticle, subrAnal, coordAnal, xNum, xPred
 							# (if $XPRED='BASELEM'), xApp, namedEnt,
 							# [phrasElem,] unstruct; crdParts (if
-							# $COORD='ROW'), srdClauses (if $COORD='ROW'),
-							# crdGeneral (if $COORD='ROW'); spcPmc (if
+							# $COORD='ROW' or $COORD='ROW_NO_CONJ'), crdClauses
+							# (if $COORD='ROW' or $COORD='ROW_NO_CONJ'),
+							# crdGeneral (if $COORD='ROW' or
+							# $COORD='ROW_NO_CONJ'); spcPmc (if
 							# $PMC='BASELEM'), quot (if $PMC='BASELEM').
 
 our $LABEL_PHRASE_DEP = 0;	# Use one prefix for all dependency roles. 
@@ -90,8 +95,9 @@ Global variables:
            dependents of basElem) / 'DEFAULT' (everything become dependent of
            first auxverb/modal, default value)
    COORD - coordinated elements' transformation: 'ROW' (all coordination
-           elements in a row) / 'DEFAULT' (conjunction or punctuation as root
-           element, default value)
+           elements in a row) / ROW_NO_CONJ (all conjuncts in a row,
+           conjunctions and punctuation under following conjunct / 'DEFAULT'
+           (conjunction or punctuation as root element, default value)
    PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
          becomes root element) / 'DEFAULT' (first punct becomes root element,
          default value)
@@ -121,17 +127,6 @@ END
 
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
 		\&transformFile, "^.+\\.a\$", '-dep.a', 1, 0, @_);
-#	my $dirName = shift @_;
-#	my $numberedNodes = (shift @_ or 0);
-#	my $dir = IO::Dir->new($dirName) or die "dir $!";
-#
-#	while (defined(my $inFile = $dir->read))
-#	{
-#		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.a$/))
-#		{
-#			&transformFile ($dirName, $inFile, "$1-dep.a", $numberedNodes);
-#		}
-#	}
 }
 
 
@@ -150,21 +145,24 @@ Global variables:
            dependents of basElem) / 'DEFAULT' (everything become dependent of
            first auxverb/modal, default value)
    COORD - coordinated elements' transformation: 'ROW' (all coordination
-           elements in a row) / 'DEFAULT' (conjunction or punctuation as root
-           element, default value)
+           elements in a row) / ROW_NO_CONJ (all conjuncts in a row,
+           conjunctions and punctuation under following conjunct / 'DEFAULT'
+           (conjunction or punctuation as root element, default value)
    PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
          becomes root element) / 'DEFAULT' (first punct becomes root element,
          default value)
    LABEL_ROOT - add label 'ROOT' to hybrid tree's root node: 0 (no) / 1 (yes,
                 default value)
-   LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
-                      is phase: 0 (use one prefix for all dependency roles) /
-                      1 (default value)
+   LABEL_SUBROOT - leave out phrase name and child role for the child in the
+                   root of the phrase representing subtree (this done for
+                   selected phrase types only): 0 / both phrase name and child
+                   role is added to the child in the root of the phrase
+                   representing subtree for all phrase types: 1
    LABEL_PHRASE_DEP - asign different role prefix to dependencies whose head
                       is phase: 0 (use one prefix for all dependency roles,
                       default value) / 1
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
-                     all such roles are renamed just 'N/A', default value), 1
+                     all such roles are renamed just 'N/A', default value) / 1
                      (yes, label 'N/A' is procesed as every other label)
 Input files should be provided as UTF-8.
 
@@ -338,7 +336,7 @@ sub _renameDependent
 	my $isParentPhrase = shift @_;
 	my $nodeRole = getRole($xpc, $node);
 	
-	my $prefix = ($isParentPhrase and $isParentPhrase) ? 'phdep' : 'dep';
+	my $prefix = ($LABEL_PHRASE_DEP and $isParentPhrase) ? 'phdep' : 'dep';
 	my $newRole = $nodeRole;
 	$newRole = "$prefix:$newRole"
 		if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
@@ -494,6 +492,8 @@ sub crdParts
 {
 	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
+	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW_NO_CONJ');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
@@ -502,6 +502,8 @@ sub crdClauses
 {
 	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
+	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW_NO_CONJ');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
@@ -510,6 +512,8 @@ sub crdGeneral
 {
 	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
+	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+		if ($COORD eq 'ROW_NO_CONJ');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
@@ -630,7 +634,7 @@ sub utter
 
 
 ### What to do when don't know what to do #####################################
-# AUTOLOAD is called when someone tries to access nonexixting method through
+# AUTOLOAD is called when someone tries to access nonexisting method through
 # this package. See perl documentation.
 # This is used for handling unknown PMC/X-word/coordination types.
 sub AUTOLOAD
@@ -854,6 +858,87 @@ sub _chainStartingFrom
 		}
 	}
 	
+	return $newRoot;
+}
+# Chain child elements with specified roles. Unchained child elements attach
+# to next chained element.
+# _chainSpecified (pointer to array with roles determining node to be chained
+#				   relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#				   ignored and root will be renamed anyway), XPath context with
+#				   set namespaces, DOM node, role of the parent node, output
+#				   flow for warnings)
+sub _chainSpecified
+{
+	my $chainRoles = shift @_;
+	my $labelNewRoot = shift @_;
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $warnFile = shift @_; #
+	my $phraseRole = getRole($xpc, $node);
+	
+	# Find nodes to be chained.
+	my $chQuery = join '\' or pml:role=\'', @$chainRoles;
+	$chQuery = "pml:children/pml:node[pml:role=\'$chQuery\']";
+	my @forChain = $xpc->findnodes($chQuery, $node);
+	if (not @forChain)
+	{
+		my $roles = join '/', @$chainRoles;
+		print "$phraseRole have no $roles children.\n";
+		print $warnFile "$phraseRole below ". $node->find('../../@id')
+			." have no $roles children.\n";
+		return &_chainAll(0, $labelNewRoot, $xpc, $node, $parentRole, $warnFile);
+	}
+	# Sort roles to be chained to find the new root.
+	@forChain = @{sortNodesByOrd($xpc, 0, @forChain)};
+	my $newRoot = $forChain[0];
+	# Process new root.
+	$newRoot->unbindNode();
+	&_renamePhraseSubroot(
+		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
+	
+	# Find other children.
+	my $othQuery = join '\' and pml:role!=\'', @$chainRoles;
+	$othQuery = "pml:children/pml:node[pml:role!=\'$othQuery\']";
+	my @other = $xpc->findnodes($othQuery, $node);
+	@other = @{sortNodesByOrd($xpc, 0, @other)};
+	
+	# Process first chain element.
+	my $newSubRoot = shift @forChain;
+	my $subRootOrd = getOrd($xpc, $newSubRoot);
+	# Move first conj/punct under this chain element.
+	while (@other and (getOrd($xpc, $other[0]) <= $subRootOrd))
+	{
+		my $toBeMoved = shift @other;
+		$toBeMoved->unbindNode();
+		&_renamePhraseChild($xpc, $toBeMoved, $phraseRole);
+		my $chNode = getChildrenNode($xpc, $newRoot);
+		$chNode->appendChild($toBeMoved);
+	}
+
+	# Process the rest of chain elements.	
+	for my $ch (@forChain)
+	{
+		# Move conj and punct under this current chain element
+		my $chOrd = getOrd($xpc, $ch);
+		while (@other and (getOrd($xpc, $other[0]) <= $chOrd))
+		{
+			my $toBeMoved = shift @other;
+			$toBeMoved->unbindNode();
+			&_renamePhraseChild($xpc, $toBeMoved, $phraseRole);
+			my $chNode = getChildrenNode($xpc, $ch);
+			$chNode->appendChild($toBeMoved);
+		}
+		
+		# Move chain element.
+		$ch->unbindNode();
+		&_renamePhraseChild($xpc, $ch, $phraseRole);
+		my $subrootChNode = getChildrenNode($xpc, $newSubRoot);
+		$subrootChNode->appendChild($ch);
+		
+		$newSubRoot = $ch;
+	}
+
 	return $newRoot;
 }
 
