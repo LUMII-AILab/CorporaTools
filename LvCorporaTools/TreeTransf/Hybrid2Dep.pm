@@ -3,7 +3,7 @@ package LvCorporaTools::TreeTransf::Hybrid2Dep;
 
 use strict;
 use warnings;
-#use utf8;
+use utf8;
 
 use Exporter();
 our @ISA = qw(Exporter);
@@ -39,6 +39,11 @@ use LvCorporaTools::PMLUtils::AUtils qw(
 # Licenced under GPL.
 ###############################################################################
 
+# References:
+# [1] Martin Popel, David Mareček, Jan Štěpánek, Daniel Zeman, Zdeněk
+#	  Žabokrtský: Coordination Structures in Dependency Treebanks In
+#	  Proceedings of ACL 2013, Sofia, Bulgaria, August 5–7, 2013, pp. 517–527.
+
 # Global variables set how to transform specific elements.
 # Unknown values cause fatal error.
 
@@ -47,9 +52,12 @@ our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
 
 #our $COORD = 'ROW';		# all coordination elements in a row except conj
 							# before first conjunct
+							# fMhLsNcBpBdU [1]
 #our $COORD = 'ROW_NO_CONJ';# conjuncts in a row, conjunctions and punctuatuon
 							# below following conjunct
+							# fMhLsNcFpFdU [1]
 our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
+							# fPhLsHcHpBdU [1]
 
 #our $PMC = 'BASELEM';		# basElem as root element
 our $PMC = 'DEFAULT';		# first punct as root element
