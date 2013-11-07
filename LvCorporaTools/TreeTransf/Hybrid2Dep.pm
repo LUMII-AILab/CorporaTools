@@ -52,11 +52,17 @@ our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
 
 #our $COORD = 'ROW';		# all coordination elements in a row except conj
 							# before first conjunct
-							# fMhLsNcBpBdU [1]
+							# fMhLsHcBpBdU [1]
 #our $COORD = 'ROW_NO_CONJ';# conjuncts in a row, conjunctions and punctuatuon
 							# below following conjunct
-							# fMhLsNcFpFdU [1]
-our $COORD = 'DEFAULT'; 	# conjunction or punctuation as root element
+							# fMhLsHcFpFdU [1]
+#our $COORD = '3_LEVEL';	# first conjunct as root element, other conjuncts
+							# below first, conjunction and punctuation below
+							# following conjunct
+							# fShLsHcFpFdU [1]
+our $COORD = 'DEFAULT'; 	# conjunction or punctuation (if there is no
+							# conjunction between first and second conjunct) as
+							# root element, all other elements under root
 							# fPhLsHcHpBdU [1]
 
 #our $PMC = 'BASELEM';		# basElem as root element
@@ -98,7 +104,9 @@ Global variables:
            first auxverb/modal, default value)
    COORD - coordinated elements' transformation: 'ROW' (all coordination
            elements in a row) / ROW_NO_CONJ (all conjuncts in a row,
-           conjunctions and punctuation under following conjunct / 'DEFAULT'
+           conjunctions and punctuation under following conjunct) / '3_LEVEL'
+           (first conjunct as root element, other conjuncts below first,
+           conjunction and punctuation below following conjunct) / 'DEFAULT'
            (conjunction or punctuation as root element, default value)
    PMC - punctuation mark constucts' transformation: 'BASELEM' (basElem
          becomes root element) / 'DEFAULT' (first punct becomes root element,
@@ -487,32 +495,38 @@ sub unstruct
 
 ### Coordination ##############################################################
 
-sub crdParts
+sub crdParts 
 {
-	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_chainStartingFrom(['crdPart'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
+	return &_conjToNextConjunct(['crdPart'], 0, $LABEL_SUBROOT, @_)
+		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
 }
 sub crdClauses
 {
-	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_chainStartingFrom(['crdPart'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
+	return &_conjToNextConjunct(['crdPart'], 0, $LABEL_SUBROOT, @_)
+		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
 }
 sub crdGeneral
 {
-	return &_chainStartingFrom(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_chainStartingFrom(['gen'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_chainSpecified(['crdPart', 'gen'], $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['gen', 'genList'], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
+	return &_conjToNextConjunct(['gen', 'genList'], 0, $LABEL_SUBROOT, @_)
+		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
 	# Root is labeled according to settings if elements are chained.
@@ -851,14 +865,16 @@ sub _chainStartingFrom
 }
 # Chain child elements with specified roles. Unchained child elements attach
 # to next chained element.
-# _chainSpecified (pointer to array with roles determining node to be chained
-#				   relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
-#				   ignored and root will be renamed anyway), XPath context with
-#				   set namespaces, DOM node, role of the parent node, output
-#				   flow for warnings)
-sub _chainSpecified
+# _conjToNextConjunct (pointer to array with roles determining conjunct nodes
+#					   (i.e. not conj and punct), chain conjuncts (0 - all
+#					   under first, 1 - make chain) relabel new root (0/1; if
+#					   $LABEL_SUBROOT=1, this will be ignored and root will be
+#					   renamed anyway), XPath context with set namespaces, DOM
+#					   node, role of the parent node, output flow for warnings)
+sub _conjToNextConjunct
 {
-	my $chainRoles = shift @_;
+	my $conjunctRoles = shift @_;
+	my $chainConjuncts = shift @_;
 	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
@@ -866,46 +882,47 @@ sub _chainSpecified
 	my $warnFile = shift @_; #
 	my $phraseRole = getRole($xpc, $node);
 	
-	# Find nodes to be chained.
-	my $chQuery = join '\' or pml:role=\'', @$chainRoles;
-	$chQuery = "pml:children/pml:node[pml:role=\'$chQuery\']";
-	my @forChain = $xpc->findnodes($chQuery, $node);
-	if (not @forChain)
+	# Find conjunct nodes.
+	my $cQuery = join '\' or pml:role=\'', @$conjunctRoles;
+	$cQuery = "pml:children/pml:node[pml:role=\'$cQuery\']";
+	my @conjuncts = $xpc->findnodes($cQuery, $node);
+	if (not @conjuncts)
 	{
-		my $roles = join '/', @$chainRoles;
+		my $roles = join '/', @$conjunctRoles;
 		print "$phraseRole have no $roles children.\n";
 		print $warnFile "$phraseRole below ". $node->find('../../@id')
 			." have no $roles children.\n";
 		return &_chainAll(0, $labelNewRoot, $xpc, $node, $parentRole, $warnFile);
 	}
-	# Sort roles to be chained to find the new root.
-	@forChain = @{sortNodesByOrd($xpc, 0, @forChain)};
-	my $newRoot = $forChain[0];
-	# Process new root.
-	$newRoot->unbindNode();
-	&_renamePhraseSubroot(
-		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
 	
 	# Find other children.
-	my $othQuery = join '\' and pml:role!=\'', @$chainRoles;
+	my $othQuery = join '\' and pml:role!=\'', @$conjunctRoles;
 	$othQuery = "pml:children/pml:node[pml:role!=\'$othQuery\']";
 	my @other = $xpc->findnodes($othQuery, $node);
 	@other = @{sortNodesByOrd($xpc, 0, @other)};
 	
-	# Process first chain element.
-	my $newSubRoot = shift @forChain;
-	my $subRootOrd = getOrd($xpc, $newSubRoot);
-	# Move first conj/punct under this chain element.
-	while (@other and (getOrd($xpc, $other[0]) <= $subRootOrd))
+	# Sort conjuncts to find the new root.
+	@conjuncts = @{sortNodesByOrd($xpc, 0, @conjuncts)};
+	my $newRoot = shift @conjuncts;
+	
+	# Root-specific processing for new root.
+	$newRoot->unbindNode();
+	&_renamePhraseSubroot(
+		$labelNewRoot, $xpc, $newRoot, $parentRole, $phraseRole);
+	# Move first conj/punct under this conjunct.
+	my $newRootOrd = getOrd($xpc, $newRoot);
+	while (@other and (getOrd($xpc, $other[0]) <= $newRootOrd))
 	{
 		my $toBeMoved = shift @other;
 		&_movePhraseChild($toBeMoved, $newRoot, $phraseRole, $xpc);
 	}
 
-	# Process the rest of chain elements.	
-	for my $ch (@forChain)
+	# Process other conjuncts.	
+	my $currentSubRoot = $newRoot;
+	while (@conjuncts)
 	{
-		# Move conj and punct under this current chain element
+		my $ch = shift @conjuncts;
+		# Move conj and punct under this conjunct.
 		my $chOrd = getOrd($xpc, $ch);
 		while (@other and (getOrd($xpc, $other[0]) <= $chOrd))
 		{
@@ -914,10 +931,15 @@ sub _chainSpecified
 		}
 		
 		# Move chain element.
-		&_movePhraseChild($ch, $newSubRoot, $phraseRole, $xpc);
-		$newSubRoot = $ch;
+		&_movePhraseChild($ch, $currentSubRoot, $phraseRole, $xpc);
+		$currentSubRoot = $ch if ($chainConjuncts);
 	}
-
+	
+	die (($node->find('../../@id')).' has '.(scalar @conjuncts).' unprocessed conjuncts!')
+		if (@conjuncts);
+	die (($node->find('../../@id')).' has '.(scalar @other).' unprocessed conjunctions or punctuation!')
+		if (@other);
+		
 	return $newRoot;
 }
 
