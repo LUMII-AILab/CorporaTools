@@ -1,4 +1,4 @@
-package LvCorporaTools::TreeTransf::TreeTransformatorUI;
+package LvCorporaTools::UIs::TreeTransformatorUI;
 
 use strict;
 use warnings;
@@ -31,7 +31,7 @@ use Data::Dumper;
 # Interface for Latvian Treebank PML transformations. See documentation in
 # &_printMan().
 # Invocation example for Windows:
-# perl LvCorporaTools/TreeTransf/TreeTransformatorUI.pm --dir data --collect --dep BASELEM ROW BASELEM 0 0 --red 0 --knit --conll 1 FIRST FULL 0 --fold 1
+# perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --dep BASELEM ROW BASELEM 0 1 0 0 --red 0 --knit --conll 1 FIRST FULL 0 --fold 1
 #
 # TODO: control sentence omiting, when converting to conll.
 #
