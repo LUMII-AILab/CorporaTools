@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(processDir);
+our @EXPORT_OK = qw(processDir collect ord unnest dep red knit conll fold);
 
 #use Carp::Always;	# Print stack trace on die.
 
@@ -138,46 +138,46 @@ sub processDir
 	# Collecting data recursively.
 	if ($params{'--collect'})
 	{
-		$source = &_collect($source, $dirPrefix);
+		$source = &collect($source, $dirPrefix);
 		#$dirPrefix = $source;
 	}
 	
 	# Recalculating ord fields.
-	$source = &_ord($source, $dirPrefix, $params{'--ord'})
+	$source = &ord($source, $dirPrefix, $params{'--ord'})
 		if ($params{'--ord'});
 		
 	# Unnest coordinations.
-	$source = &_unnest($source, $dirPrefix, $params{'--ord'})
+	$source = &unnest($source, $dirPrefix, $params{'--ord'})
 		if ($params{'--unnest'});
 	
 	
 	# Converting to dependencies.
-	$source = &_dep($source, $dirPrefix, $params{'--dep'})
+	$source = &dep($source, $dirPrefix, $params{'--dep'})
 		if ($params{'--dep'});
 	
 	# Removing reductions.
-	$source = &_red($source, $dirPrefix, $params{'--red'})
+	$source = &red($source, $dirPrefix, $params{'--red'})
 		if ($params{'--red'});
 	
 	# Knitting-in.
-	$source = &_knit($source, $dirPrefix, $params{'--knit'})
+	$source = &knit($source, $dirPrefix, $params{'--knit'})
 		if ($params{'--knit'});
 		
 	# Converting to CoNLL.
-	$source = &_conll($source, $dirPrefix, $params{'--conll'})
+	$source = &conll($source, $dirPrefix, $params{'--conll'})
 		if ($params{'--conll'});
 	
 	# Folding data sets for training.
-	$source = &_fold($source, $dirPrefix, $params{'--fold'})
+	$source = &fold($source, $dirPrefix, $params{'--fold'})
 		if ($params{'--fold'});
 	
 	print "\n==== Successful finish =======================================\n";
 }
 
 # Collect data recursively.
-# _collect(source data directory, global working directory)
-# return adress to step results.
-sub _collect
+# collect(source data directory, global working directory)
+# return folder with step results.
+sub collect
 {
 	my ($source, $dirPrefix) = @_;
 	print "\n==== Recursive data collecting ===========================\n";
@@ -216,8 +216,10 @@ sub _collect
 }
 
 # Recalculate ord fields.
-# return adress to step results.
-sub _ord
+# ord(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub ord
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Recalculating ord fields ================================\n";
@@ -255,8 +257,10 @@ sub _ord
 }
 
 # Unnest coordinations.
-# return adress to step results.
-sub _unnest
+# unnest(source data directory, global working directory, pointer to 
+#		 array)
+# return folder with step results.
+sub unnest
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Unnesting coordinations =================================\n";
@@ -278,8 +282,10 @@ sub _unnest
 
 
 # Convert to dependencies.
-# return adress to step results.
-sub _dep
+# dep(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub dep
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Converting to dependencies ==============================\n";
@@ -301,7 +307,7 @@ sub _dep
 		if (defined $params->[6]);
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[6]);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[7]);
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
@@ -316,8 +322,10 @@ sub _dep
 }
 
 # Remove reductions.
-# return adress to step results.
-sub _red
+# red(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub red
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Removing reductions =====================================\n";
@@ -342,8 +350,10 @@ sub _red
 }
 
 # Knit-in.
-# return adress to step results.
-sub _knit
+# knit(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub knit
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Knitting-in =============================================\n";
@@ -360,8 +370,10 @@ sub _knit
 }
 
 # Convert to CoNLL format.
-# return adress to step results.
-sub _conll
+# conll(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub conll
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Converting to CoNLL =====================================\n";
@@ -381,8 +393,10 @@ sub _conll
 }
 
 # Fold data sets for training.
-# return adress to step results.
-sub _fold
+# fold(source data directory, global working directory, pointer to parameter
+#	  array)
+# return folder with step results.
+sub fold
 {
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Folding datasets ========================================\n";

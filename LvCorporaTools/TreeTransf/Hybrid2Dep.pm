@@ -11,7 +11,7 @@ our @EXPORT_OK = qw(
 	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_PHRASE_DEP
 	$LABEL_DETAIL_NA transformFile processDir transformTree);
 	
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Path;
 use IO::File;
