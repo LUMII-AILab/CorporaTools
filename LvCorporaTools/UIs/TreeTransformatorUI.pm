@@ -31,7 +31,7 @@ use Data::Dumper;
 # Interface for Latvian Treebank PML transformations. See documentation in
 # &_printMan().
 # Invocation example for Windows:
-# perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --dep BASELEM ROW BASELEM 0 1 0 0 --red 0 --knit --conll 1 FIRST FULL 0 --fold 1
+# perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --unnest --dep xpred=BASELEM coord=ROW pmc=BASELEM root=0 phdep=1 na=0 subrt=0 --red label=0 --knit --conll label=1 cpostag=FIRST postag=FULL conll09=0 --fold p=1
 #
 # TODO: control sentence omiting, when converting to conll.
 #
@@ -48,9 +48,12 @@ sub _printMan
 	print <<END;
 Unified interface for transformation scripts.
 Input files should be provided as UTF-8.
-Usage
-  TreeTransformatorUI --flag1 value11 value12 --flag2 value21 ...
-  --dir and at least one processing step is mandatory
+Usage:
+  TreeTransformatorUI --flag1 param11=value11 param12=value12
+                      --flag2 param21=value21 ...
+                        ...
+  Flags, parameter names and values are case sensitive.
+  --dir and at least one processing step is mandatory.
   
 Params:
   General
@@ -59,37 +62,50 @@ Params:
   Preprocessing
     --collect  collect all .w + .m + .a from input folder and it's
                folder - use this if data files are given in some subfolder
-               structure (no values)
+               structure (no params)
 
   Main flow
-    --unnest   convert multi-level coordinations to single level (value:
-               (*) do input data have all nodes ordered [0 (default) / 1])
-    --dep      convert to dependencies (values: (*) x-Pred mode [BASELEM /
-               DEFAULT (default)], (*) Coord mode [ROW / DEFAULT (default)],
-               (*) PMC mode [BASELEM / DEFAULT (default)], (*) label root node
-               with distinct label [0 / 1 (default)], (*) label phrase
-               dependents with different role prefix [0 (default) / 1],
-               (*) allow 'N/A' to be part of longer labels [0 (default) / 1],
-               (*) label new roots of all phrases as members of corresponding
-               phrases [0 (only some) / 1 (default)], (*) do input data have
-               all nodes ordered [0 (default) / 1])
-    --red      remove reductions (value: (*) label ommisions of empty nodes
-               [0 / 1 (default)], (*) do input data have all nodes ordered
-               [0 (default) / 1])
-    --knit     convert .w + .m + .a to a single .pml file (value: directory of
-               PML schemas [default = 'TrEd extension/lv-treebank/resources'])
-    --conll    convert .pml to conll (values: (*) label output tree arcs
-               [0/1], (*) CPOSTAG mode [PURIFY / FIRST / NONE (default)],
-               (*) POSTAG mode [FULL (default) / PURIFY], (*) is "large"
-               CoNLL-2009 output needed [0 (default) / 1])
-    --fold     create development/test or cross-validation datasets (values:
-               (*) probability (0;1), or cross-validation part count {3; 4;
-               5; ...}, or 1 for concatenating all files, (*) seed [default =
-               nothing pased to srand])
+    --unnest   convert multi-level coordinations to single level
+               params:
+                 ord - do input data have all nodes ordered [0 (default) / 1]
+    --dep      convert to dependencies
+               params:
+                 xpred - x-Pred mode [BASELEM / DEFAULT (default)],
+                 coord - Coord mode [ROW / ROW_NO_CONJ / 3_LEVEL / DEFAULT
+                         (default)],
+                 pmc   - PMC mode [BASELEM / DEFAULT (default)],
+                 root  - label root node with distinct label [0 / 1 (default)],
+                 phdep - label phrase dependents with different role prefix [0
+                         (default) / 1],
+                 na    - allow 'N/A' to be part of longer labels [0 (default)
+                         / 1],
+                 subrt - label new roots of all phrases as members of
+                         corresponding phrases [0 (only some) / 1 (default)],
+                 ord   - do input data have all nodes ordered [0 (default) / 1]
+    --red      remove reductions
+               params:
+                 label - label ommisions of empty nodes [0 / 1 (default)],
+                 ord - do input data have all nodes ordered [0 (default) / 1]
+    --knit     convert .w + .m + .a to a single .pml file
+               params:
+                 path - directory of PML schemas [default =
+                        'TrEd extension/lv-treebank/resources']
+    --conll    convert .pml to conll
+               params:
+                 label   - label output tree arcs [0/1],
+                 cpostag - CPOSTAG mode [PURIFY / FIRST / NONE (default)],
+                 postag  - POSTAG mode [FULL (default) / PURIFY], 
+                 conll09 - do "large" CoNLL-2009 output [0 (default) / 1]
+    --fold     create development/test or cross-validation datasets
+               params:
+                 p    - probability (0;1), or cross-validation part count {3;
+                        4; 5; ...}, or 1 for concatenating all files,
+                 seed - seed [default = nothing pased to srand]
 
   Additional stand-alone transformations
-    --ord      recalculate 'ord' fields (value: (*) reordering mode
-               [TOKEN/NODE])
+    --ord      recalculate 'ord' fields
+               params:
+                 mode - reordering mode [TOKEN/NODE]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -107,7 +123,8 @@ sub processDir
 	}
 	my @flags = @_;
 
-	# Parse parameters.
+	# Parse parameters: at first find flags indicating steps and parameters of
+	# according steps.
 	my %params = ();
 	my $lastFlag;
 	for my $f (@flags)
@@ -126,14 +143,28 @@ sub processDir
 		}
 	}
 	
+	# Then parse parameters of each step.
+	for my $step (keys %params)
+	{
+		my %attrValues = ();
+		for my $attrValSt (@{$params{$step}})
+		{
+			my @splitted = split('=', $attrValSt, 2);
+			push (@splitted, '1') if (@splitted == 1);
+			%attrValues = (%attrValues, @splitted);
+		}
+		$params{$step} = \%attrValues;
+	}
+	
 	# Get directories.
-	if (not $params{'--dir'} or @{$params{'--dir'}} > 1)
+	if (not $params{'--dir'} or keys(%{$params{'--dir'}}) > 1)
 	{
 		&_printMan;
 		exit 1;
 	}
-	my $dirPrefix = $params{'--dir'}[0];
-	my $source = $params{'--dir'}[0];
+
+	my $dirPrefix = (keys(%{$params{'--dir'}}))[0];
+	my $source = (keys(%{$params{'--dir'}}))[0];
 		
 	# Collecting data recursively.
 	if ($params{'--collect'})
@@ -147,7 +178,7 @@ sub processDir
 		if ($params{'--ord'});
 		
 	# Unnest coordinations.
-	$source = &unnest($source, $dirPrefix, $params{'--ord'})
+	$source = &unnest($source, $dirPrefix, $params{'--unnest'})
 		if ($params{'--unnest'});
 	
 	
@@ -224,12 +255,12 @@ sub ord
 	my ($source, $dirPrefix, $params) = @_;
 	print "\n==== Recalculating ord fields ================================\n";
 	die "Invalid argument ".$params->[0]." for --ord $!"
-		if ($params->[0] ne 'TOKEN' and $params->[0] ne 'NODE');
+		if ($params->{'mode'} ne 'TOKEN' and $params->{'mode'} ne 'NODE');
 	
 	# Definition how to process a single tree.
 	my $treeProc = sub
 	{
-		$params->[0] eq 'NODE' ?
+		$params->{'mode'} eq 'NODE' ?
 			LvCorporaTools::PMLUtils::AUtils::renumberNodes(@_):
 			LvCorporaTools::PMLUtils::AUtils::renumberTokens(@_);
 	};
@@ -266,7 +297,7 @@ sub unnest
 	print "\n==== Unnesting coordinations =================================\n";
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->[0]);
+	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/unnest");
@@ -291,23 +322,23 @@ sub dep
 	print "\n==== Converting to dependencies ==============================\n";
 		
 	# Set parameters.
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::XPRED = $params->[0]
-		if ($params->[0]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::COORD = $params->[1]
-		if ($params->[1]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::PMC = $params->[2]
-		if ($params->[2]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_ROOT = $params->[3]
-		if (defined $params->[3]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_PHRASE_DEP = $params->[4]
-		if (defined $params->[4]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_DETAIL_NA = $params->[5]
-		if (defined $params->[5]);
-	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_SUBROOT = $params->[6]
-		if (defined $params->[6]);
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::XPRED = $params->{'xpred'}
+		if ($params->{'xpred'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::COORD = $params->{'coord'}
+		if ($params->{'coord'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::PMC = $params->{'pmc'}
+		if ($params->{'pmc'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_ROOT = $params->{'root'}
+		if (defined $params->{'root'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_PHRASE_DEP = $params->{'phdep'}
+		if (defined $params->{'phdep'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_DETAIL_NA = $params->{'na'}
+		if (defined $params->{'na'});
+	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_SUBROOT = $params->{'subrt'}
+		if (defined $params->{'subrt'});
 		
 	# Convert.
-	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->[7]);
+	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/dep");
@@ -331,12 +362,12 @@ sub red
 	print "\n==== Removing reductions =====================================\n";
 		
 	# Set parameters.
-	$LvCorporaTools::TreeTransf::RemoveReduction::LABEL_EMPTY = $params->[0]
-		if (defined $params->[0]);
+	$LvCorporaTools::TreeTransf::RemoveReduction::LABEL_EMPTY = $params->{'label'}
+		if (defined $params->{'label'});
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::RemoveReduction::processDir(
-		$source, $params->[1]);
+		$source, $params->{'ord'});
 		
 	# Move files to correct places.
 	move("$source/res", "$dirPrefix/red");
@@ -359,7 +390,7 @@ sub knit
 	print "\n==== Knitting-in =============================================\n";
 	
 	# Set parameters.
-	my $schemaDir = $params->[0];
+	my $schemaDir = $params->{'path'};
 	$schemaDir = 'TrEd extension/lv-treebank/resources' unless $schemaDir;
 	
 	# Convert.
@@ -380,13 +411,13 @@ sub conll
 	
 	# Set parameters.
 	$LvCorporaTools::FormatTransf::DepPml2Conll::CPOSTAG = 
-		$params->[1] if ($params->[1]);
+		$params->{'cpostag'} if ($params->{'cpostag'});
 	$LvCorporaTools::FormatTransf::DepPml2Conll::POSTAG =
-		$params->[2] if ($params->[2]);
+		$params->{'postag'} if ($params->{'postag'});
 		
 	# Convert.
 	LvCorporaTools::FormatTransf::DepPml2Conll::processDir(
-		$source, $params->[0], $params->[3]);
+		$source, $params->{'label'}, $params->{'conll09'});
 	move("$source/res", "$dirPrefix/conll");
 		
 	return "$dirPrefix/conll";
@@ -402,7 +433,7 @@ sub fold
 	print "\n==== Folding datasets ========================================\n";
 	
 	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
-		$source, @{$params});
+		$source, $params->{'p'}, $params->{'seed'});
 	move("$source/res", "$dirPrefix/fold");
 
 	return "$dirPrefix/fold";
