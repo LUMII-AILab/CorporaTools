@@ -1,4 +1,4 @@
-package lv.morphology.corpora;
+package lv.ailab.morphology.corpora;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import lv.semti.morphology.attributes.AttributeNames;
 import lv.semti.morphology.attributes.AttributeValues;
 import lv.semti.morphology.corpus.Statistics;
 
-import lv.morphology.corpora.tests.*;
-import lv.morphology.corpora.util.MorphoEntry;
+import lv.ailab.morphology.corpora.tests.*;
+import lv.ailab.morphology.corpora.util.MorphoEntry;
 /**
  * Meaningfull handling of abbriveations (tag: y) currently not implemented.
  */
@@ -91,7 +91,7 @@ public class CorpusVerificator
 //		Word w = anal.analyze("no alkohola");
 //		System.out.println("noalkoholu atpazina? " + w.isRecognized());
 		
-		morphStat = new Statistics("lib/morphology/Statistics.xml");
+		morphStat = Statistics.getStatistics("lib/morphology/Statistics.xml");
 		singleTests = new SingleTokenTests(anal);
 		contTests = new ContinousTests(anal);
 	}

@@ -1,4 +1,4 @@
-package lv.morphology.corpora.util;
+package lv.ailab.morphology.corpora.util;
 
 
 import java.util.ArrayList;

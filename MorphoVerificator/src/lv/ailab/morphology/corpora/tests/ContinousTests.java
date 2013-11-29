@@ -1,10 +1,10 @@
-package lv.morphology.corpora.tests;
+package lv.ailab.morphology.corpora.tests;
 
 import java.util.ArrayList;
 import lv.semti.morphology.analyzer.*;
 import lv.semti.morphology.attributes.AttributeNames;
 
-import lv.morphology.corpora.util.MorphoEntry;
+import lv.ailab.morphology.corpora.util.MorphoEntry;
 
 public class ContinousTests
 {

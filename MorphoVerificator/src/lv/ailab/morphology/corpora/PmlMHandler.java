@@ -1,4 +1,4 @@
-package lv.morphology.corpora;
+package lv.ailab.morphology.corpora;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import lv.semti.morphology.analyzer.MarkupConverter;
 
-import lv.morphology.corpora.util.MorphoEntry;
+import lv.ailab.morphology.corpora.util.MorphoEntry;
 
 
 // Based on echoing code from
