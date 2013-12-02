@@ -29,3 +29,6 @@
 /testdata/UnnestCoord/zeens.m
 
 /testdata/UnnestCoord/zeens.w
+/ParserTools/lv
+/ParserTools/*.mco
+/ParserTools/*.out
