@@ -8,7 +8,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir collect ord unnest dep red knit conll fold);
 
-#use Carp::Always;	# Print stack trace on die.
+use Carp::Always;	# Print stack trace on die.
 
 use File::Copy;
 use File::Path;
@@ -211,7 +211,7 @@ sub processDir
 sub collect
 {
 	my ($source, $dirPrefix) = @_;
-	print "\n==== Recursive data collecting ===========================\n";
+	print "\n==== Recursive data collecting ===============================\n";
 		
 	my $fileCounter = 0;
 	my @todoDirs = ();
@@ -277,7 +277,8 @@ sub ord
 		$fileProc, "^.+\\.a\$", '-ord.a', 1, 0, $source);
 	
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/ord");
+	move("$source/res", "$dirPrefix/ord")
+		|| warn "Moving $source/res to $dirPrefix/ord failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
@@ -300,8 +301,10 @@ sub unnest
 	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/unnest");
-	move("$source/warnings", "$dirPrefix/unnest/warnings");
+	move("$source/res", "$dirPrefix/unnest")
+		|| warn "Moving $source/res to $dirPrefix/unnest failed: $!";
+	move("$source/warnings", "$dirPrefix/unnest/warnings")
+		|| warn "Moving $source/warnings to $dirPrefix/unnest/warnings failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
@@ -341,12 +344,15 @@ sub dep
 	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/dep");
-	move("$source/warnings", "$dirPrefix/dep/warnings");
+	move("$source/res", "$dirPrefix/dep")
+		|| warn "Moving $source/res to $dirPrefix/dep failed: $!";
+	move("$source/warnings", "$dirPrefix/dep/warnings")
+		|| warn "Moving $source/warnings to $dirPrefix/dep/warnings failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/dep/");
+		copy($_, "$dirPrefix/dep/")
+			|| warn "Copying $_ to $dirPrefix/dep failed: $!";
 	}
 		
 	return "$dirPrefix/dep";
@@ -370,11 +376,13 @@ sub red
 		$source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/red");
+	move("$source/res", "$dirPrefix/red")
+		|| warn "Moving $source/res to $dirPrefix/red failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/red/");
+		copy($_, "$dirPrefix/red/")
+			|| warn "Copying $_ to $dirPrefix/red failed: $!";
 	}
 		
 	return "$dirPrefix/red";
@@ -395,7 +403,8 @@ sub knit
 	
 	# Convert.
 	LvCorporaTools::PMLUtils::Knit::processDir($source, 'a', $schemaDir);
-	move("$source/res", "$dirPrefix/knitted");
+	move("$source/res", "$dirPrefix/knitted")
+		|| warn "Moving $source/res to $dirPrefix/knitted failed: $!";
 		
 	return "$dirPrefix/knitted";
 }
@@ -418,7 +427,8 @@ sub conll
 	# Convert.
 	LvCorporaTools::FormatTransf::DepPml2Conll::processDir(
 		$source, $params->{'label'}, $params->{'conll09'});
-	move("$source/res", "$dirPrefix/conll");
+	move("$source/res", "$dirPrefix/conll")
+		|| warn "Moving $source/res to $dirPrefix/conll failed: $!";
 		
 	return "$dirPrefix/conll";
 }
@@ -434,7 +444,8 @@ sub fold
 	
 	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
 		$source, $params->{'p'}, $params->{'seed'});
-	move("$source/res", "$dirPrefix/fold");
+	move("$source/res", "$dirPrefix/fold")
+		|| warn "Moving $source/res to $dirPrefix/fold failed: $!";
 
 	return "$dirPrefix/fold";
 	
