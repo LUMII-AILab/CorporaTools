@@ -8,7 +8,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir collect ord unnest dep red knit conll fold);
 
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 
 use File::Copy;
 use File::Path;
@@ -169,54 +169,53 @@ sub processDir
 	# Collecting data recursively.
 	if ($params{'--collect'})
 	{
-		$source = &collect($source, $dirPrefix);
-		#$dirPrefix = $source;
+		$source = &collect($source, "$dirPrefix/collected");
 	}
 	
 	# Recalculating ord fields.
-	$source = &ord($source, $dirPrefix, $params{'--ord'})
+	$source = &ord($source, "$dirPrefix/ord", $params{'--ord'})
 		if ($params{'--ord'});
 		
 	# Unnest coordinations.
-	$source = &unnest($source, $dirPrefix, $params{'--unnest'})
+	$source = &unnest($source, "$dirPrefix/unnest", $params{'--unnest'})
 		if ($params{'--unnest'});
 	
 	
 	# Converting to dependencies.
-	$source = &dep($source, $dirPrefix, $params{'--dep'})
+	$source = &dep($source, "$dirPrefix/dep", $params{'--dep'})
 		if ($params{'--dep'});
 	
 	# Removing reductions.
-	$source = &red($source, $dirPrefix, $params{'--red'})
+	$source = &red($source, "$dirPrefix/red", $params{'--red'})
 		if ($params{'--red'});
 	
 	# Knitting-in.
-	$source = &knit($source, $dirPrefix, $params{'--knit'})
+	$source = &knit($source, "$dirPrefix/knitted", $params{'--knit'})
 		if ($params{'--knit'});
 		
 	# Converting to CoNLL.
-	$source = &conll($source, $dirPrefix, $params{'--conll'})
+	$source = &conll($source, "$dirPrefix/conll", $params{'--conll'})
 		if ($params{'--conll'});
 	
 	# Folding data sets for training.
-	$source = &fold($source, $dirPrefix, $params{'--fold'})
+	$source = &fold($source, "$dirPrefix/fold", $params{'--fold'})
 		if ($params{'--fold'});
 	
 	print "\n==== Successful finish =======================================\n";
 }
 
 # Collect data recursively.
-# collect(source data directory, global working directory)
+# collect(source data directory, destination directory)
 # return folder with step results.
 sub collect
 {
-	my ($source, $dirPrefix) = @_;
+	my ($source, $dest) = @_;
 	print "\n==== Recursive data collecting ===============================\n";
 		
 	my $fileCounter = 0;
 	my @todoDirs = ();
 	my $current = $source;
-	mkpath ("$dirPrefix/collected");
+	mkpath ($dest);
 		
 	# Traverse subdirectories.
 	while ($current)
@@ -227,7 +226,7 @@ sub collect
 			# Treebank file
 			if ((-f "$current/$item") and ($item =~ /.[amw]$/))
 			{
-				copy("$current/$item", "$dirPrefix/collected/");
+				copy("$current/$item", $dest);
 				$fileCounter++;
 			}
 			elsif (-d "$current/$item" and $item !~ /^\.\.?$/ and $item ne "collected")
@@ -243,16 +242,15 @@ sub collect
 	}
 		
 		print "Found $fileCounter files.\n";
-		return "$dirPrefix/collected";
+		return $dest;
 }
 
 # Recalculate ord fields.
-# ord(source data directory, global working directory, pointer to parameter
-#	  array)
+# ord(source data directory, destination directory, pointer to parameter array)
 # return folder with step results.
 sub ord
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Recalculating ord fields ================================\n";
 	die "Invalid argument ".$params->[0]." for --ord $!"
 		if ($params->{'mode'} ne 'TOKEN' and $params->{'mode'} ne 'NODE');
@@ -277,51 +275,50 @@ sub ord
 		$fileProc, "^.+\\.a\$", '-ord.a', 1, 0, $source);
 	
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/ord")
-		|| warn "Moving $source/res to $dirPrefix/ord failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/ord/");
+		copy($_, $dest);
 	}
 	
-	return "$dirPrefix/ord";
+	return $dest;
 }
 
 # Unnest coordinations.
-# unnest(source data directory, global working directory, pointer to 
+# unnest(source data directory, destination directory, pointer to parameter
 #		 array)
 # return folder with step results.
 sub unnest
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Unnesting coordinations =================================\n";
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/unnest")
-		|| warn "Moving $source/res to $dirPrefix/unnest failed: $!";
-	move("$source/warnings", "$dirPrefix/unnest/warnings")
-		|| warn "Moving $source/warnings to $dirPrefix/unnest/warnings failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
+	move("$source/warnings", "$dest/warnings")
+		|| warn "Moving $source/warnings to $dest/warnings failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/unnest/");
+		copy($_, $dest);
 	}
 		
-	return "$dirPrefix/unnest";
+	return $dest;
 }
 
 
 # Convert to dependencies.
-# dep(source data directory, global working directory, pointer to parameter
-#	  array)
+# dep(source data directory, destination directory, pointer to parameter array)
 # return folder with step results.
 sub dep
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Converting to dependencies ==============================\n";
 		
 	# Set parameters.
@@ -344,27 +341,26 @@ sub dep
 	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/dep")
-		|| warn "Moving $source/res to $dirPrefix/dep failed: $!";
-	move("$source/warnings", "$dirPrefix/dep/warnings")
-		|| warn "Moving $source/warnings to $dirPrefix/dep/warnings failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
+	move("$source/warnings", "$dest/warnings")
+		|| warn "Moving $source/warnings to $dest/warnings failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/dep/")
-			|| warn "Copying $_ to $dirPrefix/dep failed: $!";
+		copy($_, $dest)
+			|| warn "Copying $_ to $dest failed: $!";
 	}
 		
-	return "$dirPrefix/dep";
+	return $dest;
 }
 
 # Remove reductions.
-# red(source data directory, global working directory, pointer to parameter
-#	  array)
+# red(source data directory, destination directory, pointer to parameter array)
 # return folder with step results.
 sub red
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Removing reductions =====================================\n";
 		
 	# Set parameters.
@@ -376,25 +372,25 @@ sub red
 		$source, $params->{'ord'});
 		
 	# Move files to correct places.
-	move("$source/res", "$dirPrefix/red")
-		|| warn "Moving $source/res to $dirPrefix/red failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
 	my @files = glob("$source/*.m $source/*.w");
 	for (@files)
 	{
-		copy($_, "$dirPrefix/red/")
-			|| warn "Copying $_ to $dirPrefix/red failed: $!";
+		copy($_, $dest)
+			|| warn "Copying $_ to $dest failed: $!";
 	}
 		
-	return "$dirPrefix/red";
+	return $dest;
 }
 
 # Knit-in.
-# knit(source data directory, global working directory, pointer to parameter
+# knit(source data directory, destination directory, pointer to parameter
 #	  array)
 # return folder with step results.
 sub knit
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Knitting-in =============================================\n";
 	
 	# Set parameters.
@@ -403,19 +399,19 @@ sub knit
 	
 	# Convert.
 	LvCorporaTools::PMLUtils::Knit::processDir($source, 'a', $schemaDir);
-	move("$source/res", "$dirPrefix/knitted")
-		|| warn "Moving $source/res to $dirPrefix/knitted failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
 		
-	return "$dirPrefix/knitted";
+	return $dest;
 }
 
 # Convert to CoNLL format.
-# conll(source data directory, global working directory, pointer to parameter
+# conll(source data directory, destination directory, pointer to parameter
 #	  array)
 # return folder with step results.
 sub conll
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Converting to CoNLL =====================================\n";
 	
 	# Set parameters.
@@ -427,27 +423,27 @@ sub conll
 	# Convert.
 	LvCorporaTools::FormatTransf::DepPml2Conll::processDir(
 		$source, $params->{'label'}, $params->{'conll09'});
-	move("$source/res", "$dirPrefix/conll")
-		|| warn "Moving $source/res to $dirPrefix/conll failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
 		
-	return "$dirPrefix/conll";
+	return $dest;
 }
 
 # Fold data sets for training.
-# fold(source data directory, global working directory, pointer to parameter
+# fold(source data directory, destination directory, pointer to parameter
 #	  array)
 # return folder with step results.
 sub fold
 {
-	my ($source, $dirPrefix, $params) = @_;
+	my ($source, $dest, $params) = @_;
 	print "\n==== Folding datasets ========================================\n";
 	
 	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
 		$source, $params->{'p'}, $params->{'seed'});
-	move("$source/res", "$dirPrefix/fold")
-		|| warn "Moving $source/res to $dirPrefix/fold failed: $!";
+	move("$source/res", $dest)
+		|| warn "Moving $source/res to $dest failed: $!";
 
-	return "$dirPrefix/fold";
+	return $dest;
 	
 }
 
