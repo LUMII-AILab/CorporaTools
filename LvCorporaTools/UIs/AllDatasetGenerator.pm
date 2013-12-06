@@ -7,14 +7,10 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir $PARAMS);
 
-use Carp::Always;	# Print stack trace on die.
+#use Carp::Always;	# Print stack trace on die.
 use Data::Dumper;
-#use Carp qw(croak);
 
 use File::Copy;
-#use File::Path;
-#use IO::Dir;
-#use IO::File;
 
 use LvCorporaTools::UIs::TreeTransformatorUI qw(
 	collect unnest dep red knit conll fold);
@@ -77,7 +73,6 @@ sub processDir
 
 	# Parse parameters.
 	# TODO.
-	#my $destPrefix = (keys %{$params{'--dir'}})[0];
 	my $destPrefix = shift @_;
 	my $sources = [$destPrefix];
 	my %params = %$PARAMS;
@@ -188,19 +183,6 @@ sub _performStep
 	
 	return \@resultDirs;
 }
-
-# Get parameters with multiple values. 
-#sub _getMultivalueAttr
-#{
-#	my $paramAV = shift @_;
-#	my @res = ();
-#	for my $attr (keys %$paramAV)
-#	{
-#		push(@res, $attr) if ($paramAV->{$attr} and @{$paramAV->{$attr}} > 1);
-#	}
-#	
-#	return \@res;
-#}
 
 
 # This ensures that when module is called from shell (and only then!)
