@@ -350,12 +350,12 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   my ($hook)=@_;
   my $resuming = ($hook eq 'file_resumed_hook');
   my $current = CurrentContext();
-  if (&is_lva_file())
+  if (is_lva_file())
   {
     SetCurrentStylesheet('lv-a') if $resuming;
     return 'LV_A_View';
   }
-  if (&is_lvadep_file())
+  if (is_lvadep_file())
   {
     SetCurrentStylesheet('lv-a-dep-ord') if $resuming;
     return 'LV_A_PureDependency';
@@ -368,7 +368,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 # do not use this annotation mode for other files
 sub allow_switch_context_hook
 {
-  return 'stop' if (not &is_lva_file() and not &is_lvadep_file());
+  return 'stop' if (not is_lva_file() and not is_lvadep_file());
 }
 #endif LV_A
 

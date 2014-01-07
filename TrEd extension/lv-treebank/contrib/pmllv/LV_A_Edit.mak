@@ -57,14 +57,6 @@ sub normalize_n_ords
 {
   &normalize_m_ords;
   &_give_ord_everybody($root);
-#  my @nodes = GetNodes;
-#  SortByOrd(\@nodes);
-#  my $npk = 1;
-#  foreach my $n (@nodes)
-#  {
-#	$n->{'ord'} = $npk;
-#	$npk++;
-#  }
 }
 # Recalculate ord values and give ords to the empty nodes for all trees.
 sub normalize_n_ords_all_trees
@@ -85,36 +77,56 @@ sub _give_ord_everybody
 {
 	my $tree = shift;
 	my $smallerSibOrd = shift or 0;
-	# Process children recursively.
-	my $new_id = 0;
-	#my @ch_array = $tree->children;
-	my (@processFirst, @postponed) = ((), ());
 	
-	# At first we process those children who have nonzero ord somewhere below
-	# them. After that - all other children.
+	# Currently best found ID for root node.
+	my $new_id = 0;
+	# Does this node have phrase children with unreduced constituents (these
+	# are more inportant than dependants).
+	my $has_num_phrase_ch = 0;
+
+	# Process children.
+	
+	# Seperate children with nonzero ords.
+	my (@processFirst, @postponed) = ((), ());
 	for my $ch ($tree->children)
 	{
 		&_has_ord_child($ch) ? 
 			push @processFirst, $ch :
 			push @postponed, $ch;
 	}
+	
+	# Process children recursively.
 	push @processFirst, @postponed;
 	for my $ch (@processFirst)
 	{
+		# Find smallest sibling ord.
 		my @sibOrds = 
 			sort (
 				map {$_->attr('ord')} (
 					grep {$_->attr('ord') and $_->attr('ord') > 0} $tree->children));
-	#	my @sibOrds = 				# Seems that this solution is slower.
-	#		sort (
-	#			grep {$_ > 0} (
-	#				map {$_->attr('ord') or 0}  $tree->children));
 		my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
 		&_give_ord_everybody($ch, $min);
 		my $tmp_ord = $ch->attr('ord');
-		$new_id = $tmp_ord
-			if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));
-			#if ($tmp_ord gt 0 and ($tmp_ord lt $new_id or $new_id le 0));
+		
+		#$new_id = $tmp_ord
+		#	if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));
+		
+		# If node has phrase children with numbered constituents, it is
+		# them, who determine ord of the parent, not dependants.
+		if ($tmp_ord)
+		{
+				my $ch_type = $ch->attr('#name');
+				if ($ch_type eq 'xinfo' or $ch_type eq 'coordinfo'
+					or $ch_type eq 'pmcinfo')
+				{
+					$new_id = $tmp_ord if ($tmp_ord < $new_id or not $has_num_phrase_ch);
+					$has_num_phrase_ch = 1;
+				}
+				elsif (not $has_num_phrase_ch and ($tmp_ord < $new_id or $new_id <= 0))
+				{
+					$new_id = $tmp_ord;
+				} 
+			}
 		
 	}
 	

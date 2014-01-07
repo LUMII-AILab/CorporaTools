@@ -99,6 +99,9 @@ sub _renumberNodesSubtree
 
 	# Currently best found ID for root node.
 	my $newId = 0;
+	# Does this node have phrase children with unreduced constituents (these
+	# are more inportant than dependants).
+	my $hasNumPhraseCh = 0;
 	
 	# Process children.
 	if (&hasChildrenNode($xpc, $root))
@@ -112,7 +115,6 @@ sub _renumberNodesSubtree
 		my $chNode = &getChildrenNode($xpc, $root);
 		for my $ch ($chNode->childNodes())
 		{
-			#my @ordChildren = $xpc->findnodes('.//pml:ord', $ch);
 			my @mChildren = $xpc->findnodes('.//pml:m.rf|.//pml:m', $ch);
 			if (@mChildren and @mChildren > 0)
 			{
@@ -135,12 +137,26 @@ sub _renumberNodesSubtree
 			my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
 			&_renumberNodesSubtree($xpc, $ch, $tree, $min);
 			my $tmpOrd = &getOrd($xpc, $ch);
-			$newId = $tmpOrd
-				if ($tmpOrd and ($tmpOrd < $newId or $newId <= 0));
 			
+			# If node has phrase children with numbered constituents, it is
+			# them, who determine ord of the parent, not dependants.
+			if ($tmpOrd)
+			{
+				my $chType = $ch->nodeName();
+				if ($chType eq 'xinfo' or $chType eq 'coordinfo'
+					or $chType eq 'pmcinfo')
+				{
+					$newId = $tmpOrd if ($tmpOrd < $newId or not $hasNumPhraseCh);
+					$hasNumPhraseCh = 1;
+				}
+				elsif (not $hasNumPhraseCh and ($tmpOrd < $newId or $newId <= 0))
+				{
+					$newId = $tmpOrd;
+				} 
+			}
 		}
 	}
-	#return if (${$xpc->findnodes('pml:ord', $root)}[0]->textContent > 0);
+
 	return if (&getOrd($xpc, $root));
 	
 	# Obtain new id if given node has no children.
@@ -169,19 +185,6 @@ sub _renumberNodesSubtree
 		}
 	}
 	$newId++;
-
-	#if ($newId <= 0)
-	#{
-	#	my $follower = $tree->following;
-	#	while ($follower and $follower->attr('ord') <= 0)
-	#	{
-	#		$follower = $follower->following;
-	#	}
-	#	$newId = $follower->attr('ord') if ($follower);
-	#} else
-	#{
-	#	$newId++;
-	#}
 	
 	# Shift by one all ords greater or equal $newId so that $newId can be used
 	# for root of the subtree.
