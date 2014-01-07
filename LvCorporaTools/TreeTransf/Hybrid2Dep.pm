@@ -935,8 +935,11 @@ sub _conjToNextConjunct
 		$currentSubRoot = $ch if ($chainConjuncts);
 	}
 	
-	die (($node->find('../../@id')).' has '.(scalar @other).' unprocessed conjunctions or punctuation!')
-		if (@other);
+	if (@other)
+	{
+		# TODO: reevalute this when "u.c."
+		die (($node->find('../../@id')).' has '.(scalar @other).' unprocessed conjunctions or punctuation!');
+	}
 	die (($node->find('../../@id')).' has '.(scalar @conjuncts).' unprocessed conjuncts!')
 		if (@conjuncts); # This should not happen.
 		
