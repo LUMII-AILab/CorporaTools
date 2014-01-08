@@ -22,7 +22,8 @@ sub switch_context_hook
 sub normalize_m_ords
 {
   my @nodes = GetNodes;
-  sort { $a->attr('ord') <=> $b->attr('ord') } (@nodes);
+  #sort { $a->attr('ord') <=> $b->attr('ord') } (@nodes);
+  SortByOrd (\@nodes);
   my $npk = 1;
   foreach my $n (@nodes)
   {

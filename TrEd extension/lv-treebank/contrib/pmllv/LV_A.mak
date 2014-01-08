@@ -363,8 +363,6 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   return;
 };
 
-
-#include <contrib/pml/PML.mak>
 # do not use this annotation mode for other files
 sub allow_switch_context_hook
 {
