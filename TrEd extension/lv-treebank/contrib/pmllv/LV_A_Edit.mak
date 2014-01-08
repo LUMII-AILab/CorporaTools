@@ -76,7 +76,6 @@ sub normalize_n_ords_all_trees
 # Give "ord" tags to the "empty" nodes.
 sub _give_ord_everybody
 {
-	use Carp::Always;
 	my $tree = shift;
 	my $smallerSibOrd = shift or 0;
 	
