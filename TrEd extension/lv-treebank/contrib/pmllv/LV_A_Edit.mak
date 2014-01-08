@@ -22,8 +22,8 @@ sub switch_context_hook
 sub normalize_m_ords
 {
   my @nodes = GetNodes;
-  #sort { $a->attr('ord') <=> $b->attr('ord') } (@nodes);
-  SortByOrd (\@nodes);
+  @nodes = sort { $a->attr('ord') <=> $b->attr('ord') } @nodes;
+  #SortByOrd (\@nodes); # This makes warnings with nodes with no ords in Tred 2.5049
   my $npk = 1;
   foreach my $n (@nodes)
   {
@@ -76,66 +76,67 @@ sub normalize_n_ords_all_trees
 # Give "ord" tags to the "empty" nodes.
 sub _give_ord_everybody
 {
+	use Carp::Always;
 	my $tree = shift;
 	my $smallerSibOrd = shift or 0;
-	
-	# Process children.
-	
-	# Seperate children with nonzero ords.
-	my (@processFirst, @postponed) = ((), ());
-	for my $ch ($tree->children)
-	{
-		&_has_ord_child($ch) ? 
-			push @processFirst, $ch :
-			push @postponed, $ch;
-	}
-	
-	# Process children recursively.
-	push @processFirst, @postponed;
-	for my $ch (@processFirst)
-	{
-		# Find smallest sibling ord.
-		my @sibOrds = 
-			sort (
-				map {$_->attr('ord')} (
-					grep {$_->attr('ord') and $_->attr('ord') > 0} $tree->children));
-		my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
-		&_give_ord_everybody($ch, $min);
-	}
-	
-	return if ($tree->attr('ord') > 0);
 	
 	# Currently best found ID for root node.
 	my $new_id = 0;
 	# Does this node have phrase children with unreduced constituents (these
 	# are more inportant than dependants).
 	my $has_num_phrase_ch = 0;
-	
-	# Obtain new id if given node have children. 
-		# Now we can find new ord safely, because children ords don't change
-		# anymore.
-	for my $ch ($tree->children)
+
+	# Process children.
+	if ($tree->children)
 	{
-		my $ch_ord = $ch->attr('ord');
-		
-		# If node has phrase children with numbered constituents, it is them,
-		# who determine ord of the parent, not dependants.
-		if ($ch_ord)
+		# Seperate children with nonzero ords.
+		my (@processFirst, @postponed) = ((), ());
+		for my $ch ($tree->children)
 		{
-			my $type = $ch->attr('#name');
-			if (($type ne 'node') and
-				($ch_ord < $new_id or $new_id <= 0 or not $has_num_phrase_ch))
+			&_has_ord_child($ch) ? 
+				push @processFirst, $ch :
+				push @postponed, $ch;
+		}
+		
+		# Process children recursively.
+		push @processFirst, @postponed;
+		for my $ch (@processFirst)
+		{
+			# Find smallest sibling ord.
+			my @sibOrds = grep {($_->attr('ord') and $_->attr('ord') > 0)}
+							   $tree->children;
+			@sibOrds = sort (map {$_->attr('ord')} @sibOrds);
+			my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
+			&_give_ord_everybody($ch, $min);
+		}
+		
+		return if ($tree->attr('ord') > 0);
+			
+		# Obtain new id if given node have children. 
+			# Now we can find new ord safely, because children ords don't
+			# change anymore.
+		for my $ch ($tree->children)
+		{
+			my $ch_ord = $ch->attr('ord');
+			
+			# If node has phrase children with numbered constituents, it is 
+			# them, who determine ord of the parent, not dependants.
+			if ($ch_ord)
 			{
-				$new_id = $ch_ord;
-				$has_num_phrase_ch = 1;
+				my $type = $ch->attr('#name');
+				if (($type ne 'node') and
+					($ch_ord < $new_id or $new_id <= 0 or not $has_num_phrase_ch))
+				{
+					$new_id = $ch_ord;
+					$has_num_phrase_ch = 1;
+				}
+				elsif (not $has_num_phrase_ch and ($ch_ord < $new_id or $new_id <= 0))
+				{
+					$new_id = $ch_ord;
+				} 
 			}
-			elsif (not $has_num_phrase_ch and ($ch_ord < $new_id or $new_id <= 0))
-			{
-				$new_id = $ch_ord;
-			} 
 		}
 	}
-	
 	return if ($tree->attr('ord'));
 	
 	# Obtain new id if given node has no children.
