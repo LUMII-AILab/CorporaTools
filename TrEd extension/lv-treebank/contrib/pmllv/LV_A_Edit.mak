@@ -78,12 +78,6 @@ sub _give_ord_everybody
 	my $tree = shift;
 	my $smallerSibOrd = shift or 0;
 	
-	# Currently best found ID for root node.
-	my $new_id = 0;
-	# Does this node have phrase children with unreduced constituents (these
-	# are more inportant than dependants).
-	my $has_num_phrase_ch = 0;
-
 	# Process children.
 	
 	# Seperate children with nonzero ords.
@@ -106,40 +100,52 @@ sub _give_ord_everybody
 					grep {$_->attr('ord') and $_->attr('ord') > 0} $tree->children));
 		my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
 		&_give_ord_everybody($ch, $min);
-		my $tmp_ord = $ch->attr('ord');
-		
-		#$new_id = $tmp_ord
-		#	if ($tmp_ord > 0 and ($tmp_ord < $new_id or $new_id <= 0));
-		
-		# If node has phrase children with numbered constituents, it is
-		# them, who determine ord of the parent, not dependants.
-		if ($tmp_ord)
-		{
-				my $ch_type = $ch->attr('#name');
-				if ($ch_type eq 'xinfo' or $ch_type eq 'coordinfo'
-					or $ch_type eq 'pmcinfo')
-				{
-					$new_id = $tmp_ord if ($tmp_ord < $new_id or not $has_num_phrase_ch);
-					$has_num_phrase_ch = 1;
-				}
-				elsif (not $has_num_phrase_ch and ($tmp_ord < $new_id or $new_id <= 0))
-				{
-					$new_id = $tmp_ord;
-				} 
-			}
-		
 	}
 	
 	return if ($tree->attr('ord') > 0);
 	
+	# Currently best found ID for root node.
+	my $new_id = 0;
+	# Does this node have phrase children with unreduced constituents (these
+	# are more inportant than dependants).
+	my $has_num_phrase_ch = 0;
+	
+	# Obtain new id if given node have children. 
+		# Now we can find new ord safely, because children ords don't change
+		# anymore.
+	for my $ch ($tree->children)
+	{
+		my $ch_ord = $ch->attr('ord');
+		
+		# If node has phrase children with numbered constituents, it is them,
+		# who determine ord of the parent, not dependants.
+		if ($ch_ord)
+		{
+			my $type = $ch->attr('#name');
+			if (($type ne 'node') and
+				($ch_ord < $new_id or $new_id <= 0 or not $has_num_phrase_ch))
+			{
+				$new_id = $ch_ord;
+				$has_num_phrase_ch = 1;
+			}
+			elsif (not $has_num_phrase_ch and ($ch_ord < $new_id or $new_id <= 0))
+			{
+				$new_id = $ch_ord;
+			} 
+		}
+	}
+	
+	return if ($tree->attr('ord'));
+	
 	# Obtain new id if given node has no children.
 	$new_id = $smallerSibOrd if ($new_id <= 0);
+	# Obtain new id if given node has no children and no siblings.	
 	print "Node ID was not obtained from other nodes.\n" if ($new_id <= 0);
-		$new_id++;
+	$new_id++;
 	
 	# Give ord to root of the subtree.
 	&_rise_ords($new_id);
-	$tree->set_attr('ord', $new_id)
+	$tree->set_attr('ord', $new_id);
 }
 
 # Support function.

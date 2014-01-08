@@ -136,25 +136,34 @@ sub _renumberNodesSubtree
 				map {$_->textContent} ($xpc->findnodes('pml:children/*/pml:ord', $root))));
 			my $min = $sibOrds[0] ? $sibOrds[0] : $smallerSibOrd;
 			&_renumberNodesSubtree($xpc, $ch, $tree, $min);
-			my $tmpOrd = &getOrd($xpc, $ch);
-			
+		}
+		
+		# Obtain new id if given node have children. 
+			# Now we can find new ord safely, because children ords don't
+			# change anymore.
+		#my $chNode = &getChildrenNode($xpc, $root);
+		for my $ch ((&getChildrenNode($xpc, $root))->childNodes())
+		{
+			my $chOrd = &getOrd($xpc, $ch);
 			# If node has phrase children with numbered constituents, it is
 			# them, who determine ord of the parent, not dependants.
-			if ($tmpOrd)
+
+			if ($chOrd)
 			{
-				my $chType = $ch->nodeName();
-				if ($chType eq 'xinfo' or $chType eq 'coordinfo'
-					or $chType eq 'pmcinfo')
+				my $type = $ch->nodeName();
+				if (($type ne 'node') and
+					($chOrd < $newId or $newId <= 0 or not $hasNumPhraseCh))
 				{
-					$newId = $tmpOrd if ($tmpOrd < $newId or not $hasNumPhraseCh);
+					$newId = $chOrd;
 					$hasNumPhraseCh = 1;
 				}
-				elsif (not $hasNumPhraseCh and ($tmpOrd < $newId or $newId <= 0))
+				elsif (not $hasNumPhraseCh and ($chOrd < $newId or $newId <= 0))
 				{
-					$newId = $tmpOrd;
+					$newId = $chOrd;
 				} 
 			}
 		}
+
 	}
 
 	return if (&getOrd($xpc, $root));
