@@ -6,8 +6,8 @@
   <pkgname>lv-treebank</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>IMCS UL experimental Treebank Annotation</title>
-  <version>2.14</version>
-  <copyright year="2012">Lauma Pretkalniņa</copyright>
+  <version>2.15</version>
+  <copyright year="2012-2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides experimental support for viewing
     and editing annotations of Latvian TreeBank.
   </description>
