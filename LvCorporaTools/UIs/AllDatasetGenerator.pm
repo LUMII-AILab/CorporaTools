@@ -108,6 +108,12 @@ sub processDir
 			$sources, $destPrefix, \&knit, 'knit', $params{'--knit'});
 	}
 	
+	if ($params{'--conll'})	
+	{
+		$sources = &_performStep(
+			$sources, $destPrefix, \&conll, 'conll', $params{'--conll'});
+	}
+	
 	if ($params{'--fold'})	
 	{
 		$sources = &_performStep(
