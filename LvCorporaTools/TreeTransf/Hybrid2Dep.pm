@@ -627,12 +627,13 @@ sub utter
 		die "utter below ". $node->find('../../@id').' has no children!'
 			if (not @res);
 		# Warning about suspective structure.
-		if (scalar @res ne 1)
-		{	
-			print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
-			print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
-				.(scalar @res)." potential rootnodes.\n";
-		}
+		# Currently disabled because of too many false positives.
+		#if (scalar @res ne 1)
+		#{	
+		#	print "$phraseRole has ".(scalar @res)." potential rootnodes.\n";
+		#	print $warnFile "$phraseRole below ". $node->find('../../@id').' has '
+		#		.(scalar @res)." potential rootnodes.\n";
+		#}
 		
 		my $newRoot = $res[0];
 		
