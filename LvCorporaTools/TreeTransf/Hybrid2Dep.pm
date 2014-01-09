@@ -16,7 +16,8 @@ our @EXPORT_OK = qw(
 use File::Path;
 use IO::File;
 use IO::Dir;
-use List::Util qw(first);
+#use List::Util qw(first);
+use List::MoreUtils qw(any); #first
 use XML::LibXML;  # XML handling library
 
 use LvCorporaTools::GenericUtils::UIWrapper;
@@ -499,9 +500,9 @@ sub crdParts
 {
 	return &_chainStartingFrom(['crdPart'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_conjToNextConjunct(['crdPart'], 1, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], [], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
-	return &_conjToNextConjunct(['crdPart'], 0, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], [], 0, $LABEL_SUBROOT, @_)
 		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
@@ -511,9 +512,9 @@ sub crdClauses
 {
 	return &_chainStartingFrom(['crdPart'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_conjToNextConjunct(['crdPart'], 1, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], [], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
-	return &_conjToNextConjunct(['crdPart'], 0, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['crdPart'], [], 0, $LABEL_SUBROOT, @_)
 		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
@@ -523,9 +524,9 @@ sub crdGeneral
 {
 	return &_chainStartingFrom(['gen'], $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW');
-	return &_conjToNextConjunct(['gen', 'genList'], 1, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['gen', 'genList'], ['punct'], 1, $LABEL_SUBROOT, @_)
 		if ($COORD eq 'ROW_NO_CONJ');
-	return &_conjToNextConjunct(['gen', 'genList'], 0, $LABEL_SUBROOT, @_)
+	return &_conjToNextConjunct(['gen', 'genList'], ['punct'], 0, $LABEL_SUBROOT, @_)
 		if ($COORD eq '3_LEVEL');
 	return &_allBelowCoordSep(1, @_) if ($COORD eq 'DEFAULT');
 	die "Unknown value \'$COORD\' for global constant \$COORD ";
@@ -867,14 +868,17 @@ sub _chainStartingFrom
 # Chain child elements with specified roles. Unchained child elements attach
 # to next chained element.
 # _conjToNextConjunct (pointer to array with roles determining conjunct nodes
-#					   (i.e. not conj and punct), chain conjuncts (0 - all
-#					   under first, 1 - make chain) relabel new root (0/1; if
-#					   $LABEL_SUBROOT=1, this will be ignored and root will be
-#					   renamed anyway), XPath context with set namespaces, DOM
-#					   node, role of the parent node, output flow for warnings)
+#					   (i.e. not conj and punct), pointer to array with roles
+#					   allowed after last conjunct (e.g. conj and/or punct)
+#					   chain conjuncts (0 - all under first, 1 - make chain)
+#					   relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
+#					   ignored and root will be renamed anyway), XPath context
+#					   with set namespaces, DOM node, role of the parent node,
+#					   output flow for warnings)
 sub _conjToNextConjunct
 {
 	my $conjunctRoles = shift @_;
+	my $afterLastConjunctRoles = shift @_;
 	my $chainConjuncts = shift @_;
 	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
@@ -920,6 +924,7 @@ sub _conjToNextConjunct
 
 	# Process other conjuncts.	
 	my $currentSubRoot = $newRoot;
+	my $currentConjunct = $newRoot;
 	while (@conjuncts)
 	{
 		my $ch = shift @conjuncts;
@@ -934,13 +939,20 @@ sub _conjToNextConjunct
 		# Move chain element.
 		&_movePhraseChild($ch, $currentSubRoot, $phraseRole, $xpc);
 		$currentSubRoot = $ch if ($chainConjuncts);
+		$currentConjunct  = $ch;
 	}
 	
-	if (@other)
+	# If some nodes after last conjunct are allowed to be added to last
+	# conjunct, then do it.
+	while (@other and any {getRole($xpc, $other[0])} @$afterLastConjunctRoles)
 	{
-		# TODO: reevalute this when "u.c."
-		die (($node->find('../../@id')).' has '.(scalar @other).' unprocessed conjunctions or punctuation!');
+		my $toBeMoved = shift @other;
+		&_movePhraseChild($toBeMoved, $currentConjunct, $phraseRole, $xpc);
 	}
+	
+	
+	die (($node->find('../../@id')).' has '.(scalar @other).' unprocessed conjunctions or punctuation!')
+		if (@other); # This should not happen.
 	die (($node->find('../../@id')).' has '.(scalar @conjuncts).' unprocessed conjuncts!')
 		if (@conjuncts); # This should not happen.
 		
