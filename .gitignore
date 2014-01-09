@@ -32,3 +32,6 @@
 /ParserTools/lv
 /ParserTools/*.mco
 /ParserTools/*.out
+
+/MorphoVerificator/lv
+
