@@ -143,7 +143,7 @@ sub _performStep
 				my $newStub = $dirNameStub;
 				if (@{$params->{$param}} > 0)
 				{
-					if ($paramVal =~ m/^[^ ]{0,10}$/)
+					if ($paramVal =~ m/^[^ ]{0,11}$/)
 					{
 						$newStub .= "-$param$paramVal";
 					}
