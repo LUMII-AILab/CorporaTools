@@ -82,43 +82,43 @@ sub processDir
 	if ($params{'--collect'})	
 	{
 		# collect has no additional parameters.
-		$sources = [&collect($sources->[0], "$destPrefix/collected")];
+		$sources = [&collect($sources->[0], "$destPrefix/0_collected")];
 	}
 	
 	if ($params{'--unnest'})	
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&unnest, 'unnest', $params{'--unnest'});
+			$sources, $destPrefix, \&unnest, 'unnest', '1', $params{'--unnest'});
 	}
 	
 	if ($params{'--dep'})
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&dep, 'dep', $params{'--dep'});
+			$sources, $destPrefix, \&dep, 'dep', '2', $params{'--dep'});
 	}
 	
 	if ($params{'--red'})	
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&red, 'red', $params{'--red'});
+			$sources, $destPrefix, \&red, 'red', '3', $params{'--red'});
 	}
 	
 	if ($params{'--knit'})	
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&knit, 'knit', $params{'--knit'});
+			$sources, $destPrefix, \&knit, 'knit', '4', $params{'--knit'});
 	}
 	
 	if ($params{'--conll'})	
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&conll, 'conll', $params{'--conll'});
+			$sources, $destPrefix, \&conll, 'conll', '5', $params{'--conll'});
 	}
 	
 	if ($params{'--fold'})	
 	{
 		$sources = &_performStep(
-			$sources, $destPrefix, \&fold, 'fold', $params{'--fold'});
+			$sources, $destPrefix, \&fold, 'fold', '6', $params{'--fold'});
 	}
 	
 	print "\n==== Successful finish =======================================\n";
@@ -129,12 +129,14 @@ sub processDir
 # combinations.
 # _performStep (pointer to list of folders to process, global working
 #				directory, pointer to step function for actual data processing,
-#				step name (used as prefix for result folder names), parameters
-#				for step function)
+#				step name (used as postfix for result folder names), numerical
+#				prefix for result folder name (to make sroting easier),
+#				parameters for step function)
 # return pointer to list of result folder names.
 sub _performStep
 {
-	my ($sourceDirs, $destPrefix, $stepFunct, $stepName, $params) = @_;
+	my ($sourceDirs, $destPrefix, $stepFunct, $stepName, $stepSortNum, $params)
+		= @_;
 	
 	# Generate parameter sets.
 	my %paramSets = ('' => {});
@@ -176,10 +178,10 @@ sub _performStep
 	for my $source (@$sourceDirs)
 	{
 		my $sourceNameEnding = $source;
-		$sourceNameEnding =~ s#^.*[\\/]([^\\/]*?)[\\/]?$#$1#;
+		$sourceNameEnding =~ s#^.*[\\/](\d+_)?([^\\/]*?)[\\/]?$#$2#;
 		for my $dirNameStub (keys %paramSets)
 		{
-			my $newResName = "$destPrefix/${sourceNameEnding}_$stepName";
+			my $newResName = "$destPrefix/${stepSortNum}_${sourceNameEnding}_$stepName";
 			$newResName .= $dirNameStub if ($setCount > 1);
 			
 			my $tempResDir = &$stepFunct(
