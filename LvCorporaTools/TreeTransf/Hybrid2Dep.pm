@@ -1052,7 +1052,7 @@ sub _allBelowPunct
 {
 	my $invert = shift @_;
 	my $useNo = shift @_;
-	my $labelNewRoot = shift @_;	
+	my $labelNewRoot = shift @_;
 	my $xpc = shift @_; # XPath context
 	my $node = shift @_;
 	my $parentRole = shift @_;

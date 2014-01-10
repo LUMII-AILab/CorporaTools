@@ -63,6 +63,7 @@ Params:
     --collect  collect all .w + .m + .a from input folder and it's
                folder - use this if data files are given in some subfolder
                structure (no params)
+			   NB! unique file names assumed (duplicates will be overwritten)
 
   Main flow
     --unnest   convert multi-level coordinations to single level
@@ -205,6 +206,7 @@ sub processDir
 }
 
 # Collect data recursively.
+# TODO: add support for recurring filenames.
 # collect(source data directory, destination directory)
 # return folder with step results.
 sub collect
