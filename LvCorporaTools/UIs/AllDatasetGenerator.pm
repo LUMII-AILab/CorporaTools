@@ -42,9 +42,10 @@ our $PARAMS = {
 		'postag' => ['FULL'], #['FULL', 'PURIFY'],
 		'conll09' => [0], #[0, 1],
 		},
-#	'--fold' => {'p' => [],
-#		'seed' => [],
-#		},
+	'--fold' => {
+		'p' => [1],
+		#'seed' => [],
+		},
 	};
 
 sub _printMan
