@@ -29,7 +29,7 @@ use LvCorporaTools::GenericUtils::UIWrapper;
 # Input files - utf8.
 #
 # Developed on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2012-2013
+# Latvian Treebank project, 2012-now
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
@@ -69,7 +69,7 @@ Params:
    0/1 - print labeled output (if true, trees with reductions will be ommited)
    use CoNLL-2009 format [opt, false by default]
 
-Latvian Treebank project, LUMII, 2012, provided under GPL
+Latvian Treebank project, LUMII, 2012-now, provided under GPL
 END
 		exit 1;
 	}
@@ -105,7 +105,7 @@ Params:
          [opt. false by default]
    use CoNLL-2009 format [opt, false by default]
 
-Latvian Treebank project, LUMII, 2012, provided under GPL
+Latvian Treebank project, LUMII, 2012-now, provided under GPL
 END
 		exit 1;
 	}
@@ -119,7 +119,7 @@ END
 	# Open output file.
 	File::Path::mkpath("$dirPrefix/res/");
 	my $out = IO::File->new("$dirPrefix/res/$newName", "> :encoding(UTF-8)")
-		or die "Could create file $newName: $!";
+		or die "Could not create file $newName: $!";
 		
 	# Load the tagset XML.
 	my $tagDecoder = parseTagSet();
