@@ -1,5 +1,5 @@
 ﻿#!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::FormatTransf::LegacyToPML::MakeW;
+package LvCorporaTools::FormatTransf::Plaintext2W;
 
 use utf8;
 use strict;
