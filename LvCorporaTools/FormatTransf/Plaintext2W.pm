@@ -22,8 +22,8 @@ use LvCorporaTools::GenericUtils::UIWrapper;
 # Licenced under GPL.
 ###############################################################################
 
-# Process all .pml and .xml files in given folder. This can be used as entry
-# point, if this module is used standalone.
+# Convert all .txt files in given folder to PML-W files. This can be used as
+# entry point, if this module is used standalone.
 sub processDir
 {
 	autoflush STDOUT 1;
@@ -69,8 +69,8 @@ END
 
 }
 
-# Process single plain-text file. This can be used as entry point, if this
-# module is used standalone.
+# Convert single plain-text file to PML-W file. This can be used as entry
+# point, if this module is used standalone.
 sub transformFile
 {
 	if (not @_ or @_ < 2)
