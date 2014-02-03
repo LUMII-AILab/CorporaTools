@@ -38,7 +38,7 @@ Params:
    text file extension [opt, txt used by default]
    tokenization file extension or 0/'' to use brute tokenization (formats: 
      CoNLL with spaces inside token replaced with '_' format or one token per
-      line)[opt, brute tokenization used otherwise] THIS IS JET TODO.
+      line)[opt, brute tokenization used otherwise] THIS IS YET TODO.
    input data encoding [opt, UTF-8 used by default]
    metadata file (metadata must be UTF--8 encoded one-liner) or string [opt]
 
@@ -85,7 +85,7 @@ Params:
    new file name [opt, current file name used otherwise]
    tokenization file name or 0/'' to use brute tokenization (formats: CoNLL 
       with spaces inside token replaced with '_' format or one token per line)
-      [opt, brute tokenization used otherwise] THIS IS JET TODO.
+      [opt, brute tokenization used otherwise] THIS IS YET TODO.
    input data encoding [opt, UTF-8 used by default]
    metadata file (metadata must be UTF--8 encoded one-liner) or string [opt]
 
