@@ -23,7 +23,7 @@ Params:
    data directory
    input file
 
-Latvian Treebank project, LUMII, 2013, provided under GPL
+Latvian Treebank project, LUMII, 2013-now, provided under GPL
 END
 		exit 1;
 	}
