@@ -1,0 +1,524 @@
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	2	dep:subj	_	_
+2	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	2	dep:adv-xPrep:prep	_	_
+4	skolu	skola	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	3	xPrep:basElem	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Meitene	meitene	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	2	dep:subj	_	_
+2	ņēma	ņemt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	ābolu	ābols	n	ncmsa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=1	2	dep:obj	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Vasarā	vasara	n	ncfsl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=4	3	dep:adv	_	_
+2	zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+3	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Skaists	skaists	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	2	dep:attr	_	_
+2	zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+3	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+2	ātri	ātri	r	rpt	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Laika	3	dep:adv	_	_
+3	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	5	dep:subj-crdParts:crdPart	_	_
+2	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	1	crdParts:conj	_	_
+3	miegainā	miegains	a	affsnyp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Noteiktā|Pakāpe=Pamata	4	dep:attr	_	_
+4	meitene	meitene	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	2	crdParts:crdPart	_	_
+5	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+6	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	5	dep:adv-xPrep:prep	_	_
+7	skolu	skola	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	6	xPrep:basElem	_	_
+8	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+2	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	3	xPred:auxVerb	_	_
+3	gājis	iet	v	vmnpdmsnasn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Pagātne|Noteiktība=Nenoteiktā	0	ROOT-sent:pred-xPred:basElem	_	_
+4	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	3	dep:adv-xPrep:prep	_	_
+5	skolu	skola	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	4	xPrep:basElem	_	_
+6	laikā	laiks	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	3	dep:adv	_	_
+7	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	9	subrCl:punct	_	_
+8	kad	kad	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	9	dep:adv	_	_
+9	dzīvoja	dzīvot	v	vmnisi230an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=2|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	6	dep:attrCl-subrCl:pred	_	_
+10	pilsētā	pilsēta	n	ncfsl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=4	9	dep:obj	_	_
+11	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Mani	mans	p	ps10pnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Piederības|Persona=1|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	2	dep:attr	_	_
+2	brāļi	brālis	n	ncmpn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=2	5	dep:subj-crdParts:crdPart	_	_
+3	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	2	crdParts:conj	_	_
+4	māsas	māsa	n	ncfpn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=4	3	crdParts:crdPart	_	_
+5	guļ	gulēt	v	vmnipt330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+6	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	8	spcPmc:punct	_	_
+7	skaļi	skaļi	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	8	dep:adv	_	_
+8	krākdami	krākt	v	vmnppmpnap0	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Daļēji+lokāms|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Tagadne|Noteiktība=Nepiemīt	5	dep:spc-spcPmc:basElem	_	_
+9	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+
+1	Vakaros	vakars	n	ncmpl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=1	4	dep:sit	_	_
+2	ūdens	ūdens	n	ncmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	4	dep:subj	_	_
+3	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	xPred:auxVerb	_	_
+4	silts	silts	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	0	ROOT-sent:pred-xPred:basElem	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	2	dep:subj	_	_
+2	iet	iet	v	vmnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-mainCl:pred	_	_
+3	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	2	dep:adv-xPrep:prep	_	_
+4	skolu	skola	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	3	xPrep:basElem	_	_
+5	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	2	crdClauses:punct	_	_
+6	bet	bet	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	5	crdClauses:conj	_	_
+7	meitene	meitene	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	8	dep:subj	_	_
+8	paliek	palikt	v	vmnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	6	crdClauses:crdPart-mainCl:pred	_	_
+9	mājās	māja	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	8	dep:adv	_	_
+10	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	11	spcPmc:punct	_	_
+11	skatīdamās	skatīties	v	vmyppfsnap0	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Divdabis|Lokāmība=Daļēji+lokāms|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Tagadne|Noteiktība=Nepiemīt	8	dep:spc-spcPmc:basElem	_	_
+12	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	15	subrCl:punct	_	_
+13	kā	kā	r	r0m	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Veida	15	dep:adv	_	_
+14	viņš	viņš	p	pp3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	15	dep:subj	_	_
+15	aiziet	aiziet	v	vmnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	11	dep:objCl-subrCl:pred	_	_
+16	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Vakaros	vakars	n	ncmpl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=1	3	dep:sit	_	_
+2	zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+3	iet	iet	v	vmnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-crdClauses:crdPart-mainCl:pred	_	_
+4	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	3	dep:adv-xPrep:prep	_	_
+5	kino	kino	n	nc_sa0	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=Nepiemīt	4	xPrep:basElem	_	_
+6	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	3	crdClauses:punct	_	_
+7	bet	bet	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	6	crdClauses:conj	_	_
+8	meitene	meitene	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	9	dep:subj	_	_
+9	brauc	braukt	v	vmnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	7	crdClauses:crdPart-mainCl:pred	_	_
+10	ar	ar	s	spsan	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Nē	9	dep:adv-xPrep:prep	_	_
+11	divriteni	divritenis	n	ncmsa2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=2	10	xPrep:basElem	_	_
+12	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	3	crdClauses:punct	_	_
+13	taču	taču	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	12	crdClauses:conj	_	_
+14	pusdienlaikos	pusdienlaiks	n	ncmpl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=1	16	dep:sit	_	_
+15	viņi	viņš	p	pp3mpnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	16	dep:subj	_	_
+16	satiekas	satikties	v	vmyipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	13	crdClauses:crdPart-mainCl:pred	_	_
+17	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Ziemās	ziema	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	2	dep:sit	_	_
+2	snieg	snigt	v	vmnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-mainCl:pred	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	2	crdClauses:punct	_	_
+4	bet	bet	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	3	crdClauses:conj	_	_
+5	vasarās	vasara	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	6	dep:sit	_	_
+6	līst	līt	v	vmnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	crdClauses:crdPart-mainCl:pred	_	_
+7	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	11	subrCl:punct	_	_
+8	jo	jo	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	11	subrCl:conj	_	_
+9	vasarās	vasara	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	11	dep:sit	_	_
+10	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	11	xPred:mod	_	_
+11	silti	silti	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	6	dep:motivCl-subrCl:pred-xPred:basElem	_	_
+12	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Ak	ak	i	is	Vārdšķira=Izsauksmes+vārds|Uzbūve=Vienkāršs	0	ROOT-utter:basElem	_	_
+2	!	!	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	1	utter:punct	_	_
+
+1	Vai	Vai	i	is	Vārdšķira=Izsauksmes+vārds|Uzbūve=Vienkāršs	4	sent:no-interj:basElem	_	_
+2	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	1	interj:punct	_	_
+3	zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	4	dep:subj	_	_
+4	paņēma	paņemt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+5	manu	mans	p	ps0msan	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Piederības|Persona=Nepiemīt|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Noliegums=Nē	8	dep:attr	_	_
+6	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	8	quot:punct	_	_
+7	Mājas	māja	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	8	dep:attr	_	_
+8	Viesi	viesis	n	ncmsa2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=2	4	dep:obj-quot:basElem	_	_
+9	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	8	quot:punct	_	_
+10	...	...	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Viņa	viņa	p	pp3fsnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	2	dep:subj	_	_
+2	teica	teikt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	:	:	z	zo	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Kols	5	dirSpPmc:punct	_	_
+4	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	5	dirSpPmc:punct	_	_
+5	Iesim	iet	v	vmnifii1pan	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=1|Skaitlis=Daudzskaitlis|Kārta=Darāmā|Noliegums=Nē	2	dep:dirSp-dirSpPmc:basElem-sent:pred	_	_
+6	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+7	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	5	dirSpPmc:punct	_	_
+
+1	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	6	dirSpPmc:punct	_	_
+2	Nē	nē	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	6	sent:no-particle:basElem	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	2	particle:punct	_	_
+4	šonakt	šonakt	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	6	dep:adv	_	_
+5	labāk	labi	r	rcq	Vārdšķira=Apstākļa+vārds|Pakāpe=Pārākā|Apstākļa+vārda+tips=Mēra	6	dep:adv	_	_
+6	paliksim	palikt	v	vmnifi11pan	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=1|Skaitlis=Daudzskaitlis|Kārta=Darāmā|Noliegums=Nē	11	dep:dirSp-dirSpPmc:basElem-sent:pred	_	_
+7	tepat	tepat	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	6	dep:adv	_	_
+8	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	6	sent:punct	_	_
+9	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	6	dirSpPmc:punct	_	_
+10	viņš	viņš	p	pp3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	11	dep:subj	_	_
+11	nepiekrita	nepiekrist	v	vmnisi130ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	0	ROOT-sent:pred	_	_
+12	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	11	sent:punct	_	_
+
+1	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	10	dirSpPmc:punct	_	_
+2	Mēs	mēs	p	pp10pnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	10	dep:subj	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	6	sent:punct	_	_
+4	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	10	dirSpPmc:punct	_	_
+5	viņš	viņš	p	pp3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	6	dep:subj	_	_
+6	turpināja	turpināt	v	vmnist330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+7	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	6	sent:punct	_	_
+8	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	10	dirSpPmc:punct	_	_
+9	nu	nu	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	10	dep:adv	_	_
+10	iesim	iet	v	vmnifii1pan	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=1|Skaitlis=Daudzskaitlis|Kārta=Darāmā|Noliegums=Nē	6	dep:dirSp-dirSpPmc:basElem-sent:basElem-crdClauses:crdPart-mainCl:pred	_	_
+11	mājās	māja	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	10	dep:adv	_	_
+12	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	10	crdClauses:punct	_	_
+13	lai_gan	lai_gan	c	csc	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Salikts	12	crdClauses:conj	_	_
+14	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	15	address:punct	_	_
+15	Maija	Maija	n	npfsv4	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Vokatīvs|Deklinācija=4	19	mainCl:no-address:basElem	_	_
+16	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	15	address:punct	_	_
+17	tu	tu	p	pp20snn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=2|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	19	dep:subj	_	_
+18	vari	varēt	v	vonipt32san	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Modāls|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=2|Skaitlis=Vienskaitlis|Kārta=Darāmā|Noliegums=Nē	19	xPred:mod	_	_
+19	palikt	palikt	v	vmnn0i1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	13	crdClauses:crdPart-mainCl:pred-xPred:basElem	_	_
+20	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	10	sent:punct	_	_
+21	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	10	dirSpPmc:punct	_	_
+
+1	Anna	Anna	n	npfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	2	dep:subj	_	_
+2	nomurmināja	nomurmināt	v	vmnist330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred-crdParts:crdPart	_	_
+3	:	:	z	zo	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Kols	7	dirSpPmc:punct	_	_
+4	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	7	dirSpPmc:punct	_	_
+5	Gan_jau	gan_jau	q	qc	Vārdšķira=Partikula|Uzbūve=Salikts	7	sent:no	_	_
+6	būs	būt	v	vcnifii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	7	xPred:auxVerb	_	_
+7	labi	labi	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	2	dep:dirSp-dirSpPmc:basElem-sent:pred-xPred:basElem	_	_
+8	!	!	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	7	sent:punct	_	_
+9	Rīt	rīt	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	10	dep:sit	_	_
+10	skaidrosies	skaidroties	v	vmyifi330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	7	dirSpPmc:basElem-sent:pred	_	_
+11	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	10	sent:punct	_	_
+12	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	7	dirSpPmc:punct	_	_
+13	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	2	crdParts:conj	_	_
+14	turpināja	turpināt	v	vpnist330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Fāzes|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	15	xPred:mod	_	_
+15	adīt	adīt	v	vmnn0t3000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=3|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	13	crdParts:crdPart-xPred:basElem	_	_
+16	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	17:40	17:40	x	xn	Vārdšķira=Reziduālis|Reziduāļa+tips=Skaitlis+cipariem	6	dep:adv	_	_
+2	bioķīmiķis	bioķīmiķis	n	ncmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	6	dep:subj-xApp:basElem	_	_
+3	Kārlis	Kārlis	n	npmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	2	xApp:basElem-namedEnt:basElem	_	_
+4	fon	fon	x	xf	Vārdšķira=Reziduālis|Reziduāļa+tips=Vārds+svešvalodā	3	namedEnt:basElem	_	_
+5	Kabacis	Kabacis	n	npmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	3	namedEnt:basElem	_	_
+6	paņēma	paņemt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred-crdParts:crdPart	_	_
+7	17.	17.	x	xo	Vārdšķira=Reziduālis|Reziduāļa+tips=Kārtas+skaitlis+cipariem	8	dep:attr	_	_
+8	atslēgu	atslēga	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	6	dep:obj	_	_
+9	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	6	crdParts:conj	_	_
+10	izņēma	izņemt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	9	crdParts:crdPart	_	_
+11	no	no	s	spsgy	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Ģenitīvs|Vietas+apstākļa+nozīme=Jā	10	dep:adv-xPrep:prep	_	_
+12	skapīša	skapītis	n	ncmsg2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=2	11	xPrep:basElem	_	_
+13	15,7	15,7	x	xn	Vārdšķira=Reziduālis|Reziduāļa+tips=Skaitlis+cipariem	14	dep:attr	_	_
+14	miligramus	miligrams	n	ncmpa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=1	10	dep:obj	_	_
+15	reakcijas	reakcija	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	16	dep:attr	_	_
+16	katalizatora	katalizators	n	ncmsg1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=1	14	dep:attr	_	_
+17	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	6	sent:punct	_	_
+
+1	Viņš	viņš	p	pp3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	12	dep:subj	_	_
+2	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	5	subrCl:punct	_	_
+3	kas	kas	p	pr000nn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Attieksmes|Persona=Nepiemīt|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Nominatīvs|Noliegums=Nē	5	dep:subj	_	_
+4	pērn	pērn	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	5	dep:adv	_	_
+5	noslimoja	noslimot	v	vmnisi230an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=2|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	1	dep:subjCl-subrCl:pred	_	_
+6	visu	viss	n	ncmpg1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Ģenitīvs|Deklinācija=1	7	dep:attr	_	_
+7	ziemu	ziema	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	5	dep:adv-crdParts:crdPart	_	_
+8	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	7	crdParts:punct	_	_
+9	pavasari	pavasaris	n	ncmsa2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=2	8	crdParts:crdPart	_	_
+10	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	5	subrCl:punct	_	_
+11	labi	labi	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	12	dep:adv	_	_
+12	tiek	tikt	v	vtnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbi+'tikt'+un+'tapt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+13	klasei	klase	n	ncfsd5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Datīvs|Deklinācija=5	14	xPrep:basElem	_	_
+14	līdzi	līdzi	r	rrp	Vārdšķira=Apstākļa+vārds|Pakāpe=Relatīvais|Apstākļa+vārda+tips=Vietas	12	dep:obj-xPrep:prep	_	_
+15	mācībās	mācība	n	ncfpl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=4	12	dep:adv	_	_
+16	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	12	sent:punct	_	_
+
+1	Ja	ja	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	3	subrCl:conj	_	_
+2	rīt	rīt	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	11	dep:sit	_	_
+3	nelīs	nelīt	v	vmnifi130ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	11	dep:condCl-crdClauses:crdPart-subrCl:pred	_	_
+4	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	3	crdClauses:conj	_	_
+5	ja	ja	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	8	subrCl:conj	_	_
+6	Jānis	Jānis	n	npmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	8	dep:subj	_	_
+7	būs	būt	v	vcnifii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	8	xPred:auxVerb	_	_
+8	atgriezies	atgriezties	v	vmypdmsnasn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Pagātne|Noteiktība=Nenoteiktā	4	crdClauses:crdPart-subrCl:pred-xPred:basElem	_	_
+9	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	8	subrCl:punct	_	_
+10	mēs	mēs	p	pp10pnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	11	dep:subj	_	_
+11	rīkosim	rīkot	v	vmnift21pan	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Pārejošs|Konjugācija=2|Persona=1|Skaitlis=Daudzskaitlis|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+12	balli	balle	n	ncfsa5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=5	11	dep:obj	_	_
+13	dārzā	dārzs	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	11	dep:adv	_	_
+14	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	11	sent:punct	_	_
+
+1	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	5	quot:punct	_	_
+2	Čārlza	Čārlzs	n	npmsg1	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=1	3	namedEnt:basElem	_	_
+3	Cukini	cukini	n	nc___0	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Deklinācija=Nepiemīt	5	dep:attr-namedEnt:basElem	_	_
+4	gurķu	gurķis	n	ncmpg2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Ģenitīvs|Deklinācija=2	5	dep:attr	_	_
+5	kantoris	kantoris	n	ncmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	13	dep:subj-quot:basElem	_	_
+6	"	"	z	zq	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Pēdiņa	5	quot:punct	_	_
+7	(	(	z	zb	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Iekava	10	insPmc:punct	_	_
+8	turpmāk	turpmāk	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	10	dep:adv	_	_
+9	tekstā	teksts	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	10	dep:adv	_	_
+10	-	-	z	zd	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Domuzīme	5	dep:ins-insPmc:pred-red:self	_	_
+11	ČCGK	ČCGK	y	y	Vārdšķira=Saīsinājums	10	dep:subj	_	_
+12	)	)	z	zb	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Iekava	10	insPmc:punct	_	_
+13	pārtrauc	pārtraukt	v	vmnipt130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-mainCl:pred	_	_
+14	matraču	matracis	n	ncmpg2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Ģenitīvs|Deklinācija=2	15	dep:attr	_	_
+15	ražošanu	ražošana	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	13	dep:obj	_	_
+16	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	13	crdClauses:punct	_	_
+17	savukārt	savukārt	r	r0c	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Cēloņa/nolūka	20	dep:sit	_	_
+18	šokolādes	šokolāde	n	ncfsg5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=5	19	dep:attr	_	_
+19	fabrika	fabrika	n	ncfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	20	dep:subj	_	_
+20	-	-	z	zd	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Domuzīme	16	crdClauses:crdPart-mainCl:pred-red:self-red:child	_	_
+21	zefīra	zefīrs	n	ncmsg1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=1	20	dep:attr-red:parent	_	_
+22	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	13	sent:punct	_	_
+
+1	Juris	Juris	n	npmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	5	dep:subj	_	_
+2	-	-	z	zd	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Domuzīme	5	xPred:auxVerb-red:self	_	_
+3	ČCGK	ČCGK	y	y	Vārdšķira=Saīsinājums	5	dep:attr	_	_
+4	labākais	labākais	a	afmsnyc	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Noteiktā|Pakāpe=Pārākā	5	dep:attr	_	_
+5	konditors	konditors	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	0	ROOT-sent:pred-xPred:basElem	_	_
+6	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+
+1	Debesis	debess	n	ncfpn6	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=6	4	dep:subj	_	_
+2	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	xPred:auxVerb	_	_
+3	tik	tik	r	r0q	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Mēra	4	dep:adv	_	_
+4	zilas	zila	a	affpnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	0	ROOT-sent:pred-xPred:basElem	_	_
+5	(	(	z	zb	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Iekava	9	insPmc:punct	_	_
+6	kuru	kurš	p	pq0msan	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Jautājamie|Persona=Nepiemīt|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Noliegums=Nē	9	dep:obj	_	_
+7	gan	gan	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	9	mainCl:no	_	_
+8	tas	tas	p	pd3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Norādāmie|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	9	dep:subj	_	_
+9	interesē	interesēt	v	vmnipt230an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=2|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	dep:ins-insPmc:basElem-mainCl:pred	_	_
+10	?	?	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	9	mainCl:punct	_	_
+11	)	)	z	zb	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Iekava	9	insPmc:punct	_	_
+12	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Mēs	mēs	p	pp10pnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	2	dep:subj	_	_
+2	zinām	zināt	v	vmnipt31pan	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=1|Skaitlis=Daudzskaitlis|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred-red:child	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	2	subrCl:punct-red:parent	_	_
+4	kā	kā	r	r0m	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Veida	2	dep:adv-red:parent	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Līst	līt	v	vmnn0i1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	0	ROOT-sent:pred	_	_
+2	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	1	sent:punct	_	_
+
+1	Paldies	paldies	i	is	Vārdšķira=Izsauksmes+vārds|Uzbūve=Vienkāršs	0	ROOT-utter:no	_	_
+2	par	par	s	sppdn	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Daudzskaitlis|Rekcija=Datīvs|Vietas+apstākļa+nozīme=Nē	1	dep:no-xPrep:prep	_	_
+3	ogām	oga	n	ncfpd4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Datīvs|Deklinācija=4	2	xPrep:basElem	_	_
+4	!	!	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	1	utter:punct	_	_
+
+1	Tādas	tāda	p	pd0fpnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Norādāmie|Persona=Nepiemīt|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Noliegums=Nē	2	dep:attr	_	_
+2	sēnes	sēne	n	ncfpn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=5	10	dep:subj-crdGeneral:gen	_	_
+3	kā	kā	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	2	crdGeneral:conj	_	_
+4	gailenes	gailene	n	ncfpn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=5	3	crdGeneral:genList-crdParts:crdPart	_	_
+5	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	4	crdParts:punct	_	_
+6	baravikas	baravika	n	ncfpn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=4	5	crdParts:crdPart	_	_
+7	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	6	crdParts:conj	_	_
+8	bērzlapes	bērzlape	n	ncfpn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=5	7	crdParts:crdPart	_	_
+9	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	10	xPred:auxVerb	_	_
+10	ēdamas	ēst	v	vmnpdfpnppn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Kārta=Ciešamā|Laiks=Tagadne|Noteiktība=Nenoteiktā	0	ROOT-sent:pred-xPred:basElem	_	_
+11	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	10	sent:punct	_	_
+
+1	Bērnam	bērns	n	ncmsd1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Datīvs|Deklinācija=1	3	dep:obj	_	_
+2	var	varēt	v	vonipt330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Modāls|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	3	xPred:mod	_	_
+3	dot	dot	v	vmnn0ti000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=Nekārtns|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	0	ROOT-sent:pred-xPred:basElem	_	_
+4	ne	ne	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	5	xParticle:no	_	_
+5	vairāk	daudz	r	rcq	Vārdšķira=Apstākļa+vārds|Pakāpe=Pārākā|Apstākļa+vārda+tips=Mēra	6	subrAnal:basElem-xParticle:basElem	_	_
+6	kā	kā	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	8	dep:attr-subrAnal:basElem-xSimile:conj	_	_
+7	divus	divi	m	mcsmpav	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Skaitļu+kārta=Vieni	6	xSimile:basElem	_	_
+8	vārdus	vārds	n	ncmpa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=1	3	dep:obj	_	_
+9	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Spēle	spēle	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	2	dep:subj	_	_
+2	noslēdzās	noslēgties	v	vmyisi230an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=2|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	ar	ar	s	spsan	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Nē	2	dep:adv-xPrep:prep	_	_
+4	vairāk	daudz	r	rcq	Vārdšķira=Apstākļa+vārds|Pakāpe=Pārākā|Apstākļa+vārda+tips=Mēra	5	subrAnal:basElem	_	_
+5	nekā	nekā	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	7	dep:attr-subrAnal:basElem-xSimile:conj	_	_
+6	pārliecinošu	pārliecināt	v	vmnpdfsaapn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Kārta=Darāmā|Laiks=Tagadne|Noteiktība=Nenoteiktā	5	xSimile:basElem	_	_
+7	uzvaru	uzvara	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	3	xPrep:basElem	_	_
+8	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Latvijā	Latvija	n	npfsl4	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=4	7	dep:adv	_	_
+2	vairāk	daudz	r	rcq	Vārdšķira=Apstākļa+vārds|Pakāpe=Pārākā|Apstākļa+vārda+tips=Mēra	7	dep:adv	_	_
+3	nekā	nekā	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	7	dep:spc-xSimile:conj	_	_
+4	jebkur	jebkur	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	3	xSimile:basElem-coordAnal:basElem	_	_
+5	citur	citur	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	4	coordAnal:basElem	_	_
+6	ļaudis	ļaudis	n	ncmdn6	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlinieks|Locījums=Nominatīvs|Deklinācija=6	7	dep:subj	_	_
+7	mīl	mīlēt	v	vmnipt330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+8	labi	labi	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	9	dep:adv	_	_
+9	paēst	paēst	v	vmnn0t1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	7	dep:spc	_	_
+10	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	7	sent:punct	_	_
+
+1	Es	es	p	pp10snn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	4	dep:subj	_	_
+2	esmu	būt	v	vcnipii1san	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=1|Skaitlis=Vienskaitlis|Kārta=Darāmā|Noliegums=Nē	4	xPred:auxVerb	_	_
+3	kļuvusi	kļūt	v	vtnpdfsnasn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbi+'tikt'+un+'tapt'|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Pagātne|Noteiktība=Nenoteiktā	4	xPred:auxVerb	_	_
+4	veca	veca	a	affsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	0	ROOT-sent:pred-xPred:basElem	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Viņš	viņš	p	pp3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	4	dep:subj	_	_
+2	negrib	negribēt	v	vonipt330ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Modāls|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	4	xPred:mod	_	_
+3	kļūt	kļūt	v	vtnn0i1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbi+'tikt'+un+'tapt'|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	4	xPred:auxVerb	_	_
+4	vecs	vecs	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	0	ROOT-sent:pred-xPred:basElem	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Dzīvnieks	dzīvnieks	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+2	bija	būt	v	vcnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	3	xPred:auxVerb	_	_
+3	mazs	mazs	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	0	ROOT-sent:pred-xPred:basElem-crdParts:crdPart	_	_
+4	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	3	crdParts:conj	_	_
+5	slimīgs	slimīgs	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	4	crdParts:crdPart	_	_
+6	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Man	es	p	pp10sdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Datīvs|Noliegums=Nē	2	dep:det	_	_
+2	ir	būt	v	vmnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-mainCl:pred	_	_
+3	skaista	skaists	a	affsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	4	dep:attr	_	_
+4	māja	māja	n	ncfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	2	dep:subj	_	_
+5	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	2	crdClauses:conj	_	_
+6	kādreiz	kādreiz	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	7	dep:adv	_	_
+7	piederēs	piederēt	v	vmnifi330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Nākotne|Transitivitāte=Nepārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	5	crdClauses:crdPart-mainCl:pred	_	_
+8	arī	arī	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	9	dep:no	_	_
+9	suns	suns	n	ncmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	7	dep:subj	_	_
+10	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Man	es	p	pp10sdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Datīvs|Noliegums=Nē	2	dep:det	_	_
+2	salst	salt	v	vmnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Saulei	saule	n	ncfsd5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Datīvs|Deklinācija=5	2	dep:subj	_	_
+2	austot	aust	v	vmnpu000000	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Nelokāms|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Nepiemīt|Kārta=Nepiemīt|Laiks=Nepiemīt|Noteiktība=Nepiemīt	6	dep:spc-spcPmc:basElem	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	2	spcPmc:punct	_	_
+4	putni	putns	n	ncmpn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=1	6	dep:subj	_	_
+5	sāka	sākt	v	vpnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Fāzes|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	6	xPred:mod	_	_
+6	čivināt	čivināt	v	vmnn0t3000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=3|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	0	ROOT-sent:basElem-crdClauses:crdPart-mainCl:pred-xPred:basElem	_	_
+7	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	6	crdClauses:conj	_	_
+8	kļuva	kļūt	v	vcnisi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	9	xPred:auxVerb	_	_
+9	siltāks	silts	a	afmsnnc	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pārākā	7	crdClauses:crdPart-mainCl:pred-xPred:basElem	_	_
+10	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	6	sent:punct	_	_
+
+1	Pa	pa	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	13	dep:adv-xPrep:prep	_	_
+2	ielu	iela	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	1	xPrep:basElem	_	_
+3	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	7	spcPmc:punct	_	_
+4	skaņu	skaņa	n	ncfpg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Ģenitīvs|Deklinācija=4	5	dep:attr	_	_
+5	signāliem	signāls	n	ncmpd1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Datīvs|Deklinācija=1	7	dep:subj	_	_
+6	griezīgi	griezīgi	r	rpm	Vārdšķira=Apstākļa+vārds|Pakāpe=Pamata|Apstākļa+vārda+tips=Veida	7	dep:adv	_	_
+7	kaucot	kaukt	v	vmnpu000000	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Nelokāms|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Nepiemīt|Kārta=Nepiemīt|Laiks=Nepiemīt|Noteiktība=Nepiemīt	13	dep:spc-crdParts:crdPart-spcPmc:basElem	_	_
+8	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	7	crdParts:conj	_	_
+9	zibinot	zibināt	v	vmnpu000000	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Nelokāms|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Nepiemīt|Kārta=Nepiemīt|Laiks=Nepiemīt|Noteiktība=Nepiemīt	8	crdParts:crdPart-spcPmc:basElem	_	_
+10	oranžas	oranža	a	arfpanp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Attieksmes|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	11	dep:attr	_	_
+11	bākugunis	bākuguns	n	ncfpa6	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=6	9	dep:obj	_	_
+12	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	9	spcPmc:punct	_	_
+13	traucas	traukties	v	vmyipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+14	ātrās	ātra	a	affsgyp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Noteiktība=Noteiktā|Pakāpe=Pamata	15	dep:attr	_	_
+15	palīdzības	palīdzība	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	16	dep:attr	_	_
+16	mašīna	mašīna	n	ncfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	13	dep:subj	_	_
+17	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	13	sent:punct	_	_
+
+1	Aptaustījis	aptaustīt	v	vmnpdmsnasn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Pagātne|Noteiktība=Nenoteiktā	8	dep:spc-spcPmc:basElem-crdParts:crdPart	_	_
+2	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	1	crdParts:conj	_	_
+3	apostījis	apostīt	v	vmnpdmsnasn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Pagātne|Noteiktība=Nenoteiktā	2	crdParts:crdPart	_	_
+4	maisiņu	maisiņš	n	ncmsa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=1	1	dep:obj	_	_
+5	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	1	spcPmc:punct	_	_
+6	pērtiķis	pērtiķis	n	ncmsn2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=2	8	dep:subj	_	_
+7	to	tas	p	pd3msan	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Norādāmie|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Noliegums=Nē	8	dep:obj	_	_
+8	atvēra	atvērt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+9	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	8	sent:punct	_	_
+
+1	Man	es	p	pp10sdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Datīvs|Noliegums=Nē	2	dep:subj	_	_
+2	jāiet	iet	v	vmnd0ii00an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Vajadzības|Laiks=Nepiemīt|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred-xPred:basElem-red:child	_	_
+3	prom	prom	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	2	dep:adv	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Laukā	laukā	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	4	dep:adv	_	_
+2	temperatūra	temperatūra	n	ncfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	4	dep:subj	_	_
+3	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	xPred:auxVerb	_	_
+4	ap	ap	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	0	ROOT-sent:pred-xPred:basElem-xPrep:prep	_	_
+5	nulli	nulle	n	ncfsa5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=5	4	xPrep:basElem	_	_
+6	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Par	par	s	spsan	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Nē	5	dep:obj-xPrep:prep	_	_
+2	ko	kas	p	pq000an	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Jautājamie|Persona=Nepiemīt|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Akuzatīvs|Noliegums=Nē	1	xPrep:basElem	_	_
+3	man	es	p	pp10sdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Datīvs|Noliegums=Nē	5	dep:det	_	_
+4	tas	tas	p	pd3msnn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Norādāmie|Persona=3|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	5	dep:subj	_	_
+5	ir	būt	v	vmnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	8	dep:objCl-subrCl:pred	_	_
+6	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	5	subrCl:punct	_	_
+7	es	es	p	pp10snn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	8	dep:subj	_	_
+8	domāju	domāt	v	vmnipt21san	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=2|Persona=1|Skaitlis=Vienskaitlis|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred-red:child	_	_
+9	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	8	subrCl:punct-red:parent	_	_
+10	par	par	s	spsan	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Nē	8	dep:obj-xPrep:prep-red:parent	_	_
+11	ko	kas	p	pq000an	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Jautājamie|Persona=Nepiemīt|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Akuzatīvs|Noliegums=Nē	10	xPrep:basElem	_	_
+12	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	8	sent:punct	_	_
+
+1	Man	es	p	pp10sdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Datīvs|Noliegums=Nē	2	dep:det	_	_
+2	ienāca	ienākt	v	vmnisi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	prātā	prāts	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	2	dep:adv	_	_
+4	,	,	z	zc	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Komats	7	subrCl:punct	_	_
+5	ka	ka	c	css	Vārdšķira=Saiklis|Saikļa+tips=Pakārtojuma|Uzbūve=Vienkāršs	7	subrCl:conj	_	_
+6	vajag	vajadzēt	v	vonipt330an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Modāls|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=3|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	7	xPred:mod	_	_
+7	nopirkt	nopirkt	v	vmnn0t1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	2	dep:subjCl-subrCl:pred-xPred:basElem	_	_
+8	sodu	soda	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	7	dep:obj	_	_
+9	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Pasniedzējs	pasniedzējs	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	2	dep:subj	_	_
+2	likās	likties	v	vmyisi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	gudrs	gudrs	a	afmsnnp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Kādības|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noteiktība=Nenoteiktā|Pakāpe=Pamata	2	dep:spc-xPred:basElem	_	_
+4	esam	būt	v	vcnpu000000	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Nelokāms|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Nepiemīt|Kārta=Nepiemīt|Laiks=Nepiemīt|Noteiktība=Nepiemīt	3	xPred:auxVerb	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	No	no	s	spsgy	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Ģenitīvs|Vietas+apstākļa+nozīme=Jā	4	dep:obj-xPrep:prep	_	_
+2	tādas	tāda	p	pd0fsgn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Norādāmie|Persona=Nepiemīt|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Noliegums=Nē	3	dep:attr	_	_
+3	situācijas	situācija	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	1	xPrep:basElem	_	_
+4	nav	nebūt	v	vmnipii30ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	0	ROOT-sent:pred	_	_
+5	ko	kas	p	pi000an	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Nenoteiktie|Persona=Nepiemīt|Dzimte=Nepiemīt|Skaitlis=Nepiemīt|Locījums=Akuzatīvs|Noliegums=Nē	4	dep:subj-subrAnal:basElem	_	_
+6	gaidīt	gaidīt	v	vmnn0t3000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=3|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	5	subrAnal:basElem	_	_
+7	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+
+1	Ar	ar	s	spsan	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Nē	5	dep:adv-xPrep:prep	_	_
+2	Balvi	Balvis	n	npmsa2	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=2	1	xPrep:basElem	_	_
+3	vismaz	vismaz	r	r0q	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Mēra	5	dep:adv	_	_
+4	nebija	nebūt	v	vcnisii30ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	5	xPred:auxVerb	_	_
+5	garlaicīgi	garlaicīgi	r	r0m	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Veida	0	ROOT-sent:pred-xPred:basElem	_	_
+6	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+
+1	Vēlāk	vēlāk	r	r0t	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Laika	3	dep:adv	_	_
+2	Sofija	Sofija	n	npfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	3	dep:subj	_	_
+3	ieguva	iegūt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	pundurpapagailīšus	pundurpapagailītis	n	ncmpa2	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=2	3	dep:obj-xApp:basElem	_	_
+5	vārdā	vārds	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	4	xApp:basElem-xApp:basElem	_	_
+6	Smits	Smits	n	npmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	5	xApp:basElem-crdParts:crdPart	_	_
+7	un	un	c	ccs	Vārdšķira=Saiklis|Saikļa+tips=Sakārtojuma|Uzbūve=Vienkāršs	6	crdParts:conj	_	_
+8	Smulē	Smulē	n	npmsn0	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=Nepiemīt	7	crdParts:crdPart	_	_
+9	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Meiteni	meitene	n	ncfsa5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=5	3	dep:obj	_	_
+2	grāmatā	grāmata	n	ncfsl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=4	1	dep:spc	_	_
+3	sauc	saukt	v	vmnipt130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	Emīlija	Emīlija	n	npfsn4	Vārdšķira=Lietvārds|Lietvārda+tips=Īpašvārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=4	3	dep:spc	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Es	es	p	pp10snn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=1|Dzimte=Nepiemīt|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Nē	2	dep:subj	_	_
+2	dzīvoju	dzīvot	v	vmnist21san	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=2|Persona=1|Skaitlis=Vienskaitlis|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	laukos	lauks	n	ncmpl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Lokatīvs|Deklinācija=1	2	dep:adv	_	_
+4	desmit	desmit	m	mcs0p0d	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nepiemīt|Skaitļu+kārta=Desmiti	5	dep:attr	_	_
+5	gadus	gads	n	ncmpa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=1	2	dep:adv	_	_
+6	atpakaļ	atpakaļ	r	r0p	Vārdšķira=Apstākļa+vārds|Pakāpe=Nepiemīt|Apstākļa+vārda+tips=Vietas	5	dep:adv	_	_
+7	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Neviens	neviens	p	pi0msny	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Nenoteiktie|Persona=Nepiemīt|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Noliegums=Jā	5	dep:subj	_	_
+2	no	no	s	sppdy	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Daudzskaitlis|Rekcija=Datīvs|Vietas+apstākļa+nozīme=Jā	1	dep:spc-xPrep:prep	_	_
+3	viņiem	viņš	p	pp3mpdn	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Personu|Persona=3|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Datīvs|Noliegums=Nē	2	xPrep:basElem	_	_
+4	nevēlējās	nevēlēties	v	voyist230ay	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Modāls|Atgriezeniskums=Jā|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=2|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Jā	5	xPred:mod	_	_
+5	uzņemties	uzņemties	v	vmyn0i1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Jā|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	0	ROOT-sent:pred-xPred:basElem	_	_
+6	administratīvos	administratīvs	a	armpayp	Vārdšķira=Īpašības+vārds|Īpašības+vārda+tips=Attieksmes|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Noteiktība=Noteiktā|Pakāpe=Pamata	7	dep:attr	_	_
+7	pienākumus	pienākums	n	ncmpa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=1	5	dep:obj	_	_
+8	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	5	sent:punct	_	_
+
+1	Lai	lai	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	3	xParticle:no	_	_
+2	top	tapt	v	vtnipi130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbi+'tikt'+un+'tapt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	3	xPred:auxVerb	_	_
+3	izpirkti	izpirkt	v	vmnpdmpnpsn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Kārta=Ciešamā|Laiks=Pagātne|Noteiktība=Nenoteiktā	0	ROOT-sent:pred-xParticle:basElem-xPred:basElem	_	_
+4	arī	arī	q	qs	Vārdšķira=Partikula|Uzbūve=Vienkāršs	8	dep:no	_	_
+5	simt	simt	m	mcs0p0s	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nepiemīt|Skaitļu+kārta=Simti	8	dep:attr-xNum:basElem	_	_
+6	divdesmit	divdesmit	m	mcc0p0d	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Salikts|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nepiemīt|Skaitļu+kārta=Desmiti	5	xNum:basElem	_	_
+7	septiņi	septiņi	m	mcsmpnv	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Skaitļu+kārta=Vieni	6	xNum:basElem	_	_
+8	grēki	grēks	n	ncmpn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+9	!	!	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
+1	Atrast	atrast	v	vmnn0t1000n	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Nenoteiksme|Laiks=Nepiemīt|Transitivitāte=Pārejošs|Konjugācija=1|Persona=Nepiemīt|Skaitlis=Nepiemīt|Kārta=Nepiemīt|Noliegums=Nē	7	dep:subj	_	_
+2	piecus	pieci	m	mcsmpav	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Skaitļu+kārta=Vieni	4	dep:attr-coordAnal:basElem	_	_
+3	desmit	desmit	m	mcs0p0d	Vārdšķira=Skaitļa+vārds|Skaitļa+vārda+tips=Pamata|Uzbūve=Vienkāršs|Dzimte=Nepiemīt|Skaitlis=Daudzskaitlis|Locījums=Nepiemīt|Skaitļu+kārta=Desmiti	2	coordAnal:basElem	_	_
+4	latus	lats	n	ncmpa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Daudzskaitlis|Locījums=Akuzatīvs|Deklinācija=1	1	dep:obj	_	_
+5	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	7	xPred:auxVerb	_	_
+6	cūkas	cūka	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	7	dep:attr	_	_
+7	laime	laime	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	0	ROOT-sent:pred-xPred:basElem	_	_
+8	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	7	sent:punct	_	_
+
+1	Funkc.	funkc.	y	y	Vārdšķira=Saīsinājums	4	dep:subj-xApp:basElem	_	_
+2	f(x)	f(x)	x	xx	Vārdšķira=Reziduālis|Reziduāļa+tips=Cits	1	xApp:basElem	_	_
+3	ir	būt	v	vcnipii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Palīgverbs+'būt'|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Tagadne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	4	xPred:auxVerb	_	_
+4	augoša	augt	v	vmnpdfsnapn	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Divdabis|Lokāmība=Lokāms|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Kārta=Darāmā|Laiks=Tagadne|Noteiktība=Nenoteiktā	0	ROOT-sent:pred-xPred:basElem	_	_
+5	visā	viss	p	pg0msln	Vārdšķira=Vietniekvārds|Vietniekvārda+tips=Noteiktie|Persona=Nepiemīt|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Noliegums=Nē	7	dep:attr	_	_
+6	definīcijas	definīcija	n	ncfsg4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Ģenitīvs|Deklinācija=4	7	dep:attr	_	_
+7	apgabalā	apgabals	n	ncmsl1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=1	4	dep:adv	_	_
+8	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	4	sent:punct	_	_
+

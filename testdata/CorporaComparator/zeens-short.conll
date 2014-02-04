@@ -1,0 +1,16 @@
+1	Zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	2	dep:subj	_	_
+2	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	uz	uz	s	spsay	Vārdšķira=Prievārds|Novietojums=Pirms|Skaitlis=Vienskaitlis|Rekcija=Akuzatīvs|Vietas+apstākļa+nozīme=Jā	2	dep:adv-xPrep:prep	_	_
+4	skolu	skola	n	ncfsa4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=4	3	xPrep:basElem	_	_
+5	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Meitene	meitene	n	ncfsn5	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=5	2	dep:subj	_	_
+2	ņēma	ņemt	v	vmnist130an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Pārejošs|Konjugācija=1|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+3	ābolu	ābols	n	ncmsa1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Akuzatīvs|Deklinācija=1	2	dep:obj	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	2	sent:punct	_	_
+
+1	Vasarā	vasara	n	ncfsl4	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Sieviešu|Skaitlis=Vienskaitlis|Locījums=Lokatīvs|Deklinācija=4	3	dep:adv	_	_
+2	zēns	zēns	n	ncmsn1	Vārdšķira=Lietvārds|Lietvārda+tips=Sugas+vārds|Dzimte=Vīriešu|Skaitlis=Vienskaitlis|Locījums=Nominatīvs|Deklinācija=1	3	dep:subj	_	_
+3	gāja	iet	v	vmnisii30an	Vārdšķira=Darbības+vārds|Darbības+vārda+tips=Patstāvīgs+darbības+vārds|Atgriezeniskums=Nē|Izteiksme=Īstenības|Laiks=Pagātne|Transitivitāte=Nepārejošs|Konjugācija=Nekārtns|Persona=3|Skaitlis=Nepiemīt|Kārta=Darāmā|Noliegums=Nē	0	ROOT-sent:pred	_	_
+4	.	.	z	zs	Vārdšķira=Pieturzīme|Pieturzīmes+tips=Punkts	3	sent:punct	_	_
+
