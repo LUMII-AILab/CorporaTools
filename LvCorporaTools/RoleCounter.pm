@@ -40,7 +40,8 @@ END
 	
 	my $out = IO::File->new("$dirName/counts.txt", "> :encoding(UTF-8)")
 		or die "Could not open file counts.txt: $!";
-	@roles = sort {$counts{$a}<=>$counts{$b}} keys(%counts);
+	@roles = sort {$counts{$a} == $counts{$b} ? $a cmp $b : $counts{$a}<=>$counts{$b}}
+		keys(%counts);
 	
 	print $out @roles."\n";
 	print $out $counts{$_}."\t$_\n" for @roles;
