@@ -8,14 +8,14 @@ use strict;
 
 BEGIN { import TredMacro;}
 
-# set correct stylesheet when entering this annotation mode
+# Set correct stylesheet when entering this annotation mode.
 sub switch_context_hook
 {
   SetCurrentStylesheet('lv-m');
   Redraw() if GUI();
 }
 
-# Status line mesidge.
+# Status line message.
 sub get_status_line_hook
 {
   # get_status_line_hook may either return a string
@@ -86,18 +86,7 @@ sub _new_node
 
   $this->{'#content'}{'form_change'} = Treex::PML::Factory->createList(['insert'], 1);
 
-#  my $content = Treex::PML::Factory->createTypedNode(
-#	'm-node.type', $root->type->schema);
-#  $this->{'#name'} = 'm';
-#  $this->{'#content'} = $content;
-#  AddToAlt($n->{'#content'}, 'id', $sentid . 'w' . &_get_next_id);
-  #$n->{'#content'}{'id'} = $sentid . 'w' . &_get_next_id;
-#  $this->{'#content'}{'form'}='N/A';
-#  $this->{'#content'}{'tag'}='N/A';
-#  $this->{'#content'}{'lemma'}='N/A';
-#  $this->{'#content'}{'src.rf'} = 'manual';
-#  $this->{'#content'}{'form_change'}[0] = 'insert';
-  Redraw_All;
+  #Redraw_All;
 }
 
 sub new_brother_before
@@ -143,6 +132,7 @@ sub is_lvm_file
 }
 
 
+# Add context guesser.
 push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 {
   my ($hook)=@_;
@@ -150,7 +140,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   my $current = CurrentContext();
   if (LV_M::is_lvm_file)
   {
-    SetCurrentStylesheet('lv-m-vert') if $resuming;
+    SetCurrentStylesheet('lv-m') if $resuming;
     return 'LV_M';
   }
   return;
@@ -160,6 +150,12 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 sub allow_switch_context_hook
 {
   return 'stop' if (not LV_M::is_lvm_file);
+}
+
+# Do not allow to move nodes.
+sub node_release_hook
+{
+  return 'stop';
 }
 
 #binding-context LV_M
