@@ -155,7 +155,7 @@
     <choice>
 	  <value>crdParts</value>		<!-- coordinated parts of senence -->	
 	  <value>crdClauses</value>		<!-- coordinated clauses -->  
-	  <!--<value>crdGeneral</value>		<!-- coordination with generalizing word -->
+	  <!--<value>crdGeneral</value>-->		<!-- coordination with generalizing word -->
 	  <value>N/A</value>		
 	</choice>
   </type>
@@ -200,8 +200,8 @@
 	  <value>auxVerb</value>	<!-- auxiliary verb -->
 	  <value>basElem</value>	<!-- basic element** -->
 	  <value>punct</value>		<!-- punctuation mark -->
-	  <!--<value>gen</value>		<!-- generalizing word* -->
-	  <!--<value>genList</value>	<!-- list of specific items, used together with generalizing word** -->
+	  <!--<value>gen</value>-->		<!-- generalizing word* -->
+	  <!--<value>genList</value>-->	<!-- list of specific items, used together with generalizing word** -->
 	  
 	  <value>N/A</value>
 	</choice>
