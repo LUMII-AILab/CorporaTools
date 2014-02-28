@@ -29,8 +29,6 @@ sub pre_switch_context_hook {
   enable_node_menu_items() if GUI();
 }
 
-#bind GotoTree to Alt+g menu Goto Tree
-
 #bind Redraw_All to Alt+r menu Redraw
 #bind swich_styles_full to Alt+f menu Switch On/Off Full-info Layout
 #bind swich_styles_ord to Alt+o menu Switch On/Off Ordered Layout

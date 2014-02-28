@@ -159,7 +159,6 @@ sub node_release_hook
 }
 
 #binding-context LV_M
-#bind GotoTree to Alt+g menu Goto Tree
 #bind Redraw_All to Alt+r menu Redraw
 
 #bind new_brother_after to a menu New Node After Current

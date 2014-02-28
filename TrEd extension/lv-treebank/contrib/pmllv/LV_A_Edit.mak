@@ -636,7 +636,6 @@ sub remove_single_child_x
 }
 
 #binding-context LV_A_Edit
-#bind GotoTree to Alt+g menu Goto Tree
 
 #bind new_xinfo_node to x menu New X-word Node
 #bind new_pmcinfo_node to p menu New PMC Node
