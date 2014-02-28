@@ -1,0 +1,175 @@
+# -*- cperl -*-
+
+#ifndef LV_M
+#define LV_M
+
+package LV_M;
+use strict;
+
+BEGIN { import TredMacro;}
+
+# set correct stylesheet when entering this annotation mode
+sub switch_context_hook
+{
+  SetCurrentStylesheet('lv-m');
+  Redraw() if GUI();
+}
+
+# Status line mesidge.
+sub get_status_line_hook
+{
+  # get_status_line_hook may either return a string
+  # or a pair [ field-definitions, field-styles ]
+  return unless $this;
+  my @mas = ();
+  if ($this->{id})
+  {
+	push(@mas, "     id: ");
+	push(@mas, [qw(label)]);
+	push(@mas, $this->{id});
+	push(@mas, [qw({id} value)]);
+  } else
+  {
+	push(@mas, "     ");
+	push(@mas, [qw(label)]);
+	push(@mas, $this->{'#name'});
+	push(@mas, [qw({#name} value)]);
+  }
+  if ($this->attr('lemma'))
+  {
+	push(@mas, "     lemma: ");
+	push(@mas, [qw(label)]);
+	push(@mas, $this->attr('#content/lemma'));
+	push(@mas, [qw({lemma} value)]);
+  }
+  if ($this->attr('tag'))
+  {
+	push(@mas, "     tag: ");
+	push(@mas, [qw(label)]);
+	push(@mas, $this->attr('#content/tag'));
+	push(@mas, [qw({tag} value)]);
+  }
+  return [\@mas,
+      [
+	   "label" => [-foreground => 'black' ],
+	   "value" => [-underline => 1 ],
+	  ]
+	 ];
+}
+
+# Insert new node. Mode ('BEFORE' or 'AFTER') identifies, whether to insert
+# before or after current node.
+sub _new_node
+{
+  my $mode = shift;
+  my $sentid = $root->{'id'};
+  my $anchor = $this;
+  PlainNewSon($root);
+ # Treex::PML::Factory->createTypedNode(
+#	'm-m.type', $root->type->schema);
+  if ($anchor != $root and $mode eq 'AFTER')
+  {
+	CutPasteAfter($this, $anchor);
+  }
+  elsif ($anchor != $root and $mode eq 'BEFORE')
+  {
+	CutPasteBefore($this, $anchor);
+  }
+  
+  $this->{'#content'} = Treex::PML::Factory->createContainer(0, {
+	'id' => $sentid . 'w' . &_get_next_id,
+	'form' => 'N/A',
+	'tag' => 'N/A',
+	'lemma' => 'N/A',
+	'src.rf' => 'manual',
+	}, 1);
+
+  $this->{'#content'}{'form_change'} = Treex::PML::Factory->createList(['insert'], 1);
+
+#  my $content = Treex::PML::Factory->createTypedNode(
+#	'm-node.type', $root->type->schema);
+#  $this->{'#name'} = 'm';
+#  $this->{'#content'} = $content;
+#  AddToAlt($n->{'#content'}, 'id', $sentid . 'w' . &_get_next_id);
+  #$n->{'#content'}{'id'} = $sentid . 'w' . &_get_next_id;
+#  $this->{'#content'}{'form'}='N/A';
+#  $this->{'#content'}{'tag'}='N/A';
+#  $this->{'#content'}{'lemma'}='N/A';
+#  $this->{'#content'}{'src.rf'} = 'manual';
+#  $this->{'#content'}{'form_change'}[0] = 'insert';
+  Redraw_All;
+}
+
+sub new_brother_before
+{
+	&_new_node('BEFORE')
+}
+
+sub new_brother_after
+{
+	&_new_node('AFTER')
+}
+
+sub delete_node
+{
+  TredMacro::PlainDeleteNode($this);
+}
+
+
+# Get next free word ID.
+sub _get_next_id
+{
+  my @nodes = GetNodes($root);
+  my %ids = ();
+  foreach my $n (@nodes)
+  {
+	  $ids{$1} = 1
+		if ($n->{'#content'}{'id'} =~ /w(\d+)$/);
+  }
+  my $newid = 1;
+  foreach my $key (sort {$a <=> $b} keys(%ids))
+  {
+    last if ($key > $newid);
+	$newid++ if ($key == $newid);
+  }
+  return $newid;
+}
+
+
+# Check if the current file is standard Latvian Treebank M file.
+sub is_lvm_file
+{
+  return (((PML::SchemaName()||'') eq 'lvmdata') ? 1 : 0);
+}
+
+
+push @TredMacro::AUTO_CONTEXT_GUESSING, sub
+{
+  my ($hook)=@_;
+  my $resuming = ($hook eq 'file_resumed_hook');
+  my $current = CurrentContext();
+  if (LV_M::is_lvm_file)
+  {
+    SetCurrentStylesheet('lv-m-vert') if $resuming;
+    return 'LV_M';
+  }
+  return;
+};
+
+# do not use this annotation mode for other files
+sub allow_switch_context_hook
+{
+  return 'stop' if (not LV_M::is_lvm_file);
+}
+
+#binding-context LV_M
+#bind GotoTree to Alt+g menu Goto Tree
+#bind Redraw_All to Alt+r menu Redraw
+
+#bind new_brother_after to a menu New Node After Current
+#bind new_brother_before to b menu New Node Before Current
+#bind delete_node to Delete menu Delete Leaf Node
+
+1;
+
+#endif LV_M

@@ -1,0 +1,26 @@
+context: LV_M
+rootstyle: #{NodeLabel-skipempty:1}
+           #{balance:0}
+		   #{vertical:1}
+text:<? $${#content/w/token}eq$${#content/form} ? 
+  '#{'.CustomColor('sentence').'}${#content/w/token}' : 
+  '#{-over:1}#{'.CustomColor('spell').'}['.
+     join(" ",map { $_->{token} } ListV($this->attr('#content/w'))).
+  ']#{-over:0}#{'.CustomColor('sentence').'}${#content/form}' ?>
+node:#{darkred}${id}${#content/id}
+node:${#content/form}
+node:#{darkgreen}${#content/tag}
+node:<? $${#content/lemma} ? '#{dimgray}[${#content/lemma}]' : ''?>
+
+style: #{Node-shape:oval}
+       #{Oval-fill:Yellow}
+       #{CurrentOval-width:2}
+       #{Line-width:1}
+       #{Node-width:8}
+       #{Node-height:8}
+       #{Node-currentwidth:13}
+       #{Node-currentheight:13}
+
+hint:<? $${#content/lemma} ? 'lemma: ${#content/lemma} ' : '' ?><?
+  $${#content/tag} ? 'tag: ${#content/tag}' : '' ?><? 
+  $${#content/form_change} ? "\n".'form_change: ${#content/form_change}' : '' ?>
