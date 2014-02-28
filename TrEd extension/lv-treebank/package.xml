@@ -5,11 +5,11 @@
   </head>
   <pkgname>lv-treebank</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
-  <title>IMCS UL experimental Treebank Annotation</title>
-  <version>2.15</version>
+  <title>IMCS UL Latvian Treebank Annotation</title>
+  <version>2.16</version>
   <copyright year="2012-2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
-  <description>Provides experimental support for viewing
-    and editing annotations of Latvian TreeBank.
+  <description>Provides support for viewing and editing annotations of Latvian
+	TreeBank, analytical and morphological layers.
   </description>
   <icon>icons/ailab.gif</icon>
   <require>
