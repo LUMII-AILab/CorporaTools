@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tred_extension xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+  <head>
+    <schema href="tred_extension_schema.xml"/>
+  </head>
+  <pkgname>instant-conll2007</pkgname>
+  <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
+  <title>CoNLL-2007 Shared Task Backend</title>
+  <version>0.1</version>
+  <copyright year="2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
+  <description>Provides support for viewing and editing CoNLL-2007 files
+	directly from TrEd.
+  </description>
+  <!--<icon>icons/ico.gif</icon>-->
+  <require>
+  </require>
+</tred_extension>

@@ -1,0 +1,8 @@
+context: CONLL_2007
+rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
+
+node:#{darkred}[${ord}] #{black}${form}
+node:#{dimgray}${lemma}
+node:#{green}${cpostag}
+node:#{darkgreen}${postag}
+node:#{darkblue}${deprel}
