@@ -1,5 +1,7 @@
 context: CONLL_2007
-rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
+rootstyle: #{NodeLabel-skipempty:1}#{balance:0}#{skipHiddenLevels}
+
+text:<?'#{'.CustomColor('sentence').'}${form}'?>
 
 node:#{darkred}[${ord}] #{black}${form}
 node:#{dimgray}${lemma}

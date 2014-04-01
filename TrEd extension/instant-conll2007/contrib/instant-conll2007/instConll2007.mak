@@ -3,9 +3,15 @@
 #ifndef instConll2007
 #define instConll2007
 
-BEGIN { import ConllBackend; import PML; import Treex::PML::IO;}
-use ConllBackend;
+package instConll2007;
 use strict;
+
+BEGIN {
+  import TredMacro;
+  import ConllBackend;
+  import PML;
+  import Treex::PML::IO;
+}
 
 AddBackend(Treex::PML::ImportBackends('ConllBackend'));
 
@@ -20,7 +26,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   my ($hook)=@_;
   my $resuming = ($hook eq 'file_resumed_hook');
   my $current = CurrentContext();
-  if (((PML::SchemaName()||'') eq ''))
+  if (((PML::SchemaName()||'') eq 'conlldata'))
   {
     SetCurrentStylesheet('conll') if $resuming;
     return 'CONLL_2007';
@@ -36,7 +42,8 @@ sub switch_context_hook
 }
 
 
-#binding-context LV_A_Edit
-1;
+#binding-context CONLL_2007
+#bind Redraw_All to Alt+r menu Redraw
+
 
 #endif instConll2007
