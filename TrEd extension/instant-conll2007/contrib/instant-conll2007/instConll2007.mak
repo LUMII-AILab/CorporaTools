@@ -15,12 +15,6 @@ BEGIN {
 
 AddBackend(Treex::PML::ImportBackends('ConllBackend'));
 
-#sub get_backends_hook
-#{
-#	print 'Izsauc huuku.';
-#	return ('ConllBackend', ConllBackend->new, @_);
-#}
-
 push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 {
   my ($hook)=@_;
@@ -34,20 +28,23 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   return;
 };
 
-# set correct stylesheet when entering this annotation mode
+# Set correct stylesheet when entering this annotation mode.
 sub switch_context_hook
 {
   TredMacro::SetCurrentStylesheet('conll');
   Redraw() if GUI();
 }
 
-sub is_conll_2007_file
-{
-	return ((PML::SchemaName or '') eq 'conlldata');
-}
+# Do not use this mode for other files.
 sub allow_switch_context_hook
 {
   return 'stop' if (not &is_conll_2007_file);
+}
+
+# Check (by schema) if the file opened is suitable for this mode.
+sub is_conll_2007_file
+{
+	return ((PML::SchemaName or '') eq 'conlldata');
 }
 
 #binding-context CONLL_2007

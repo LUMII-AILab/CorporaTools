@@ -2,7 +2,6 @@ package ConllBackend;
 
 use strict;
 
-#use Treex::PML::IO;
 use Treex::PML::Factory;
 use Treex::PML::Document;
 use Treex::PML::Node;
@@ -11,11 +10,8 @@ use Treex::PML::Node;
 
 #use Moose;
 #extends qw (Treex::PML::IO);
-
 #our @ISA = qw(Treex::PML::IO);
 use parent qw(Treex::PML::IO);
-#our @EXPORT_OK = qw(test open_backend read write close_backend);
-
 
 #sub new
 #{
@@ -38,8 +34,8 @@ sub test
 	
 }
 
-# This must be inhereted from Treex::PML::IO
-# WHY U NO INHERIT YOURSELF?!
+# This must be inhereted from Treex::PML::IO, not sure why it does not happen
+# magically.
 sub open_backend {
 	return Treex::PML::IO::open_backend(@_);
 }
@@ -50,6 +46,7 @@ sub read
 	my ($filehandle, $fsfile) = @_;
 	#$fsfile is Treex::PML::Document object.
 	
+	# Prepare Document object with scheme information etc.
 	#my $fsthingy = Treex::PML::Factory->createFSFormat([
 	#	'@N ord', '@V form', '@K lemma', '@K cpostag', '@K postag',
 	#	'@K deprel', '@K phead', '@K pdeprel']);
@@ -60,8 +57,8 @@ sub read
 		'string' => &_get_schema});
 		#'filename' => 'libs/conll2007schema.xml'});
 	$fsfile->changeMetaData('schema', $schema);
-#	$fsfile->changeSchemaURL('conll2007schema.xml');
 
+	# Fetch imput data.
 	my @rows = <$filehandle>;
 	my @text = ();	# Array of sentences, where sentence = array of tokens.
 	my $tmpsent = [];
@@ -79,13 +76,12 @@ sub read
 		}
 	}
 	
-	# Seperate fields for each token.
+	# Parse node atributes, make object for each node.
 	my $treeId = 0;
 	for my $sent (@text)
 	{
 		my %par2node = ();
 		my %id2node = ();
-		# Parse node atributes, make each node.
 		for my $token (@$sent)
 		{
 			my @fields = split /\t/, $token;
@@ -105,20 +101,16 @@ sub read
 			$node->set_attr('phead', $fields[8]) unless ($fields[8] eq '_');
 			$node->set_attr('pdeprel', $fields[9]) unless ($fields[9] eq '_');
 			
-			#$par2node{$fields[6]} = $node;
 			my $otherChildren = $par2node{$fields[6]} or [];
 			push @$otherChildren, $node;
 			%par2node = (%par2node, $fields[6] => $otherChildren);
 			$id2node{$fields[0]} = $node;
-			#push @nodes, $node; 
-			#push (@parentIds, ($fields[6] ? $fields[6] - 1 : -1));
 		}
 
 		# Link the nodes in the tree.
 		#my $root = $fsfile->new_tree($treeId);
 		my $root = Treex::PML::Factory->createTypedNode('root.type', $fsfile->schema);
 		$root->set_attr('ord', 0);
-		$root->set_attr('deprel', 'pseudoroot');
 		
 		$id2node{0} = $root;
 		my @toDo = ('0');
@@ -150,12 +142,14 @@ sub write
 	#}
 }
 
-# This must be inhereted from Treex::PML::IO
-# WHY U NO INHERIT YOURSELF?!
+# This must be inhereted from Treex::PML::IO, not sure why it does not happen
+# magically.
 sub close_backend {
 	return Treex::PML::IO::close_backend(@_);
 }
 
+# PML schema definition for trees in CoNLL 2007 files.
+# TODO: move this to a seperate data file.
 sub _get_schema
 {
 	my $schema = <<END;
@@ -179,7 +173,6 @@ sub _get_schema
   <type name="root.type"> <!-- Root.-->
 	<structure role="#NODE" name="node">
       <member name="ord" role="#ORDER" as_attribute="1" required="1"><constant>0</constant></member>
-	  <member name="deprel"><cdata format="any"/></member>
       <member name="children" role="#CHILDNODES">
         <list type="node.type" ordered="0"/>
       </member>	  
