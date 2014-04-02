@@ -22,12 +22,10 @@ use parent qw(Treex::PML::IO);
 #	return $self, $class;
 #}
 
-#our $SCHEMA_DIR = '';
-
 sub test
 {
-	#my ($self, $filename, $encoding) = @_;	#TrEd uses package oriented call, not object?
-	my ($filename, $encoding) = @_;
+	#my ($self, $filename, $encoding) = @_;
+	my ($filename, $encoding) = @_;		#TrEd uses package oriented call, not object?
 	# Not very good.
 	return 1 if ($filename =~ /.*\.conll(2007|07)?$/);
 	return 0;
@@ -43,7 +41,7 @@ sub open_backend {
 sub read
 {
 	#my ($self, $filehandle, $fsfile) = @_;
-	my ($filehandle, $fsfile) = @_;
+	my ($filehandle, $fsfile) = @_;	#It seems that TrEd uses call through package, not object.
 	#$fsfile is Treex::PML::Document object.
 	
 	# Prepare Document object with scheme information etc.
@@ -134,12 +132,39 @@ sub read
 sub write
 {
 	#my ($self, $filehandle, $fsfile) = @_;
-	my ($filehandle, $fsfile) = @_;
+	my ($filehandle, $fsfile) = @_; #It seems that TrEd uses call through package, not object.
 	#$fsfile is Treex::PML::Document object.
 	
-	#for my $tree ($fsfile->trees)
-	#{
-	#}
+	# For each tree in the current document...
+	for my $tree ($fsfile->trees)
+	{
+		# Get all token nodes sorted by order.
+		my @nodes = $tree->descendants;
+		@nodes = sort {$a->get_order <=> $b->get_order} @nodes;
+		shift @nodes while ($nodes[0]->get_order < 1);
+		# Far each node in the tree print attributes (escaped, if needed).
+		for my $n (@nodes)
+		{
+			print $filehandle ($n->attr('ord') or '_')."\t";
+			my $form = $n->attr('form');
+			$form =~ tr/ /_/;
+			print $filehandle ($form or '_')."\t";
+			my $lemma = $n->attr('lemma');
+			$lemma =~ tr/ /_/;			
+			print $filehandle ($lemma or '_')."\t";
+			print $filehandle ($n->attr('cpostag') or '_')."\t";
+			print $filehandle ($n->attr('postag') or '_')."\t";
+			my $feats = join '|', $n->attr('feats')->values;
+			$feats =~ tr/ /+/;
+			print $filehandle ($feats or '_')."\t";
+			print $filehandle ($n->parent->get_order or '0')."\t";
+			print $filehandle ($n->attr('deprel') or '_')."\t";
+			print $filehandle ($n->attr('phead') or '_')."\t";
+			print $filehandle ($n->attr('pdeprel') or '_')."\t\n";
+		}
+	
+		print $filehandle "\n";
+	}
 }
 
 # This must be inhereted from Treex::PML::IO, not sure why it does not happen
@@ -149,7 +174,7 @@ sub close_backend {
 }
 
 # PML schema definition for trees in CoNLL 2007 files.
-# TODO: move this to a seperate data file.
+# TODO: move this to a seperate data file. How to link to such file?
 sub _get_schema
 {
 	my $schema = <<END;
