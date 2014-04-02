@@ -5,8 +5,8 @@
   </head>
   <pkgname>instant-conll</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
-  <title>CoNLL-2007 Shared Task Backend</title>
-  <version>0.1</version>
+  <title>CoNLL-2007 Shared Task Data Format Backend</title>
+  <version>1.0</version>
   <copyright year="2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides support for viewing and editing CoNLL-2007 files
 	directly from TrEd.
