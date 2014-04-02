@@ -1,9 +1,0 @@
-#ifndef instant-conll2007
-#define instant-conll2007
-
-package InstantConll2007;
-
-#binding-context CoNLL_2007
-#include "CONLL_2007.mak"
-
-#endif instant-conll2007

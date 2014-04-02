@@ -1,7 +1,7 @@
 # -*- cperl -*-
 
-#ifndef instConll2007
-#define instConll2007
+#ifndef CONLL_2007
+#define CONLL_2007
 
 package CONLL_2007;
 use strict;
@@ -50,4 +50,4 @@ sub is_conll_2007_file
 #bind Redraw_All to Alt+r menu Redraw
 
 
-#endif instConll2007
+#endif CONLL_2007

@@ -3,7 +3,7 @@
   <head>
     <schema href="tred_extension_schema.xml"/>
   </head>
-  <pkgname>instant-conll2007</pkgname>
+  <pkgname>instant-conll</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>CoNLL-2007 Shared Task Backend</title>
   <version>0.1</version>
