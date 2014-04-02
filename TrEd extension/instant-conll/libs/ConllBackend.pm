@@ -45,16 +45,17 @@ sub read
 	#$fsfile is Treex::PML::Document object.
 	
 	# Prepare Document object with scheme information etc.
-	#my $fsthingy = Treex::PML::Factory->createFSFormat([
-	#	'@N ord', '@V form', '@K lemma', '@K cpostag', '@K postag',
-	#	'@K deprel', '@K phead', '@K pdeprel']);
-	#$fsfile->changeFS($fsthingy);
 	$fsfile->changeBackend('ConllBackend');
 	$fsfile->changeFileFormat('CoNLL-2007');
 	my $schema = Treex::PML::Factory->createPMLSchema({
 		'string' => &_get_schema});
 		#'filename' => 'libs/conll2007schema.xml'});
 	$fsfile->changeMetaData('schema', $schema);
+	#my $fsthingy = Treex::PML::Factory->createFSFormat([
+	#	'@N ord', '@V form', '@K lemma', '@K cpostag', '@K postag',
+	#	'@K deprel', '@K phead', '@K pdeprel']);
+	#$fsfile->changeFS($fsthingy);
+	$fsfile->changeFS(&_get_simple_FSformat($schema));
 
 	# Fetch imput data.
 	my @rows = <$filehandle>;
@@ -172,6 +173,31 @@ sub write
 # magically.
 sub close_backend {
 	return Treex::PML::IO::close_backend(@_);
+}
+
+sub _get_simple_FSformat
+{
+	my $schema = shift;
+	return unless $schema;
+	my $fs = Treex::PML::Factory->createFSFormat;
+	
+	OUTER: for my $nt ($schema->node_types)
+	{
+		for my $attrName ($nt->get_normal_fields)
+		{
+			my $attrType = $schema->find_type_by_path($attrName, 1, $nt);
+			if ($attrType->get_role eq '#ORDER')
+			{
+				$fs->addNewAttribute('N K', '', $attrName);
+				#last OUTER;
+			}
+		}
+		#$fs->addNewAttribute('N K', '', 'aita');
+		# Looks like passing multiple type letters (N and K) might allow to
+		# hack FSFormat to have multiple Numering atributes.
+	}
+	
+	return $fs;
 }
 
 # PML schema definition for trees in CoNLL 2007 files.
