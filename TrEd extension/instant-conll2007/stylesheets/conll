@@ -1,5 +1,5 @@
 context: CONLL_2007
-rootstyle: #{NodeLabel-skipempty:1}#{balance:0}#{skipHiddenLevels}
+rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
 
 text:<?'#{'.CustomColor('sentence').'}${form}'?>
 

@@ -87,7 +87,7 @@ sub read
 			$fields[2] =~ tr/_/ / if ($fields[2] !~ /^_$/);
 			my $node = Treex::PML::Factory->createTypedNode('node.type', $fsfile->schema);
 			#my $node = Treex::PML::Factory->createTypedNode($fsfile->FS);
-			$node->set_attr('ord', $fields[0]);
+			$node->set_attr('ord', $fields[0]+0);
 			$node->set_attr('form', $fields[1]);
 			$node->set_attr('lemma', $fields[2]) unless ($fields[2] eq '_');
 			$node->set_attr('cpostag', $fields[3]) unless ($fields[3] eq '_');
@@ -125,6 +125,7 @@ sub read
 		$fsfile->append_tree($root);
 		$treeId++;
 	}
+	$fsfile->rebuildIDHash;
 	return $fsfile;
 }
 
@@ -197,9 +198,9 @@ sub _get_schema
   
   <type name="root.type"> <!-- Root.-->
 	<structure role="#NODE" name="node">
-      <member name="ord" role="#ORDER" as_attribute="1" required="1"><constant>0</constant></member>
+      <member name="ord" role="#ORDER" required="1"><constant>0</constant></member>
       <member name="children" role="#CHILDNODES">
-        <list type="node.type" ordered="0"/>
+        <list type="node.type" ordered="1"/>
       </member>	  
 	</structure>
   </type>
@@ -207,7 +208,7 @@ sub _get_schema
   <type name="node.type"> <!-- Arbitrary node. -->
 	<structure role="#NODE" name="node">
 	  <member name="form" required="1"><cdata format="string"/></member>
-      <member name="ord" role="#ORDER" as_attribute="1" required="1"><cdata format="positiveInteger"/></member>
+      <member name="ord" role="#ORDER" required="1"><cdata format="positiveInteger"/></member>
 	  <member name="lemma"><cdata format="string"/></member>
 	  <member name="cpostag"><cdata format="any"/></member>
 	  <member name="postag"><cdata format="any"/></member>
@@ -216,7 +217,7 @@ sub _get_schema
 	  <member name="phead"><cdata format="nonNegativeInteger"/></member>
 	  <member name="pdeprel"><cdata format="any"/></member>
       <member name="children" role="#CHILDNODES">
-        <list type="node.type" ordered="0"/>
+        <list type="node.type" ordered="1"/>
       </member>	  
 	</structure>
   </type>
