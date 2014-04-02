@@ -3,8 +3,7 @@ rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
 
 text:<?'#{'.CustomColor('sentence').'}${form}'?>
 
-node:#{darkred}[${ord}] #{black}${form}
-node:#{dimgray}${lemma}
-node:#{green}${cpostag}
-node:#{darkgreen}${postag}
+node:<? '#{black}${form} ' if $${form} ?>#{darkred}(${ord})
+node:<? '#{dimgray}[${lemma}]' if $${lemma} ?>
+node:<? '#{darkgreen}${cpostag} ~ ${postag}' if ($${ord} > 0 ) ?>
 node:#{darkblue}${deprel}
