@@ -15,6 +15,7 @@ node:#{darkgreen}${m/tag}${tag}
 node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction:' if $${reduction}?>
 node:<? '#{darkviolet}${reduction}' if $${reduction}?>
+node:<? '#{darkorange}marked' if $${marked}?>
 
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}

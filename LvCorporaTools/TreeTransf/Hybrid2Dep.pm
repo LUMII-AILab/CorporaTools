@@ -9,7 +9,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
 	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_PHRASE_DEP
-	$LABEL_DETAIL_NA transformFile processDir transformTree);
+	$LABEL_DETAIL_NA $MARK transformFile processDir transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -94,6 +94,15 @@ our $LABEL_PHRASE_DEP = 0;	# Use one prefix for all dependency roles.
 our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 #our $LABEL_DETAIL_NA = 1;	# Treat N/A as every other role (allow it to be part
 							# of longer role)
+							
+# Add <marked>1</marked> for each node involved in this phrase-style construction.
+# For HLT 2014
+#our $MARK = {'crdParts' => 1, 'crdClauses' => 1};
+#our $MARK = {'xPred' => 1};
+#our $MARK = {'sent' => 1, 'utter' => 1, 'mainCl' => 1, 'subrCl' => 1,
+#			 'interj' => 1, 'spcPmc' => 1, 'insPmc' => 1, 'particle' => 1,
+#			 'dirSpPmc' => 1, 'address' => 1, 'quot' => 1};
+our $MARK = {};
 
 # Print information about all global variables.
 sub _printFlagDesc
@@ -125,6 +134,10 @@ Global variables:
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value) / 1
                      (yes, label 'N/A' is procesed as every other label)
+   MARK (hash) - if phrase type (role) is included as key in this hash, then
+				 nodes representing elemnts of phrases of this type are marked
+				 by setting field "marked" to value 1 (e.g. %MARK=('xpred'=>1))
+				 This functionality is included for HLT'14.
 					 
 END
 }
@@ -226,6 +239,13 @@ sub transformTree
 
 		# Process PMC (probably) node.
 		my $chRole = getRole($xpc, $phrases[0]);
+		if ($MARK->{$chRole})
+		{
+			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+			{
+				&_setMarked($ch);
+			}
+		}
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile); # Function call by role name.
 		# Reset dependents' roles.
 		my $hasPhChild = hasPhraseChild($xpc, $tree); # This should always be true.
@@ -234,6 +254,8 @@ sub transformTree
 			&_renameDependent($xpc, $ch, $hasPhChild);
 		}
 		moveChildren($xpc, $tree, $newNode);
+		# This probably is always false.
+		&_setMarked($newNode) if ($xpc->findnodes('pml:marked[text()=1]', $phrases[0]));
 		# Add reformed subtree to the main tree.
 		$phrases[0]->replaceNode($newNode);
 
@@ -252,7 +274,8 @@ sub transformTree
 	# &_finishRoles($xpc, $tree);
 }
 
-# Traversal function for procesing any subtree except "the big Tree" starting
+# Traversal function for procesing any subtree except "the big Tree" - root
+# subtree.
 # _transformSubtree (XPath context with set namespaces, DOM "node" node for
 #					 subtree root, output flow for warnings)
 sub _transformSubtree
@@ -297,15 +320,25 @@ sub _transformSubtree
 	
 	# Process phrase node.
 	my $phRole = getRole($xpc, $phrases[0]);
+	if ($MARK->{$phRole})
+	{
+		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+		{
+			&_setMarked($ch);
+		}
+	}
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile); #Function call by role name.
 	moveChildren($xpc, $node, $newNode);
+	&_setMarked($newNode) if ($xpc->findnodes('pml:marked[text()=1]', $node));
 	$node->replaceNode($newNode);
 
 	# Process childen.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
 	{
+		#&_setMarked($ch) if ($MARK{$phRole});
 		&_transformSubtree($xpc, $ch, $warnFile);
 	}
+	#&_setMarked($newNode) if ($MARK{$phRole});
 	&_transformSubtree($xpc, $newNode, $warnFile);
 }
 
@@ -1167,9 +1200,9 @@ sub _finshPhraseTransf
 # Move phrase children (type: node) to new parent (type: supposed to be node,
 # but nothing should break if type is xinfo/coordinfo/pmcinfo). This includes
 # relabeling with &getChildrenNode.
-# movePhraseChild (node to be moved, new parent, label of
-#				   x-word/coordination/pmc this node is part of, XPath context
-#				   with set namespaces)
+# _movePhraseChild (node to be moved, new parent, label of
+#					x-word/coordination/pmc this node is part of, XPath context
+#					with set namespaces)
 sub _movePhraseChild
 {
 	my $node = shift @_;
@@ -1181,6 +1214,15 @@ sub _movePhraseChild
 		&_renamePhraseChild($xpc, $node, $phraseRole);
 		my $chNode = getChildrenNode($xpc, $newParent);
 		$chNode->appendChild($node);
+}
+
+# Create "marked" field for a node and set it to value '1'.
+# _movePhraseChild (node)
+sub _setMarked
+{
+	my $node = shift @_;
+	my $newNode = $node->addNewChild( 'http://ufal.mff.cuni.cz/pdt/pml/', "marked" );
+	$newNode->addChild(XML::LibXML::Text->new('1'));
 }
 
 1;

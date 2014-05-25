@@ -10,6 +10,7 @@ node:${m/form}<?
   ' ' if $${ord} and $${m/form} ?><?
   '#{darkred}(${ord})' if $${ord} ?>
 node:<? '#{darkviolet}reduction' if $${reduction}?>
+node:<? '#{darkorange}marked' if $${marked}?>
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}
        #{CurrentOval-width:2}

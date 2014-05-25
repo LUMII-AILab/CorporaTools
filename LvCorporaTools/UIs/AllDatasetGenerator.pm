@@ -28,6 +28,8 @@ our $PARAMS = {
 		'na' => [0], #[0, 1],
 		'subrt' => [0], #[0, 1],
 		'ord' => [], #[0, 1],
+		'mark' => ['', 'crdParts,crdClauses', 'xPred',
+				   'sent,utter,mainCl,subrCl,interj,spcPmc,insPmc,particle,dirSpPmc,address,quot'],
 		},
 	'--red' => {
 		'label' => [0], #[0, 1],

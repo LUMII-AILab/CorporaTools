@@ -83,6 +83,8 @@ Params:
                  subrt - label new roots of all phrases as members of
                          corresponding phrases [0 (only some) / 1 (default)],
                  ord   - do input data have all nodes ordered [0 (default) / 1]
+                 mark  - list (comma separated, no space) of phrase-like
+				         constructions to mark [default - mark nothing]
     --red      remove reductions
                params:
                  label - label ommisions of empty nodes [0 / 1 (default)],
@@ -338,6 +340,15 @@ sub dep
 		if (defined $params->{'na'});
 	$LvCorporaTools::TreeTransf::Hybrid2Dep::LABEL_SUBROOT = $params->{'subrt'}
 		if (defined $params->{'subrt'});
+	if (defined $params->{'mark'})
+	{
+		use Data::Dumper;
+		print Dumper($params->{'mark'});
+		my @phrases = split ',', $params->{'mark'};
+		my %params = map { $_ => 1 } @phrases;
+		$LvCorporaTools::TreeTransf::Hybrid2Dep::MARK = \%params;
+		print Dumper($LvCorporaTools::TreeTransf::Hybrid2Dep::MARK);
+	}
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->{'ord'});
