@@ -107,9 +107,11 @@ sub transformTree
 	my $warnFile = shift @_;
 	
 	my $xPath = './/pml:coordinfo[./pml:coordtype=\'crdClauses\' and '.
-		'./pml:children/pml:node/pml:children/pml:coordinfo/pml:coordtype=\'crdClauses\''.
+		'./pml:children/pml:node[./pml:role=\'crdPart\''.
+		' and ./pml:children/pml:coordinfo/pml:coordtype=\'crdClauses\']'.
 		' or ./pml:coordtype=\'crdParts\' and '.
-		'./pml:children/pml:node/pml:children/pml:coordinfo/pml:coordtype=\'crdParts\']';
+		'./pml:children/pml:node[./pml:role=\'crdPart\''.
+		' and ./pml:children/pml:coordinfo/pml:coordtype=\'crdParts\']]';
 	my @coords = $xpc->findnodes($xPath, $tree);
 	while (@coords)
 	{

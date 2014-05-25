@@ -62,7 +62,7 @@ our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
 							# following conjunct
 							# fShLsHcFpFdU [1]
 our $COORD = 'DEFAULT'; 	# conjunction or punctuation (if there is no
-							# conjunction between first and second conjunct) as
+							# conjunction) between first and second conjunct as
 							# root element, all other elements under root
 							# fPhLsHcHpBdU [1]
 
