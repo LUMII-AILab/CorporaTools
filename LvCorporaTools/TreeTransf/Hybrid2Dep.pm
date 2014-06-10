@@ -23,7 +23,7 @@ use XML::LibXML;  # XML handling library
 use LvCorporaTools::GenericUtils::UIWrapper;
 use LvCorporaTools::PMLUtils::AUtils qw(
 	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
-	moveChildren getOrd sortNodesByOrd hasPhraseChild);
+	moveChildren getOrd sortNodesByOrd hasPhraseChild isNoTokenReduction);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -48,8 +48,13 @@ use LvCorporaTools::PMLUtils::AUtils qw(
 # Global variables set how to transform specific elements.
 # Unknown values cause fatal error.
 
-#our $XPRED = 'BASELEM';	# auxverbs and modals below basElem
-our $XPRED = 'DEFAULT'; 	# everything below first auxverb/modal
+#our $XPRED = 'BASELEM_OLD';	# auxverbs and modals below basElem
+#our $XPRED = 'BASELEM_NO_RED';	# auxverbs and modals below basElem, but root
+								# can not be reduction node without token
+#our $XPRED = 'DEFAULT_OLD'; 	# everything below first auxverb/modal
+our $XPRED = 'DEFAULT_NO_RED';	# everything below first auxverb/modal, but root
+								# can not be reduction node without token
+
 
 #our $COORD = 'ROW';		# all coordination elements in a row except conj
 							# before first conjunct
@@ -79,7 +84,8 @@ our $LABEL_SUBROOT = 1;		# Both phrase name and child role is added to the
 							# child in the root of the phrase representing
 							# subtree. This done for selected phrase types
 							# only: xParticle, subrAnal, coordAnal, xNum, xPred
-							# (if $XPRED='BASELEM'), xApp, namedEnt,
+							# (if $XPRED='BASELEM_OLD' or 
+							# $XPRED='BASELEM_NO_RED'), xApp, namedEnt, 
 							# [phrasElem,] unstruct; crdParts (if
 							# $COORD='ROW' or $COORD='ROW_NO_CONJ'), crdClauses
 							# (if $COORD='ROW' or $COORD='ROW_NO_CONJ'),
@@ -109,9 +115,13 @@ sub _printFlagDesc
 {
 	print <<END;
 Global variables:
-   XPRED - xPred transformation: 'BASELEM' (auxverbs and modals become
-           dependents of basElem) / 'DEFAULT' (everything become dependent of
-           first auxverb/modal, default value)
+   XPRED - xPred transformation: 'BASELEM_OLD' (auxverbs and modals become
+           dependents of basElem) / 'BASELEM_NO_RED' (auxverbs and modals 
+           become dependents of basElem unless said basElem is token-less
+           reduction node) / 'DEFAULT_OLD' (everything become dependent of
+           first auxverb/modal) / 'DEFAULT_NO_RED' (everything become dependent
+           of first auxverb/modal  unless said node is token-less reduction
+           node, default value)
    COORD - coordinated elements' transformation: 'ROW' (all coordination
            elements in a row) / ROW_NO_CONJ (all conjuncts in a row,
            conjunctions and punctuation under following conjunct) / '3_LEVEL'
@@ -439,11 +449,16 @@ sub xNum
 }
 sub xPred
 {
-	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 1, @_) if ($XPRED eq 'BASELEM');
+	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 1, @_) if ($XPRED eq 'BASELEM_OLD');
+	return &_allBelowOneNoEmptyReduction(['basElem'], $LABEL_SUBROOT, 1, @_)
+		if ($XPRED eq 'BASELEM_NO_RED');
 	return &_allBelowOne(['mod', 'auxVerb'], 1, 0, @_)
-		if ($XPRED eq 'DEFAULT');
+		if ($XPRED eq 'DEFAULT_OLD');
+	return &_allBelowOneNoEmptyReduction(['mod', 'auxVerb'], 1, 0, @_)
+		if ($XPRED eq 'DEFAULT_NO_RED');
 	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
 	# Root is labeled according to settings, if baseElem in root.
+	# TODO Use $LABEL_SUBROOT always?
 }
 sub xApp
 {
@@ -748,7 +763,7 @@ sub _defaultTransform
 # nodes.
 # _allBelowOne (pointer to array with roles determining node to become root,
 #				relabel new root (0/1; if $LABEL_SUBROOT=1, this will be
-#				ignored and root will be renamed anyway),  warn if multiple
+#				ignored and root will be renamed anyway), warn if multiple
 #				potential roots (0/1), XPath context with set namespaces, DOM
 #				node, role of the parent node, output flow for warnings)
 sub _allBelowOne
@@ -788,6 +803,75 @@ sub _allBelowOne
 		$labelNewRoot, $xpc, $node, $newRoot, $parentRole);
 	return $newRoot;
 }
+
+# Finds child element with specified role and makes ir parent of other children
+# nodes. If found child is reduction node without token, search other
+# _allBelowOneNoEmptyReduction (pointer to array with preffered roles for node
+#								to become root, relabel new root (0/1; if
+#								$LABEL_SUBROOT=1, this will be ignored and root
+#								will be renamed anyway), warn if multiple
+#								potential roots (0/1), XPath context with set
+#								namespaces, DOM node, role of the parent node,
+#								output flow for warnings)
+sub _allBelowOneNoEmptyReduction
+{
+	my $rootRoles = shift @_;
+	my $labelNewRoot = shift @_;
+	my $warn = shift @_;
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my $parentRole = shift @_;
+	my $warnFile = shift @_;
+	my $phraseRole = getRole($xpc, $node);
+	
+	# Find node with speciffied rootRoles.
+	my $query = join '\' or pml:role=\'', @$rootRoles;
+	$query = "pml:children/pml:node[pml:role=\'$query\']";
+	my @res = $xpc->findnodes($query, $node);
+	if (not @res)
+	{
+		my $roles = join '/', @$rootRoles;
+		die "$phraseRole below ". $node->find('../../@id')
+			." have no $roles children!"
+	}
+	
+	my @sorted = @{sortNodesByOrd($xpc, 0, @res)};
+	my $newRoot = shift @sorted;
+	# Try to find nonempty node.
+	while (isNoTokenReduction($xpc, $newRoot) and @sorted)
+	{
+		$newRoot = shift @sorted;
+	}
+	
+	# If nonempty node with speciffied rootRoles was not found, check other
+	# children.
+	if (isNoTokenReduction($xpc, $newRoot))
+	{
+		$query = join '\' and pml:role!=\'', @$rootRoles;
+		$query = "pml:children/pml:node[pml:role!=\'$query\']";
+		@res = $xpc->findnodes($query, $node);
+		@sorted = @{sortNodesByOrd($xpc, 0, @res)};
+		$newRoot = shift @sorted;
+		
+		while (isNoTokenReduction($xpc, $newRoot) and @sorted)
+		{
+			$newRoot = shift @sorted;
+		}
+	}
+	
+	# If all children are tokenless reduction nodes, that probably is an error.
+	if (isNoTokenReduction($xpc, $newRoot))
+	{
+		die "$phraseRole below ". $node->find('../../@id')
+			." have only tokenless reduction children!"
+	}
+	
+	# Rebuild subtree.
+	$newRoot = &_finshPhraseTransf(
+		$labelNewRoot, $xpc, $node, $newRoot, $parentRole);
+	return $newRoot;
+}
+
 
 # Makes parent-child chain of all node's children.
 # _chainAll (should start with last node, relabel new root (0/1; if

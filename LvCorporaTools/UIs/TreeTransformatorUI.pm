@@ -71,7 +71,8 @@ Params:
                  ord - do input data have all nodes ordered [0 (default) / 1]
     --dep      convert to dependencies
                params:
-                 xpred - x-Pred mode [BASELEM / DEFAULT (default)],
+                 xpred - x-Pred mode [BASELEM_OLD / BASELEM_NO_RED /
+                         DEFAULT_OLD / DEFAULT_NO_RED (default)],
                  coord - Coord mode [ROW / ROW_NO_CONJ / 3_LEVEL / DEFAULT
                          (default)],
                  pmc   - PMC mode [BASELEM / DEFAULT (default)],
@@ -342,12 +343,9 @@ sub dep
 		if (defined $params->{'subrt'});
 	if (defined $params->{'mark'})
 	{
-		use Data::Dumper;
-		print Dumper($params->{'mark'});
 		my @phrases = split ',', $params->{'mark'};
 		my %params = map { $_ => 1 } @phrases;
 		$LvCorporaTools::TreeTransf::Hybrid2Dep::MARK = \%params;
-		print Dumper($LvCorporaTools::TreeTransf::Hybrid2Dep::MARK);
 	}
 		
 	# Convert.

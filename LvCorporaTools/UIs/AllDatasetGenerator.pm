@@ -8,7 +8,7 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir $PARAMS);
 
 #use Carp::Always;	# Print stack trace on die.
-use Data::Dumper;
+#use Data::Dumper;
 
 use File::Copy;
 
@@ -20,7 +20,7 @@ our $PARAMS = {
 		'ord' => [], #[0, 1],
 		},
 	'--dep' => {
-		'xpred' => ['BASELEM', 'DEFAULT'],
+		'xpred' => ['BASELEM_NO_RED', 'DEFAULT_NO_RED'],
 		'coord' => ['ROW', 'ROW_NO_CONJ', '3_LEVEL', 'DEFAULT'],
 		'pmc' => ['BASELEM', 'DEFAULT'],
 		'root' => [0], #[0, 1],

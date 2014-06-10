@@ -10,7 +10,7 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
 	renumberTokens renumberNodes getOrd setOrd getRole setNodeRole
 	getChildrenNode hasChildrenNode moveChildren hasPhraseChild
-	sortNodesByOrd);
+	sortNodesByOrd isNoTokenReduction);
 
 use XML::LibXML;
 
@@ -342,6 +342,23 @@ sub hasPhraseChild
 	return $bestTry[0] if (@bestTry);
 	return 0;
 
+}
+
+# isNoTokenReduction (XPath context with set namespaces, DOM
+#					  node/xinfo/coordinfo/pmcinfo node)
+# return true (1) if node has reduction and no m.rf fields, false (0) otherwise.
+sub isNoTokenReduction
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+	my @reduction = $xpc->findnodes('pml:reduction', $node);
+	my @mRefs = $xpc->findnodes('pml:m.rf', $node);
+	
+	if (@reduction and not @mRefs)
+	{
+		return 1;
+	}
+	return 0;
 }
 
 # sortNodesByOrd (XPath context with set namespaces, should array be sorted in
