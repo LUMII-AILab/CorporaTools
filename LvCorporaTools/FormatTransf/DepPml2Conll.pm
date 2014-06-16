@@ -48,9 +48,9 @@ our $CPOSTAG = 'NONE';		# No CPOSTAG, this is default.
 #our $CPOSTAG = 'FIRST';	# CPOSTAG is POS.
 #our $CPOSTAG = 'PURIFY';	# No lexical features included in CPOSTAG.
 
-#our $MARKED_ONLY = 0;		# Output CONLL contains information about all nodes,
+our $MARKED_ONLY = 0;		# Output CONLL contains information about all nodes,
 							# this is default.
-our $MARKED_ONLY = 1;		# Output CONLL contains information about marked
+#our $MARKED_ONLY = 1;		# Output CONLL contains information about marked
 							# nodes only.
 
 # Process all .pml and .xml files in given folder. This can be used as entry
