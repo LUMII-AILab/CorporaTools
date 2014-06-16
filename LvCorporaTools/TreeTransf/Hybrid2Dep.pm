@@ -1305,7 +1305,7 @@ sub _movePhraseChild
 sub _setMarked
 {
 	my $node = shift @_;
-	my $newNode = $node->addNewChild( 'http://ufal.mff.cuni.cz/pdt/pml/', "marked" );
+	my $newNode = $node->addNewChild( 'http://ufal.mff.cuni.cz/pdt/pml/', 'marked' );
 	$newNode->addChild(XML::LibXML::Text->new('1'));
 }
 

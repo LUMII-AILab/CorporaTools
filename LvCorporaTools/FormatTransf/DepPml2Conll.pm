@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile processDir SPACE_SUBST POSTAG CPOSTAG);
+our @EXPORT_OK = qw(transformFile processDir SPACE_SUBST POSTAG CPOSTAG MARKED_ONLY);
 
 use Data::Dumper;
 use File::Path;
@@ -35,15 +35,23 @@ use LvCorporaTools::GenericUtils::UIWrapper;
 ###############################################################################
 
 # Global variables - transformation settings.
+
 # If lemma or token contains space, it will be replaced with this string.
 our $SPACE_SUBST = "_";
+
 # What postag to use?
 our $POSTAG = 'FULL';		# All SemTi-Kamols tagset features, this is default.
 #our $POSTAG = 'PURIFY';	# No lexical features included.
+
 # What cpostag to use?
 our $CPOSTAG = 'NONE';		# No CPOSTAG, this is default.
 #our $CPOSTAG = 'FIRST';	# CPOSTAG is POS.
 #our $CPOSTAG = 'PURIFY';	# No lexical features included in CPOSTAG.
+
+#our $MARKED_ONLY = 0;		# Output CONLL contains information about all nodes,
+							# this is default.
+our $MARKED_ONLY = 1;		# Output CONLL contains information about marked
+							# nodes only.
 
 # Process all .pml and .xml files in given folder. This can be used as entry
 # point, if this module is used standalone.
@@ -62,6 +70,9 @@ Global variables:
             SemTi-Kamols features, default value)
    SPACE_SUBST - nonspace symbol to substitute spaces that are not allowed in
                  CoNLL formats
+   MARKED_ONLY - treates as boolean: if true, information only about marked
+                 nodes is included in output conll, otherwise information about
+                 all nodes is included (default value)
 Input files should be provided as UTF-8.
 
 Params:
@@ -94,7 +105,11 @@ Global variables:
              letter) / 'NONE'(no CPOSTAG, default value)
    POSTAG - POSTAG mode 'PURIFY' (no lexical features) / 'FULL' (all
             SemTi-Kamols features, default value)
-   SPACE_SUBST 
+   SPACE_SUBST - nonspace symbol to substitute spaces that are not allowed in
+                 CoNLL formats
+   MARKED_ONLY - treates as boolean: if true, information only about marked
+                 nodes is included in output conll, otherwise information about
+                 all nodes is included (default value)
 Input files should be provided as UTF-8.
 
 Params:
@@ -160,19 +175,22 @@ END
 		foreach my $n (@nodes)
 		{
 			my $head = $n->parentNode;
+			
 			while (not exists($n2id{$head->findvalue('@id')}) and
 				$head->findvalue('@id') ne $tree->findvalue('@id'))
 			{
 				$head = $head->parentNode;
 			}
+			
 			print $out "$n2id{$n->findvalue('@id')}\t"; #ID
+			
 			my $form = ${$xpc->findnodes('pml:m.rf/pml:form', $n)}[0]->textContent;
 			$form =~ s/ /\Q$SPACE_SUBST\E/g;
 			print $out "$form\t"; #FORM
+			
 			my $lemma = ${$xpc->findnodes('pml:m.rf/pml:lemma', $n)}[0]->textContent;
 			$lemma =~ s/ /\Q$SPACE_SUBST\E/g;
 			print $out "$lemma\t"; #LEMMA
-
 			if ($conll2009)
 			{
 				print $out "$lemma\t"; #PLEMMA
@@ -198,25 +216,12 @@ END
 				print $out "\t"; #CPOSTAG
 			}
 
-			if ($POSTAG eq 'PURIFY')
-			{
-				print $out purifyKamolsTag($tag); #POSTAG
-			} else
-			{
-				print $out "$tag"; #POSTAG
-			}
-			print $out "\t"; #POSTAG
+			my $postag = ($POSTAG eq 'PURIFY') ? purifyKamolsTag($tag) : $tag;
+			print $out "$postag\t"; #POSTAG
 
 			if ($conll2009)
 			{
-				if ($POSTAG eq 'PURIFY')
-				{
-					print $out purifyKamolsTag($tag); #PPOS
-				} else
-				{
-					print $out "$tag"; #PPOS
-				}
-				print $out "\t"; #PPOS
+				print $out "$postag\t"; #PPOS
 			}
 			
 			my $decoded = decodeTag($tag, $tagDecoder);
@@ -227,46 +232,41 @@ END
 				$feats = '_';
 				warn "Tag $tag was not decoded!";
 			}
+			
 			print $out "$feats\t"; #FEATS
 			if ($conll2009)
 			{
 				print $out "$feats\t"; #PFEATS
 			}
-
-			exists($n2id{$head->findvalue('@id')}) ?
-				print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#HEAD
-			print $out "\t";
-			if ($conll2009)
-			{
-				exists($n2id{$head->findvalue('@id')}) ?
-					print $out "$n2id{$head->findvalue('@id')}" : print $out "0";	#PHEAD
-				print $out "\t";
-			}
-
-			if ($printLabels)
-			{
-				print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #DEPREL
-			} else
-			{
-				print $out "_"; #DEPREL
-			}
-			print $out "\t";
 			
+			my $isMarked =($xpc->findnodes('pml:marked', $n) and
+					${$xpc->findnodes('pml:marked', $n)}[0]->textContent) ?
+				1 : 0;
+
+			my $headId = '_';
+			if ($MARKED_ONLY and $isMarked or not $MARKED_ONLY)
+			{
+				$headId = exists($n2id{$head->findvalue('@id')}) ?
+					"$n2id{$head->findvalue('@id')}" : '0';
+			}
+			print $out "$headId\t"; #HEAD
 			if ($conll2009)
 			{
-				if ($printLabels)
-				{
-					print $out ${$xpc->findnodes('pml:role', $n)}[0]->textContent; #PDEPREL
-				} else
-				{
-					print $out "_"; #PDEPREL
-				}
-				print $out "\t";
+				print $out "$headId\t"; #PHEAD
+			}
+
+			my $role = ($printLabels and 
+					($MARKED_ONLY and $isMarked	or not $MARKED_ONLY)) ?
+				${$xpc->findnodes('pml:role', $n)}[0]->textContent : '_';
+			print $out "$role\t";	#DEPREL
+			if ($conll2009)
+			{
+				print $out "$role\t";	#PDEPREL
 			}
 
 			if ($conll2009)
 			{
-				print $out "_\t_\n"; #FILLPRED, PRED, APRED1-6
+				print $out "_\t_\t_\t_\t_\t_\t_\t_\n"; #FILLPRED, PRED, APRED1-6
 			} else 
 			{
 				print $out "_\t_\n"; #PHEAD, PDEPREL
