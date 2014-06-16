@@ -98,7 +98,9 @@ Params:
                params:
                  label   - label output tree arcs [0/1],
                  cpostag - CPOSTAG mode [PURIFY / FIRST / NONE (default)],
-                 postag  - POSTAG mode [FULL (default) / PURIFY], 
+                 postag  - POSTAG mode [FULL (default) / PURIFY],
+				 marked  - print roles and parent IDs for marked nodes only
+                           [0 (default) / 1]
                  conll09 - do "large" CoNLL-2009 output [0 (default) / 1]
     --fold     create development/test or cross-validation datasets
                params:
@@ -430,6 +432,8 @@ sub conll
 		$params->{'cpostag'} if ($params->{'cpostag'});
 	$LvCorporaTools::FormatTransf::DepPml2Conll::POSTAG =
 		$params->{'postag'} if ($params->{'postag'});
+	$LvCorporaTools::FormatTransf::DepPml2Conll::MARKED_ONLY =
+		$params->{'marked'} if (defined $params->{'marked'});
 		
 	# Convert.
 	LvCorporaTools::FormatTransf::DepPml2Conll::processDir(

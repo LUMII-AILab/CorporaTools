@@ -42,6 +42,7 @@ our $PARAMS = {
 		'label' => [1], #[0, 1],
 		'cpostag' => ['FIRST'], #['NONE', 'FIRST', 'PURIFY'],
 		'postag' => ['FULL'], #['FULL', 'PURIFY'],
+		'marked' => [0, 1], #[0, 1],
 		'conll09' => [0], #[0, 1],
 		},
 	'--fold' => {
