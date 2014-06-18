@@ -28,7 +28,8 @@ our $PARAMS = {
 		'na' => [0], #[0, 1],
 		'subrt' => [0], #[0, 1],
 		'ord' => [], #[0, 1],
-		'mark' => ['', 'crdParts,crdClauses', 'xPred',
+		#'mark' => [''],
+		'mark' => ['crdParts,crdClauses', 'xPred',
 				   'sent,utter,mainCl,subrCl,interj,spcPmc,insPmc,particle,dirSpPmc,address,quot'],
 		},
 	'--red' => {
@@ -42,7 +43,8 @@ our $PARAMS = {
 		'label' => [1], #[0, 1],
 		'cpostag' => ['FIRST'], #['NONE', 'FIRST', 'PURIFY'],
 		'postag' => ['FULL'], #['FULL', 'PURIFY'],
-		'marked' => [0, 1], #[0, 1],
+		#'marked' => [0], #[0, 1],
+		'marked' => [1], #[0, 1],
 		'conll09' => [0], #[0, 1],
 		},
 	'--fold' => {
