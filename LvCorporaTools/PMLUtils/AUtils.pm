@@ -10,7 +10,7 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
 	renumberTokens renumberNodes getOrd setOrd getRole setNodeRole
 	getChildrenNode hasChildrenNode moveChildren hasPhraseChild
-	sortNodesByOrd isNoTokenReduction);
+	sortNodesByOrd isNoTokenReduction countRealChildren);
 
 use XML::LibXML;
 
@@ -359,6 +359,27 @@ sub isNoTokenReduction
 		return 1;
 	}
 	return 0;
+}
+
+# countRealChildren (XPath context with set namespaces, DOM
+#					  node/xinfo/coordinfo/pmcinfo node)
+# return count of children who is not no-token reduction nodes according to
+# isNoTokenReduction().
+sub countRealChildren
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+
+	my $childrenNode = &hasChildrenNode($xpc, $node);
+	return 0 unless $childrenNode;
+	
+	my @childen = $xpc->findnodes('pml:node', $childrenNode);
+	my $res = 0;
+	for my $child (@childen)
+	{
+		$res++ unless &isNoTokenReduction($xpc, $child);
+	}
+	return $res;
 }
 
 # sortNodesByOrd (XPath context with set namespaces, should array be sorted in

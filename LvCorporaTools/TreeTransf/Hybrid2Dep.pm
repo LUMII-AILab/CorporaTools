@@ -23,7 +23,8 @@ use XML::LibXML;  # XML handling library
 use LvCorporaTools::GenericUtils::UIWrapper;
 use LvCorporaTools::PMLUtils::AUtils qw(
 	renumberNodes renumberTokens getRole setNodeRole getChildrenNode
-	moveChildren getOrd sortNodesByOrd hasPhraseChild isNoTokenReduction);
+	moveChildren getOrd sortNodesByOrd hasPhraseChild isNoTokenReduction
+	countRealChildren);
 
 ###############################################################################
 # This program transforms Latvian Treebank analytical layer files from native
@@ -144,10 +145,14 @@ Global variables:
    LABEL_DETAIL_NA - allow roles containing 'N/A' as a part of them: 0 (no,
                      all such roles are renamed just 'N/A', default value) / 1
                      (yes, label 'N/A' is procesed as every other label)
-   MARK (hash) - if phrase type (role) is included as key in this hash, then
-				 nodes representing elemnts of phrases of this type are marked
-				 by setting field "marked" to value 1 (e.g. %MARK=('xpred'=>1))
-				 This functionality is included for HLT'14.
+   MARK (hash ref) - if phrase type (role) is included as key in this hash
+                     (e.g. $MARK={'xPrep'=>1}), then nodes representing
+				     elemnts of phrases of this type are marked by setting
+				     setting field "marked" to value 1 (default is empty hash
+                     - no marking); if phrase contains only one child that is
+                     not empty reduction node, children of this phrase is not
+                     marked
+				     This functionality is included for HLT'14.
 					 
 END
 }
@@ -249,7 +254,7 @@ sub transformTree
 
 		# Process PMC (probably) node.
 		my $chRole = getRole($xpc, $phrases[0]);
-		if ($MARK->{$chRole})
+		if ($MARK->{$chRole} and countRealChildren($xpc, $phrases[0]) > 1)
 		{
 			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
 			{
@@ -330,7 +335,8 @@ sub _transformSubtree
 	
 	# Process phrase node.
 	my $phRole = getRole($xpc, $phrases[0]);
-	if ($MARK->{$phRole})
+	my $realChildrenCount = countRealChildren($xpc, $phrases[0]);
+	if ($MARK->{$phRole} and $realChildrenCount > 1)
 	{
 		foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
 		{
@@ -345,10 +351,8 @@ sub _transformSubtree
 	# Process childen.
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $newNode))
 	{
-		#&_setMarked($ch) if ($MARK{$phRole});
 		&_transformSubtree($xpc, $ch, $warnFile);
 	}
-	#&_setMarked($newNode) if ($MARK{$phRole});
 	&_transformSubtree($xpc, $newNode, $warnFile);
 }
 
