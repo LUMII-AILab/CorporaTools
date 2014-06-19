@@ -456,13 +456,12 @@ sub xPred
 	return &_allBelowOne(['basElem'], $LABEL_SUBROOT, 1, @_) if ($XPRED eq 'BASELEM_OLD');
 	return &_allBelowOneNoEmptyReduction(['basElem'], $LABEL_SUBROOT, 1, @_)
 		if ($XPRED eq 'BASELEM_NO_RED');
-	return &_allBelowOne(['mod', 'auxVerb'], 1, 0, @_)
+	return &_allBelowOne(['mod', 'auxVerb'], $LABEL_SUBROOT, 0, @_)
 		if ($XPRED eq 'DEFAULT_OLD');
-	return &_allBelowOneNoEmptyReduction(['mod', 'auxVerb'], 1, 0, @_)
+	return &_allBelowOneNoEmptyReduction(['mod', 'auxVerb'], $LABEL_SUBROOT, 0, @_)
 		if ($XPRED eq 'DEFAULT_NO_RED');
 	die "Unknown value \'$XPRED\' for global constant \$XPRED ";
-	# Root is labeled according to settings, if baseElem in root.
-	# TODO Use $LABEL_SUBROOT always?
+	# Root is labeled according to settings.
 }
 sub xApp
 {
