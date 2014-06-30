@@ -7,8 +7,8 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(evaluateFile);
 
-our $SIMPLE_STATS = 0;	# Calculate only UAS, LAS, LA (require less memory).
-our $SIMPLE_STATS = 1;	# Calculate only UAS, LAS, LA, confusion matrix, etc.
+our $SIMPLE_STATS = 1;	# Calculate only UAS, LAS, LA (require less memory).
+#our $SIMPLE_STATS = 0;	# Calculate only UAS, LAS, LA, confusion matrix, etc.
 
 
 sub evaluateFile
@@ -21,6 +21,10 @@ Script for evaluating syntax parser output file in conll 2007 format regarding
 to golden file. Only ROLE and HEAD columns are compared.
 NB: If golden file has empty ('_') ROLE and HEAD fields for a token, this token
     is excluded from scoring.
+	
+Global variables:
+   SIMPLE_STATS - If true, calculate only UAS, LAS, LA (require less memory).
+                  Calculate all stats otherwise.
 
 Params:
    data directory
@@ -51,26 +55,29 @@ END
 	my $correctRole = 0;
 	my $correctHead = 0;
 	my $correctRoleAndHead = 0;
+	my $ignored = 0;
 	
 	my $roleCOnfusionMatrix = {};
 	my $goldRoles = {};
 	my $sysRoles = {};
 	
 	my $rowNumber = 0; # For debuging purposes.
-	while my $sysLine (<$systemIn>)
+	for my $sysLine (<$systemIn>)
 	{
 		my $goldLine = <$goldenIn>;
 		die "Gold file is shorter than sytem result file (line $rowNumber): $!"
 			unless (defined $goldLine or not $sysLine); # It is okay to have few unnecessary enters in the end of file.
 		# Nothing to count, if both lines are empty (end of sentence).
-		next if (not $sysLine and not $goldLine);
+		next if ((not $sysLine or $sysLine =~ /^\s*$/) and (not $goldLine or $goldLine =~ /^\s*$/));
 		die "Line $rowNumber in gold file have no corresponding line in system file: $!"
 			if ($goldLine and not $sysLine);
 		die "Line $rowNumber in system result file have no corresponding line in gold file: $!"
 			if ($sysLine and not $goldLine);
 		
-		@goldCol = split /[\t\n\r]/, $goldLine;
-		@sysCol = split /[\t\n\r]/, $sysLine;
+		#$sysLine = s/^\s*(.*?)\s*$/$1/;
+		#$goldLine = s/^\s*(.*?)\s*$/$1/;
+		my @goldCol = split /[\t\n\r]/, $goldLine;
+		my @sysCol = split /[\t\n\r]/, $sysLine;
 		
 		die "Missing columns in line $rowNumber: $!" if ( @goldCol < 8 or @sysCol < 8);
 		
@@ -99,6 +106,9 @@ END
 					$roleCOnfusionMatrix->{$goldCol[7]}->{$sysCol[7]}++;
 				}
 			}
+		} elsif ($goldCol[7] eq '_' or $goldCol[6] eq '_')
+		{
+			$ignored++;
 		}
 	}
 	continue
@@ -117,9 +127,10 @@ END
 	my $uas = 100 * $correctHead / $total;
 	my $las = 100 * $correctRoleAndHead / $total;
 	my $la = 100 * $correctRole / $total;
-	print $out "UAS (%)\t$uas\n";
-	print $out "LAS (%)\t$las\n";
-	print $out "LA (%)\t$la\n";
+	print $out "UAS = $correctHead / $total * 100 (%)\t$uas\n";
+	print $out "LAS =  $correctRoleAndHead / $total * 100 (%)\t$las\n";
+	print $out "LA = $correctRole / $total * 100 (%)\t$la\n";
+	print $out "Ignored arcs: $ignored\n";
 	
 	if (not $SIMPLE_STATS)
 	{
@@ -131,12 +142,12 @@ END
 		print $out "Golden\\System\t";
 		print $out join("\t", @sortedSys);
 		print $out "\n";
-		for $sysRole (@sortedSys)
+		for my $sysRole (@sortedSys)
 		{
 			print $out "$sysRole";
-			for $goldRole (@sortedGold)
+			for my $goldRole (@sortedGold)
 			{
-				print $out "\t".($roleCOnfusionMatrix->{$goldRole}->{$sysRole} + 0);
+				print $out "\t".($roleCOnfusionMatrix->{$goldRole}->{$sysRole} or 0);
 			}
 			print $out "\n";
 		}
@@ -146,12 +157,12 @@ END
 		print $out "Golden\\System\t";
 		print $out join("\t", @sortedSys);
 		print $out "\n";
-		for $sysRole (@sortedSys)
+		for my $sysRole (@sortedSys)
 		{
 			print $out "$sysRole";
-			for $goldRole (@sortedGold)
+			for my $goldRole (@sortedGold)
 			{
-				print $out "\t".(($roleCOnfusionMatrix->{$goldRole}->{$sysRole} + 0)*100/$goldRoles->{$goldRole});
+				print $out "\t".(($roleCOnfusionMatrix->{$goldRole}->{$sysRole} or 0)*100/$goldRoles->{$goldRole});
 			}
 			print $out "\n";
 		}
