@@ -127,9 +127,9 @@ END
 	my $uas = 100 * $correctHead / $total;
 	my $las = 100 * $correctRoleAndHead / $total;
 	my $la = 100 * $correctRole / $total;
-	print $out "UAS = $correctHead / $total * 100 (%)\t$uas\n";
-	print $out "LAS =  $correctRoleAndHead / $total * 100 (%)\t$las\n";
-	print $out "LA = $correctRole / $total * 100 (%)\t$la\n";
+	print $out "UAS (%) = $correctHead / $total * 100 = $uas\n";
+	print $out "LAS (%) = $correctRoleAndHead / $total * 100 = $las\n";
+	print $out "LA  (%) = $correctRole / $total * 100 = $la\n";
 	print $out "Ignored arcs: $ignored\n";
 	
 	if (not $SIMPLE_STATS)

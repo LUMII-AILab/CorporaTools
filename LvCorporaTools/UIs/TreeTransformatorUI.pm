@@ -71,25 +71,31 @@ Params:
                  ord - do input data have all nodes ordered [0 (default) / 1]
     --dep      convert to dependencies
                params:
-                 xpred - x-Pred mode [BASELEM_OLD / BASELEM_NO_RED /
-                         DEFAULT_OLD / DEFAULT_NO_RED (default)],
-                 coord - Coord mode [ROW / ROW_NO_CONJ / 3_LEVEL / DEFAULT
-                         (default)],
-                 pmc   - PMC mode [BASELEM / DEFAULT (default)],
-                 root  - label root node with distinct label [0 / 1 (default)],
-                 phdep - label phrase dependents with different role prefix [0
-                         (default) / 1],
-                 na    - allow 'N/A' to be part of longer labels [0 (default)
-                         / 1],
-                 subrt - label new roots of all phrases as members of
-                         corresponding phrases [0 (only some) / 1 (default)],
-                 ord   - do input data have all nodes ordered [0 (default) / 1]
-                 mark  - list (comma separated, no space) of phrase-like
-				         constructions to mark [default - mark nothing]
+                 xpred     - x-Pred mode [BASELEM_OLD / BASELEM_NO_RED /
+                             DEFAULT_OLD / DEFAULT_NO_RED (default)],
+                 coord     - Coord mode [ROW / ROW_NO_CONJ / 3_LEVEL / DEFAULT
+                             (default)],
+                 pmc       - PMC mode [BASELEM / DEFAULT (default)],
+                 root      - label root node with distinct label [0 / 1
+                             (default)],
+                 phdep     - label phrase dependents with different role prefix
+                             [0 (default) / 1],
+                 na        - allow 'N/A' to be part of longer labels [0 
+                             (default) / 1],
+                 subrt     - label new roots of all phrases as members of
+                             corresponding phrases [0 (only some) / 1
+                             (default)],
+                 ord       - do input data have all nodes ordered [0 (default)
+                             / 1],
+                 mark      - list (comma separated, no space) of phrase-like
+				             constructions to mark [default - mark nothing],
+                 markphdep - list (comma separated, no space) of phrase-like
+				             constructions whose phrase-dependants must be
+                             marked [default - mark nothing]
     --red      remove reductions
                params:
                  label - label ommisions of empty nodes [0 / 1 (default)],
-                 ord - do input data have all nodes ordered [0 (default) / 1]
+                 ord   - do input data have all nodes ordered [0 (default) / 1]
     --knit     convert .w + .m + .a to a single .pml file
                params:
                  path - directory of PML schemas [default =
@@ -349,6 +355,13 @@ sub dep
 		my %params = map { $_ => 1 } @phrases;
 		$LvCorporaTools::TreeTransf::Hybrid2Dep::MARK = \%params;
 	}
+	if (defined $params->{'markphdep'})
+	{
+		my @phrases = split ',', $params->{'markphdep'};
+		my %params = map { $_ => 1 } @phrases;
+		$LvCorporaTools::TreeTransf::Hybrid2Dep::MARK_PHDEP = \%params;
+	}
+
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::Hybrid2Dep::processDir($source, $params->{'ord'});

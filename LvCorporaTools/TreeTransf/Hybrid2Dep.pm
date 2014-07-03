@@ -9,7 +9,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
 	$XPRED $COORD $PMC $LABEL_ROOT $LABEL_SUBROOT $LABEL_PHRASE_DEP
-	$LABEL_DETAIL_NA $MARK transformFile processDir transformTree);
+	$LABEL_DETAIL_NA $MARK $MARK_PHDEP transformFile processDir transformTree);
 	
 #use Carp::Always;	# Print stack trace on die.
 
@@ -73,7 +73,7 @@ our $COORD = 'DEFAULT'; 	# conjunction or punctuation (if there is no
 							# fPhLsHcHpBdU [1]
 
 #our $PMC = 'BASELEM';		# basElem as root element
-our $PMC = 'DEFAULT';		# first punct as root element
+our $PMC = 'DEFAULT';		# first conj or punct as root element
 
 our $LABEL_ROOT = 1;		# Label tree's empty root node 'ROOT'.
 #our $LABEL_ROOT = 0;		# Do not label root node.
@@ -110,6 +110,16 @@ our $LABEL_DETAIL_NA = 0;	# All roles containing N/A rename as just 'N/A'.
 #			 'interj' => 1, 'spcPmc' => 1, 'insPmc' => 1, 'particle' => 1,
 #			 'dirSpPmc' => 1, 'address' => 1, 'quot' => 1};
 our $MARK = {};
+
+# Add <marked>1</marked> for each phrase dependant in this phrase-style construction.
+# For HLT 2014
+#our $MARK_PHDEP = {'crdParts' => 1, 'crdClauses' => 1};
+#our $MARK_PHDEP = {'xPred' => 1};
+#our $MARK_PHDEP = {'sent' => 1, 'utter' => 1, 'mainCl' => 1, 'subrCl' => 1,
+#					'interj' => 1, 'spcPmc' => 1, 'insPmc' => 1,
+#					'particle' => 1, 'dirSpPmc' => 1, 'address' => 1,
+#					'quot' => 1};
+our $MARK_PHDEP = {};
 
 # Print information about all global variables.
 sub _printFlagDesc
@@ -153,6 +163,14 @@ Global variables:
                      not empty reduction node, children of this phrase is not
                      marked
 				     This functionality is included for HLT'14.
+   MARK_PHDEP (hash ref) - if phrase type (role) is included as key in this 
+                           hash (e.g. $MARK_PHDEP={'xPrep'=>1}), then 
+                           phrase-dependents of phrases of this type are marked
+				           by setting setting field "marked" to value 1 
+                           (default is empty hash - no marking); if phrase
+                           contains only one child that is not empty reduction
+                           node, children of this phrase is not marked
+				           This functionality is included for HLT'14.
 					 
 END
 }
@@ -246,17 +264,27 @@ sub transformTree
 	foreach my $childrenWrap ($xpc->findnodes('pml:children', $tree))
 	{
 		my @phrases = $xpc->findnodes(
-			'pml:children/*[local-name()!=\'node\']',
-			$tree);
+			'pml:children/*[local-name()!=\'node\']', $tree);
 		die ($tree->find('@id'))." has ".(scalar @phrases)." non-node children for the root!"
 			if (scalar @phrases ne 1);
 		
 
 		# Process PMC (probably) node.
 		my $chRole = getRole($xpc, $phrases[0]);
-		if ($MARK->{$chRole} and countRealChildren($xpc, $phrases[0]) > 1)
+		my $realChildrenCount = countRealChildren($xpc, $phrases[0]);
+
+		if ($MARK->{$chRole} and $realChildrenCount > 1)
 		{
 			foreach my $ch ($xpc->findnodes('pml:children/pml:node', $phrases[0]))
+			{
+				&_setMarked($ch);
+			}
+		}
+		if ($MARK_PHDEP->{$chRole} and $realChildrenCount > 1)
+		{
+			my @phDeps = $xpc->findnodes( 
+				'pml:children/pml:node', $tree);
+			foreach my $ch (@phDeps)
 			{
 				&_setMarked($ch);
 			}
@@ -343,6 +371,16 @@ sub _transformSubtree
 			&_setMarked($ch);
 		}
 	}
+	if ($MARK_PHDEP->{$phRole} and $realChildrenCount > 1)
+	{
+		my @phDeps = $xpc->findnodes( 
+			'pml:children/pml:node', $node);
+		foreach my $ch (@phDeps)
+		{
+			&_setMarked($ch);
+		}
+	}
+
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile); #Function call by role name.
 	moveChildren($xpc, $node, $newNode);
 	&_setMarked($newNode) if ($xpc->findnodes('pml:marked[text()=1]', $node));
