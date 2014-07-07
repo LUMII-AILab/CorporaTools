@@ -260,6 +260,9 @@ sub transformTree
 	my $role = '';
 	$role = 'ROOT' if ($LABEL_ROOT);
 	
+	# Mark phrase dependents.
+	&_markPhdepInSubtree($xpc, $tree);
+	
 	# Well, actually, for valid trees there should be only one children node.
 	foreach my $childrenWrap ($xpc->findnodes('pml:children', $tree))
 	{
@@ -280,15 +283,15 @@ sub transformTree
 				&_setMarked($ch);
 			}
 		}
-		if ($MARK_PHDEP->{$chRole} and $realChildrenCount > 1)
-		{
-			my @phDeps = $xpc->findnodes( 
-				'pml:children/pml:node', $tree);
-			foreach my $ch (@phDeps)
-			{
-				&_setMarked($ch);
-			}
-		}
+		#if ($MARK_PHDEP->{$chRole} and $realChildrenCount > 1)
+		#{
+		#	my @phDeps = $xpc->findnodes( 
+		#		'pml:children/pml:node', $tree);
+		#	foreach my $ch (@phDeps)
+		#	{
+		#		&_setMarked($ch);
+		#	}
+		#}
 		my $newNode = &{\&{$chRole}}($xpc, $phrases[0], $role, $warnFile); # Function call by role name.
 		# Reset dependents' roles.
 		my $hasPhChild = hasPhraseChild($xpc, $tree); # This should always be true.
@@ -317,6 +320,32 @@ sub transformTree
 	# &_finishRoles($xpc, $tree);
 }
 
+# Traversal function for marking phrase dependants (as preprocessing).
+# _markPhdepInSubtree (XPath context with set namespaces, DOM "node" node for
+#					 subtree root, output flow for warnings)
+sub _markPhdepInSubtree
+{
+	my $xpc = shift @_; # XPath context
+	my $node = shift @_;
+
+	return unless $MARK_PHDEP;
+	
+	my $xtypes = join '\' or pml:xtype=\'', keys %$MARK_PHDEP;
+	my $coordtypes = join '\' or pml:coordtype=\'', keys %$MARK_PHDEP;
+	my $pmctypes = join '\' or pml:pmctype=\'', keys %$MARK_PHDEP;
+	foreach my $ch ($xpc->findnodes(
+		"//pml:children[pml:xinfo[pml:xtype=\'$xtypes\'] or ".
+		"pml:pmcinfo[pml:pmctype=\'$pmctypes\'] or ".
+		"pml:coordinfo[pml:coordtype=\'$coordtypes\']]/pml:node", $node))
+	#foreach my $ch ($xpc->findnodes(
+	#	"//pml:node/pml:children[pml:pmcinfo/pml:pmctype=\'$pmctypes\']/pml:node", $node))
+	{
+		&_setMarked($ch);
+	}
+}
+
+
+
 # Traversal function for procesing any subtree except "the big Tree" - root
 # subtree.
 # _transformSubtree (XPath context with set namespaces, DOM "node" node for
@@ -329,7 +358,7 @@ sub _transformSubtree
 	my $role = getRole($xpc, $node);
 
 	# Reset dependents' roles.
-	my $hasPhChild = hasPhraseChild($xpc, $node); 
+	my $hasPhChild = hasPhraseChild($xpc, $node);
 	foreach my $ch ($xpc->findnodes('pml:children/pml:node', $node))
 	{
 		&_renameDependent($xpc, $ch, $hasPhChild);
@@ -371,15 +400,15 @@ sub _transformSubtree
 			&_setMarked($ch);
 		}
 	}
-	if ($MARK_PHDEP->{$phRole} and $realChildrenCount > 1)
-	{
-		my @phDeps = $xpc->findnodes( 
-			'pml:children/pml:node', $node);
-		foreach my $ch (@phDeps)
-		{
-			&_setMarked($ch);
-		}
-	}
+	#if ($MARK_PHDEP->{$phRole} and $realChildrenCount > 1)
+	#{
+	#	my @phDeps = $xpc->findnodes( 
+	#		'pml:children/pml:node', $node);
+	#	foreach my $ch (@phDeps)
+	#	{
+	#		&_setMarked($ch);
+	#	}
+	#}
 
 	my $newNode = &{\&{$phRole}}($xpc, $phrases[0], $role, $warnFile); #Function call by role name.
 	moveChildren($xpc, $node, $newNode);
