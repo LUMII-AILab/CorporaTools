@@ -98,7 +98,7 @@ END
 		$treeProc, 1, 0, '', '', $dirPrefix, $oldName, $newName);
 }
 
-# Remove reductions from single tee (LM element in most tree files).
+# Flatten coordinations in single tree (LM element in most tree files).
 # transformTree (XPath context with set namespaces, DOM node for tree root)
 sub transformTree
 {
@@ -155,7 +155,7 @@ sub transformTree
 				$const0Ch->appendChild($d);
 			}
 			
-			# Dependants of the lower coordination is transfered to the upper
+			# Constituents of the lower coordination is transfered to the upper
 			# coordination.
 			@constituents = $xpc->findnodes(
 				'pml:children/pml:coordinfo/pml:children/pml:node', $node);
