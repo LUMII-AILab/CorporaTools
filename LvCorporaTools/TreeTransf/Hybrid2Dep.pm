@@ -432,7 +432,7 @@ sub _renamePhraseChild
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
 	
-	my $newRole = "$phraseRole:$nodeRole";
+	my $newRole = "$phraseRole.$nodeRole";
 	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);
 	setNodeRole($xpc, $node, $newRole);
 }
@@ -445,7 +445,7 @@ sub _renamePhraseSubroot
 	my $phraseRole = shift @_;
 	my $nodeRole = getRole($xpc, $node);
 	
-	my $newRole = ($labelSubroot or $LABEL_SUBROOT) ? "$phraseRole:$nodeRole" : '';
+	my $newRole = ($labelSubroot or $LABEL_SUBROOT) ? "$phraseRole.$nodeRole" : '';
 	$newRole = "-$newRole" if ($parentRole and $newRole);
 	$newRole = "$parentRole$newRole" if ($parentRole);
 	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
@@ -460,8 +460,8 @@ sub _renameDependent
 	
 	my $prefix = ($LABEL_PHRASE_DEP and $isParentPhrase) ? 'phdep' : 'dep';
 	my $newRole = $nodeRole;
-	$newRole = "$prefix:$newRole"
-		if ($nodeRole =~ /^[^:]+-/ or $nodeRole !~ /:/);
+	$newRole = "$prefix.$newRole"
+		if ($nodeRole =~ /^[^.]+-/ or $nodeRole !~ /\./);
 	$newRole = 'N/A' if (not $LABEL_DETAIL_NA and $newRole =~ m#N/A#);	
 	setNodeRole($xpc, $node, $newRole);
 }
