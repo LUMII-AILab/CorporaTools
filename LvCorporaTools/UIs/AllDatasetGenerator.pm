@@ -8,9 +8,9 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir $PARAMS);
 
 #use Carp::Always;	# Print stack trace on die.
-#use Data::Dumper;
 
 use File::Copy;
+use Data::Dumper;
 
 use LvCorporaTools::UIs::TreeTransformatorUI qw(
 	collect unnest dep red knit conll fold);
@@ -53,8 +53,16 @@ our $PARAMS = {
 	'--fold' => {
 		'p' => [1],
 		#'seed' => [],
+		#'name' => [],
+		'name' => ['LETA_test'],
+		#'name' => ['treebank'],
 		},
 	};
+
+# Omit single value parameters in folder names? Boolean.
+our $OMIT_PARAMS = 0;
+# Omit step name in folder names? Boolean.
+our $OMIT_STEP_NAME = 0;
 
 sub _printMan
 {
@@ -66,6 +74,9 @@ global $PARAMS variable. This behaviour might be subject to change.
 
 Params:
    data directory
+   log file [opt]
+   omit single value parameters in folder names [1/0 (default), opt]
+   omit step name in folder names [1/0 (default), opt]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
 END
@@ -85,12 +96,25 @@ sub processDir
 	my $destPrefix = shift @_;
 	my $sources = [$destPrefix];
 	my %params = %$PARAMS;
+	my $logFile = shift @_;
+	$OMIT_PARAMS = (shift @_ or 0);
+	$OMIT_STEP_NAME = (shift @_ or 0);
+	
+	if ($logFile)
+	{
+		my $logStream = IO::File->new($logFile, "> :encoding(UTF-8)")
+			or die "Could not open file $logFile: $!";
+		print $logStream Dumper ($PARAMS);
+		$logStream->close;
+	}
 		
 	# Do things step by step.
 	if ($params{'--collect'})	
 	{
 		# collect has no additional parameters.
-		$sources = [&collect($sources->[0], "$destPrefix/0_collected")];
+		my $dest = "0";
+		$dest .= "_collected" unless ($OMIT_STEP_NAME);
+		$sources = [&collect($sources->[0], "$destPrefix/$dest")];
 	}
 	
 	if ($params{'--unnest'})	
@@ -158,7 +182,7 @@ sub _performStep
 			{
 				$paramValId++;
 				my $newStub = $dirNameStub;
-				if (@{$params->{$param}} > 0)
+				if (@{$params->{$param}} > 0 && !$OMIT_PARAMS || @{$params->{$param}} > 1)
 				{
 					if ($paramVal =~ m/^[^ ]{0,11}$/)
 					{
@@ -186,10 +210,12 @@ sub _performStep
 	for my $source (@$sourceDirs)
 	{
 		my $sourceNameEnding = $source;
-		$sourceNameEnding =~ s#^.*[\\/](\d+_)?([^\\/]*?)[\\/]?$#$2#;
+		$sourceNameEnding =~ s#^.*[\\/](\d+_?)?([^\\/]*?)[\\/]?$#$2#;
 		for my $dirNameStub (keys %paramSets)
 		{
-			my $newResName = "$destPrefix/${stepSortNum}_${sourceNameEnding}_$stepName";
+			my $newResName = "$destPrefix/${stepSortNum}";
+			$newResName .= "_$sourceNameEnding" if ($sourceNameEnding);
+			$newResName .= "_$stepName" unless ($OMIT_STEP_NAME);
 			$newResName .= $dirNameStub if ($setCount > 1);
 			
 			my $tempResDir = &$stepFunct(

@@ -112,7 +112,9 @@ Params:
                params:
                  p    - probability (0;1), or cross-validation part count {3;
                         4; 5; ...}, or 1 for concatenating all files,
-                 seed - seed [default = nothing pased to srand]
+                 seed - seed [default = nothing pased to srand],
+				 name - naming prefix for output files [default = null =
+                        default names used]
 
   Additional stand-alone transformations
     --ord      recalculate 'ord' fields
@@ -467,7 +469,7 @@ sub fold
 	print "\n==== Folding datasets ========================================\n";
 	
 	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
-		$source, $params->{'p'}, $params->{'seed'});
+		$source, $params->{'p'}, $params->{'seed'}, $params->{'name'});
 	move("$source/res", $dest)
 		|| warn "Moving $source/res to $dest failed: $!";
 
