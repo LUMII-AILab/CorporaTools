@@ -16,65 +16,76 @@ public class Token
 	 * range for tokens with multiple words.
 	 * First element of the range.
 	 */
-	public int idBegin;
+	public int idBegin = -1;
 	/**
 	 * 1st column.
 	 * ID: Word index, integer starting at 1 for each new sentence; may be a
 	 * range for tokens with multiple words.
 	 * Last element of the range.
 	 */
-	public int idEnd;
+	public int idEnd = -1;
 	/**
 	 * 2nd column.
 	 * FORM: Word form or punctuation symbol.
 	 */
-	public String form;
+	public String form = null;
 	/**
 	 * 3rd column.
 	 * LEMMA: Lemma or stem of word form.
 	 */
-	public String lemma;
+	public String lemma = null;
 	/**
 	 * 4th column.
 	 * UPOSTAG: Universal part-of-speech tag drawn from our revised version of
 	 * the Google universal POS tags.
 	 */
-	public UPosTag upostag;
+	public UPosTag upostag = null;
 	/**
 	 * 5th column.
 	 * XPOSTAG: Language-specific part-of-speech tag; underscore if not
 	 * available.
 	 */
-	public String xpostag;
+	public String xpostag = null;
 	/**
 	 * 6th column.
 	 * FEATS: List of morphological features from the universal feature
 	 * inventory or from a defined language-specific extension; underscore if
 	 * not available.
 	 */
-	public ArrayList<UFeat> feats;
+	public ArrayList<UFeat> feats = null;
 	/**
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
 	 */
-	public Integer head;
+	public Integer head = null;
 	/**
 	 * 8th column.
 	 * DEPREL: Universal Stanford dependency relation to the HEAD
 	 * (root iff HEAD = 0) or a defined language-specific subtype of one.
 	 */
-	public URelations deprel;
+	public URelations deprel = null;
 	/**
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).
 	 */
-	public String deps;
+	public String deps = null;
 	/**
 	 * 10th column.
 	 * MISC: Any other annotation.
 	 * SpaceAfter=No
 	 */
-	public String misc;
+	public String misc = null;
+
+	public Token() { }
+
+	public Token (int id, String form, String lemma, String xpostag)
+	{
+		idBegin = id;
+		idEnd = id;
+		this.form = form;
+		this.lemma = lemma;
+		this.xpostag = xpostag;
+	}
 
 	/**
 	 * Transforms token to a CoNLL-U format line. No newline added.
