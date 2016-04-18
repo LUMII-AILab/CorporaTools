@@ -238,7 +238,15 @@ public class SentenceTransformator
 		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UFeat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
 		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UFeat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
-		//TODO
+		if (xpostag.matches("p.1.*|v..[^p]...1.*")) res.add(UFeat.PERSON_1);
+		if (xpostag.matches("a.*") && lemma.matches("(manēj|mūsēj)(ais|ā)")) res.add(UFeat.PERSON_1);
+		if (xpostag.matches("p.2.*|v..[^p]...2.*")) res.add(UFeat.PERSON_2);
+		if (xpostag.matches("a.*") && lemma.matches("(tavēj|jūsēj)(ais|ā)")) res.add(UFeat.PERSON_2);
+		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UFeat.PERSON_3);
+		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UFeat.PERSON_3);
+
+		if (xpostag.matches("v..[^p]......y.*")) res.add(UFeat.NEGATIVE_POS); // Minimal annotations, for nomens manual labor is needed.
+		if (xpostag.matches("v..[^p]......n.*")) res.add(UFeat.NEGATIVE_NEG); // Minimal annotations, for nomens manual labor is needed.
 
 		// Lexical features
 
