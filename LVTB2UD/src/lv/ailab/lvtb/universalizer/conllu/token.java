@@ -88,7 +88,7 @@ public class Token
 	}
 
 	/**
-	 * Transforms token to a CoNLL-U format line. No newline added.
+	 * Transforms token to a CoNLL-U format line. Newline is added.
 	 */
 	public String toConllU()
 	{
@@ -134,6 +134,7 @@ public class Token
 		res.append("\t");
 		if (misc == null|| misc.length() < 1) res.append("_");
 		else res.append(misc);
+		res.append("\n");
 
 		return res.toString();
 	}

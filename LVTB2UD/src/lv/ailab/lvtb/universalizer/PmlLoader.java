@@ -38,7 +38,7 @@ public class PmlLoader
 	public static NodeList getTrees(Document pmlDoc) throws XPathExpressionException
 	{
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		NodeList nodes = (NodeList)xPath.evaluate("/lvdata/trees/LM",
+		NodeList nodes = (NodeList)xPath.evaluate("/lvadata/trees/LM",
 				pmlDoc.getDocumentElement(), XPathConstants.NODESET);
 		return nodes;
 	}

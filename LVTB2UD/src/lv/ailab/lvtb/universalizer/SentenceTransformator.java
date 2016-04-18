@@ -2,7 +2,7 @@ package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
-import org.w3c.dom.Element;
+import lv.ailab.lvtb.universalizer.conllu.URelations;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -20,28 +20,28 @@ import java.util.stream.Collectors;
  *
  * @author Lauma
  */
-public class Transformator
+public class SentenceTransformator
 {
 	protected String sentenceID;
 	protected Node pmlTree;
 	protected ArrayList<Token> conll;
-	protected HashMap<Token, Node> mapping = new HashMap<>();
+	protected HashMap<Token, Node> conllToPmla = new HashMap<>();
+	protected HashMap<Node, Token> pmlaToConll = new HashMap<>();
 	XPath xPath = XPathFactory.newInstance().newXPath();
 
 
-	public Transformator(Node pmlTree) throws XPathExpressionException
+	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
 	{
 		this.pmlTree = pmlTree;
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		sentenceID = xPath.evaluate("LM/@id",
-				pmlTree);
+		sentenceID = xPath.evaluate("./@id", this.pmlTree);
 	}
 
 	public void transformTokens() throws XPathExpressionException
 	{
 		conll = new ArrayList<>();
 		// Selects ord numbers from the tree.
-		NodeList ordNodes = (NodeList)xPath.evaluate("LM//node[m.rf]/ord",
+		NodeList ordNodes = (NodeList)xPath.evaluate(".//node[m.rf]/ord",
 				pmlTree, XPathConstants.NODESET);
 		List<Integer> ords = new ArrayList<>();
 		for (int i = 0; i < ordNodes.getLength(); i++)
@@ -56,7 +56,7 @@ public class Transformator
 		for (int ord : ords)
 		{
 			if (ord < 1) continue;
-			NodeList nodes = (NodeList)xPath.evaluate("LM//node[m.rf and ord=" + ord + "]",
+			NodeList nodes = (NodeList)xPath.evaluate(".//node[m.rf and ord=" + ord + "]",
 					pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
 				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
@@ -69,11 +69,12 @@ public class Transformator
 	protected int transformCurrentToken(Node aNode, int offset)
 	throws XPathExpressionException
 	{
-		Node mNode = (Node)xPath.evaluate("/node/m.rf[1]",
-				pmlTree, XPathConstants.NODE);
-		String mForm = xPath.evaluate("/m.rf/form", mNode);
-		String mLemma = xPath.evaluate("/m.rf/lemma", mNode);
-		String lvtbRole = xPath.evaluate("/node/role", aNode);
+		Node mNode = (Node)xPath.evaluate("./m.rf[1]",
+				aNode, XPathConstants.NODE);
+		String mForm = xPath.evaluate("./form", mNode);
+		String mLemma = xPath.evaluate("./lemma", mNode);
+		String lvtbRole = xPath.evaluate("./role", aNode);
+		String lvtbTag = xPath.evaluate("./tag", mNode);
 		if (mForm.contains(" ") || mLemma.contains(" "))
 		{
 			String[] forms = mForm.split(" ");
@@ -81,41 +82,49 @@ public class Transformator
 			if (forms.length != lemmas.length)
 				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
 						sentenceID, mForm, mLemma);
+			//int length = Math.min(forms.length, lemmas.length);
 
 			// First one is different.
-			String xpostag = xPath.evaluate("/m.rf/tag", mNode);
+			String xpostag = lvtbTag;
 			if (xpostag.equals("N/A")) xpostag = "_";
-			else xpostag = xpostag + "_SPLIT";
+			else xpostag = xpostag + "_SPLIT_FIRST";
 			Token firstTok = new Token(
-					Integer.parseInt(xPath.evaluate("/node/@ord", aNode)) + offset,
+					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
 					forms[0], lemmas[0], xpostag);
 			firstTok.upostag = getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, lvtbRole);
 			conll.add(firstTok);
-			mapping.put(firstTok, aNode);
+			conllToPmla.put(firstTok, aNode);
+			pmlaToConll.put(aNode, firstTok);
 
 			// The rest
 			for(int i = 1; i < forms.length && i < lemmas.length; i++)
 			{
 				offset++;
+				xpostag = lvtbTag;
+				if (xpostag.equals("N/A")) xpostag = "_";
+				else xpostag = xpostag + "_SPLIT_PART";
 				Token nextTok = new Token(
-						Integer.parseInt(xPath.evaluate("/node/@ord", aNode)) + offset,
-						forms[i], lemmas[i], "SPLIT_FROM_PREV");
+						Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
+						forms[i], lemmas[i], xpostag);
 				nextTok.upostag = getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
+				nextTok.head = firstTok.idBegin;
+				nextTok.deprel = URelations.MWE;
 				conll.add(nextTok);
-				mapping.put(nextTok, aNode);
+				conllToPmla.put(nextTok, aNode);
 
 			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
-			String xpostag = xPath.evaluate("/m.rf/tag", mNode);
+			String xpostag = xPath.evaluate("./tag", mNode);
 			if (xpostag.equals("N/A")) xpostag = "_";
 			Token nextTok = new Token(
-					Integer.parseInt(xPath.evaluate("/node/@ord", aNode)) + offset,
+					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
 					mForm, mLemma, xpostag);
 			nextTok.upostag = getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
 			conll.add(nextTok);
-			mapping.put(nextTok, aNode);
+			conllToPmla.put(nextTok, aNode);
+			pmlaToConll.put(aNode, nextTok);
 		}
 		// TODO: morpho.
 		return offset;
@@ -168,7 +177,7 @@ public class Transformator
 		else if (xpostag.matches("xx.*")) return UPosTag.SYM; // Or sometimes PROPN/NOUN
 		else System.err.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n",
 					lemma, xpostag);
-		
+
 		return UPosTag.X;
 	}
 
@@ -177,4 +186,26 @@ public class Transformator
 		transformTokens();
 		// TODO
 	}
+
+	public String toConllU()
+	{
+		StringBuilder res = new StringBuilder();
+		res.append("# Latvian Treebank sentence ID: ");
+		res.append(sentenceID);
+		res.append("\n");
+		for (Token t : conll)
+			res.append(t.toConllU());
+		res.append("\n");
+		return res.toString();
+	}
+
+	public static String treeToConll(Node pmlTree)
+	throws XPathExpressionException
+	{
+		SentenceTransformator t = new SentenceTransformator(pmlTree);
+		t.transformSyntax();
+		return t.toConllU();
+	}
+
+
 }
