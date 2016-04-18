@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
+import lv.ailab.lvtb.universalizer.conllu.UFeat;
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import org.w3c.dom.Node;
@@ -91,7 +92,8 @@ public class SentenceTransformator
 			Token firstTok = new Token(
 					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
 					forms[0], lemmas[0], xpostag);
-			firstTok.upostag = getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, lvtbRole);
+			firstTok.upostag = getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
+			firstTok.feats = getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, lvtbRole);
 			conll.add(firstTok);
 			conllToPmla.put(firstTok, aNode);
 			pmlaToConll.put(aNode, firstTok);
@@ -106,7 +108,8 @@ public class SentenceTransformator
 				Token nextTok = new Token(
 						Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
 						forms[i], lemmas[i], xpostag);
-				nextTok.upostag = getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
+				nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+				nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
 				nextTok.head = firstTok.idBegin;
 				nextTok.deprel = URelations.MWE;
 				conll.add(nextTok);
@@ -121,7 +124,8 @@ public class SentenceTransformator
 			Token nextTok = new Token(
 					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
 					mForm, mLemma, xpostag);
-			nextTok.upostag = getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
+			nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+			nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
 			conll.add(nextTok);
 			conllToPmla.put(nextTok, aNode);
 			pmlaToConll.put(aNode, nextTok);
@@ -130,7 +134,7 @@ public class SentenceTransformator
 		return offset;
 	}
 
-	public UPosTag getUPosTag(String form, String lemma, String xpostag, String lvtbRole)
+	public static UPosTag getUPosTag(String lemma, String xpostag, String lvtbRole)
 	{
 		if (xpostag.matches("nc.*")) return UPosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UPosTag.PROPN;
@@ -179,6 +183,68 @@ public class SentenceTransformator
 					lemma, xpostag);
 
 		return UPosTag.X;
+	}
+
+	public static ArrayList<UFeat> getUFeats(String form, String lemma, String xpostag, String lvtbRole)
+	{
+		ArrayList<UFeat> res = new ArrayList<>();
+
+		// Inflectional features: nominal
+
+		if (xpostag.matches("[na].m.*|v..p.m.*|[pm]..m.*")) res.add(UFeat.GENDER_MASC);
+		if (xpostag.matches("[na].f.*|v..p.f.*|[pm]..f.*")) res.add(UFeat.GENDER_FEM);
+
+		if (xpostag.matches("[na]..s.*|v..[^p]....s.*|v..p..s.*|[pm]...s.*")) res.add(UFeat.NUMBER_SING);
+		if (xpostag.matches("[na]..p.*|v..[^p]....p.*|v..p..p.*|[pm]...p.*")) res.add(UFeat.NUMBER_SING);
+		if (xpostag.matches("n..d.*")) res.add(UFeat.NUMBER_PTAN); // Fuzzy borders.
+		if (xpostag.matches("n..v.*")) res.add(UFeat.NUMBER_PTAN); // Fuzzy borders.
+
+		if (xpostag.matches("[na]...n.*|v..p...n.*|[pm]....n.*")) res.add(UFeat.CASE_NOM);
+		if (xpostag.matches("[na]...a.*|v..p...a.*|[pm]....a.*")) res.add(UFeat.CASE_ACC);
+		if (xpostag.matches("[na]...d.*|v..p...d.*|[pm]....d.*")) res.add(UFeat.CASE_DAT);
+		if (xpostag.matches("[na]...g.*|v..p...g.*|[pm]....g.*")) res.add(UFeat.CASE_GEN);
+		if (xpostag.matches("[na]...l.*|v..p...l.*|[pm]....l.*")) res.add(UFeat.CASE_LOC);
+		if (xpostag.matches("[na]...v.*|v..p...v.*")) res.add(UFeat.CASE_VOC);
+
+		if (xpostag.matches("a.....n.*|v..p......n.*")) res.add(UFeat.DEFINITE_IND);
+		if (xpostag.matches("a.....y.*|v..p......y.*")) res.add(UFeat.DEFINITE_DEF);
+		if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UFeat.DEFINITE_DEF);
+
+		// TODO DEGREE
+
+		// Inflectional features: verbal
+
+		if (xpostag.matches("v..[^p]....[123].*")) res.add(UFeat.VERBFORM_FIN); // According to local understanding
+		//if (xpostag.matches("v..[^pn].*")) res.add(UFeat.VERBFORM_FIN); // According to UD rule of thumb.
+		if (xpostag.matches("v..n.*")) res.add(UFeat.VERBFORM_INF);
+		if (xpostag.matches("v..pd.*")) res.add(UFeat.VERBFORM_PART);
+		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UFeat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
+		if (xpostag.matches("v..p[pu].*")) res.add(UFeat.VERBFORM_TRANS);
+
+		if (xpostag.matches("v..i.*")) res.add(UFeat.MOOD_IND);
+		if (xpostag.matches("v..m.*")) res.add(UFeat.MOOD_IMP);
+		if (xpostag.matches("v..c.*")) res.add(UFeat.MOOD_CND);
+		if (xpostag.matches("v..r.*")) res.add(UFeat.MOOD_QOT);
+		if (xpostag.matches("v..d.*")) res.add(UFeat.MOOD_NEC);
+
+		if (xpostag.matches("v..[^p]s.*|v..pd....s.*")) res.add(UFeat.TENSE_PAST);
+		if (xpostag.matches("v..[^p]p.*|v..pd....p.*")) res.add(UFeat.TENSE_PRES);
+		if (xpostag.matches("v..[^p]f.*")) res.add(UFeat.TENSE_FUT);
+
+		if (xpostag.matches("v..pd...ap.*")) res.add(UFeat.ASPECT_IMP);
+		if (xpostag.matches("v..pd....s.*")) res.add(UFeat.ASPECT_PERF);
+
+		if (xpostag.matches("v..[^p].....a.*|v..p.....a.*")) res.add(UFeat.VOICE_ACT);
+		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UFeat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
+		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UFeat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
+
+		//TODO
+
+		// Lexical features
+
+		// TODO
+
+		return res;
 	}
 
 	public void transformSyntax() throws XPathExpressionException
