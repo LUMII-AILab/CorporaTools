@@ -87,6 +87,19 @@ public class Token
 		this.xpostag = xpostag;
 	}
 
+	public Token (
+			int id, String form, String lemma, UPosTag upostag, String xpostag,
+			ArrayList<UFeat> feats)
+	{
+		idBegin = id;
+		idEnd = id;
+		this.form = form;
+		this.lemma = lemma;
+		this.xpostag = xpostag;
+		this.upostag = upostag;
+		this.feats = feats;
+	}
+
 	/**
 	 * Transforms token to a CoNLL-U format line. Newline is added.
 	 */

@@ -4,6 +4,10 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UFeat;
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.semti.morphology.analyzer.Analyzer;
+import lv.semti.morphology.analyzer.Word;
+import lv.semti.morphology.analyzer.Wordform;
+import lv.semti.morphology.attributes.AttributeNames;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created on 2016-04-17.
+ * Asumes normalized ord values.
  *
  * @author Lauma
  */
@@ -28,10 +33,16 @@ public class SentenceTransformator
 	protected ArrayList<Token> conll;
 	protected HashMap<Token, Node> conllToPmla = new HashMap<>();
 	protected HashMap<Node, Token> pmlaToConll = new HashMap<>();
-	XPath xPath = XPathFactory.newInstance().newXPath();
 
+	public static Analyzer helperMorpho = null;
+	public static XPath xPathEngine = XPathFactory.newInstance().newXPath();
 
-	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
+	public static void initMorpho() throws Exception
+	{
+		if (helperMorpho == null) helperMorpho = new Analyzer();
+	}
+
+	public SentenceTransformator(Node pmlTree) throws Exception
 	{
 		this.pmlTree = pmlTree;
 		XPath xPath = XPathFactory.newInstance().newXPath();
@@ -42,7 +53,7 @@ public class SentenceTransformator
 	{
 		conll = new ArrayList<>();
 		// Selects ord numbers from the tree.
-		NodeList ordNodes = (NodeList)xPath.evaluate(".//node[m.rf]/ord",
+		NodeList ordNodes = (NodeList) xPathEngine.evaluate(".//node[m.rf]/ord",
 				pmlTree, XPathConstants.NODESET);
 		List<Integer> ords = new ArrayList<>();
 		for (int i = 0; i < ordNodes.getLength(); i++)
@@ -57,7 +68,7 @@ public class SentenceTransformator
 		for (int ord : ords)
 		{
 			if (ord < 1) continue;
-			NodeList nodes = (NodeList)xPath.evaluate(".//node[m.rf and ord=" + ord + "]",
+			NodeList nodes = (NodeList) xPathEngine.evaluate(".//node[m.rf and ord=" + ord + "]",
 					pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
 				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
@@ -70,12 +81,12 @@ public class SentenceTransformator
 	protected int transformCurrentToken(Node aNode, int offset)
 	throws XPathExpressionException
 	{
-		Node mNode = (Node)xPath.evaluate("./m.rf[1]",
+		Node mNode = (Node) xPathEngine.evaluate("./m.rf[1]",
 				aNode, XPathConstants.NODE);
-		String mForm = xPath.evaluate("./form", mNode);
-		String mLemma = xPath.evaluate("./lemma", mNode);
-		String lvtbRole = xPath.evaluate("./role", aNode);
-		String lvtbTag = xPath.evaluate("./tag", mNode);
+		String mForm = xPathEngine.evaluate("./form", mNode);
+		String mLemma = xPathEngine.evaluate("./lemma", mNode);
+		String lvtbRole = xPathEngine.evaluate("./role", aNode);
+		String lvtbTag = xPathEngine.evaluate("./tag", mNode);
 		if (mForm.contains(" ") || mLemma.contains(" "))
 		{
 			String[] forms = mForm.split(" ");
@@ -83,49 +94,81 @@ public class SentenceTransformator
 			if (forms.length != lemmas.length)
 				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
 						sentenceID, mForm, mLemma);
-			//int length = Math.min(forms.length, lemmas.length);
+			int length = Math.min(forms.length, lemmas.length);
 
-			// First one is different.
-			String xpostag = lvtbTag;
-			if (xpostag.equals("N/A")) xpostag = "_";
-			else xpostag = xpostag + "_SPLIT_FIRST";
-			Token firstTok = new Token(
-					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
-					forms[0], lemmas[0], xpostag);
-			firstTok.upostag = getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
-			firstTok.feats = getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, lvtbRole);
-			conll.add(firstTok);
-			conllToPmla.put(firstTok, aNode);
-			pmlaToConll.put(aNode, firstTok);
-
-			// The rest
-			for(int i = 1; i < forms.length && i < lemmas.length; i++)
+			// If the root is last token.
+			if (lvtbTag.matches("xn.*"))
 			{
-				offset++;
-				xpostag = lvtbTag;
-				if (xpostag.equals("N/A")) xpostag = "_";
-				else xpostag = xpostag + "_SPLIT_PART";
-				Token nextTok = new Token(
-						Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
-						forms[i], lemmas[i], xpostag);
-				nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
-				nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
-				nextTok.head = firstTok.idBegin;
-				nextTok.deprel = URelations.MWE;
-				conll.add(nextTok);
-				conllToPmla.put(nextTok, aNode);
+				// The last one is different.
+				Token lastTok = new Token(
+						Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + length-1,
+						forms[length-1], lemmas[length-1],
+						getXpostag(lvtbTag, "_SPLIT_PART"));
+				lastTok.upostag = getUPosTag(lastTok.lemma, lastTok.xpostag, lvtbRole);
+				lastTok.feats = getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
+				conllToPmla.put(lastTok, aNode);
+				pmlaToConll.put(aNode, lastTok);
 
+				// Process the rest.
+				// First one has different xpostag.
+				String xpostag = getXpostag(lvtbTag, "_SPLIT_FIRST");
+				for (int i = 0; i < length - 1; i++)
+				{
+					Token nextTok = new Token(
+							Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+							forms[i], lemmas[i], xpostag);
+					nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+					nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					nextTok.head = nextTok.idBegin;
+					nextTok.deprel = URelations.COMPOUND;
+					conll.add(nextTok);
+					conllToPmla.put(nextTok, aNode);
+					// Get ready for next token.
+					offset++;
+					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
+				}
+				conll.add(lastTok);
+
+			}
+			// If the root is first token.
+			else
+			{
+				// First one is different.
+				Token firstTok = new Token(
+						Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+						forms[0], lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
+				firstTok.upostag = getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
+				firstTok.feats = getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				conll.add(firstTok);
+				conllToPmla.put(firstTok, aNode);
+				pmlaToConll.put(aNode, firstTok);
+
+				// The rest
+				for (int i = 1; i < forms.length && i < lemmas.length; i++)
+				{
+					offset++;
+					Token nextTok = new Token(
+							Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+							forms[i], lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
+					nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+					nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					nextTok.head = firstTok.idBegin;
+					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
+					else nextTok.deprel = URelations.MWE;
+					conll.add(nextTok);
+					conllToPmla.put(nextTok, aNode);
+
+				}
 			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
-			String xpostag = xPath.evaluate("./tag", mNode);
-			if (xpostag.equals("N/A")) xpostag = "_";
 			Token nextTok = new Token(
-					Integer.parseInt(xPath.evaluate("./ord", aNode)) + offset,
-					mForm, mLemma, xpostag);
+					Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+					mForm, mLemma,
+					getXpostag(xPathEngine.evaluate("./tag", mNode), null));
 			nextTok.upostag = getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
-			nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, lvtbRole);
+			nextTok.feats = getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 			conll.add(nextTok);
 			conllToPmla.put(nextTok, aNode);
 			pmlaToConll.put(aNode, nextTok);
@@ -134,9 +177,21 @@ public class SentenceTransformator
 		return offset;
 	}
 
+	/**
+	 * Logic for obtaining XPOSTAG from tag given in LVTB.
+	 */
+	public static String getXpostag (String lvtbTag, String ending)
+	{
+		if (lvtbTag == null || lvtbTag.length() < 1 || lvtbTag.matches("N/[Aa]"))
+			return "_";
+		if (ending == null || ending.length() < 1) return lvtbTag;
+		else return lvtbTag + ending;
+	}
+
 	public static UPosTag getUPosTag(String lemma, String xpostag, String lvtbRole)
 	{
-		if (xpostag.matches("nc.*")) return UPosTag.NOUN; // Or sometimes SCONJ
+		if (xpostag.matches("N/[Aa]")) return UPosTag.X; // Not given.
+		else if (xpostag.matches("nc.*")) return UPosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UPosTag.PROPN;
 		else if (xpostag.matches("v..[^p].*")) return UPosTag.VERB;
 		else if (xpostag.matches("v..p[dpu].*")) return UPosTag.VERB;
@@ -185,7 +240,8 @@ public class SentenceTransformator
 		return UPosTag.X;
 	}
 
-	public static ArrayList<UFeat> getUFeats(String form, String lemma, String xpostag, String lvtbRole)
+	public static ArrayList<UFeat> getUFeats(String form, String lemma, String xpostag, Node aNode)
+	throws XPathExpressionException
 	{
 		ArrayList<UFeat> res = new ArrayList<>();
 
@@ -207,15 +263,43 @@ public class SentenceTransformator
 		if (xpostag.matches("[na]...v.*|v..p...v.*")) res.add(UFeat.CASE_VOC);
 
 		if (xpostag.matches("a.....n.*|v..p......n.*")) res.add(UFeat.DEFINITE_IND);
+		if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UFeat.DEFINITE_IND);
 		if (xpostag.matches("a.....y.*|v..p......y.*")) res.add(UFeat.DEFINITE_DEF);
 		if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UFeat.DEFINITE_DEF);
 
-		// TODO DEGREE
+		//if (xpostag.matches("a.....p.*|rp.*|v.ypd.*")) res.add(UFeat.DEGREE_POS);
+		if (xpostag.matches("a.....p.*|rp.*|mo.*")) res.add(UFeat.DEGREE_POS);
+		if (xpostag.matches("a.....c.*|rc.*")) res.add(UFeat.DEGREE_CMP);
+		if (xpostag.matches("a.....s.*|rs.*")) res.add(UFeat.DEGREE_SUP);
+		if (xpostag.matches("v..pd.*"))
+		{
+			try
+			{
+				initMorpho();
+				Word analysis = helperMorpho.analyze(form);
+				Wordform correctOne = analysis.getMatchingWordform(
+						xpostag.contains("_") ? xpostag.substring(0, xpostag.indexOf('_')) : xpostag,
+						true);
+				String degree = correctOne.getValue(AttributeNames.i_Degree);
+				if (degree == null || degree.equals(AttributeNames.v_Positive)) res.add(UFeat.DEGREE_POS);
+				else if (degree.equals(AttributeNames.v_Comparative)) res.add(UFeat.DEGREE_CMP);
+				else if (degree.equals(AttributeNames.v_Superlative)) res.add(UFeat.DEGREE_SUP);
+				else System.err.printf("\"%s\" with tag %s has unrecognized degree value %s",
+							form, xpostag, degree);
+			}
+			catch (Exception e)
+			{
+				System.err.println("Could not initialize Morphology, Degree for participles is not added.");
+				e.printStackTrace(System.err);
+			}
+
+		}
+		// Patalogical cases like "pirmākais un vispirmākais" are not represented.
 
 		// Inflectional features: verbal
 
-		if (xpostag.matches("v..[^p]....[123].*")) res.add(UFeat.VERBFORM_FIN); // According to local understanding
-		//if (xpostag.matches("v..[^pn].*")) res.add(UFeat.VERBFORM_FIN); // According to UD rule of thumb.
+		//if (xpostag.matches("v..[^p]....[123].*")) res.add(UFeat.VERBFORM_FIN); // According to local understanding
+		if (xpostag.matches("v..[^pn].*")) res.add(UFeat.VERBFORM_FIN); // According to UD rule of thumb.
 		if (xpostag.matches("v..n.*")) res.add(UFeat.VERBFORM_INF);
 		if (xpostag.matches("v..pd.*")) res.add(UFeat.VERBFORM_PART);
 		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UFeat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
@@ -239,9 +323,9 @@ public class SentenceTransformator
 		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UFeat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
 		if (xpostag.matches("p.1.*|v..[^p]...1.*")) res.add(UFeat.PERSON_1);
-		if (xpostag.matches("a.*") && lemma.matches("(manēj|mūsēj)(ais|ā)")) res.add(UFeat.PERSON_1);
+		if (xpostag.matches("a.*") && lemma.matches("(man|mūs)ēj(ais|ā)")) res.add(UFeat.PERSON_1);
 		if (xpostag.matches("p.2.*|v..[^p]...2.*")) res.add(UFeat.PERSON_2);
-		if (xpostag.matches("a.*") && lemma.matches("(tavēj|jūsēj)(ais|ā)")) res.add(UFeat.PERSON_2);
+		if (xpostag.matches("a.*") && lemma.matches("(tav|jūs)ēj(ais|ā)")) res.add(UFeat.PERSON_2);
 		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UFeat.PERSON_3);
 		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UFeat.PERSON_3);
 
@@ -250,7 +334,54 @@ public class SentenceTransformator
 
 		// Lexical features
 
-		// TODO
+		if (xpostag.matches("p[ps].*")) res.add(UFeat.PRONTYPE_PRS);
+		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+			res.add(UFeat.PRONTYPE_PRS);
+		if (xpostag.matches("px.*")) res.add(UFeat.PRONTYPE_RCP);
+		if (xpostag.matches("pq.*")) res.add(UFeat.PRONTYPE_INT);
+		if (xpostag.matches("r0.*") && lemma.matches("cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?"))
+			res.add(UFeat.PRONTYPE_INT);
+		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
+				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+			res.add(UFeat.PRONTYPE_INT);
+		if (xpostag.matches("pr.*")) res.add(UFeat.PRONTYPE_REL);
+		if (xpostag.matches("pd.*")) res.add(UFeat.PRONTYPE_DEM);
+		if (xpostag.matches("r0.*") && lemma.matches("te|tur|šeit|tad|tagad|tik|tā"))
+			res.add(UFeat.PRONTYPE_DEM);
+		if (xpostag.matches("n.*") && lemma.equals("t(ur|ej)iene") &&
+				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+			res.add(UFeat.PRONTYPE_DEM);
+		if (xpostag.matches("pg.*")) res.add(UFeat.PRONTYPE_TOT);
+		if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
+			res.add(UFeat.PRONTYPE_TOT);
+		if (xpostag.matches("n.*") && lemma.equals("vis(ur|ad)iene") &&
+				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+			res.add(UFeat.PRONTYPE_TOT);
+		if (xpostag.matches("p.....y.*")) res.add(UFeat.PRONTYPE_NEG);
+		if (xpostag.matches("r0.*") && lemma.matches("ne.*"))
+			res.add(UFeat.PRONTYPE_NEG);
+		if (xpostag.matches("n.*") && lemma.equals("nek(ur|ad)iene") &&
+				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+			res.add(UFeat.PRONTYPE_NEG);
+		if (xpostag.matches("pi.*")) res.add(UFeat.PRONTYPE_IND);
+		if (xpostag.matches("r0.*") &&
+				"xParticle".equals(xPathEngine.evaluate("../../xtype", aNode)))
+		{
+			NodeList result = (NodeList) xPathEngine.evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
+			if (result != null && result.getLength() > 0) res.add(UFeat.PRONTYPE_IND);
+		}
+
+		if (xpostag.matches("mc.*|xn.*")) res.add(UFeat.NUMTYPE_CARD); // Nouns like "simts", "desmits" are not marked.
+		if (xpostag.matches("mo.*|xo.*")) res.add(UFeat.NUMTYPE_ORD);
+		if (xpostag.matches("r0.*") && lemma.matches("(vien|div|trīs|četr|piec|seš|septiņ|astoņ|deviņ|desmit|pusotr)reiz"))
+			res.add(UFeat.NUMTYPE_MULT); // Incomplete list.
+		if (xpostag.matches("mf.*")) res.add(UFeat.NUMTYPE_FRAC); // Nouns like "desmitdaļa" are not marked.
+
+		if (xpostag.matches("ps.*")) res.add(UFeat.POSS_YES);
+		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+			res.add(UFeat.POSS_YES);
+
+		if (xpostag.matches("px.*|v.y.*")) res.add(UFeat.REFLEX_YES); // Currently it is impossible to split out "reflexive particle" of each verb.
 
 		return res;
 	}
@@ -274,7 +405,7 @@ public class SentenceTransformator
 	}
 
 	public static String treeToConll(Node pmlTree)
-	throws XPathExpressionException
+	throws Exception
 	{
 		SentenceTransformator t = new SentenceTransformator(pmlTree);
 		t.transformSyntax();

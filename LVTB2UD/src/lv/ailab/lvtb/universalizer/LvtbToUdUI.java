@@ -1,10 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 
 /**
@@ -17,9 +14,7 @@ public class LvtbToUdUI
 	public static String inputDataPath = "./data/pml/";
 	public static String outputDataPath = "./data/conll-u/";
 
-	public static void main(String[] args)
-	throws IOException, SAXException, ParserConfigurationException,
-			XPathExpressionException
+	public static void main(String[] args) throws Exception
 	{
 		File folder = new File(inputDataPath);
 		if (!folder.exists())
@@ -53,8 +48,7 @@ public class LvtbToUdUI
 	}
 
 	public static void transformFile(String inputPath, BufferedWriter conllOut)
-	throws SAXException, ParserConfigurationException, XPathExpressionException,
-			IOException
+	throws Exception
 	{
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
 		System.out.printf("%s trees found...\t", pmlTrees.getLength());
