@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer;
 
+import lv.ailab.lvtb.universalizer.transformator.SentenceTransformator;
 import org.w3c.dom.NodeList;
 
 import java.io.*;
