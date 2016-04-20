@@ -21,8 +21,8 @@ import java.util.ArrayList;
  */
 public class FeatsLogic
 {
-	protected static Analyzer morphoEngine;
-	protected static XPath xPathEngine;
+	protected Analyzer morphoEngine;
+	protected XPath xPathEngine;
 
 	protected void initMorpho() throws Exception
 	{

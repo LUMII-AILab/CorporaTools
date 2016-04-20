@@ -1,12 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.UFeat;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
-import lv.semti.morphology.analyzer.Analyzer;
-import lv.semti.morphology.analyzer.Word;
-import lv.semti.morphology.analyzer.Wordform;
-import lv.semti.morphology.attributes.AttributeNames;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -15,7 +10,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,28 +21,23 @@ import java.util.stream.Collectors;
  */
 public class SentenceTransformator
 {
-	protected String sentenceID;
-	protected Node pmlTree;
-	protected ArrayList<Token> conll;
-	protected HashMap<Token, Node> conllToPmla = new HashMap<>();
-	protected HashMap<Node, Token> pmlaToConll = new HashMap<>();
+	public Sentence s;
 
 	public static XPath xPathEngine = XPathFactory.newInstance().newXPath();
+	public static DepRelLogic depTransf = new DepRelLogic(xPathEngine);
+	public static PhraseTransformator phraseTransf = new PhraseTransformator(xPathEngine);
 
 	public SentenceTransformator(Node pmlTree) throws Exception
 	{
-		this.pmlTree = pmlTree;
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		sentenceID = xPath.evaluate("./@id", this.pmlTree);
+		s = new Sentence(pmlTree);
 	}
 
 	public void transformTokens() throws XPathExpressionException
 	{
-		conll = new ArrayList<>();
 		FeatsLogic fl = new FeatsLogic(xPathEngine);
 		// Selects ord numbers from the tree.
 		NodeList ordNodes = (NodeList) xPathEngine.evaluate(".//node[m.rf]/ord",
-				pmlTree, XPathConstants.NODESET);
+				s.pmlTree, XPathConstants.NODESET);
 		List<Integer> ords = new ArrayList<>();
 		for (int i = 0; i < ordNodes.getLength(); i++)
 		{
@@ -63,10 +52,10 @@ public class SentenceTransformator
 		{
 			if (ord < 1) continue;
 			NodeList nodes = (NodeList) xPathEngine.evaluate(".//node[m.rf and ord=" + ord + "]",
-					pmlTree, XPathConstants.NODESET);
+					s.pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
 				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
-						sentenceID, ord);
+						s.id, ord);
 			offset = transformCurrentToken(nodes.item(0), offset, fl);
 		}
 	}
@@ -86,7 +75,7 @@ public class SentenceTransformator
 			String[] lemmas = mLemma.split(" ");
 			if (forms.length != lemmas.length)
 				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
-						sentenceID, mForm, mLemma);
+						s.id, mForm, mLemma);
 			int length = Math.min(forms.length, lemmas.length);
 
 			// If the root is last token.
@@ -99,8 +88,8 @@ public class SentenceTransformator
 						getXpostag(lvtbTag, "_SPLIT_PART"));
 				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, lvtbRole);
 				lastTok.feats = featsTransformer.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
-				conllToPmla.put(lastTok, aNode);
-				pmlaToConll.put(aNode, lastTok);
+				s.conllToPmla.put(lastTok, aNode);
+				s.pmlaToConll.put(aNode, lastTok);
 
 				// Process the rest.
 				// First one has different xpostag.
@@ -114,13 +103,13 @@ public class SentenceTransformator
 					nextTok.feats = featsTransformer.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = nextTok.idBegin;
 					nextTok.deprel = URelations.COMPOUND;
-					conll.add(nextTok);
-					conllToPmla.put(nextTok, aNode);
+					s.conll.add(nextTok);
+					s.conllToPmla.put(nextTok, aNode);
 					// Get ready for next token.
 					offset++;
 					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
 				}
-				conll.add(lastTok);
+				s.conll.add(lastTok);
 
 			}
 			// If the root is first token.
@@ -132,9 +121,9 @@ public class SentenceTransformator
 						forms[0], lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
 				firstTok.feats = featsTransformer.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
-				conll.add(firstTok);
-				conllToPmla.put(firstTok, aNode);
-				pmlaToConll.put(aNode, firstTok);
+				s.conll.add(firstTok);
+				s.conllToPmla.put(firstTok, aNode);
+				s.pmlaToConll.put(aNode, firstTok);
 
 				// The rest
 				for (int i = 1; i < forms.length && i < lemmas.length; i++)
@@ -148,8 +137,8 @@ public class SentenceTransformator
 					nextTok.head = firstTok.idBegin;
 					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
 					else nextTok.deprel = URelations.MWE;
-					conll.add(nextTok);
-					conllToPmla.put(nextTok, aNode);
+					s.conll.add(nextTok);
+					s.conllToPmla.put(nextTok, aNode);
 				}
 			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
@@ -161,9 +150,9 @@ public class SentenceTransformator
 					getXpostag(xPathEngine.evaluate("./tag", mNode), null));
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
 			nextTok.feats = featsTransformer.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
-			conll.add(nextTok);
-			conllToPmla.put(nextTok, aNode);
-			pmlaToConll.put(aNode, nextTok);
+			s.conll.add(nextTok);
+			s.conllToPmla.put(nextTok, aNode);
+			s.pmlaToConll.put(aNode, nextTok);
 		}
 		return offset;
 	}
@@ -185,21 +174,37 @@ public class SentenceTransformator
 		// TODO
 	}
 
-	protected void transformSubtree (Node aNode)
+	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
+		// TODO ellipsis
+		NodeList pmlChildren = (NodeList)xPathEngine.evaluate("./children/*", aNode, XPathConstants.NODESET);
+		Node pmlPmc = (Node)xPathEngine.evaluate("./children/pmcinfo", aNode, XPathConstants.NODE);
+		Node pmlX = (Node)xPathEngine.evaluate("./children/xinfo", aNode, XPathConstants.NODE);
+		Node pmlCoord = (Node)xPathEngine.evaluate("./childen/coordinfo", aNode, XPathConstants.NODE);
+		NodeList pmlDependents = (NodeList)xPathEngine.evaluate("./children/node", aNode, XPathConstants.NODESET);
+		if (pmlChildren == null || pmlChildren.getLength() < 1)
+			return;
+		Node newRoot = null;
+		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
+		if (pmlPmc != null)
+			newRoot = phraseTransf.pmcToUD(pmlPmc, s);
+		if (pmlCoord != null)
+			newRoot = phraseTransf.coordToUD(pmlCoord, s);
+		if (pmlX != null)
+			newRoot = phraseTransf.xToUD(pmlX, s);
+		if (newRoot == null) newRoot = aNode;
+		else s.conllToPmla.put(s.pmlaToConll.get(newRoot), aNode);
 
-	}
-
-	public String toConllU()
-	{
-		StringBuilder res = new StringBuilder();
-		res.append("# Latvian Treebank sentence ID: ");
-		res.append(sentenceID);
-		res.append("\n");
-		for (Token t : conll)
-			res.append(t.toConllU());
-		res.append("\n");
-		return res.toString();
+		if (pmlDependents != null && pmlDependents.getLength() > 0)
+		{
+			for (int i = 0; i < pmlDependents.getLength(); i++)
+			{
+				transformSubtree(pmlDependents.item(i));
+				Token conllTok = s.pmlaToConll.get(pmlDependents.item(i));
+				conllTok.deprel = depTransf.getUDepFromDep(pmlDependents.item(i));
+				conllTok.head = s.pmlaToConll.get(newRoot).idBegin;
+			}
+		}
 	}
 
 	public static String treeToConll(Node pmlTree)
@@ -207,8 +212,6 @@ public class SentenceTransformator
 	{
 		SentenceTransformator t = new SentenceTransformator(pmlTree);
 		t.transformSyntax();
-		return t.toConllU();
+		return t.s.toConllU();
 	}
-
-
 }
