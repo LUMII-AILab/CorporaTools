@@ -19,6 +19,7 @@ public class Utils
 {
 	/**
 	 * Find ord value for given Node. If not found, return 0.
+	 * @throws XPathExpressionException
 	 */
 	public static int getOrd(Node node) throws XPathExpressionException
 	{
@@ -49,6 +50,7 @@ public class Utils
 
 	/**
 	 * Find node with the smallest ord value in its descendants.
+	 * @throws XPathExpressionException
 	 */
 	public static Node getFirstByOrd(NodeList nodes)
 	throws XPathExpressionException
@@ -76,6 +78,7 @@ public class Utils
 
 	/**
 	 * Find node with the biggest ord value in its descendants.
+	 * @throws XPathExpressionException
 	 */
 	public static Node getLastByOrd(NodeList nodes)
 	throws XPathExpressionException
@@ -115,6 +118,7 @@ public class Utils
 
 	/**
 	 * Transform NodeList to ArrayList of Node and sort list by ord values.
+	 * @throws XPathExpressionException
 	 */
 	public static ArrayList<Node> asOrderedList(NodeList nodes)
 	throws XPathExpressionException

@@ -36,7 +36,7 @@ public class DepRelLogic
 
 	}
 
-	public static URelations getUDepFromPhrsePart(Node aNode, String pmcType)
+	public static URelations getUDepFromPhrasePart(Node aNode, String pmcType)
 	throws XPathExpressionException
 	{
 		String nodeId = XPathEngine.get().evaluate("./@id", aNode);

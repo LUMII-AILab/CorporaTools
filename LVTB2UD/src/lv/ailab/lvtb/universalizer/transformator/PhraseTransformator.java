@@ -14,13 +14,19 @@ import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
 
 /**
+ * Logic for creating dependency structures from LVTB phrase-style structures.
+ * No change is done in PML tree, all results are stored in CoNLL-U table only.
  * Created on 2016-04-20.
  *
  * @author Lauma
  */
 public class PhraseTransformator
 {
-
+	/**
+	 * Transform PMC phrase UD structure.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
 	public static Node pmcToUD(Node pmcNode, Sentence sent)
 	throws XPathExpressionException
 	{
@@ -82,6 +88,11 @@ public class PhraseTransformator
 		return null;
 	}
 
+	/**
+	 * Transform coordination phrase UD structure.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
 	public static Node coordToUD(Node coordNode, Sentence sent)
 	throws XPathExpressionException
 	{
@@ -138,6 +149,13 @@ public class PhraseTransformator
 		return null;
 	}
 
+	/**
+	 * Helper function, split out from coordToUD(): do the transformation,
+	 * assuming that resulting structure has one root and everything else is
+	 * directly depending on that one root.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
 	protected static Node coordPartsChildListToUD(
 			ArrayList<Node> sordedNodes, Sentence sent, String coordType)
 	throws XPathExpressionException
@@ -165,6 +183,11 @@ public class PhraseTransformator
 		return newRoot;
 	}
 
+	/**
+	 * Transform X-word phrase to UD structure.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
 	public static Node xToUD(Node pmcNode, Sentence sent)
 	throws XPathExpressionException
 	{
@@ -176,6 +199,17 @@ public class PhraseTransformator
 		return null;
 	}
 
+	/**
+	 * Helper function: make a list of given nodes children of the designated
+	 * parent. Set UD deprel for each child. If designated parent is included in
+	 * child list node, circular dependency is not made, role is not set.
+	 * @param sent			sentence data
+	 * @param newRoot		designated parent
+	 * @param children		list of child nodes
+	 * @param phraseType    phrase type from PML data, used for obtaining
+	 *                      correct UD role for children.
+	 * @throws XPathExpressionException
+	 */
 	protected static void allAsDependents(
 			Sentence sent, Node newRoot, NodeList children, String phraseType)
 	throws XPathExpressionException
@@ -183,6 +217,17 @@ public class PhraseTransformator
 		allAsDependents(sent, newRoot, Utils.asList(children), phraseType);
 	}
 
+	/**
+	 * Helper function: make a list of given nodes children of the designated
+	 * parent. Set UD deprel for each child. If designated parent is included in
+	 * child list node, circular dependency is not made, role is not set.
+	 * @param sent			sentence data
+	 * @param newRoot		designated parent
+	 * @param children		list of child nodes
+	 * @param phraseType    phrase type from PML data, used for obtaining
+	 *                      correct UD role for children.
+	 * @throws XPathExpressionException
+	 */
 	protected static void allAsDependents(
 			Sentence sent, Node newRoot, ArrayList<Node> children, String phraseType)
 	throws XPathExpressionException
@@ -197,7 +242,7 @@ public class PhraseTransformator
 			if (child.equals(newRoot)) continue;
 			Token childToken = sent.pmlaToConll.get(child);
 			childToken.head = rootToken.idBegin;
-			childToken.deprel = DepRelLogic.getUDepFromPhrsePart(child, phraseType);
+			childToken.deprel = DepRelLogic.getUDepFromPhrasePart(child, phraseType);
 		}
 	}
 

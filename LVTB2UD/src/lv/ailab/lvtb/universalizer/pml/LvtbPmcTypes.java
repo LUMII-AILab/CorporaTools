@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.pml;
 
 /**
+ * Possible values for PML pmcinfo/pmctype field.
  * Created on 2016-04-20.
  *
  * @author Lauma
