@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbPmcTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import org.w3c.dom.Node;
@@ -36,14 +37,25 @@ public class DepRelLogic
 
 	}
 
-	public static URelations getUDepFromPhrasePart(Node aNode, String pmcType)
+	/**
+	 * Generic relation between phrase part roles and UD DEPREL.
+	 * Only for nodes that are not roots or subroots.
+	 * NB! Case when a part of crdClauses maps to parataxis is handled in
+	 * PhraseTransform class.
+	 * @param aNode			node for which the DEPREL must be obtained
+	 * @param phraseType	type of phrase in relation to which DEPREL must be
+	 *                      chosen
+	 * @return contents for corresponding DEPREL field
+	 * @throws XPathExpressionException
+	 */
+	public static URelations getUDepFromPhrasePart(Node aNode, String phraseType)
 	throws XPathExpressionException
 	{
 		String nodeId = XPathEngine.get().evaluate("./@id", aNode);
 		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
 
-		if ((pmcType.equals(LvtbPmcTypes.SENT) || pmcType.equals(LvtbPmcTypes.UTER)
-				|| pmcType.equals(LvtbPmcTypes.SUBRCL)) || pmcType.equals(LvtbPmcTypes.MAINCL))
+		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER)
+				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.MAINCL))
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
 				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
@@ -54,20 +66,27 @@ public class DepRelLogic
 				if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
 			}
 
-		if ((pmcType.equals(LvtbPmcTypes.SENT) || pmcType.equals(LvtbPmcTypes.UTER)
-				|| pmcType.equals(LvtbPmcTypes.SUBRCL)) || pmcType.equals(LvtbPmcTypes.INSPMC)
-				|| pmcType.equals(LvtbPmcTypes.SPCPMC) || pmcType.equals(LvtbPmcTypes.PARTICLE)
-				|| pmcType.equals(LvtbPmcTypes.DIRSPPMC) || pmcType.equals(LvtbPmcTypes.QUOT)
-				|| pmcType.equals(LvtbPmcTypes.ADRESS) || pmcType.equals(LvtbPmcTypes.INTERJ))
+		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER)
+				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.INSPMC)
+				|| phraseType.equals(LvtbPmcTypes.SPCPMC) || phraseType.equals(LvtbPmcTypes.PARTICLE)
+				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
+				|| phraseType.equals(LvtbPmcTypes.ADRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 
-		if (pmcType.equals(LvtbPmcTypes.SENT) || pmcType.equals(LvtbPmcTypes.UTER))
+		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.DISCOURSE;
 
-		if (pmcType.equals(LvtbPmcTypes.SUBRCL))
+		if (phraseType.equals(LvtbPmcTypes.SUBRCL))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.MARK;
 
-		System.err.printf("%s in %s phrase has no UD label.", nodeId, pmcType);
+
+		if (phraseType.equals(LvtbCoordTypes.CRDPARTS) || phraseType.equals(LvtbCoordTypes.CRDCLAUSES))
+		{
+			if (lvtbRole.equals(LvtbRoles.CRDPART)) return URelations.CONJ; // Parataxis role is given in PhraseTransform class.
+			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.CC;
+			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
+		}
+		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
 		return URelations.DEP;
 	}
 }

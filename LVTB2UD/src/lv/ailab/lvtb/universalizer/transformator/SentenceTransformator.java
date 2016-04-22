@@ -2,20 +2,23 @@ package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.pml.Utils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Logic for transforming LVTB sentence annotations to UD.
+ * No change is done in PML tree, all results are stored in CoNLL-U table only.
+ * Asumes normalized ord values (only morpho tokens are normalized).
+ * XPathExpressionException everywhere, because all the navigation in the XML is
+ * done with XPaths.
  * Created on 2016-04-17.
- * Asumes normalized ord values.
  *
  * @author Lauma
  */
@@ -23,20 +26,46 @@ public class SentenceTransformator
 {
 	public Sentence s;
 
-	public static XPath xPathEngine = XPathFactory.newInstance().newXPath();
-	public static DepRelLogic depTransf = new DepRelLogic(xPathEngine);
-	public static PhraseTransformator phraseTransf = new PhraseTransformator(xPathEngine);
-
-	public SentenceTransformator(Node pmlTree) throws Exception
+	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
 	}
 
+	/**
+	 * Create CoNLL-U token table, try to fill it in as much as possible.
+	 * @throws XPathExpressionException
+	 */
+	public void transform() throws XPathExpressionException
+	{
+		transformTokens();
+		transformSyntax();
+	}
+
+	/**
+	 * Utility method for "doing everything": create transformer object,
+	 * transform given PML tree and get the string representation for the
+	 * resulting CoNLL-U table.
+	 * @param pmlTree	tree to transform
+	 * @return UD tree in CoNLL-U format
+	 * @throws XPathExpressionException
+	 */
+	public static String treeToConll(Node pmlTree)
+	throws XPathExpressionException
+	{
+		SentenceTransformator t = new SentenceTransformator(pmlTree);
+		t.transform();
+		return t.s.toConllU();
+	}
+
+	/**
+	 * Create CoNLL-U token table, fill in ID, FORM, LEMMA, XPOSTAG, UPOSTAG and
+	 * FEATS fields.
+	 * @throws XPathExpressionException
+	 */
 	public void transformTokens() throws XPathExpressionException
 	{
-		FeatsLogic fl = new FeatsLogic(xPathEngine);
 		// Selects ord numbers from the tree.
-		NodeList ordNodes = (NodeList) xPathEngine.evaluate(".//node[m.rf]/ord",
+		NodeList ordNodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf]/ord",
 				s.pmlTree, XPathConstants.NODESET);
 		List<Integer> ords = new ArrayList<>();
 		for (int i = 0; i < ordNodes.getLength(); i++)
@@ -51,24 +80,33 @@ public class SentenceTransformator
 		for (int ord : ords)
 		{
 			if (ord < 1) continue;
-			NodeList nodes = (NodeList) xPathEngine.evaluate(".//node[m.rf and ord=" + ord + "]",
+			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + ord + "]",
 					s.pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
 				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
 						s.id, ord);
-			offset = transformCurrentToken(nodes.item(0), offset, fl);
+			offset = transformCurrentToken(nodes.item(0), offset);
 		}
 	}
 
-	protected int transformCurrentToken(Node aNode, int offset, FeatsLogic featsTransformer)
+	/**
+	 * Helper method: Create CoNLL-U table entry for one token, fill in ID,
+	 * FORM, LEMMA, XPOSTAG, UPOSTAG and FEATS fields.
+	 * @param aNode		PML A-level node for which CoNLL entry must be created.
+	 * @param offset	Difference between PML node's ord value and ID value for
+	 *                  CoNLL token to be created.
+	 * @return Offset for next token.
+	 * @throws XPathExpressionException
+	 */
+	protected int transformCurrentToken(Node aNode, int offset)
 	throws XPathExpressionException
 	{
-		Node mNode = (Node) xPathEngine.evaluate("./m.rf[1]",
+		Node mNode = (Node)XPathEngine.get().evaluate("./m.rf[1]",
 				aNode, XPathConstants.NODE);
-		String mForm = xPathEngine.evaluate("./form", mNode);
-		String mLemma = xPathEngine.evaluate("./lemma", mNode);
-		String lvtbRole = xPathEngine.evaluate("./role", aNode);
-		String lvtbTag = xPathEngine.evaluate("./tag", mNode);
+		String mForm = XPathEngine.get().evaluate("./form", mNode);
+		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
+		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
 		if (mForm.contains(" ") || mLemma.contains(" "))
 		{
 			String[] forms = mForm.split(" ");
@@ -83,13 +121,13 @@ public class SentenceTransformator
 			{
 				// The last one is different.
 				Token lastTok = new Token(
-						Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + length-1,
+						Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + length-1,
 						forms[length-1], lemmas[length-1],
 						getXpostag(lvtbTag, "_SPLIT_PART"));
 				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, lvtbRole);
-				lastTok.feats = featsTransformer.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
-				s.conllToPmla.put(lastTok, aNode);
-				s.pmlaToConll.put(aNode, lastTok);
+				lastTok.feats = FeatsLogic.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
+				//s.conllToPmla.put(lastTok, aNode);
+				s.pmlaToConll.put(Utils.getId(aNode), lastTok);
 
 				// Process the rest.
 				// First one has different xpostag.
@@ -97,14 +135,14 @@ public class SentenceTransformator
 				for (int i = 0; i < length - 1; i++)
 				{
 					Token nextTok = new Token(
-							Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+							Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
 							forms[i], lemmas[i], xpostag);
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
-					nextTok.feats = featsTransformer.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = nextTok.idBegin;
 					nextTok.deprel = URelations.COMPOUND;
 					s.conll.add(nextTok);
-					s.conllToPmla.put(nextTok, aNode);
+					//s.conllToPmla.put(nextTok, aNode);
 					// Get ready for next token.
 					offset++;
 					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
@@ -117,48 +155,51 @@ public class SentenceTransformator
 			{
 				// First one is different.
 				Token firstTok = new Token(
-						Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+						Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
 						forms[0], lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
-				firstTok.feats = featsTransformer.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				s.conll.add(firstTok);
-				s.conllToPmla.put(firstTok, aNode);
-				s.pmlaToConll.put(aNode, firstTok);
+				//s.conllToPmla.put(firstTok, aNode);
+				s.pmlaToConll.put(Utils.getId(aNode), firstTok);
 
 				// The rest
 				for (int i = 1; i < forms.length && i < lemmas.length; i++)
 				{
 					offset++;
 					Token nextTok = new Token(
-							Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+							Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
 							forms[i], lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
-					nextTok.feats = featsTransformer.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = firstTok.idBegin;
 					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
 					else nextTok.deprel = URelations.MWE;
 					s.conll.add(nextTok);
-					s.conllToPmla.put(nextTok, aNode);
+					//s.conllToPmla.put(nextTok, aNode);
 				}
 			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
 			Token nextTok = new Token(
-					Integer.parseInt(xPathEngine.evaluate("./ord", aNode)) + offset,
+					Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
 					mForm, mLemma,
-					getXpostag(xPathEngine.evaluate("./tag", mNode), null));
+					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
-			nextTok.feats = featsTransformer.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 			s.conll.add(nextTok);
-			s.conllToPmla.put(nextTok, aNode);
-			s.pmlaToConll.put(aNode, nextTok);
+			//s.conllToPmla.put(nextTok, aNode);
+			s.pmlaToConll.put(Utils.getId(aNode), nextTok);
 		}
 		return offset;
 	}
 
 	/**
 	 * Logic for obtaining XPOSTAG from tag given in LVTB.
+	 * @param lvtbTag	tag given in LVTB
+	 * @param ending	postfix to be added to the tag
+	 * @return XPOSTAG or _ if tag from LVTB is not meaningfull
 	 */
 	public static String getXpostag (String lvtbTag, String ending)
 	{
@@ -168,50 +209,107 @@ public class SentenceTransformator
 		else return lvtbTag + ending;
 	}
 
+	/**
+	 * Fill in DEPREL and HEAD fields in CoNLL-U table.
+	 * @throws XPathExpressionException
+	 */
 	public void transformSyntax() throws XPathExpressionException
 	{
-		transformTokens();
-		// TODO
+		// TODO ellipsis
+		Node pmlPmc = (Node)XPathEngine.get().evaluate(
+				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
+		transformPhraseParts(pmlPmc);
+		Node newRoot = PhraseTransformator.pmcToUD(pmlPmc, s);
+		if (newRoot == null)
+			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
+		Token conllRoot = s.pmlaToConll.get(Utils.getId(newRoot));
+		s.pmlaToConll.put(Utils.getId(s.pmlTree), conllRoot);
+		conllRoot.head = 0;
+		conllRoot.deprel = URelations.ROOT;
+		transformDependents(s.pmlTree, newRoot);
+
 	}
 
+	/**
+	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for given
+	 * subtree.
+	 * @param aNode	root of the subtree to process
+	 * @throws XPathExpressionException
+	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
-		// TODO ellipsis
-		NodeList pmlChildren = (NodeList)xPathEngine.evaluate("./children/*", aNode, XPathConstants.NODESET);
-		Node pmlPmc = (Node)xPathEngine.evaluate("./children/pmcinfo", aNode, XPathConstants.NODE);
-		Node pmlX = (Node)xPathEngine.evaluate("./children/xinfo", aNode, XPathConstants.NODE);
-		Node pmlCoord = (Node)xPathEngine.evaluate("./childen/coordinfo", aNode, XPathConstants.NODE);
-		NodeList pmlDependents = (NodeList)xPathEngine.evaluate("./children/node", aNode, XPathConstants.NODESET);
+		NodeList pmlChildren = (NodeList)XPathEngine.get().evaluate(
+				"./children/*", aNode, XPathConstants.NODESET);
+		Node pmlPmc = (Node)XPathEngine.get().evaluate(
+				"./children/pmcinfo", aNode, XPathConstants.NODE);
+		Node pmlX = (Node)XPathEngine.get().evaluate(
+				"./children/xinfo", aNode, XPathConstants.NODE);
+		Node pmlCoord = (Node)XPathEngine.get().evaluate(
+				"./children/coordinfo", aNode, XPathConstants.NODE);
+
 		if (pmlChildren == null || pmlChildren.getLength() < 1)
 			return;
-		Node newRoot = null;
+		Node newRoot = aNode;
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
 		if (pmlPmc != null)
-			newRoot = phraseTransf.pmcToUD(pmlPmc, s);
-		if (pmlCoord != null)
-			newRoot = phraseTransf.coordToUD(pmlCoord, s);
-		if (pmlX != null)
-			newRoot = phraseTransf.xToUD(pmlX, s);
-		if (newRoot == null) newRoot = aNode;
-		else s.conllToPmla.put(s.pmlaToConll.get(newRoot), aNode);
-
-		if (pmlDependents != null && pmlDependents.getLength() > 0)
 		{
+			transformPhraseParts(pmlPmc);
+			newRoot = PhraseTransformator.pmcToUD(pmlPmc, s);
+		}
+		if (pmlCoord != null)
+		{
+			transformPhraseParts(pmlCoord);
+			newRoot = PhraseTransformator.coordToUD(pmlCoord, s);
+		}
+		if (pmlX != null)
+		{
+			transformPhraseParts(pmlX);
+			newRoot = PhraseTransformator.xToUD(pmlX, s);
+		}
+		if (newRoot == null)
+			throw new IllegalStateException(
+					"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
+
+		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));
+		transformDependents(aNode, newRoot);
+	}
+	/**
+	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for PML
+	 * dependency children of the given node.
+	 * @param parentANode	node whose dependency children will be processed
+	 * @param newRoot		node that will be the root of the coresponding UD
+	 *                  	structure
+	 * @throws XPathExpressionException
+	 */
+	protected void transformDependents(Node parentANode, Node newRoot)
+	throws XPathExpressionException
+	{
+		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
+				"./children/node", parentANode, XPathConstants.NODESET);
+		Token newRootTok = s.pmlaToConll.get(Utils.getId(newRoot));
+		if (pmlDependents != null && pmlDependents.getLength() > 0)
 			for (int i = 0; i < pmlDependents.getLength(); i++)
-			{
-				transformSubtree(pmlDependents.item(i));
-				Token conllTok = s.pmlaToConll.get(pmlDependents.item(i));
-				conllTok.deprel = depTransf.getUDepFromDep(pmlDependents.item(i));
-				conllTok.head = s.pmlaToConll.get(newRoot).idBegin;
-			}
+		{
+			transformSubtree(pmlDependents.item(i));
+			Token conllTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
+			conllTok.deprel = DepRelLogic.getUDepFromDep(pmlDependents.item(i));
+			conllTok.head = newRootTok.idBegin;
 		}
 	}
 
-	public static String treeToConll(Node pmlTree)
-	throws Exception
+	/**
+	 * Helper method: process subtrees under each part of PML phrase.
+	 * @param phraseInfoNode	node whose dependency children will be processed
+	 * @throws XPathExpressionException
+	 */
+	protected void transformPhraseParts(Node phraseInfoNode)
+	throws XPathExpressionException
 	{
-		SentenceTransformator t = new SentenceTransformator(pmlTree);
-		t.transformSyntax();
-		return t.s.toConllU();
+		NodeList parts = (NodeList)XPathEngine.get().evaluate(
+				"./children/node", phraseInfoNode, XPathConstants.NODESET);
+		if (parts != null && parts.getLength() > 0)
+			for (int i = 0; i < parts.getLength(); i++)
+				transformSubtree(parts.item(i));
 	}
+
 }

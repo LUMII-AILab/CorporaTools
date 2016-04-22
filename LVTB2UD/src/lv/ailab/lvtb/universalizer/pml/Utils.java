@@ -18,7 +18,7 @@ import java.util.TreeMap;
 public class Utils
 {
 	/**
-	 * Find ord value for given Node. If not found, return 0.
+	 * Find ord value for given node. If not found, return 0.
 	 * @throws XPathExpressionException
 	 */
 	public static int getOrd(Node node) throws XPathExpressionException
@@ -27,6 +27,15 @@ public class Utils
 		int ord = 0;
 		if (ordStr != null) ord = Integer.parseInt(ordStr);
 		return ord;
+	}
+
+	/**
+	 * Find id attribure for given A-level node.
+	 * @throws XPathExpressionException
+	 */
+	public static String getId(Node aNode) throws XPathExpressionException
+	{
+		return XPathEngine.get().evaluate("./@id", aNode);
 	}
 
 	/**
@@ -56,7 +65,7 @@ public class Utils
 	throws XPathExpressionException
 	{
 		if (nodes == null) return null;
-		if (nodes.getLength() == 1) return nodes.item(1);
+		if (nodes.getLength() == 1) return nodes.item(0);
 		int smallestOrd = Integer.MAX_VALUE;
 		Node bestNode = null;
 		for (int i = 0; i < nodes.getLength(); i++)
@@ -78,13 +87,14 @@ public class Utils
 
 	/**
 	 * Find node with the biggest ord value in its descendants.
+	 * Nodes with no ord are ignored.
 	 * @throws XPathExpressionException
 	 */
 	public static Node getLastByOrd(NodeList nodes)
 	throws XPathExpressionException
 	{
 		if (nodes == null) return null;
-		if (nodes.getLength() == 1) return nodes.item(1);
+		if (nodes.getLength() == 1) return nodes.item(0);
 		int biggestOrd = Integer.MIN_VALUE;
 		Node bestNode = null;
 		for (int i = 0; i < nodes.getLength(); i++)
