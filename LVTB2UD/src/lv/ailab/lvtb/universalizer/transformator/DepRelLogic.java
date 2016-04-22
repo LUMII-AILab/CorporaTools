@@ -15,14 +15,8 @@ import javax.xml.xpath.XPathExpressionException;
  */
 public class DepRelLogic
 {
-	protected static XPath xPathEngine;
 
-	public DepRelLogic (XPath xPathEngine)
-	{
-		this.xPathEngine = xPathEngine;
-		// Will initialize when needed.
-	}
-	public URelations getUDepFromDep(Node aNode) throws XPathExpressionException
+	public static URelations getUDepFromDep(Node aNode) throws XPathExpressionException
 	{
 		return URelations.DEP;
 		/*Node pmlParent = (Node)xPathEngine.evaluate("../..", aNode, XPathConstants.NODE);
@@ -42,21 +36,21 @@ public class DepRelLogic
 
 	}
 
-	public URelations getUDepFromPhrsePart(Node aNode, String pmcType)
+	public static URelations getUDepFromPhrsePart(Node aNode, String pmcType)
 	throws XPathExpressionException
 	{
-		String nodeId = xPathEngine.evaluate("./@id", aNode);
-		String lvtbRole = xPathEngine.evaluate("./role", aNode);
+		String nodeId = XPathEngine.get().evaluate("./@id", aNode);
+		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
 
 		if ((pmcType.equals(LvtbPmcTypes.SENT) || pmcType.equals(LvtbPmcTypes.UTER)
 				|| pmcType.equals(LvtbPmcTypes.SUBRCL)) || pmcType.equals(LvtbPmcTypes.MAINCL))
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
-				String subPmcType = xPathEngine.evaluate("./children/pmcinfo/pmctype", aNode);
+				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
 				if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 					return URelations.DISCOURSE;
-				String tag = xPathEngine.evaluate("./tag", aNode);
+				String tag = XPathEngine.get().evaluate("./tag", aNode);
 				if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
 			}
 

@@ -21,28 +21,15 @@ import java.util.ArrayList;
  */
 public class FeatsLogic
 {
-	protected Analyzer morphoEngine;
-	protected XPath xPathEngine;
+	protected static Analyzer morphoEngineSing;
 
-	protected void initMorpho() throws Exception
+	protected static Analyzer getMorpho() throws Exception
 	{
-		if (morphoEngine == null) morphoEngine = new Analyzer();
+		if (morphoEngineSing == null) morphoEngineSing = new Analyzer();
+		return morphoEngineSing;
 	}
 
-	protected void initXPath()
-	{
-		if (xPathEngine == null) xPathEngine = XPathFactory.newInstance().newXPath();
-	}
-
-	public FeatsLogic (XPath xPathEngine)
-	{
-		this.xPathEngine = xPathEngine;
-		// Will initialize when needed.
-		morphoEngine = null;
-	}
-
-
-	public ArrayList<UFeat> getUFeats(String form, String lemma, String xpostag, Node aNode)
+	public static ArrayList<UFeat> getUFeats(String form, String lemma, String xpostag, Node aNode)
 	throws XPathExpressionException
 	{
 		ArrayList<UFeat> res = new ArrayList<>();
@@ -77,8 +64,7 @@ public class FeatsLogic
 		{
 			try
 			{
-				initMorpho();
-				Word analysis = morphoEngine.analyze(form);
+				Word analysis = getMorpho().analyze(form);
 				Wordform correctOne = analysis.getMatchingWordform(
 						xpostag.contains("_") ? xpostag.substring(0, xpostag.indexOf('_')) : xpostag,
 						true);
@@ -136,8 +122,6 @@ public class FeatsLogic
 
 		// Lexical features
 
-		initXPath();
-
 		if (xpostag.matches("p[ps].*")) res.add(UFeat.PRONTYPE_PRS);
 		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
 			res.add(UFeat.PRONTYPE_PRS);
@@ -146,32 +130,32 @@ public class FeatsLogic
 		if (xpostag.matches("r0.*") && lemma.matches("cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?"))
 			res.add(UFeat.PRONTYPE_INT);
 		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
-				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_INT);
 		if (xpostag.matches("pr.*")) res.add(UFeat.PRONTYPE_REL);
 		if (xpostag.matches("pd.*")) res.add(UFeat.PRONTYPE_DEM);
 		if (xpostag.matches("r0.*") && lemma.matches("te|tur|šeit|tad|tagad|tik|tā"))
 			res.add(UFeat.PRONTYPE_DEM);
 		if (xpostag.matches("n.*") && lemma.equals("t(ur|ej)iene") &&
-				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_DEM);
 		if (xpostag.matches("pg.*")) res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
 			res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("n.*") && lemma.equals("vis(ur|ad)iene") &&
-				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("p.....y.*")) res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("r0.*") && lemma.matches("ne.*"))
 			res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("n.*") && lemma.equals("nek(ur|ad)iene") &&
-				"xPrep".equals(xPathEngine.evaluate("../../xtype", aNode)))
+				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("pi.*")) res.add(UFeat.PRONTYPE_IND);
 		if (xpostag.matches("r0.*") &&
-				"xParticle".equals(xPathEngine.evaluate("../../xtype", aNode)))
+				"xParticle".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
-			NodeList result = (NodeList) xPathEngine.evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
+			NodeList result = (NodeList) XPathEngine.get().evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
 			if (result != null && result.getLength() > 0) res.add(UFeat.PRONTYPE_IND);
 		}
 
