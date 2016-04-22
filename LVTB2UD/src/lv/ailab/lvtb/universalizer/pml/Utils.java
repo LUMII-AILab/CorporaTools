@@ -39,6 +39,20 @@ public class Utils
 	}
 
 	/**
+	 * Find tag attribute A-level node. Use either morphotag or x-word tag or
+	 * coordination tag. For PMC node returns first basElem's tag.
+	 * @throws XPathExpressionException
+	 */
+	public static String getTag(Node aNode) throws XPathExpressionException
+	{
+		NodeList pmcBasElems = (NodeList) XPathEngine.get().evaluate(
+				"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
+		if (pmcBasElems != null && pmcBasElems.getLength() > 0)
+			return getTag(getFirstByOrd(pmcBasElems));
+		return XPathEngine.get().evaluate("./m.rf/tag|./childen/xinfo/tag|./children/coordinfo/tag", aNode);
+	}
+
+	/**
 	 * Create splice array that contains all nodes from the given array, to whom
 	 * begin <= ord < end.
 	 * @throws XPathExpressionException

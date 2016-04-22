@@ -1,15 +1,15 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.URelations;
-import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
-import lv.ailab.lvtb.universalizer.pml.LvtbPmcTypes;
-import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.pml.*;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
+ * Relations between roles used in LVTB and UD.
  * Created on 2016-04-20.
  *
  * @author Lauma
@@ -17,24 +17,193 @@ import javax.xml.xpath.XPathExpressionException;
 public class DepRelLogic
 {
 
-	public static URelations getUDepFromDep(Node aNode) throws XPathExpressionException
+	public static URelations getUDepFromDep(Node aNode)
+	throws XPathExpressionException
 	{
-		return URelations.DEP;
-		/*Node pmlParent = (Node)xPathEngine.evaluate("../..", aNode, XPathConstants.NODE);
-		String lvtbRole = xPathEngine.evaluate("./role", aNode);
+		String nodeId = Utils.getId(aNode);
+		Node pmlParent = (Node)XPathEngine.get().evaluate("../..", aNode, XPathConstants.NODE);
+		String parentTag = Utils.getTag(pmlParent);
+		String parentType = XPathEngine.get().evaluate("./role|./pmctype|./coortype|./xtype", pmlParent);
 
-		if (lvtbRole.equals("subj"))
+		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		String tag = Utils.getTag(aNode);
+
+		// Simple dependencies.
+
+		if (lvtbRole.equals(LvtbRoles.SUBJ))
 		{
-			if ("pred".equals(xPathEngine.evaluate("./role", pmlParent)))
+			// Nominal subject
+			if (tag.matches("[nampx].*|v..pd.*"))
 			{
-				String parentTag = xPathEngine.evaluate("./m.rf/tag", pmlParent);
-				if (parentTag.matches("v..[^p].....a.*")) return URelations.NSUBJ;
-				if (parentTag.matches("v..[^p].....p.*")) return URelations.NSUBJPASS;
-				System.out.printf("\"%s\"")
-
+				// Parent is simple predicate
+				if (parentType.equals(LvtbRoles.PRED))
+				{
+					if (parentTag.matches("v..[^p].....a.*|v..n.*")) return URelations.NSUBJ;
+					if (parentTag.matches("v..[^p].....p.*")) return URelations.NSUBJPASS;
+				}
+				// Parent is complex predicate
+				if (parentType.equals(LvtbXTypes.XPRED))
+				{
+					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
+					if (parentTag.matches("v.*")) return URelations.NSUBJ;
+				}
 			}
-		}*/
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+		if (lvtbRole.equals(LvtbRoles.OBJ))
+		{
+			if (tag.matches("[na]...a.*|[pm]....a.*|v..p...a.*")) return URelations.DOBJ;
+			if (tag.matches("[na]...n.*|[pm]....n.*|v..p...n.*") && parentTag.matches("v..d.*"))
+				return URelations.DOBJ;
+			return URelations.IOBJ;
+		}
+		if (lvtbRole.equals(LvtbRoles.SPC))
+		{
+			// Infinitive SPC
+			if (tag.matches("v..n.*"))
+			{
+				if ((parentType.equals(LvtbRoles.PRED) ||
+						parentType.equals(LvtbXTypes.XPRED)) &&
+						parentTag.matches("v..[^p]...[123].*"))
+					return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
+				if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
+			}
+			// Simple nominal SPC
+			if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*"))
+				return URelations.ACL;
+			String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
+			// SPC with comparison
+			if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return URelations.ADVCL;
+			// prepositional SPC
+			if (xType != null && xType.equals(LvtbXTypes.XPREP))
+			{
+				NodeList preps = (NodeList)XPathEngine.get().evaluate(
+						"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']", aNode, XPathConstants.NODESET);
+				NodeList basElems = (NodeList)XPathEngine.get().evaluate(
+						"./children/xinfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
+				if (preps.getLength() > 1)
+					System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.PREP);
+				if (basElems.getLength() > 1)
+					System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
+				String baseElemTag = Utils.getTag(basElems.item(0));
+				if ("par".equals(XPathEngine.get().evaluate("./m.fr/lemma", preps.item(0)))
+						&& baseElemTag != null && baseElemTag.matches("[nampx].*"))
+					return URelations.XCOMP;
+			}
+			// Participal SPC
+			if (tag.matches("v..p[pu].*")) return URelations.ADVCL;
 
+			// SPC with punctuation.
+			String pmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
+			if (pmcType != null && pmcType.equals(LvtbPmcTypes.SPCPMC))
+			{
+				NodeList basElems = (NodeList)XPathEngine.get().evaluate(
+						"./children/pminfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
+				if (basElems.getLength() > 1)
+					System.err.printf("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM);
+				String basElemTag = Utils.getTag(basElems.item(0));
+				String basElemXType = XPathEngine.get().evaluate("./childen/xinfo/xtype", basElems.item(0));
+
+				// SPC with comparison
+				if (LvtbXTypes.XSIMILE.equals(basElemXType)) return URelations.ADVCL;
+				// Participal SPC
+				if (basElemTag.matches("v..p[pu].*")) return URelations.ADVCL;
+				// Nominal SPC
+				if (basElemTag.matches("n.*")) return URelations.APPOS;
+				// Adjective SPC
+				if (basElemTag.matches("a.*|v..d.*")) return URelations.ACL;
+			}
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+		if (lvtbRole.equals(LvtbRoles.ATTR))
+		{
+			if (tag.matches("n.*")) return URelations.NMOD;
+			if (tag.matches("m[cf].*|xn.*")) return URelations.NUMMOD;
+			if (tag.matches("mo.*|xo.*|v..p.*")) return URelations.AMOD;
+			if (tag.matches("p.*")) return URelations.DET;
+			if (tag.matches("a.*"))
+			{
+				String lemma = XPathEngine.get().evaluate("./m.rf/lemma", aNode);
+				if (lemma != null && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)|(daudz|vairāk|daž)(i|as)"))
+					return URelations.DET;
+				return URelations.AMOD;
+			}
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+
+		if (lvtbRole.equals(LvtbRoles.ADV) || lvtbRole.equals(LvtbRoles.SIT))
+		{
+			if (tag.matches("n.*")) return URelations.NMOD;
+			if (tag.matches("r.*")) return URelations.ADVMOD;
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+		if (lvtbRole.equals(LvtbRoles.DET)) return URelations.NMOD;
+
+		if (lvtbRole.equals(LvtbRoles.NO))
+		{
+			String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
+			if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
+			if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
+				return URelations.DISCOURSE;
+			if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+
+		// Clausal dependencies.
+
+		if (lvtbRole.equals(LvtbRoles.PREDCL))
+		{
+			// Parent is simple predicate
+			if (parentType.equals(LvtbRoles.PRED)) return URelations.CCOMP;
+			// Parent is complex predicate
+			if (parentType.equals(LvtbXTypes.XPRED)) return URelations.ACL;
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+		if (lvtbRole.equals(LvtbRoles.SUBJCL))
+		{
+			// Parent is simple predicate
+			if (parentType.equals(LvtbRoles.PRED))
+			{
+				if (parentTag.matches("v..[^p].....a.*|v..n.*")) return URelations.NSUBJ;
+				if (parentTag.matches("v..[^p].....p.*")) return URelations.NSUBJPASS;
+			}
+			// Parent is complex predicate
+			if (parentType.equals(LvtbXTypes.XPRED))
+			{
+				if (parentTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return URelations.NSUBJPASS;
+				if (parentTag.matches("v.*")) return URelations.NSUBJ;
+			}
+			System.err.printf("Role \"%s\" for node %s was not transformed.\n", lvtbRole, nodeId);
+		}
+		if (lvtbRole.equals(LvtbRoles.OBJCL)) return URelations.CCOMP;
+		if (lvtbRole.equals(LvtbRoles.ATTRCL)) return URelations.ACL;
+		if (lvtbRole.equals(LvtbRoles.PLACECL) ||
+				lvtbRole.equals(LvtbRoles.TIMECL) ||
+				lvtbRole.equals(LvtbRoles.MANCL) ||
+				lvtbRole.equals(LvtbRoles.DEGCL) ||
+				lvtbRole.equals(LvtbRoles.CAUSCL) ||
+				lvtbRole.equals(LvtbRoles.PURPCL) ||
+				lvtbRole.equals(LvtbRoles.CONDCL) ||
+				lvtbRole.equals(LvtbRoles.CNSECCL) ||
+				lvtbRole.equals(LvtbRoles.CNCESCL) ||
+				lvtbRole.equals(LvtbRoles.MOTIVCL) ||
+				lvtbRole.equals(LvtbRoles.COMPCL) ||
+				lvtbRole.equals(LvtbRoles.QUASICL)) return URelations.ADVCL;
+
+		// Semi-clausal dependencies.
+		if (lvtbRole.equals(LvtbRoles.INS))
+		{
+
+			NodeList basElems = (NodeList)XPathEngine.get().evaluate(
+					"./children/pminfo/children/node[role='" + LvtbRoles.PRED + "']", aNode, XPathConstants.NODESET);
+			if (basElems!= null && basElems.getLength() > 1)
+				System.err.printf("\"%s\" has multiple \"%s\"", LvtbPmcTypes.INSPMC, LvtbRoles.PRED);
+			if (basElems != null) return URelations.PARATAXIS;
+			return URelations.DISCOURSE; // Washington (CNN) is left unidentified.
+		}
+		if (lvtbRole.equals(LvtbRoles.DIRSP)) return URelations.PARATAXIS;
+
+		return URelations.DEP;
 	}
 
 	/**
@@ -62,7 +231,7 @@ public class DepRelLogic
 				if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 					return URelations.DISCOURSE;
-				String tag = XPathEngine.get().evaluate("./tag", aNode);
+				String tag = Utils.getTag(aNode);
 				if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
 			}
 
@@ -86,6 +255,8 @@ public class DepRelLogic
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.CC;
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 		}
+
+
 		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
 		return URelations.DEP;
 	}

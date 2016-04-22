@@ -168,7 +168,7 @@ public enum URelations
 	/**
 	 * Open clausal complement.
 	 */
-	XCOP("xcomp"),
+	XCOMP("xcomp"),
 	;
 
 	final String strRep;
