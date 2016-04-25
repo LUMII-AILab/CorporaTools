@@ -28,6 +28,7 @@ public class LvtbToUdUI
 		File outFolder = new File(outputDataPath);
 		if (!outFolder.exists()) outFolder.mkdirs();
 		File[] listOfFiles = folder.listFiles();
+		int omited = 0;
 		for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
@@ -38,23 +39,31 @@ public class LvtbToUdUI
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
 				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(outPath), "UTF8"));
-				transformFile(f.getAbsolutePath(), out);
+				omited = omited + transformFile(f.getAbsolutePath(), out);
 				out.flush();
 				out.close();
 			}
 			else System.out.println(
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
 		}
-		System.out.println("Everything is finished.");
+		System.out.printf(
+				"Everything is finished, %s trees was omited because of ellipsis.\n", omited);
 	}
 
-	public static void transformFile(String inputPath, BufferedWriter conllOut)
+	public static int transformFile(String inputPath, BufferedWriter conllOut)
 	throws Exception
 	{
+		int omited = 0;
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
 		System.out.printf("%s trees found...\t", pmlTrees.getLength());
 		for (int i = 0; i < pmlTrees.getLength(); i++)
-			conllOut.write(SentenceTransformator.treeToConll(pmlTrees.item(i)));
+		{
+			String conllTree = SentenceTransformator.treeToConll(pmlTrees.item(i));
+			if (conllTree != null) conllOut.write(conllTree);
+			else
+				omited++;
+		}
 		System.out.println("Finished.");
+		return omited;
 	}
 }

@@ -33,12 +33,17 @@ public class SentenceTransformator
 
 	/**
 	 * Create CoNLL-U token table, try to fill it in as much as possible.
+	 * @return	true, if tree has no untranformable ellipsis; false if tree
+	 * 			contains untransformable ellipsis and, thus, result should not
+	 * 			be used
 	 * @throws XPathExpressionException
 	 */
-	public void transform() throws XPathExpressionException
+	public boolean transform() throws XPathExpressionException
 	{
 		transformTokens();
-		transformSyntax();
+		boolean noElipsis = preprocessEllipsis();
+		if (noElipsis) transformSyntax();
+		return noElipsis;
 	}
 
 	/**
@@ -46,15 +51,18 @@ public class SentenceTransformator
 	 * transform given PML tree and get the string representation for the
 	 * resulting CoNLL-U table.
 	 * @param pmlTree	tree to transform
-	 * @return UD tree in CoNLL-U format
+	 * @return 	UD tree in CoNLL-U format or null if tree could not be
+	 * 			transformed.
 	 * @throws XPathExpressionException
 	 */
 	public static String treeToConll(Node pmlTree)
 	throws XPathExpressionException
 	{
 		SentenceTransformator t = new SentenceTransformator(pmlTree);
-		t.transform();
-		return t.s.toConllU();
+		boolean res = t.transform();
+		if (res) return t.s.toConllU();
+		System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+		return null;
 	}
 
 	/**
@@ -209,13 +217,39 @@ public class SentenceTransformator
 		else return lvtbTag + ending;
 	}
 
+	public boolean preprocessEllipsis() throws XPathExpressionException
+	{
+		// TODO better ellipsis
+		// Currently trees that have reduction nodes with children are not
+		// transformed.
+		NodeList ellipsisChildren = (NodeList) XPathEngine.get().evaluate(
+				".//node[reduction]/children/node", s.pmlTree, XPathConstants.NODESET);
+		for (int i = 0; i < ellipsisChildren.getLength(); i++)
+		{
+			NodeList morpho = (NodeList) XPathEngine.get().evaluate(
+					"../../m.rf", ellipsisChildren.item(i), XPathConstants.NODESET);
+			if (morpho == null || morpho.getLength() < 1) return false;
+		}
+		// Other reduction nodes are removed to be ignored in latter processing.
+		ellipsisChildren = (NodeList) XPathEngine.get().evaluate(
+				".//node[reduction]", s.pmlTree, XPathConstants.NODESET);
+		if (ellipsisChildren != null) for (int i = 0; i < ellipsisChildren.getLength(); i++)
+		{
+			Node current = ellipsisChildren.item(i);
+			NodeList morpho = (NodeList) XPathEngine.get().evaluate(
+					"./m.rf", current, XPathConstants.NODESET);
+			if (morpho == null || morpho.getLength() < 1)
+				current.getParentNode().removeChild(current);
+		}
+		return true;
+	}
+
 	/**
 	 * Fill in DEPREL and HEAD fields in CoNLL-U table.
 	 * @throws XPathExpressionException
 	 */
 	public void transformSyntax() throws XPathExpressionException
 	{
-		// TODO ellipsis
 		Node pmlPmc = (Node)XPathEngine.get().evaluate(
 				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
 		transformPhraseParts(pmlPmc);
@@ -227,7 +261,6 @@ public class SentenceTransformator
 		conllRoot.head = 0;
 		conllRoot.deprel = URelations.ROOT;
 		transformDependents(s.pmlTree, newRoot);
-
 	}
 
 	/**
