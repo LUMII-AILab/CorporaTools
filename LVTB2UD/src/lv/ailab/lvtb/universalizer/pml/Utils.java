@@ -43,6 +43,17 @@ public class Utils
 	}
 
 	/**
+	 * Find lemma for given node.
+	 * @param node node to analyze
+	 * @return	lemma
+	 * @throws XPathExpressionException
+	 */
+	public static String getLemma(Node node) throws XPathExpressionException
+	{
+		return XPathEngine.get().evaluate("./m.rf/lemma", node);
+	}
+
+	/**
 	 * Find tag attribute A-level node. Use either morphotag or x-word tag or
 	 * coordination tag. For PMC node returns first basElem's tag. Based on
 	 * assumption, that single aNode has no more than one phrase-child.
@@ -58,6 +69,7 @@ public class Utils
 			return getTag(getFirstByOrd(pmcBasElems));
 		return XPathEngine.get().evaluate("./m.rf/tag|./childen/xinfo/tag|./children/coordinfo/tag", aNode);
 	}
+
 
 	/**
 	 * Create splice array that contains all nodes from the given array, to whom

@@ -188,8 +188,39 @@ public class PhraseTransformator
 
 			if (foreigns != null && children.getLength() == foreigns.getLength())
 				return allUnderFirstBasElem(sent, xNode, xType, URelations.FOREIGN, false);
-			else
-				return allUnderFirstBasElem(sent, xNode, xType, null, false);
+			else return allUnderFirstBasElem(sent, xNode, xType, null, false);
+		}
+
+		if (xType.equals(LvtbXTypes.XSIMILE))
+			// If relinking (like for "vairāk nekā" constructions) will be
+			// needed, it will be done when processing the parent node.
+			return allUnderLastBasElem(sent, xNode, xType, null, true);
+
+		if (xType.equals(LvtbXTypes.SUBRANAL))
+		{
+			// Tricky part, where subordinated xSimile structure also must be
+			// rearanged.
+			Node first = Utils.getFirstByOrd(children);
+			Node last = Utils.getLastByOrd(children);
+			if (children != null && children.getLength() == 2 &&
+					"vairāk".equals(Utils.getLemma(first)) &&
+					LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
+			{
+				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
+				Token newRootToken = sent.pmlaToConll.get(Utils.getId(last));
+				Token vToken = sent.pmlaToConll.get(Utils.getId(first));
+				vToken.head = newRootToken.idBegin;
+				vToken.deprel = URelations.ADVMOD;
+				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
+				{
+					Token conjToken = sent.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+					conjToken.deprel = URelations.MWE;
+					conjToken.head = vToken.idBegin;
+				}
+				return last;
+			}
+			else return allUnderFirstBasElem(sent, xNode, xType, null, false);
 		}
 
 		System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",

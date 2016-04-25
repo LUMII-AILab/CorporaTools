@@ -86,7 +86,7 @@ public class DepRelLogic
 				if (basElems.getLength() > 1)
 					System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
 				String baseElemTag = Utils.getTag(basElems.item(0));
-				if ("par".equals(XPathEngine.get().evaluate("./m.fr/lemma", preps.item(0)))
+				if ("par".equals(Utils.getLemma(preps.item(0)))
 						&& baseElemTag != null && baseElemTag.matches("[nampx].*"))
 					return URelations.XCOMP;
 			}
@@ -123,7 +123,7 @@ public class DepRelLogic
 			if (tag.matches("p.*")) return URelations.DET;
 			if (tag.matches("a.*"))
 			{
-				String lemma = XPathEngine.get().evaluate("./m.rf/lemma", aNode);
+				String lemma = Utils.getLemma(aNode);
 				if (lemma != null && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)|(daudz|vairāk|daž)(i|as)"))
 					return URelations.DET;
 				return URelations.AMOD;
@@ -213,6 +213,8 @@ public class DepRelLogic
 	 * PhraseTransform class.
 	 * Case when a part of unstruct basElem maps to foreign is handled in
 	 * PhraseTransform class.
+	 * Case when subrAnal is "vairāk" + xSimile is handled in
+	 * PhraseTransform class.
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
@@ -260,27 +262,43 @@ public class DepRelLogic
 
 		if (phraseType.equals(LvtbXTypes.XAPP) &&
 			lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NMOD;
-		if (phraseType.equals(LvtbXTypes.XNUM) &&
+		if ((phraseType.equals(LvtbXTypes.XNUM) ||
+				phraseType.equals(LvtbXTypes.COORDANAL) ||
+				phraseType.equals(LvtbXTypes.SUBRANAL)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.COMPOUND;
-		if (phraseType.equals(LvtbXTypes.PHRASELEM) &&
+		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
+				phraseType.equals(LvtbXTypes.UNSTRUCT)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.MWE;
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NAME;
-		if (phraseType.equals(LvtbXTypes.COORDANAL) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.COMPOUND;
-		if (phraseType.equals(LvtbXTypes.UNSTRUCT) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.MWE;
-
 
 		if (phraseType.equals(LvtbXTypes.XPREP) &&
 			lvtbRole.equals(LvtbRoles.PREP)) return URelations.CASE;
 		if (phraseType.equals(LvtbXTypes.XPARTICLE) &&
 				lvtbRole.equals(LvtbRoles.NO))
 		{
-			String lemma = XPathEngine.get().evaluate("./m.rf/lemma", aNode);
-			if (lemma != null && lemma.equals("ne")) return URelations.NEG;
+			if ("ne".equals(Utils.getLemma(aNode))) return URelations.NEG;
 			return URelations.DISCOURSE;
 		}
+
+		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
+				lvtbRole.equals(LvtbRoles.CONJ))
+		{
+			Node parent = (Node)XPathEngine.get().evaluate(
+					"../..", aNode, XPathConstants.NODE); // node/xinfo/pmcinfo/phraseinfo
+			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[m.rf/lemma='vairāk']", parent, XPathConstants.NODESET);
+			String parentRole = XPathEngine.get().evaluate("./role", parent);
+			String parentType = XPathEngine.get().evaluate("./xinfo/xtype|./pmcinfo/pmctype", parent);
+			if (LvtbRoles.SPC.equals(parentRole) ||
+					LvtbPmcTypes.SPCPMC.equals(parentType) ||
+					LvtbPmcTypes.INSPMC.equals(parentType)) return URelations.MARK;
+			if (LvtbXTypes.XPRED.equals(parentType)) return URelations.DISCOURSE;
+			if (LvtbXTypes.SUBRANAL.equals(parentType) && vSiblings != null &&
+					vSiblings.getLength() > 0) return URelations.MWE;
+		}
+
+		// TODO XPRED
 
 		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
 		return URelations.DEP;
