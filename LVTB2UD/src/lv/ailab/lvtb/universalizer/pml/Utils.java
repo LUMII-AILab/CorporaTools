@@ -18,7 +18,9 @@ import java.util.TreeMap;
 public class Utils
 {
 	/**
-	 * Find ord value for given node. If not found, return 0.
+	 * Find ord value for given node.
+	 * @param node node to analyze
+	 * @return	ord value or 0, if no ord found.
 	 * @throws XPathExpressionException
 	 */
 	public static int getOrd(Node node) throws XPathExpressionException
@@ -30,17 +32,22 @@ public class Utils
 	}
 
 	/**
-	 * Find id attribure for given A-level node.
+	 * Find id attribute for given node.
+	 * @param node node to analyze
+	 * @return	attribute value
 	 * @throws XPathExpressionException
 	 */
-	public static String getId(Node aNode) throws XPathExpressionException
+	public static String getId(Node node) throws XPathExpressionException
 	{
-		return XPathEngine.get().evaluate("./@id", aNode);
+		return XPathEngine.get().evaluate("./@id", node);
 	}
 
 	/**
 	 * Find tag attribute A-level node. Use either morphotag or x-word tag or
-	 * coordination tag. For PMC node returns first basElem's tag.
+	 * coordination tag. For PMC node returns first basElem's tag. Based on
+	 * assumption, that single aNode has no more than one phrase-child.
+	 * @param aNode	node to analyze
+	 * @return	tag
 	 * @throws XPathExpressionException
 	 */
 	public static String getTag(Node aNode) throws XPathExpressionException
@@ -55,6 +62,11 @@ public class Utils
 	/**
 	 * Create splice array that contains all nodes from the given array, to whom
 	 * begin <= ord < end.
+	 * @param nodes	list of nodes to splice
+	 * @param begin smallest index (inclusive)
+	 * @param end	largest index (excluse)
+	 * @return	list with all elements satisfying the criterion, ordered in the
+	 * 			same order as in input data
 	 * @throws XPathExpressionException
 	 */
 
@@ -73,6 +85,8 @@ public class Utils
 
 	/**
 	 * Find node with the smallest ord value in its descendants.
+	 * @param nodes list of nodes where to search
+	 * @return	node with smallest given ord value
 	 * @throws XPathExpressionException
 	 */
 	public static Node getFirstByOrd(NodeList nodes)
@@ -102,6 +116,8 @@ public class Utils
 	/**
 	 * Find node with the biggest ord value in its descendants.
 	 * Nodes with no ord are ignored.
+	 * @param nodes list of nodes where to search
+	 * @return	node with largest given ord value
 	 * @throws XPathExpressionException
 	 */
 	public static Node getLastByOrd(NodeList nodes)
@@ -130,6 +146,8 @@ public class Utils
 
 	/**
 	 * Transform NodeList to ArrayList of Node.
+	 * @param nodes	list to tranform
+	 * @return	transformed list (original node ordering is preserved)
 	 * TODO: is there a more optimal implementation?
 	 */
 	public static ArrayList<Node> asList (NodeList nodes)
@@ -142,6 +160,8 @@ public class Utils
 
 	/**
 	 * Transform NodeList to ArrayList of Node and sort list by ord values.
+	 * @param nodes	list to sort
+	 * @return	sorted list
 	 * @throws XPathExpressionException
 	 */
 	public static ArrayList<Node> asOrderedList(NodeList nodes)

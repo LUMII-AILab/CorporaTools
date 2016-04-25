@@ -211,6 +211,8 @@ public class DepRelLogic
 	 * Only for nodes that are not roots or subroots.
 	 * NB! Case when a part of crdClauses maps to parataxis is handled in
 	 * PhraseTransform class.
+	 * Case when a part of unstruct basElem maps to foreign is handled in
+	 * PhraseTransform class.
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
@@ -256,6 +258,29 @@ public class DepRelLogic
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 		}
 
+		if (phraseType.equals(LvtbXTypes.XAPP) &&
+			lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NMOD;
+		if (phraseType.equals(LvtbXTypes.XNUM) &&
+				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.COMPOUND;
+		if (phraseType.equals(LvtbXTypes.PHRASELEM) &&
+				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.MWE;
+		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
+				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NAME;
+		if (phraseType.equals(LvtbXTypes.COORDANAL) &&
+				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.COMPOUND;
+		if (phraseType.equals(LvtbXTypes.UNSTRUCT) &&
+				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.MWE;
+
+
+		if (phraseType.equals(LvtbXTypes.XPREP) &&
+			lvtbRole.equals(LvtbRoles.PREP)) return URelations.CASE;
+		if (phraseType.equals(LvtbXTypes.XPARTICLE) &&
+				lvtbRole.equals(LvtbRoles.NO))
+		{
+			String lemma = XPathEngine.get().evaluate("./m.rf/lemma", aNode);
+			if (lemma != null && lemma.equals("ne")) return URelations.NEG;
+			return URelations.DISCOURSE;
+		}
 
 		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
 		return URelations.DEP;
