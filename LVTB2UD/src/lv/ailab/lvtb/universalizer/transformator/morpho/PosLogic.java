@@ -1,4 +1,4 @@
-package lv.ailab.lvtb.universalizer.transformator;
+package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
 

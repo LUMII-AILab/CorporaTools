@@ -2,7 +2,11 @@ package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
+import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
+import lv.ailab.lvtb.universalizer.transformator.syntax.PhraseTransformator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

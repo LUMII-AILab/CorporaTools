@@ -73,7 +73,7 @@ public class Utils
 
 	/**
 	 * Find pmctype, coordtype or xtype for a given node.
-	 * @param phraseNode	note to analyze
+	 * @param phraseNode	node to analyze
 	 * @return	phrase type
 	 * @throws XPathExpressionException
 	 */
@@ -82,6 +82,20 @@ public class Utils
 	{
 		return XPathEngine.get().evaluate(
 				"./pmctype|./coordtype|./xtype", phraseNode);
+	}
+
+	/**
+	 * Find all children of the given node in PML sense. xinfo, pmcinfo and
+	 * coordinfo are not in the result.
+	 * @param node	node to analyze
+	 * @return	children set
+	 * @throws XPathExpressionException
+	 */
+	public static NodeList getPMLChildren(Node node)
+	throws XPathExpressionException
+	{
+		return (NodeList)XPathEngine.get().evaluate(
+				"./children/node", node, XPathConstants.NODESET);
 	}
 
 

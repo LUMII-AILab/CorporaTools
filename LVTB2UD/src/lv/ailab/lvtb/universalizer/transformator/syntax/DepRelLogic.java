@@ -1,7 +1,8 @@
-package lv.ailab.lvtb.universalizer.transformator;
+package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -21,7 +22,7 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(aNode);
-		Node pmlParent = (Node)XPathEngine.get().evaluate("../..", aNode, XPathConstants.NODE);
+		Node pmlParent = (Node) XPathEngine.get().evaluate("../..", aNode, XPathConstants.NODE);
 		String parentTag = Utils.getTag(pmlParent);
 		String parentType = XPathEngine.get().evaluate("./role|./pmctype|./coortype|./xtype", pmlParent);
 

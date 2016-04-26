@@ -1,6 +1,7 @@
-package lv.ailab.lvtb.universalizer.transformator;
+package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.UFeat;
+import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import lv.semti.morphology.analyzer.Analyzer;
 import lv.semti.morphology.analyzer.Word;
 import lv.semti.morphology.analyzer.Wordform;
@@ -8,10 +9,8 @@ import lv.semti.morphology.attributes.AttributeNames;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 
 /**
