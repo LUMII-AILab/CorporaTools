@@ -3,7 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
+import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -59,7 +59,7 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.getUDepFromPhrasePart() should
+	 *                      null, if DepRelLogic.ohrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @throws XPathExpressionException
 	 */
@@ -80,7 +80,7 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.getUDepFromPhrasePart() should
+	 *                      null, if DepRelLogic.ohrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @throws XPathExpressionException
 	 */
@@ -99,7 +99,7 @@ public class Sentence
 			Token childToken = pmlaToConll.get(Utils.getId(child));
 			childToken.head = rootToken.idBegin;
 			if (childDeprel == null)
-				childToken.deprel = DepRelLogic.getUDepFromPhrasePart(child, phraseType);
+				childToken.deprel = PhrasePartDepLogic.ohrasePartRoleToUD(child, phraseType);
 			else childToken.deprel = childDeprel;
 		}
 	}
@@ -113,7 +113,7 @@ public class Sentence
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.getUDepFromPhrasePart()
+	 *                          or null, if DepRelLogic.ohrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
@@ -155,7 +155,7 @@ public class Sentence
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.getUDepFromPhrasePart()
+	 *                          or null, if DepRelLogic.ohrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found

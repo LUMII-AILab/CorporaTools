@@ -85,6 +85,19 @@ public class Utils
 	}
 
 	/**
+	 * Find pmctype, coordtype, xtype or role for a given node.
+	 * @param node	node to analyze
+	 * @return	phrase type or dependency role
+	 * @throws XPathExpressionException
+	 */
+	public static String getAnyLabel(Node node)
+	throws XPathExpressionException
+	{
+		return XPathEngine.get().evaluate(
+				"./role|./pmctype|./coortype|./xtype", node);
+	}
+
+	/**
 	 * If this node is a constituent node, find is pmcinfo, coordinfo or xinfo
 	 * structure.
 	 * @param aNode	node to analyze
@@ -110,6 +123,18 @@ public class Utils
 	{
 		return (NodeList)XPathEngine.get().evaluate(
 				"./children/node", node, XPathConstants.NODESET);
+	}
+
+	/**
+	 * Find parent node (or phrase structure) in PML sense.
+	 * @param node	node to analyze
+	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
+	 * @throws XPathExpressionException
+	 */
+	public static Node getPMLParent(Node node) throws XPathExpressionException
+	{
+		return (Node) XPathEngine.get().evaluate(
+				"../..", node, XPathConstants.NODE);
 	}
 
 

@@ -317,7 +317,7 @@ public class SentenceTransformator
 		{
 			transformSubtree(pmlDependents.item(i));
 			Token conllTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
-			conllTok.deprel = DepRelLogic.getUDepFromDep(pmlDependents.item(i));
+			conllTok.deprel = DepRelLogic.depToUD(pmlDependents.item(i));
 			conllTok.head = newRootTok.idBegin;
 		}
 	}
