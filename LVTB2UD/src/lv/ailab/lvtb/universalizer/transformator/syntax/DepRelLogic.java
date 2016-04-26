@@ -87,27 +87,40 @@ public class DepRelLogic
 		String parentType = Utils.getAnyLabel(pmlParent);
 
 		// Nominal subject
-		if (tag.matches("[nampx].*|v..pd.*"))
+		if (tag.matches("[nampx].*|v..pd.*") ||
+				(tag.matches("y.*") && Utils.getLemma(aNode).matches("\\p{Lu}+")))
 		{
-			// Parent is simple predicate
+			// Parent is predicate
 			if (parentType.equals(LvtbRoles.PRED))
 			{
-				// TODO recheck zd.*
-				if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..n.*")) return URelations.NSUBJ;
-				if (parentTag.matches("v..[^p].....p.*|v..pd...p.*")) return URelations.NSUBJPASS;
-				if (parentTag.matches("z.*"))
+				Node xChild = Utils.getPhraseNode(aNode);
+				// Parent is complex predicate
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
 				{
-					String reduction = XPathEngine.get().evaluate("./reduction", pmlParent);
-					if (reduction.matches("v..[^p].....a.*|v..n.*")) return URelations.NSUBJ;
-					if (reduction.matches("v..[^p].....p.*")) return URelations.NSUBJPASS;
+					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
+					if (parentTag.matches("v.*")) return URelations.NSUBJ;
+				}
+				// Parent is simple predicate
+				else
+				{
+
+					// TODO recheck zd.*
+					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..n.*"))
+						return URelations.NSUBJ;
+					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
+						return URelations.NSUBJPASS;
+					if (parentTag.matches("z.*"))
+					{
+						String reduction = XPathEngine.get().evaluate(
+								"./reduction", pmlParent);
+						if (reduction.matches("v..[^p].....a.*|v..n.*"))
+							return URelations.NSUBJ;
+						if (reduction.matches("v..[^p].....p.*"))
+							return URelations.NSUBJPASS;
+					}
 				}
 			}
-			// Parent is complex predicate
-			if (parentType.equals(LvtbXTypes.XPRED))
-			{
-				if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
-				if (parentTag.matches("v.*")) return URelations.NSUBJ;
-			}
+
 		}
 		// Infinitive
 		if (tag.matches("v..n.*"))
@@ -232,7 +245,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-		if (tag.matches("n.*|xn.*|p.*")) return URelations.NMOD;
+		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*")) return URelations.NMOD;
 		if (tag.matches("r.*")) return URelations.ADVMOD;
 		if (tag.matches("q.*"))
 		{
