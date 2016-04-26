@@ -59,7 +59,7 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.ohrasePartRoleToUD() should
+	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @throws XPathExpressionException
 	 */
@@ -80,7 +80,7 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.ohrasePartRoleToUD() should
+	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @throws XPathExpressionException
 	 */
@@ -99,7 +99,7 @@ public class Sentence
 			Token childToken = pmlaToConll.get(Utils.getId(child));
 			childToken.head = rootToken.idBegin;
 			if (childDeprel == null)
-				childToken.deprel = PhrasePartDepLogic.ohrasePartRoleToUD(child, phraseType);
+				childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
 			else childToken.deprel = childDeprel;
 		}
 	}
@@ -113,7 +113,7 @@ public class Sentence
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.ohrasePartRoleToUD()
+	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
@@ -155,7 +155,7 @@ public class Sentence
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.ohrasePartRoleToUD()
+	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found

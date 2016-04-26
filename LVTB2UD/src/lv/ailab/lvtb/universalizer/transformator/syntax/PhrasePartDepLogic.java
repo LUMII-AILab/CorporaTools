@@ -35,14 +35,18 @@ public class PhrasePartDepLogic
 	 * @return contents for corresponding DEPREL field
 	 * @throws XPathExpressionException
 	 */
-	public static URelations ohrasePartRoleToUD(Node aNode, String phraseType)
+	public static URelations phrasePartRoleToUD(Node aNode, String phraseType)
 	throws XPathExpressionException
 	{
 		String nodeId = XPathEngine.get().evaluate("./@id", aNode);
 		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
 
-		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
-				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.MAINCL))
+		if ((phraseType.equals(LvtbPmcTypes.SENT) ||
+				phraseType.equals(LvtbPmcTypes.UTTER) ||
+				phraseType.equals(LvtbPmcTypes.SUBRCL)) ||
+				phraseType.equals(LvtbPmcTypes.MAINCL) ||
+				phraseType.equals(LvtbPmcTypes.INSPMC) ||
+				phraseType.equals(LvtbPmcTypes.DIRSPPMC))
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
 				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
@@ -59,6 +63,7 @@ public class PhrasePartDepLogic
 				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
 				|| phraseType.equals(LvtbPmcTypes.ADRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
+
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.DISCOURSE;
@@ -98,18 +103,26 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
 				lvtbRole.equals(LvtbRoles.CONJ))
 		{
-			Node parent = (Node)XPathEngine.get().evaluate(
-					"../..", aNode, XPathConstants.NODE); // node/xinfo/pmcinfo/phraseinfo
+			// Because parent is the xSimile itself.
+			Node firstAncestor = Utils.getPMLGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
 			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/lemma='vairāk']", parent, XPathConstants.NODESET);
-			String parentRole = XPathEngine.get().evaluate("./role", parent);
-			String parentType = XPathEngine.get().evaluate("./xinfo/xtype|./pmcinfo/pmctype", parent);
-			if (LvtbRoles.SPC.equals(parentRole) ||
-					LvtbPmcTypes.SPCPMC.equals(parentType) ||
-					LvtbPmcTypes.INSPMC.equals(parentType)) return URelations.MARK;
-			if (LvtbXTypes.XPRED.equals(parentType)) return URelations.DISCOURSE;
-			if (LvtbXTypes.SUBRANAL.equals(parentType) && vSiblings != null &&
-					vSiblings.getLength() > 0) return URelations.MWE;
+					"./children/node[m.rf/lemma='vairāk']", firstAncestor, XPathConstants.NODESET);
+			String firstAncType = Utils.getAnyLabel(firstAncestor);
+			String secondAncType = Utils.getAnyLabel(Utils.getPMLParent(firstAncestor));
+
+			if (LvtbRoles.SPC.equals(firstAncType))
+				return URelations.MARK;
+			if (LvtbRoles.BASELEM.equals(firstAncType))
+			{
+				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
+						LvtbPmcTypes.INSPMC.equals(secondAncType))
+					return URelations.MARK;
+				if (LvtbXTypes.XPRED.equals(secondAncType))
+					return URelations.DISCOURSE;
+				if (LvtbXTypes.SUBRANAL
+						.equals(secondAncType) && vSiblings != null &&
+						vSiblings.getLength() > 0) return URelations.MWE;
+			}
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
@@ -119,7 +132,7 @@ public class PhrasePartDepLogic
 					lvtbRole.equals(LvtbRoles.MOD)) return URelations.XCOMP;
 		}
 
-		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
+		System.err.printf("%s in \"%s\" phrase has no UD label.\n", nodeId, phraseType);
 		return URelations.DEP;
 	}
 }

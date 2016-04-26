@@ -93,8 +93,8 @@ public class DepRelLogic
 			if (parentType.equals(LvtbRoles.PRED))
 			{
 				// TODO recheck zd.*
-				if (parentTag.matches("v..[^p].....a.*|v..n.*")) return URelations.NSUBJ;
-				if (parentTag.matches("v..[^p].....p.*")) return URelations.NSUBJPASS;
+				if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..n.*")) return URelations.NSUBJ;
+				if (parentTag.matches("v..[^p].....p.*|v..pd...p.*")) return URelations.NSUBJPASS;
 				if (parentTag.matches("z.*"))
 				{
 					String reduction = XPathEngine.get().evaluate("./reduction", pmlParent);
@@ -222,7 +222,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-		if (tag.matches("n.*|xn.*")) return URelations.NMOD;
+		if (tag.matches("n.*|xn.*|p.*")) return URelations.NMOD;
 		if (tag.matches("r.*")) return URelations.ADVMOD;
 
 		warn(aNode);
