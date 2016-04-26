@@ -175,12 +175,12 @@ public class DepRelLogic
 		if (pmcType != null && pmcType.equals(LvtbPmcTypes.SPCPMC))
 		{
 			NodeList basElems = (NodeList)XPathEngine.get().evaluate(
-					"./children/pminfo/children/node[role='" + LvtbRoles.BASELEM + "']",
+					"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 					aNode, XPathConstants.NODESET);
 			if (basElems.getLength() > 1)
 				System.err.printf("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM);
 			String basElemTag = Utils.getTag(basElems.item(0));
-			String basElemXType = XPathEngine.get().evaluate("./childen/xinfo/xtype", basElems.item(0));
+			String basElemXType = Utils.getPhraseType(basElems.item(0));
 
 			// SPC with comparison
 			if (LvtbXTypes.XSIMILE.equals(basElemXType)) return URelations.ADVCL;
@@ -202,6 +202,7 @@ public class DepRelLogic
 		String tag = Utils.getTag(aNode);
 
 		if (tag.matches("n.*")) return URelations.NMOD;
+		if (tag.matches("r.*")) return URelations.ADVMOD;
 		if (tag.matches("m[cf].*|xn.*")) return URelations.NUMMOD;
 		if (tag.matches("mo.*|xo.*|v..p.*")) return URelations.AMOD;
 		if (tag.matches("p.*")) return URelations.DET;
@@ -224,6 +225,12 @@ public class DepRelLogic
 
 		if (tag.matches("n.*|xn.*|p.*")) return URelations.NMOD;
 		if (tag.matches("r.*")) return URelations.ADVMOD;
+		if (tag.matches("q.*"))
+		{
+			String lemma = Utils.getLemma(aNode);
+			if ("ne".equals(lemma)) return URelations.NEG;
+			return URelations.DISCOURSE;
+		}
 
 		warn(aNode);
 		return URelations.DEP;
@@ -275,6 +282,8 @@ public class DepRelLogic
 			if (parentTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return URelations.NSUBJPASS;
 			if (parentTag.matches("v.*")) return URelations.NSUBJ;
 		}
+		if (parentType.equals(LvtbRoles.SUBJ))
+			return URelations.ACL;
 
 		warn(aNode);
 		return URelations.DEP;

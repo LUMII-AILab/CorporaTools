@@ -106,7 +106,7 @@ public class PhrasePartDepLogic
 			// Because parent is the xSimile itself.
 			Node firstAncestor = Utils.getPMLGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
 			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/lemma='vairāk']", firstAncestor, XPathConstants.NODESET);
+					"./children/node[m.rf/form='vairāk']", firstAncestor, XPathConstants.NODESET);
 			String firstAncType = Utils.getAnyLabel(firstAncestor);
 			String secondAncType = Utils.getAnyLabel(Utils.getPMLParent(firstAncestor));
 
@@ -119,8 +119,7 @@ public class PhrasePartDepLogic
 					return URelations.MARK;
 				if (LvtbXTypes.XPRED.equals(secondAncType))
 					return URelations.DISCOURSE;
-				if (LvtbXTypes.SUBRANAL
-						.equals(secondAncType) && vSiblings != null &&
+				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && vSiblings != null &&
 						vSiblings.getLength() > 0) return URelations.MWE;
 			}
 		}
