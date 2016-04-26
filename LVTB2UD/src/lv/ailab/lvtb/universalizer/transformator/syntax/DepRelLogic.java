@@ -146,9 +146,11 @@ public class DepRelLogic
 		if (xType != null && xType.equals(LvtbXTypes.XPREP))
 		{
 			NodeList preps = (NodeList)XPathEngine.get().evaluate(
-					"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']", aNode, XPathConstants.NODESET);
+					"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
+					aNode, XPathConstants.NODESET);
 			NodeList basElems = (NodeList)XPathEngine.get().evaluate(
-					"./children/xinfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
+					"./children/xinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
+					aNode, XPathConstants.NODESET);
 			if (preps.getLength() > 1)
 				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.PREP);
 			if (basElems.getLength() > 1)
@@ -166,7 +168,8 @@ public class DepRelLogic
 		if (pmcType != null && pmcType.equals(LvtbPmcTypes.SPCPMC))
 		{
 			NodeList basElems = (NodeList)XPathEngine.get().evaluate(
-					"./children/pminfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
+					"./children/pminfo/children/node[role='" + LvtbRoles.BASELEM + "']",
+					aNode, XPathConstants.NODESET);
 			if (basElems.getLength() > 1)
 				System.err.printf("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM);
 			String basElemTag = Utils.getTag(basElems.item(0));

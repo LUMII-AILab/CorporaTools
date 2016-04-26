@@ -30,6 +30,7 @@ public class SentenceTransformator
 {
 	public Sentence s;
 	protected PhraseTransformator pTransf;
+	public boolean debug = false;
 
 	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
 	{
@@ -46,6 +47,8 @@ public class SentenceTransformator
 	 */
 	public boolean transform() throws XPathExpressionException
 	{
+		if (debug) System.out.printf("Working on sentence \"%s\".\n", s.id);
+
 		transformTokens();
 		boolean noElipsis = preprocessEllipsis();
 		if (noElipsis) transformSyntax();
@@ -277,6 +280,8 @@ public class SentenceTransformator
 	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
+		if (debug) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
+
 		NodeList children = Utils.getPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
 

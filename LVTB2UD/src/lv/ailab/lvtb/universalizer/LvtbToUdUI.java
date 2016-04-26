@@ -55,7 +55,7 @@ public class LvtbToUdUI
 	{
 		int omited = 0;
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
-		System.out.printf("%s trees found...\t", pmlTrees.getLength());
+		System.out.printf("%s trees found...\n", pmlTrees.getLength());
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
 			String conllTree = SentenceTransformator.treeToConll(pmlTrees.item(i));

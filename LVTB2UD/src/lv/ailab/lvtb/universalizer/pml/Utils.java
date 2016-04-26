@@ -113,7 +113,7 @@ public class Utils
 
 	/**
 	 * Find all children of the given node in PML sense. xinfo, pmcinfo and
-	 * coordinfo are not in the result.
+	 * coordinfo are included in result, if present.
 	 * @param node	node to analyze
 	 * @return	children set
 	 * @throws XPathExpressionException
@@ -122,7 +122,7 @@ public class Utils
 	throws XPathExpressionException
 	{
 		return (NodeList)XPathEngine.get().evaluate(
-				"./children/node", node, XPathConstants.NODESET);
+				"./children/*", node, XPathConstants.NODESET);
 	}
 
 	/**
