@@ -65,7 +65,7 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
 			return crdPartsToUD(phraseNode, phraseType);
 		if (phraseType.equals(LvtbCoordTypes.CRDCLAUSES))
-			crdClausesToUD(phraseNode, phraseType);
+			return crdClausesToUD(phraseNode, phraseType);
 
 		//======= X-WORD =======================================================
 
@@ -318,6 +318,7 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getPMLChildren(xNode);
+		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
 		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
@@ -335,17 +336,22 @@ public class PhraseTransformator
 		Node latestRoot = null;
 		for (int i = ordChildren.size() - 2; i >= -1; i--)
 		{
-			String role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
-			if (!LvtbRoles.AUXVERB.equals(role) || i == -1)
+			String role = null;
+			if (i > -1)	role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
+			if (!LvtbRoles.AUXVERB.equals(role))
 			{
 				Node newRoot = buffer.peek();
 				if (buffer.size() > 1)
 					newRoot = noModXPredToUD(buffer, xType);
 				Token newR = s.pmlaToConll.get(Utils.getId(newRoot));
-				Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
-				oldR.head = newR.idBegin;
-				oldR.deprel = URelations.XCOMP;
+				if (latestRoot != null) // Nothing to add to last xcomp
+				{
+					Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
+					oldR.head = newR.idBegin;
+					oldR.deprel = URelations.XCOMP;
+				}
 				latestRoot = newRoot;
+				buffer = new LinkedList<>();
 			}
 			if (i >= 0) buffer.push(ordChildren.get(i));
 		}
