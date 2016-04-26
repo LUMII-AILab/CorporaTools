@@ -24,238 +24,202 @@ import java.util.List;
 public class PhraseTransformator
 {
 	/**
+	 * In this sentence all the transformations are carried out.
+	 */
+	public Sentence s;
+
+	public PhraseTransformator(Sentence sent)
+	{
+		s = sent;
+	}
+
+	/**
+	 * Transform phrase to the UD structure.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	public Node anyPhraseToUD(Node phraseNode)
+	throws XPathExpressionException
+	{
+		String phraseType = Utils.getPhraseType(phraseNode);
+
+		//======= PMC ==========================================================
+
+		if (phraseType.equals(LvtbPmcTypes.SENT) ||
+				phraseType.equals(LvtbPmcTypes.UTTER))
+			return sentUtterToUD(phraseNode, phraseType);
+
+		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
+				phraseType.equals(LvtbPmcTypes.MAINCL) ||
+				phraseType.equals(LvtbPmcTypes.INSPMC) ||
+				phraseType.equals(LvtbPmcTypes.SPCPMC) ||
+				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
+				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
+				phraseType.equals(LvtbPmcTypes.QUOT) ||
+				phraseType.equals(LvtbPmcTypes.ADRESS) ||
+				phraseType.equals(LvtbPmcTypes.INTERJ))
+			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.PRED, null, true);
+
+		//======= COORD ========================================================
+
+		if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
+			return crdPartsToUD(phraseNode, phraseType);
+		if (phraseType.equals(LvtbCoordTypes.CRDCLAUSES))
+			crdClausesToUD(phraseNode, phraseType);
+
+		//======= X-WORD =======================================================
+
+		// Multiple basElem, root is the last.
+		if (phraseType.equals(LvtbXTypes.XAPP) ||
+				phraseType.equals(LvtbXTypes.XNUM))
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, false);
+
+		// Multiple basElem, root is the first.
+		if (phraseType.equals(LvtbXTypes.PHRASELEM) ||
+				phraseType.equals(LvtbXTypes.NAMEDENT) ||
+				phraseType.equals(LvtbXTypes.COORDANAL))
+			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, false);
+
+		// Only one basElem
+		if (phraseType.equals(LvtbXTypes.XPREP) ||
+				phraseType.equals(LvtbXTypes.XPARTICLE))
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
+		if (phraseType.equals(LvtbXTypes.XSIMILE))
+			// If relinking (for "vairāk nekā" constructions) will be needed, it
+			// will be done when processing the parent node.
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
+
+		// Specific.
+		if (phraseType.equals(LvtbXTypes.UNSTRUCT))
+			return unstructToUd(phraseNode, phraseType);
+		if (phraseType.equals(LvtbXTypes.SUBRANAL))
+			return subrAnalToUD(phraseNode, phraseType);
+		if (phraseType.equals(LvtbXTypes.XPRED))
+			return xPredToUD(phraseNode, phraseType);
+
+			System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
+				s.id, phraseType);
+		return missingTransform(phraseNode);
+	}
+
+	/**
 	 * Default phrase transformation: used when no phrase transformation rule
 	 * is defined.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	public static Node missingTransform(Node phraseNode, Sentence sent)
+	public Node missingTransform(Node phraseNode)
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getPMLChildren(phraseNode);
 		String phraseType = Utils.getPhraseType(phraseNode);
 		Node newRoot = Utils.getFirstByOrd(children);
-		Generic.allAsDependents(sent, newRoot, children, phraseType, null);
+		s.allAsDependents(newRoot, children, phraseType, null);
 		return newRoot;
 	}
 
 	/**
-	 * Transform PMC phrase UD structure.
+	 * Transformation for sent and utter - all children goes below first pred,
+	 * or below forst basElem, if there is no pred
+	 * @param pmcNode
+	 * @param pmcType
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	public static Node pmcToUD(Node pmcNode, Sentence sent)
+	protected Node sentUtterToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
-		String pmcType = XPathEngine.get().evaluate("./pmctype", pmcNode);
 		NodeList children = Utils.getPMLChildren(pmcNode);
 
-		if (pmcType.equals(LvtbPmcTypes.SENT) ||
-				pmcType.equals(LvtbPmcTypes.UTER))
+		// Find the structure root.
+		NodeList preds = (NodeList)XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.PRED +"']", pmcNode, XPathConstants.NODESET);
+		Node newRoot = null;
+		if (preds != null && preds.getLength() > 1)
+			System.err.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
+					s.id, LvtbRoles.PRED, pmcType);
+		if (preds != null && preds.getLength() > 0) newRoot = Utils.getFirstByOrd(preds);
+		else
 		{
-			// Find the structure root.
-			NodeList preds = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.PRED +"']", pmcNode, XPathConstants.NODESET);
-			Node newRoot = null;
-			if (preds != null && preds.getLength() > 1)
-				System.err.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
-						sent.id, LvtbRoles.PRED, pmcType);
-			if (preds != null && preds.getLength() > 0) newRoot = Utils.getFirstByOrd(preds);
-			else
-			{
-				preds = (NodeList)XPathEngine.get().evaluate(
-						"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
-				newRoot = Utils.getFirstByOrd(preds);
-			}
-			if (newRoot == null)
-			{
-				System.err.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n",
-						sent.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
-				newRoot = Utils.getFirstByOrd(children);
-			}
-			if (newRoot == null)
-				throw new IllegalArgumentException("Sentence \"" + sent.id + "\" seems to be empty.\n");
-
-			// Create dependency structure in conll table.
-			Generic.allAsDependents(sent, newRoot, children, pmcType, null);
-
-			return newRoot;
+			preds = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
+			newRoot = Utils.getFirstByOrd(preds);
 		}
-		if (pmcType.equals(LvtbPmcTypes.SUBRCL) || pmcType.equals(LvtbPmcTypes.MAINCL)
-				|| pmcType.equals(LvtbPmcTypes.INSPMC) || pmcType.equals(LvtbPmcTypes.SPCPMC)
-				|| pmcType.equals(LvtbPmcTypes.PARTICLE) || pmcType.equals(LvtbPmcTypes.DIRSPPMC)
-				|| pmcType.equals(LvtbPmcTypes.QUOT) || pmcType.equals(LvtbPmcTypes.ADRESS)
-				|| pmcType.equals(LvtbPmcTypes.INTERJ))
-			return Generic.allUnderFirst(sent, pmcNode, pmcType, LvtbRoles.PRED, null, true);
+		if (newRoot == null)
+		{
+			System.err.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n",
+					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
+			newRoot = Utils.getFirstByOrd(children);
+		}
+		if (newRoot == null)
+			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
 
-		System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
-				sent.id, pmcType);
-		return missingTransform(pmcNode, sent);
+		// Create dependency structure in conll table.
+		s.allAsDependents(newRoot, children, pmcType, null);
+
+		return newRoot;
 	}
 
 	/**
-	 * Transform coordination phrase UD structure.
+	 * Transformation for coordinated clauses - first coordinated part is used
+	 * as root.
+	 * @param coordNode
+	 * @param coordType
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	public static Node coordToUD(Node coordNode, Sentence sent)
+	public Node crdPartsToUD(Node coordNode, String coordType)
 	throws XPathExpressionException
 	{
-		String coordType = XPathEngine.get().evaluate("./coordtype", coordNode);
-		NodeList children = (NodeList)XPathEngine.get().evaluate(
-				"./children/*", coordNode, XPathConstants.NODESET);
-
-		if (coordType.equals(LvtbCoordTypes.CRDPARTS))
-			return coordPartsChildListToUD(Utils.asOrderedList(children), sent, coordType);
-
-		if (coordType.equals(LvtbCoordTypes.CRDCLAUSES))
-		{
-			NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
-			if (semicolons == null || semicolons.getLength() < 1)
-				return coordPartsChildListToUD(Utils.asOrderedList(children), sent, coordType);
-			ArrayList<Node> sortedSemicolons = Utils.asOrderedList(semicolons);
-			ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
-			int semicOrd = Utils.getOrd(sortedSemicolons.get(0));
-			Node newRoot = coordPartsChildListToUD(
-					Utils.ordSplice(sortedChildren, 0, semicOrd), sent, coordType);
-			Token newRootToken = sent.pmlaToConll.get(Utils.getId(newRoot));
-			for (int i  = 1; i < sortedSemicolons.size(); i++)
-			{
-				int nextSemicOrd = Utils.getOrd(sortedSemicolons.get(i));
-				Node newSubroot = coordPartsChildListToUD(
-						Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), sent, coordType);
-				Token subrootToken = sent.pmlaToConll.get(Utils.getId(newSubroot));
-				subrootToken.deprel = URelations.PARATAXIS;
-				subrootToken.head = newRootToken.idBegin;
-			}
-
-			return newRoot;
-		}
-		System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
-				sent.id, coordType);
-		return missingTransform(coordNode, sent);
+		NodeList children = Utils.getPMLChildren(coordNode);
+		return coordPartsChildListToUD(Utils.asOrderedList(children), coordType);
 	}
 
 	/**
-	 * Transform X-word phrase to UD structure.
+	 * Transformation for coordinated clauses - part after semicolon is
+	 * parataxis, otherwise the same as coordinated parts.
+	 * @param coordNode
+	 * @param coordType
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	public static Node xToUD(Node xNode, Sentence sent)
+	public Node crdClausesToUD (Node coordNode, String coordType)
 	throws XPathExpressionException
 	{
-		String xType = XPathEngine.get().evaluate("./xtype", xNode);
-		NodeList children = (NodeList)XPathEngine.get().evaluate(
-				"./children/*", xNode, XPathConstants.NODESET);
+		NodeList children = Utils.getPMLChildren(coordNode);
 
-		// Multiple basElem, root is the last.
-		if (xType.equals(LvtbXTypes.XAPP) || xType.equals(LvtbXTypes.XNUM))
-			return Generic.allUnderLast(sent, xNode, xType, LvtbRoles.BASELEM, null, false);
-
-		// Multiple basElem, root is the first.
-		if (xType.equals(LvtbXTypes.PHRASELEM) || xType.equals(LvtbXTypes.NAMEDENT) ||
-				xType.equals(LvtbXTypes.COORDANAL))
-			return Generic.allUnderFirst(sent, xNode, xType, LvtbRoles.BASELEM, null, false);
-
-		// Only one basElem
-		if (xType.equals(LvtbXTypes.XPREP) || xType.equals(LvtbXTypes.XPARTICLE))
-			return Generic.allUnderLast(sent, xNode, xType, LvtbRoles.BASELEM, null, true);
-		if (xType.equals(LvtbXTypes.XSIMILE))
-			// If relinking (for "vairāk nekā" constructions) will be needed, it
-			// will be done when processing the parent node.
-			return Generic.allUnderLast(sent, xNode, xType, LvtbRoles.BASELEM, null, true);
-
-		// Specific.
-		if (xType.equals(LvtbXTypes.UNSTRUCT))
+		NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
+				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
+		if (semicolons == null || semicolons.getLength() < 1)
+			return coordPartsChildListToUD(Utils.asOrderedList(children), coordType);
+		ArrayList<Node> sortedSemicolons = Utils.asOrderedList(semicolons);
+		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
+		int semicOrd = Utils.getOrd(sortedSemicolons.get(0));
+		Node newRoot = coordPartsChildListToUD(
+				Utils.ordSplice(sortedChildren, 0, semicOrd), coordType);
+		Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
+		for (int i  = 1; i < sortedSemicolons.size(); i++)
 		{
-			NodeList foreigns = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
-
-			if (foreigns != null && children.getLength() == foreigns.getLength())
-				return Generic.allUnderFirst(sent, xNode, xType, LvtbRoles.BASELEM, URelations.FOREIGN, false);
-			else return Generic.allUnderFirst(sent, xNode, xType, LvtbRoles.BASELEM, null, false);
-		}
-		if (xType.equals(LvtbXTypes.SUBRANAL))
-		{
-			// Tricky part, where subordinated xSimile structure also must be
-			// rearanged.
-			Node first = Utils.getFirstByOrd(children);
-			Node last = Utils.getLastByOrd(children);
-			if (children != null && children.getLength() == 2 &&
-					"vairāk".equals(Utils.getLemma(first)) &&
-					LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
-			{
-				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
-						"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
-				Token newRootToken = sent.pmlaToConll.get(Utils.getId(last));
-				Token vToken = sent.pmlaToConll.get(Utils.getId(first));
-				vToken.head = newRootToken.idBegin;
-				vToken.deprel = URelations.ADVMOD;
-				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
-				{
-					Token conjToken = sent.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
-					conjToken.deprel = URelations.MWE;
-					conjToken.head = vToken.idBegin;
-				}
-				return last;
-			}
-			else return Generic.allUnderFirst(sent, xNode, xType, LvtbRoles.BASELEM, null, false);
+			int nextSemicOrd = Utils.getOrd(sortedSemicolons.get(i));
+			Node newSubroot = coordPartsChildListToUD(
+					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType);
+			Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
+			subrootToken.deprel = URelations.PARATAXIS;
+			subrootToken.head = newRootToken.idBegin;
 		}
 
-		if (xType.equals(LvtbXTypes.XPRED))
-		{
-			NodeList mods = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
-			NodeList auxs = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
-			NodeList basElems = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
-			Node basElem = Utils.getLastByOrd(basElems);
-			if (basElem == null)
-				throw new IllegalArgumentException(
-						"\"" + xType +"\" in entence \"" + sent.id + "\" has no basElem.\n");
-			boolean nominal = Utils.getTag(basElem).matches("[napx].*|v..pd...[ap]p.*]");
-			boolean passive = Utils.getTag(basElem).matches("v..pd...ps.*]");
-			if (mods == null || mods.getLength() < 1)
-				return noModXPredToUD(Utils.asOrderedList(children), sent, xType);
-
-			ArrayList<Node> ordChildren = Utils.asOrderedList(children);
-			LinkedList<Node> buffer = new LinkedList<>();
-			buffer.push(ordChildren.get(ordChildren.size()-1));
-			Node latestRoot = null;
-			for (int i = ordChildren.size() - 2; i >= -1; i--)
-			{
-				String role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
-				if (!LvtbRoles.AUXVERB.equals(role) || i == -1)
-				{
-					Node newRoot = buffer.peek();
-					if (buffer.size() > 1)
-						newRoot = noModXPredToUD(buffer, sent, xType);
-					Token newR = sent.pmlaToConll.get(Utils.getId(newRoot));
-					Token oldR = sent.pmlaToConll.get(Utils.getId(latestRoot));
-					oldR.head = newR.idBegin;
-					oldR.deprel = URelations.XCOMP;
-					latestRoot = newRoot;
-				}
-				if (i >= 0) buffer.push(ordChildren.get(i));
-			}
-		}
-
-		System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
-				sent.id, xType);
-		return missingTransform(xNode, sent);
+		return newRoot;
 	}
 
 	/**
-	 * Specific helper function, split out from coordToUD(): do the
+	 * Specific helper function, split out from coordination processing: do the
 	 * transformation, assuming that resulting structure has one root and
 	 * everything else is directly depending on that one root.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	protected static Node coordPartsChildListToUD(
-			List<Node> sortedNodes, Sentence sent, String coordType)
+	protected Node coordPartsChildListToUD(
+			List<Node> sortedNodes, String coordType)
 	throws XPathExpressionException
 	{
 		// Find the structure root.
@@ -269,16 +233,122 @@ public class PhraseTransformator
 		if (newRoot == null)
 		{
 			System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
-					sent.id, LvtbRoles.CRDPART, coordType);
+					s.id, LvtbRoles.CRDPART, coordType);
 			newRoot = sortedNodes.get(0);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
-					"\"" + coordType +"\" in entence \"" + sent.id + "\" seems to be empty.\n");
+					"\"" + coordType +"\" in entence \"" + s.id + "\" seems to be empty.\n");
 
 		// Create dependency structure in conll table.
-		Generic.allAsDependents(sent, newRoot, sortedNodes, coordType, null);
+		s.allAsDependents(newRoot, sortedNodes, coordType, null);
 		return newRoot;
+	}
+
+	/**
+	 * Transformation for unstruct x-word - if all parts are tagged as xf,
+	 * DEPREL is foreign, else mwe.
+	 * @param xNode
+	 * @param xType
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	public Node unstructToUd(Node xNode, String xType)
+	throws XPathExpressionException
+	{
+		NodeList children = Utils.getPMLChildren(xNode);
+		NodeList foreigns = (NodeList)XPathEngine.get().evaluate(
+				"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
+
+		if (foreigns != null && children.getLength() == foreigns.getLength())
+			return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, URelations.FOREIGN, false);
+		else return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
+	}
+
+	/**
+	 * Transformation for subrAnal - special treatment for "vairāk kā/nekā X"
+	 * constructions with xSimile (conj from xSimile is rearanged under
+	 * "vairāk"), otherwise just make first element root.
+	 * @param xNode
+	 * @param xType
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	public Node subrAnalToUD(Node xNode, String xType)
+	throws XPathExpressionException
+	{
+		NodeList children = Utils.getPMLChildren(xNode);
+
+		Node first = Utils.getFirstByOrd(children);
+		Node last = Utils.getLastByOrd(children);
+		if (children != null && children.getLength() == 2 &&
+				"vairāk".equals(Utils.getLemma(first)) &&
+				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
+		{
+			// Tricky part, where subordinated xSimile structure also must be
+			// rearanged.
+			NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
+					"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
+			Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+			Token vToken = s.pmlaToConll.get(Utils.getId(first));
+			vToken.head = newRootToken.idBegin;
+			vToken.deprel = URelations.ADVMOD;
+			if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
+			{
+				Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+				conjToken.deprel = URelations.MWE;
+				conjToken.head = vToken.idBegin;
+			}
+			return last;
+		}
+		else return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
+	}
+
+	/**
+	 * Transformation for complex predicates. Predicates are splitted in parts,
+	 * each part ending right after mod or basElem. Each part is processed as
+	 * non-modal predicate, then parts are linked in a chain with xcomp links.
+	 * @param xNode
+	 * @param xType
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	public Node xPredToUD(Node xNode, String xType)
+	throws XPathExpressionException
+	{
+		NodeList children = Utils.getPMLChildren(xNode);
+		NodeList mods = (NodeList) XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
+		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
+		Node basElem = Utils.getLastByOrd(basElems);
+		if (basElem == null)
+			throw new IllegalArgumentException(
+					"\"" + xType +"\" in entence \"" + s.id + "\" has no basElem.\n");
+		if (mods == null || mods.getLength() < 1)
+			return noModXPredToUD(Utils.asOrderedList(children), xType);
+
+		ArrayList<Node> ordChildren = Utils.asOrderedList(children);
+		LinkedList<Node> buffer = new LinkedList<>();
+		buffer.push(ordChildren.get(ordChildren.size()-1));
+		Node latestRoot = null;
+		for (int i = ordChildren.size() - 2; i >= -1; i--)
+		{
+			String role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
+			if (!LvtbRoles.AUXVERB.equals(role) || i == -1)
+			{
+				Node newRoot = buffer.peek();
+				if (buffer.size() > 1)
+					newRoot = noModXPredToUD(buffer, xType);
+				Token newR = s.pmlaToConll.get(Utils.getId(newRoot));
+				Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
+				oldR.head = newR.idBegin;
+				oldR.deprel = URelations.XCOMP;
+				latestRoot = newRoot;
+			}
+			if (i >= 0) buffer.push(ordChildren.get(i));
+		}
+		return latestRoot;
 	}
 
 	/**
@@ -287,13 +357,12 @@ public class PhraseTransformator
 	 * active/passive/nominal predicates or for parts of modal predicates.
 	 * Neutral word order assumed.
 	 * @param sortedNodes
-	 * @param sent
 	 * @param xType
 	 * @return	PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	protected static Node noModXPredToUD(
-			List<Node> sortedNodes, Sentence sent, String xType)
+	protected Node noModXPredToUD(
+			List<Node> sortedNodes, String xType)
 	throws XPathExpressionException
 	{
 		Node lastAux = null;
@@ -314,166 +383,18 @@ public class PhraseTransformator
 		Node newRoot = lastBasElem;
 		if (nominal && !auxLemma.matches("(ne)?būt"))
 			newRoot = lastAux;
-		Generic.allAsDependents(sent, newRoot, sortedNodes, xType, null);
+		s.allAsDependents(newRoot, sortedNodes, xType, null);
 		if (passive)
 		{
-			Token lastAuxTok = sent.pmlaToConll.get(Utils.getId(lastAux));
+			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = URelations.AUXPASS;
 		}
 		if (nominal && auxLemma.matches("(ne)?būt"))
 		{
-			Token lastAuxTok = sent.pmlaToConll.get(Utils.getId(lastAux));
+			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = URelations.COP;
 		}
 		return newRoot;
 	}
 
-	/**
-	 * Helper functions for often used UD subtree construction routines.
-	 */
-	public static class Generic
-	{
-		/**
-		 * Make a list of given nodes children of the designated parent. Set UD
-		 * deprel for each child. If designated parent is included in child list
-		 * node, circular dependency is not made, role is not set.
-		 * @param sent			sentence data
-		 * @param newRoot		designated parent
-		 * @param children		list of child nodes
-		 * @param phraseType    phrase type from PML data, used for obtaining
-		 *                      correct UD role for children.
-		 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-		 *                      null, if DepRelLogic.getUDepFromPhrasePart() should
-		 *                      be used to obtain DEPREL for child nodes.
-		 * @throws XPathExpressionException
-		 */
-		public static void allAsDependents(
-				Sentence sent, Node newRoot, NodeList children, String phraseType,
-				URelations childDeprel)
-		throws XPathExpressionException
-		{
-			allAsDependents(sent, newRoot, Utils.asList(children), phraseType, childDeprel);
-		}
-
-		/**
-		 * Make a list of given nodes children of the designated parent. Set UD
-		 * deprel for each child. If designated parent is included in child list
-		 * node, circular dependency is not made, role is not set.
-		 * @param sent			sentence data
-		 * @param newRoot		designated parent
-		 * @param children		list of child nodes
-		 * @param phraseType    phrase type from PML data, used for obtaining
-		 *                      correct UD role for children.
-		 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-		 *                      null, if DepRelLogic.getUDepFromPhrasePart() should
-		 *                      be used to obtain DEPREL for child nodes.
-		 * @throws XPathExpressionException
-		 */
-		public static void allAsDependents(
-				Sentence sent, Node newRoot, List<Node> children, String phraseType,
-				URelations childDeprel)
-		throws XPathExpressionException
-		{
-			// Process root.
-			Token rootToken = sent.pmlaToConll.get(Utils.getId(newRoot));
-			//sent.conllToPmla.put(rootToken, newRoot);
-			//if (phraseNode != null) sent.pmlaToConll.put(phraseNode, rootToken);
-			// Process children.
-			for (Node child : children)
-			{
-				if (child.equals(newRoot)) continue;
-				Token childToken = sent.pmlaToConll.get(Utils.getId(child));
-				childToken.head = rootToken.idBegin;
-				if (childDeprel == null)
-					childToken.deprel = DepRelLogic.getUDepFromPhrasePart(child, phraseType);
-				else childToken.deprel = childDeprel;
-			}
-		}
-
-		/**
-		 * For the given node find first children of the given type and make all
-		 * other children depend on it. Set UD deprel for each child.
-		 * @param sent				sentence data
-		 * @param phraseNode		node whose children must be processed
-		 * @param phraseType    	phrase type from PML data, used for obtaining
-		 *                      	correct UD role for children
-		 * @param newRootType		rubroot for new UD structure will be searched
-		 *                          between PML nodes with this type/role
-		 * @param childDeprel		value to sent for DEPREL field for child nodes,
-		 *                          or null, if DepRelLogic.getUDepFromPhrasePart()
-		 *                          should be used to obtain DEPREL for child nodes
-		 * @param warnMoreThanOne	whether to warn if more than one potential root
-		 *                          is found
-		 * @return root of the corresponding dependency structure
-		 * @throws XPathExpressionException
-		 */
-		public static Node allUnderFirst(
-				Sentence sent, Node phraseNode, String phraseType,
-				String newRootType, URelations childDeprel, boolean warnMoreThanOne)
-		throws XPathExpressionException
-		{
-			NodeList children = (NodeList)XPathEngine.get().evaluate(
-					"./children/*", phraseNode, XPathConstants.NODESET);
-			NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
-			if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
-				System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
-						phraseType, sent.id, newRootType);
-			Node newRoot = Utils.getFirstByOrd(potentialRoots);
-			if (newRoot == null)
-			{
-				System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
-						phraseType, sent.id, newRootType);
-				newRoot = Utils.getFirstByOrd(children);
-			}
-			if (newRoot == null)
-				throw new IllegalArgumentException(
-						"\"" + phraseType +"\" in sentence \"" + sent.id + "\" seems to be empty.\n");
-			allAsDependents(sent, newRoot, children, phraseType, childDeprel);
-			return newRoot;
-		}
-
-		/**
-		 * For the given node find first children of the given type and make all
-		 * other children depend on it. Set UD deprel for each child.
-		 * @param sent				sentence data
-		 * @param phraseNode		node whose children must be processed
-		 * @param phraseType    	phrase type from PML data, used for obtaining
-		 *                      	correct UD role for children
-		 * @param newRootType		rubroot for new UD structure will be searched
-		 *                          between PML nodes with this type/role
-		 * @param childDeprel		value to sent for DEPREL field for child nodes,
-		 *                          or null, if DepRelLogic.getUDepFromPhrasePart()
-		 *                          should be used to obtain DEPREL for child nodes
-		 * @param warnMoreThanOne	whether to warn if more than one potential root
-		 *                          is found
-		 * @return root of the corresponding dependency structure
-		 * @throws XPathExpressionException
-		 */
-		public static Node allUnderLast(
-				Sentence sent, Node phraseNode, String phraseType,
-				String newRootType, URelations childDeprel, boolean warnMoreThanOne)
-		throws XPathExpressionException
-		{
-			NodeList children = (NodeList)XPathEngine.get().evaluate(
-					"./children/*", phraseNode, XPathConstants.NODESET);
-			NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
-			Node newRoot = Utils.getLastByOrd(potentialRoots);
-			if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
-				System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
-						phraseType, sent.id, newRoot);
-			if (newRoot == null)
-			{
-				System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
-						phraseType, sent.id, newRoot);
-				newRoot = Utils.getLastByOrd(children);
-			}
-			if (newRoot == null)
-				throw new IllegalArgumentException(
-						"\"" + phraseType +"\" in sentence \"" + sent.id + "\" seems to be empty.\n");
-			allAsDependents(sent, newRoot, children, phraseType, childDeprel);
-			return newRoot;
-		}
-	}
 }

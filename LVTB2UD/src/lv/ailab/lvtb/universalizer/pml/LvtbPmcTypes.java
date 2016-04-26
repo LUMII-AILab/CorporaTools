@@ -9,7 +9,7 @@ package lv.ailab.lvtb.universalizer.pml;
 public class LvtbPmcTypes
 {
 	public final static String SENT = "sent";
-	public final static String UTER = "uter";
+	public final static String UTTER = "utter";
 
 	public final static String SUBRCL = "subrCl";
 	public final static String MAINCL = "mainCl";

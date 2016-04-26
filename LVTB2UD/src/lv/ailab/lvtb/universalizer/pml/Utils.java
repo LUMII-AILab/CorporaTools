@@ -85,6 +85,20 @@ public class Utils
 	}
 
 	/**
+	 * If this node is a constituent node, find is pmcinfo, coordinfo or xinfo
+	 * structure.
+	 * @param aNode	node to analyze
+	 * @return	phrase, coordination or x-word structure
+	 * @throws XPathExpressionException
+	 */
+	public static Node getPhraseNode(Node aNode)
+	throws XPathExpressionException
+	{
+		return (Node) XPathEngine.get().evaluate(
+				"./children/pmcinfo|./children/coordinfo|./children/xinfo", aNode, XPathConstants.NODE);
+	}
+
+	/**
 	 * Find all children of the given node in PML sense. xinfo, pmcinfo and
 	 * coordinfo are not in the result.
 	 * @param node	node to analyze

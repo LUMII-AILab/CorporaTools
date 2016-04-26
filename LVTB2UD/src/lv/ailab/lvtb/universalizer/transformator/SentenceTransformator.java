@@ -29,10 +29,12 @@ import java.util.stream.Collectors;
 public class SentenceTransformator
 {
 	public Sentence s;
+	protected PhraseTransformator pTransf;
 
 	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
+		pTransf = new PhraseTransformator(s);
 	}
 
 	/**
@@ -257,7 +259,7 @@ public class SentenceTransformator
 		Node pmlPmc = (Node)XPathEngine.get().evaluate(
 				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
 		transformPhraseParts(pmlPmc);
-		Node newRoot = PhraseTransformator.pmcToUD(pmlPmc, s);
+		Node newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
 		Token conllRoot = s.pmlaToConll.get(Utils.getId(newRoot));
@@ -275,34 +277,19 @@ public class SentenceTransformator
 	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
-		NodeList pmlChildren = (NodeList)XPathEngine.get().evaluate(
-				"./children/*", aNode, XPathConstants.NODESET);
-		Node pmlPmc = (Node)XPathEngine.get().evaluate(
-				"./children/pmcinfo", aNode, XPathConstants.NODE);
-		Node pmlX = (Node)XPathEngine.get().evaluate(
-				"./children/xinfo", aNode, XPathConstants.NODE);
-		Node pmlCoord = (Node)XPathEngine.get().evaluate(
-				"./children/coordinfo", aNode, XPathConstants.NODE);
+		NodeList children = Utils.getPMLChildren(aNode);
+		if (children == null || children.getLength() < 1) return;
 
-		if (pmlChildren == null || pmlChildren.getLength() < 1)
-			return;
 		Node newRoot = aNode;
+
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
-		if (pmlPmc != null)
+		Node phraseNode = Utils.getPhraseNode(aNode);
+		if (phraseNode != null)
 		{
-			transformPhraseParts(pmlPmc);
-			newRoot = PhraseTransformator.pmcToUD(pmlPmc, s);
+			transformPhraseParts(phraseNode);
+			newRoot = pTransf.anyPhraseToUD(phraseNode);
 		}
-		if (pmlCoord != null)
-		{
-			transformPhraseParts(pmlCoord);
-			newRoot = PhraseTransformator.coordToUD(pmlCoord, s);
-		}
-		if (pmlX != null)
-		{
-			transformPhraseParts(pmlX);
-			newRoot = PhraseTransformator.xToUD(pmlX, s);
-		}
+
 		if (newRoot == null)
 			throw new IllegalStateException(
 					"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
@@ -310,6 +297,7 @@ public class SentenceTransformator
 		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));
 		transformDependents(aNode, newRoot);
 	}
+
 	/**
 	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for PML
 	 * dependency children of the given node.

@@ -229,7 +229,7 @@ public class DepRelLogic
 		String nodeId = XPathEngine.get().evaluate("./@id", aNode);
 		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
 
-		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER)
+		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
 				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.MAINCL))
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
@@ -241,14 +241,14 @@ public class DepRelLogic
 				if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
 			}
 
-		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER)
+		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
 				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.INSPMC)
 				|| phraseType.equals(LvtbPmcTypes.SPCPMC) || phraseType.equals(LvtbPmcTypes.PARTICLE)
 				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
 				|| phraseType.equals(LvtbPmcTypes.ADRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 
-		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTER))
+		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.DISCOURSE;
 
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL))
