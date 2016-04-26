@@ -105,7 +105,7 @@ public class DepRelLogic
 				{
 
 					// TODO recheck zd.*
-					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..n.*"))
+					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
 						return URelations.NSUBJ;
 					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
 						return URelations.NSUBJPASS;
@@ -160,7 +160,8 @@ public class DepRelLogic
 			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
 		}
 		// Simple nominal SPC
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*"))
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*") ||
+				(tag.matches("y.*") && Utils.getLemma(aNode).matches("\\p{Lu}+")))
 			return URelations.ACL;
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 		// SPC with comparison
