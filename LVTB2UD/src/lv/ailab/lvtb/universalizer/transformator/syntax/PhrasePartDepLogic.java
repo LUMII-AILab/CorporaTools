@@ -64,8 +64,11 @@ public class PhrasePartDepLogic
 				|| phraseType.equals(LvtbPmcTypes.ADRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 
-
-		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER))
+		if (phraseType.equals(LvtbPmcTypes.SENT) ||
+				phraseType.equals(LvtbPmcTypes.UTTER) ||
+				phraseType.equals(LvtbPmcTypes.MAINCL) ||
+				phraseType.equals(LvtbPmcTypes.INSPMC) ||
+				phraseType.equals(LvtbPmcTypes.DIRSPPMC))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.DISCOURSE;
 
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL))

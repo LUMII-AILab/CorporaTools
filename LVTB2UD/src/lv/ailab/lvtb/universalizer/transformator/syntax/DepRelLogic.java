@@ -109,6 +109,9 @@ public class DepRelLogic
 				if (parentTag.matches("v.*")) return URelations.NSUBJ;
 			}
 		}
+		// Infinitive
+		if (tag.matches("v..n.*"))
+			return URelations.CCOMP;
 
 		warn(aNode);
 		return URelations.DEP;
@@ -213,6 +216,12 @@ public class DepRelLogic
 				return URelations.DET;
 			return URelations.AMOD;
 		}
+		if (tag.matches("y.*"))
+		{
+			String lemma = Utils.getLemma(aNode);
+			if (lemma.matches("\\p{Lu}+"))
+				return URelations.NMOD;
+		}
 
 		warn(aNode);
 		return URelations.DEP;
@@ -257,7 +266,8 @@ public class DepRelLogic
 		// Parent is simple predicate
 		if (parentType.equals(LvtbRoles.PRED)) return URelations.CCOMP;
 		// Parent is complex predicate
-		if (parentType.equals(LvtbXTypes.XPRED)) return URelations.ACL;
+		String grandPatentType = Utils.getAnyLabel(Utils.getPMLGrandParent(aNode));
+		if (grandPatentType.equals(LvtbXTypes.XPRED)) return URelations.ACL;
 
 		warn(aNode);
 		return URelations.DEP;
