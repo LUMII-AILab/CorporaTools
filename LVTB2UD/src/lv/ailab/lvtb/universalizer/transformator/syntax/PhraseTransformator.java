@@ -46,19 +46,19 @@ public class PhraseTransformator
 		//======= PMC ==========================================================
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
-				phraseType.equals(LvtbPmcTypes.UTTER))
-			return sentUtterToUD(phraseNode, phraseType);
-
-		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
-				phraseType.equals(LvtbPmcTypes.MAINCL) ||
-				phraseType.equals(LvtbPmcTypes.INSPMC) ||
-				phraseType.equals(LvtbPmcTypes.SPCPMC) ||
-				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
+				phraseType.equals(LvtbPmcTypes.UTTER) ||
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
+				phraseType.equals(LvtbPmcTypes.INSPMC))
+			return sentencyToUD(phraseNode, phraseType);
+		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
+				phraseType.equals(LvtbPmcTypes.MAINCL))
+			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.PRED, null, true);
+		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
+				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADRESS) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ))
-			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.PRED, null, true);
+			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
 
 		//======= COORD ========================================================
 
@@ -119,14 +119,15 @@ public class PhraseTransformator
 	}
 
 	/**
-	 * Transformation for sent and utter - all children goes below first pred,
-	 * or below forst basElem, if there is no pred
+	 * Transformation for PMC that can have either basElem or pred - all
+	 * children goes below first pred, r below forst basElem, if there is no
+	 * pred.
 	 * @param pmcNode
 	 * @param pmcType
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException
 	 */
-	protected Node sentUtterToUD(Node pmcNode, String pmcType)
+	protected Node sentencyToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getPMLChildren(pmcNode);

@@ -21,11 +21,12 @@ public class Utils
 	/**
 	 * Find ord value for given node.
 	 * @param node node to analyze
-	 * @return	ord value or 0, if no ord found.
+	 * @return	ord value, or 0, if no ord found, or -1 if node is null.
 	 * @throws XPathExpressionException
 	 */
 	public static int getOrd(Node node) throws XPathExpressionException
 	{
+		if (node == null) return -1;
 		String ordStr = XPathEngine.get().evaluate("./ord", node);
 		int ord = 0;
 		if (ordStr != null) ord = Integer.parseInt(ordStr);
@@ -40,6 +41,7 @@ public class Utils
 	 */
 	public static String getId(Node node) throws XPathExpressionException
 	{
+		if (node == null) return null;
 		return XPathEngine.get().evaluate("./@id", node);
 	}
 
@@ -51,6 +53,7 @@ public class Utils
 	 */
 	public static String getLemma(Node node) throws XPathExpressionException
 	{
+		if (node == null) return null;
 		return XPathEngine.get().evaluate("./m.rf/lemma", node);
 	}
 
@@ -58,17 +61,33 @@ public class Utils
 	 * Find tag attribute A-level node. Use either morphotag or x-word tag or
 	 * coordination tag. For PMC node returns first basElem's tag. Based on
 	 * assumption, that single aNode has no more than one phrase-child.
+	 * For coordinations with no given tag return tag obtained from first
+	 * coordinated part.
 	 * @param aNode	node to analyze
 	 * @return	tag
 	 * @throws XPathExpressionException
 	 */
 	public static String getTag(Node aNode) throws XPathExpressionException
 	{
-		NodeList pmcBasElems = (NodeList) XPathEngine.get().evaluate(
-				"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']", aNode, XPathConstants.NODESET);
-		if (pmcBasElems != null && pmcBasElems.getLength() > 0)
-			return getTag(getFirstByOrd(pmcBasElems));
-		return XPathEngine.get().evaluate("./m.rf/tag|./childen/xinfo/tag|./children/coordinfo/tag", aNode);
+		if (aNode == null) return null;
+		String tag = XPathEngine.get().evaluate("./m.rf/tag|./children/xinfo/tag|./children/coordinfo/tag", aNode);
+		if (tag != null && tag.length() > 0) return tag;
+		NodeList baseParts = (NodeList) XPathEngine.get().evaluate(
+				"./children/pmcinfo/children/node[role='" + LvtbRoles.PRED + "']",
+				aNode, XPathConstants.NODESET);
+		if (baseParts != null && baseParts.getLength() > 0)
+			return getTag(getFirstByOrd(baseParts));
+		baseParts = (NodeList) XPathEngine.get().evaluate(
+				"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
+				aNode, XPathConstants.NODESET);
+		if (baseParts != null && baseParts.getLength() > 0)
+			return getTag(getFirstByOrd(baseParts));
+		baseParts = (NodeList) XPathEngine.get().evaluate(
+				"./children/coordinfo/children/node[role='" + LvtbRoles.CRDPART + "']",
+				aNode, XPathConstants.NODESET);
+		if (baseParts != null && baseParts.getLength() > 0)
+			return getTag(getFirstByOrd(baseParts));
+		return null;
 	}
 
 	/**
@@ -80,6 +99,7 @@ public class Utils
 	public static String getPhraseType(Node phraseNode)
 	throws XPathExpressionException
 	{
+		if (phraseNode == null) return null;
 		return XPathEngine.get().evaluate(
 				"./pmctype|./coordtype|./xtype", phraseNode);
 	}
@@ -93,6 +113,7 @@ public class Utils
 	public static String getAnyLabel(Node node)
 	throws XPathExpressionException
 	{
+		if (node == null) return null;
 		return XPathEngine.get().evaluate(
 				"./role|./pmctype|./coortype|./xtype", node);
 	}
@@ -107,6 +128,7 @@ public class Utils
 	public static Node getPhraseNode(Node aNode)
 	throws XPathExpressionException
 	{
+		if (aNode == null) return null;
 		return (Node) XPathEngine.get().evaluate(
 				"./children/pmcinfo|./children/coordinfo|./children/xinfo", aNode, XPathConstants.NODE);
 	}
@@ -121,6 +143,7 @@ public class Utils
 	public static NodeList getPMLChildren(Node node)
 	throws XPathExpressionException
 	{
+		if (node == null) return null;
 		return (NodeList)XPathEngine.get().evaluate(
 				"./children/*", node, XPathConstants.NODESET);
 	}
@@ -133,6 +156,7 @@ public class Utils
 	 */
 	public static Node getPMLParent(Node node) throws XPathExpressionException
 	{
+		if (node == null) return null;
 		return (Node) XPathEngine.get().evaluate(
 				"../..", node, XPathConstants.NODE);
 	}
