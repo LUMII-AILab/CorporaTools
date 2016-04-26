@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -70,6 +71,19 @@ public class Utils
 		return XPathEngine.get().evaluate("./m.rf/tag|./childen/xinfo/tag|./children/coordinfo/tag", aNode);
 	}
 
+	/**
+	 * Find pmctype, coordtype or xtype for a given node.
+	 * @param phraseNode	note to analyze
+	 * @return	phrase type
+	 * @throws XPathExpressionException
+	 */
+	public static String getPhraseType(Node phraseNode)
+	throws XPathExpressionException
+	{
+		return XPathEngine.get().evaluate(
+				"./pmctype|./coordtype|./xtype", phraseNode);
+	}
+
 
 	/**
 	 * Create splice array that contains all nodes from the given array, to whom
@@ -82,7 +96,7 @@ public class Utils
 	 * @throws XPathExpressionException
 	 */
 
-	public static ArrayList<Node> ordSplice(ArrayList<Node> nodes, int begin, int end)
+	public static ArrayList<Node> ordSplice(List<Node> nodes, int begin, int end)
 	throws XPathExpressionException
 	{
 		if (nodes == null) return null;

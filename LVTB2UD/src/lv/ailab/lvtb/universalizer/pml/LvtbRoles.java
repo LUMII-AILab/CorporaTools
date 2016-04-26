@@ -10,6 +10,8 @@ public class LvtbRoles
 {
 	// phrase parts
 	public final static String PRED = "pred";
+	public final static String MOD = "mod";
+	public final static String AUXVERB = "auxVerb";
 	public final static String BASELEM = "basElem";
 	public final static String CRDPART = "crdPart";
 	public final static String CONJ = "conj";

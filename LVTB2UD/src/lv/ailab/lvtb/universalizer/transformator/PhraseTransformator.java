@@ -9,6 +9,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Logic for creating dependency structures from LVTB phrase-style structures.
@@ -30,11 +32,7 @@ public class PhraseTransformator
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
 				"./children/*", phraseNode, XPathConstants.NODESET);
-		String phraseType = XPathEngine.get().evaluate("./pmctype", phraseNode);
-		if (phraseType == null || phraseType.length() < 1)
-			phraseType = XPathEngine.get().evaluate("./coordtype", phraseNode);
-		if (phraseType == null || phraseType.length() < 1)
-			phraseType = XPathEngine.get().evaluate("./xtype", phraseNode);
+		String phraseType = Utils.getPhraseType(phraseNode);
 
 		Node newRoot = Utils.getFirstByOrd(children);
 		allAsDependents(sent, newRoot, children, phraseType, null);
@@ -179,6 +177,10 @@ public class PhraseTransformator
 		// Only one basElem
 		if (xType.equals(LvtbXTypes.XPREP) || xType.equals(LvtbXTypes.XPARTICLE))
 			return allUnderLastBasElem(sent, xNode, xType, null, true);
+		if (xType.equals(LvtbXTypes.XSIMILE))
+			// If relinking (for "vairāk nekā" constructions) will be needed, it
+			// will be done when processing the parent node.
+			return allUnderLastBasElem(sent, xNode, xType, null, true);
 
 		// Specific.
 		if (xType.equals(LvtbXTypes.UNSTRUCT))
@@ -190,12 +192,6 @@ public class PhraseTransformator
 				return allUnderFirstBasElem(sent, xNode, xType, URelations.FOREIGN, false);
 			else return allUnderFirstBasElem(sent, xNode, xType, null, false);
 		}
-
-		if (xType.equals(LvtbXTypes.XSIMILE))
-			// If relinking (like for "vairāk nekā" constructions) will be
-			// needed, it will be done when processing the parent node.
-			return allUnderLastBasElem(sent, xNode, xType, null, true);
-
 		if (xType.equals(LvtbXTypes.SUBRANAL))
 		{
 			// Tricky part, where subordinated xSimile structure also must be
@@ -221,6 +217,45 @@ public class PhraseTransformator
 				return last;
 			}
 			else return allUnderFirstBasElem(sent, xNode, xType, null, false);
+		}
+
+		if (xType.equals(LvtbXTypes.XPRED))
+		{
+			NodeList mods = (NodeList) XPathEngine.get().evaluate(
+					"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
+			NodeList auxs = (NodeList) XPathEngine.get().evaluate(
+					"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
+			NodeList basElems = (NodeList) XPathEngine.get().evaluate(
+					"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
+			Node basElem = Utils.getLastByOrd(basElems);
+			if (basElem == null)
+				throw new IllegalArgumentException(
+						"\"" + xType +"\" in entence \"" + sent.id + "\" has no basElem.\n");
+			boolean nominal = Utils.getTag(basElem).matches("[napx].*|v..pd...[ap]p.*]");
+			boolean passive = Utils.getTag(basElem).matches("v..pd...ps.*]");
+			if (mods == null || mods.getLength() < 1)
+				return noModXPredToUD(Utils.asOrderedList(children), sent, xType);
+
+			ArrayList<Node> ordChildren = Utils.asOrderedList(children);
+			LinkedList<Node> buffer = new LinkedList<>();
+			buffer.push(ordChildren.get(ordChildren.size()-1));
+			Node latestRoot = null;
+			for (int i = ordChildren.size() - 2; i >= -1; i--)
+			{
+				String role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
+				if (!LvtbRoles.AUXVERB.equals(role) || i == -1)
+				{
+					Node newRoot = buffer.peek();
+					if (buffer.size() > 1)
+						newRoot = noModXPredToUD(buffer, sent, xType);
+					Token newR = sent.pmlaToConll.get(Utils.getId(newRoot));
+					Token oldR = sent.pmlaToConll.get(Utils.getId(latestRoot));
+					oldR.head = newR.idBegin;
+					oldR.deprel = URelations.XCOMP;
+					latestRoot = newRoot;
+				}
+				if (i >= 0) buffer.push(ordChildren.get(i));
+			}
 		}
 
 		System.err.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
@@ -265,7 +300,7 @@ public class PhraseTransformator
 	 * @throws XPathExpressionException
 	 */
 	protected static void allAsDependents(
-			Sentence sent, Node newRoot, ArrayList<Node> children, String phraseType,
+			Sentence sent, Node newRoot, List<Node> children, String phraseType,
 			URelations childDeprel)
 	throws XPathExpressionException
 	{
@@ -375,12 +410,12 @@ public class PhraseTransformator
 	 * @throws XPathExpressionException
 	 */
 	protected static Node coordPartsChildListToUD(
-			ArrayList<Node> sordedNodes, Sentence sent, String coordType)
+			List<Node> sortedNodes, Sentence sent, String coordType)
 	throws XPathExpressionException
 	{
 		// Find the structure root.
 		Node newRoot = null;
-		for (Node n : sordedNodes)
+		for (Node n : sortedNodes)
 			if (LvtbRoles.CRDPART.equals(XPathEngine.get().evaluate("./role", n)))
 			{
 				newRoot = n;
@@ -390,14 +425,60 @@ public class PhraseTransformator
 		{
 			System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
 					sent.id, LvtbRoles.CRDPART, coordType);
-			newRoot = sordedNodes.get(0);
+			newRoot = sortedNodes.get(0);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
 					"\"" + coordType +"\" in entence \"" + sent.id + "\" seems to be empty.\n");
 
 		// Create dependency structure in conll table.
-		allAsDependents(sent, newRoot, sordedNodes, coordType, null);
+		allAsDependents(sent, newRoot, sortedNodes, coordType, null);
+		return newRoot;
+	}
+
+	/**
+	 * Helper function implementing aux/auxpass/cop logic, split out from xPred
+	 * processing. Useful for processing either active/passive/nominal
+	 * predicates or for parts of modal predicates. Neutral word order assumed.
+	 * @param sortedNodes
+	 * @param sent
+	 * @param xType
+	 * @return	PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	protected static Node noModXPredToUD(
+			List<Node> sortedNodes, Sentence sent, String xType)
+	throws XPathExpressionException
+	{
+		Node lastAux = null;
+		Node lastBasElem = null;
+		for (Node n : sortedNodes)
+		{
+			String role = XPathEngine.get().evaluate("./role", n);
+			if (LvtbRoles.AUXVERB.equals(role)) lastAux = n;
+			else lastBasElem = n;
+		}
+		String auxLemma = Utils.getLemma(lastAux);
+		String auxTag = Utils.getTag(lastAux);
+
+		boolean nominal = auxTag.matches("[napx].*|v..pd...[ap]p.*]") ||
+				auxTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
+		boolean passive = auxTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
+
+		Node newRoot = lastBasElem;
+		if (nominal && !auxLemma.matches("(ne)?būt"))
+			newRoot = lastAux;
+		allAsDependents(sent, newRoot, sortedNodes, xType, null);
+		if (passive)
+		{
+			Token lastAuxTok = sent.pmlaToConll.get(Utils.getId(lastAux));
+			lastAuxTok.deprel = URelations.AUXPASS;
+		}
+		if (nominal && auxLemma.matches("(ne)?būt"))
+		{
+			Token lastAuxTok = sent.pmlaToConll.get(Utils.getId(lastAux));
+			lastAuxTok.deprel = URelations.COP;
+		}
 		return newRoot;
 	}
 }

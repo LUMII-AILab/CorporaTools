@@ -215,6 +215,7 @@ public class DepRelLogic
 	 * PhraseTransform class.
 	 * Case when subrAnal is "vairāk" + xSimile is handled in
 	 * PhraseTransform class.
+	 * All specific cases with xPred are handled in PhraseTransform class.
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
@@ -298,7 +299,12 @@ public class DepRelLogic
 					vSiblings.getLength() > 0) return URelations.MWE;
 		}
 
-		// TODO XPRED
+		if (phraseType.equals(LvtbXTypes.XPRED))
+		{
+				if (lvtbRole.equals(LvtbRoles.AUXVERB)) return URelations.AUX;
+				if (lvtbRole.equals(LvtbRoles.BASELEM) ||
+						lvtbRole.equals(LvtbRoles.MOD)) return URelations.XCOMP;
+		}
 
 		System.err.printf("%s in %s phrase has no UD label.", nodeId, phraseType);
 		return URelations.DEP;
