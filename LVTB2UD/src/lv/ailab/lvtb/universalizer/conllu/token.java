@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -120,8 +121,9 @@ public class Token
 		// 6
 		res.append("\t");
 		if (feats == null || feats.size() < 1) res.append("_");
-		else res.append(feats.stream().sorted((a, b) -> a.toString().compareTo(b.toString()))
-				.map(UFeat::toString).reduce((a, b) -> a + "|" + b).orElse("_"));
+		else res.append(feats.stream().map(UFeat::toString)
+				.sorted(String.CASE_INSENSITIVE_ORDER)
+				.reduce((a, b) -> a + "|" + b).orElse("_"));
 		// 7
 		res.append("\t");
 		if (head == null || head < 0) res.append("_");
