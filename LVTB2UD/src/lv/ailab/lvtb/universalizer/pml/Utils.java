@@ -29,7 +29,7 @@ public class Utils
 		if (node == null) return -1;
 		String ordStr = XPathEngine.get().evaluate("./ord", node);
 		int ord = 0;
-		if (ordStr != null) ord = Integer.parseInt(ordStr);
+		if (ordStr != null && ordStr.length() > 0) ord = Integer.parseInt(ordStr);
 		return ord;
 	}
 
