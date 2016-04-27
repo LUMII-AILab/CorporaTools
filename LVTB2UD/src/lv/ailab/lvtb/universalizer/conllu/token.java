@@ -1,6 +1,8 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Format definition: http://universaldependencies.org/format.html
@@ -92,6 +94,7 @@ public class Token
 	 */
 	public String toConllU()
 	{
+
 		StringBuilder res = new StringBuilder();
 		// 1
 		// ID - single integer or range.
@@ -117,7 +120,8 @@ public class Token
 		// 6
 		res.append("\t");
 		if (feats == null || feats.size() < 1) res.append("_");
-		else res.append(feats.stream().map(UFeat::toString).reduce((a, b) -> a + "|" + b).orElse("_"));
+		else res.append(feats.stream().sorted((a, b) -> a.toString().compareTo(b.toString()))
+				.map(UFeat::toString).reduce((a, b) -> a + "|" + b).orElse("_"));
 		// 7
 		res.append("\t");
 		if (head == null || head < 0) res.append("_");

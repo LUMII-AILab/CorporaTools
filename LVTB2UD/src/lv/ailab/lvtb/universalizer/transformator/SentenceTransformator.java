@@ -7,6 +7,7 @@ import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhraseTransformator;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -31,6 +32,11 @@ public class SentenceTransformator
 	public Sentence s;
 	protected PhraseTransformator pTransf;
 	public boolean debug = false;
+	/**
+	 * For already processed nodes without tag set the phrase tag based on node
+	 * chosen as substructure root.
+	 */
+	public static boolean INDUCE_PHRASE_TAGS = true;
 
 	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
 	{
@@ -298,6 +304,26 @@ public class SentenceTransformator
 		if (newRoot == null)
 			throw new IllegalStateException(
 					"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
+
+		if (INDUCE_PHRASE_TAGS && phraseNode != null)
+		{
+			String phraseTag = Utils.getTag(aNode);
+			String newRootTag = Utils.getTag(newRoot);
+			if ((phraseTag == null || phraseTag.length() < 1) &&
+					newRootTag != null && newRootTag.length() > 0)
+			{
+				System.out.println(phraseTag);
+				String type = phraseNode.getNodeName();
+				if (type.equals("xinfo") || type.equals("coordinfo"))
+				{
+					Element tag = phraseNode.getOwnerDocument().createElement("tag");
+					tag.appendChild(phraseNode.getOwnerDocument().createTextNode(newRootTag + "[INDUCED]"));
+					phraseNode.appendChild(tag);
+				}
+
+			}
+
+		}
 
 		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));
 		transformDependents(aNode, newRoot);
