@@ -63,7 +63,7 @@ Params:
     --collect  collect all .w + .m + .a from input folder and it's
                folder - use this if data files are given in some subfolder
                structure (no params)
-			   NB! unique file names assumed (duplicates will be overwritten)
+               NB! unique file names assumed (duplicates will be overwritten)
 
   Main flow
     --unnest   convert multi-level coordinations to single level
@@ -88,9 +88,9 @@ Params:
                  ord       - do input data have all nodes ordered [0 (default)
                              / 1],
                  mark      - list (comma separated, no space) of phrase-like
-				             constructions to mark [default - mark nothing],
+                             constructions to mark [default - mark nothing],
                  markphdep - list (comma separated, no space) of phrase-like
-				             constructions whose phrase-dependants must be
+                             constructions whose phrase-dependants must be
                              marked [default - mark nothing]
     --red      remove reductions
                params:
@@ -105,7 +105,7 @@ Params:
                  label   - label output tree arcs [0/1],
                  cpostag - CPOSTAG mode [PURIFY / FIRST / NONE (default)],
                  postag  - POSTAG mode [FULL (default) / PURIFY],
-				 marked  - print roles and parent IDs for marked nodes only
+                 marked  - print roles and parent IDs for marked nodes only
                            [0 (default) / 1]
                  conll09 - do "large" CoNLL-2009 output [0 (default) / 1]
     --fold     create development/test or cross-validation datasets
@@ -113,15 +113,15 @@ Params:
                  p    - probability (0;1), or cross-validation part count {3;
                         4; 5; ...}, or 1 for concatenating all files,
                  seed - seed [default = nothing pased to srand],
-				 name - naming prefix for output files [default = null =
-                        default names used]
+                 name - naming prefix for output files [default - null, 
+                        meaning that some default prefix is used]
 
   Additional stand-alone transformations
     --ord      recalculate 'ord' fields
                params:
                  mode - reordering mode [TOKEN/NODE]
 
-Latvian Treebank project, LUMII, 2013, provided under GPL
+Latvian Treebank project, LUMII, 2013-1016, provided under GPL
 END
 }
 
