@@ -39,9 +39,9 @@ public class FeatsLogic
 		if (xpostag.matches("[na].f.*|v..p.f.*|[pm]..f.*")) res.add(UFeat.GENDER_FEM);
 
 		if (xpostag.matches("[na]..s.*|v..[^p]....s.*|v..p..s.*|[pm]...s.*")) res.add(UFeat.NUMBER_SING);
-		if (xpostag.matches("[na]..p.*|v..[^p]....p.*|v..p..p.*|[pm]...p.*")) res.add(UFeat.NUMBER_SING);
+		if (xpostag.matches("[na]..p.*|v..[^p]....p.*|v..p..p.*|[pm]...p.*")) res.add(UFeat.NUMBER_PLUR);
 		if (xpostag.matches("n..d.*")) res.add(UFeat.NUMBER_PTAN); // Fuzzy borders.
-		if (xpostag.matches("n..v.*")) res.add(UFeat.NUMBER_PTAN); // Fuzzy borders.
+		if (xpostag.matches("n..v.*")) res.add(UFeat.NUMBER_COLL); // Fuzzy borders.
 
 		if (xpostag.matches("[na]...n.*|v..p...n.*|[pm]....n.*")) res.add(UFeat.CASE_NOM);
 		if (xpostag.matches("[na]...a.*|v..p...a.*|[pm]....a.*")) res.add(UFeat.CASE_ACC);

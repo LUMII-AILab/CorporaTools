@@ -162,7 +162,7 @@ public class SentenceTransformator
 							forms[i], lemmas[i], xpostag);
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
-					nextTok.head = nextTok.idBegin;
+					nextTok.head = lastTok.idBegin;
 					nextTok.deprel = URelations.COMPOUND;
 					s.conll.add(nextTok);
 					//s.conllToPmla.put(nextTok, aNode);

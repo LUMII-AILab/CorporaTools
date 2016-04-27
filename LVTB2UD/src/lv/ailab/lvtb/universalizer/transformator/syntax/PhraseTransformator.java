@@ -283,7 +283,7 @@ public class PhraseTransformator
 		Node first = Utils.getFirstByOrd(children);
 		Node last = Utils.getLastByOrd(children);
 		if (children != null && children.getLength() == 2 &&
-				"vairāk".equals(Utils.getLemma(first)) &&
+				"vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)) &&
 				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
 		{
 			// Tricky part, where subordinated xSimile structure also must be
