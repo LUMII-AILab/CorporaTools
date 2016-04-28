@@ -113,6 +113,7 @@
                             <src.rf>experimental</src.rf>
                             <w.rf id="w-paraugs-p1w9">
                               <token>skolu</token>
+                              <no_space_after>1</no_space_after>
                             </w.rf>
                             <form>skolu</form>
                             <lemma>skola</lemma>

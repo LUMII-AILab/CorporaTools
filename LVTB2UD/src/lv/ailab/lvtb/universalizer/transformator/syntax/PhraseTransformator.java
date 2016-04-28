@@ -188,7 +188,6 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getPMLChildren(coordNode);
-
 		NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
 		if (semicolons == null || semicolons.getLength() < 1)
@@ -199,7 +198,7 @@ public class PhraseTransformator
 		Node newRoot = coordPartsChildListToUD(
 				Utils.ordSplice(sortedChildren, 0, semicOrd), coordType);
 		Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
-		for (int i  = 1; i < sortedSemicolons.size(); i++)
+		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
 			int nextSemicOrd = Utils.getOrd(sortedSemicolons.get(i));
 			Node newSubroot = coordPartsChildListToUD(
@@ -207,7 +206,14 @@ public class PhraseTransformator
 			Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 			subrootToken.deprel = URelations.PARATAXIS;
 			subrootToken.head = newRootToken.idBegin;
+			semicOrd = nextSemicOrd;
 		}
+		// last
+		Node newSubroot = coordPartsChildListToUD(
+				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType);
+		Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
+		subrootToken.deprel = URelations.PARATAXIS;
+		subrootToken.head = newRootToken.idBegin;
 
 		return newRoot;
 	}
@@ -383,7 +389,7 @@ public class PhraseTransformator
 		String auxLemma = Utils.getLemma(lastAux);
 		String auxTag = Utils.getTag(lastAux);
 
-		boolean nominal = auxTag.matches("[napx].*|v..pd...[ap]p.*]") ||
+		boolean nominal = auxTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
 				auxTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
 		boolean passive = auxTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
 

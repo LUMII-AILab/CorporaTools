@@ -1,5 +1,9 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * Enumeration for Universal Dependencies's mophological FEATs.
  * Only used pairs represented.
@@ -75,5 +79,19 @@ public enum UFeat
 	public String toString()
 	{
 		return key + "=" + value;
+	}
+
+	public static HashMap<String, HashSet<String>> toMap (List<UFeat> feats)
+	{
+		if (feats == null) return null;
+		HashMap<String, HashSet<String>> res = new HashMap<>();
+		for (UFeat f : feats)
+		{
+			HashSet<String> val = res.get(f.key);
+			if (val == null) val = new HashSet<String>(){{add(f.value);}};
+			else val.add(f.value);
+			res.put(f.key, val);
+		}
+		return res;
 	}
 }

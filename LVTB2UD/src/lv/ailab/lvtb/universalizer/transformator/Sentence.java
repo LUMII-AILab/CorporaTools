@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class Sentence
 {
+	public static boolean CHANGE_IDS = true;
 	public String id;
 	public Node pmlTree;
 	public ArrayList<Token> conll = new ArrayList<>();
@@ -41,8 +42,9 @@ public class Sentence
 	public String toConllU()
 	{
 		StringBuilder res = new StringBuilder();
-		res.append("# Latvian Treebank sentence ID: ");
-		res.append(id);
+		res.append("# ");
+		if (CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
+		else res.append(id);
 		res.append("\n");
 		for (Token t : conll)
 			res.append(t.toConllU());

@@ -130,8 +130,17 @@ public class SentenceTransformator
 		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
 		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
 		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
+		boolean noSpaceAfter = false;
+		if ("1".equals(XPathEngine.get().evaluate(
+				"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", mNode)))
+			noSpaceAfter = true;
+
 		if (mForm.contains(" ") || mLemma.contains(" "))
 		{
+			int baseOrd = Utils.getOrd(aNode);
+			if (baseOrd < 1)
+				throw new IllegalArgumentException("Node " + Utils.getId(aNode) + "has no ord value");
+
 			String[] forms = mForm.split(" ");
 			String[] lemmas = mLemma.split(" ");
 			if (forms.length != lemmas.length)
@@ -143,13 +152,11 @@ public class SentenceTransformator
 			if (lvtbTag.matches("xn.*"))
 			{
 				// The last one is different.
-				Token lastTok = new Token(
-						Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + length-1,
-						forms[length-1], lemmas[length-1],
-						getXpostag(lvtbTag, "_SPLIT_PART"));
+				Token lastTok = new Token(baseOrd + length-1 + offset, forms[length-1],
+						lemmas[length-1], getXpostag(lvtbTag, "_SPLIT_PART"));
 				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, lvtbRole);
 				lastTok.feats = FeatsLogic.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
-				//s.conllToPmla.put(lastTok, aNode);
+				if (noSpaceAfter) lastTok.misc = "SpaceAfter=No";
 				s.pmlaToConll.put(Utils.getId(aNode), lastTok);
 
 				// Process the rest.
@@ -157,62 +164,56 @@ public class SentenceTransformator
 				String xpostag = getXpostag(lvtbTag, "_SPLIT_FIRST");
 				for (int i = 0; i < length - 1; i++)
 				{
-					Token nextTok = new Token(
-							Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
-							forms[i], lemmas[i], xpostag);
+					Token nextTok = new Token(baseOrd + offset, forms[i], lemmas[i], xpostag);
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = lastTok.idBegin;
 					nextTok.deprel = URelations.COMPOUND;
 					s.conll.add(nextTok);
-					//s.conllToPmla.put(nextTok, aNode);
 					// Get ready for next token.
 					offset++;
 					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
 				}
 				s.conll.add(lastTok);
-
 			}
 			// If the root is first token.
 			else
 			{
 				// First one is different.
-				Token firstTok = new Token(
-						Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
-						forms[0], lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
+				Token firstTok = new Token(baseOrd + offset, forms[0],
+						lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
 				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				s.conll.add(firstTok);
-				//s.conllToPmla.put(firstTok, aNode);
 				s.pmlaToConll.put(Utils.getId(aNode), firstTok);
 
 				// The rest
 				for (int i = 1; i < forms.length && i < lemmas.length; i++)
 				{
 					offset++;
-					Token nextTok = new Token(
-							Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
-							forms[i], lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
+					Token nextTok = new Token(baseOrd + offset, forms[i],
+							lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = firstTok.idBegin;
+					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
+						nextTok.misc = "SpaceAfter=No";
 					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
 					else nextTok.deprel = URelations.MWE;
 					s.conll.add(nextTok);
-					//s.conllToPmla.put(nextTok, aNode);
 				}
 			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
 			Token nextTok = new Token(
-					Integer.parseInt(XPathEngine.get().evaluate("./ord", aNode)) + offset,
-					mForm, mLemma,
+					Utils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+			if (noSpaceAfter)
+				 nextTok.misc = "SpaceAfter=No";
 			s.conll.add(nextTok);
-			//s.conllToPmla.put(nextTok, aNode);
 			s.pmlaToConll.put(Utils.getId(aNode), nextTok);
 		}
 		return offset;
@@ -320,9 +321,7 @@ public class SentenceTransformator
 					tag.appendChild(phraseNode.getOwnerDocument().createTextNode(newRootTag + "[INDUCED]"));
 					phraseNode.appendChild(tag);
 				}
-
 			}
-
 		}
 
 		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));

@@ -35,7 +35,7 @@ public class LvtbToUdUI
 			if (f.isDirectory() || f.getName().startsWith("~")) continue;
 			if (fileName.endsWith(".pml"))
 			{
-				System.out.printf("Processing file \"%s\"...\t", fileName);
+				System.out.printf("Processing file \"%s\", ", fileName);
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
 				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(outPath), "UTF8"));

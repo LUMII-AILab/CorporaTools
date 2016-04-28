@@ -1,6 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.UFeat;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import lv.semti.morphology.analyzer.Analyzer;
 import lv.semti.morphology.analyzer.Word;
@@ -126,36 +128,50 @@ public class FeatsLogic
 			res.add(UFeat.PRONTYPE_PRS);
 		if (xpostag.matches("px.*")) res.add(UFeat.PRONTYPE_RCP);
 		if (xpostag.matches("pq.*")) res.add(UFeat.PRONTYPE_INT);
-		if (xpostag.matches("r0.*") && lemma.matches("cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?"))
+		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
 			res.add(UFeat.PRONTYPE_INT);
 		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
-				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_INT);
 		if (xpostag.matches("pr.*")) res.add(UFeat.PRONTYPE_REL);
 		if (xpostag.matches("pd.*")) res.add(UFeat.PRONTYPE_DEM);
-		if (xpostag.matches("r0.*") && lemma.matches("te|tur|šeit|tad|tagad|tik|tā"))
+		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
 			res.add(UFeat.PRONTYPE_DEM);
 		if (xpostag.matches("n.*") && lemma.equals("t(ur|ej)iene") &&
-				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_DEM);
 		if (xpostag.matches("pg.*")) res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
 			res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("n.*") && lemma.equals("vis(ur|ad)iene") &&
-				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_TOT);
 		if (xpostag.matches("p.....y.*")) res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("r0.*") && lemma.matches("ne.*"))
 			res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("n.*") && lemma.equals("nek(ur|ad)iene") &&
-				"xPrep".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UFeat.PRONTYPE_NEG);
 		if (xpostag.matches("pi.*")) res.add(UFeat.PRONTYPE_IND);
 		if (xpostag.matches("r0.*") &&
-				"xParticle".equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
 			NodeList result = (NodeList) XPathEngine.get().evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
-			if (result != null && result.getLength() > 0) res.add(UFeat.PRONTYPE_IND);
+			if (result != null && result.getLength() > 0)
+			{
+				res.add(UFeat.PRONTYPE_IND);
+				res.remove(UFeat.PRONTYPE_INT);
+			}
+		}
+		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
+				LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+		{
+			NodeList result = (NodeList) XPathEngine.get()
+					.evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
+			if (result != null && result.getLength() > 0 &&
+					LvtbRoles.BASELEM.equals(XPathEngine.get().evaluate("../../../../role", aNode)) &&
+					LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../../../../../xtype", aNode)))
+				res.add(UFeat.PRONTYPE_IND);
 		}
 
 		if (xpostag.matches("mc.*|xn.*")) res.add(UFeat.NUMTYPE_CARD); // Nouns like "simts", "desmits" are not marked.

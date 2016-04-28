@@ -19,7 +19,7 @@ import java.util.TreeMap;
 public class Utils
 {
 	/**
-	 * Find ord value for given node.
+	 * Find ord value for given node, if there is one.
 	 * @param node node to analyze
 	 * @return	ord value, or 0, if no ord found, or -1 if node is null.
 	 * @throws XPathExpressionException
@@ -31,6 +31,28 @@ public class Utils
 		int ord = 0;
 		if (ordStr != null && ordStr.length() > 0) ord = Integer.parseInt(ordStr);
 		return ord;
+	}
+
+	/**
+	 *
+	 * @param node	node to analyze
+	 * @return	ord value, or 0, if no ord found, or -1 if node is null.
+	 */
+	public static int getDeepOrd (Node node) throws XPathExpressionException
+	{
+		if (node == null) return -1;
+		String ordStr = XPathEngine.get().evaluate("./ord", node);
+		if (ordStr != null && ordStr.length() > 0) return Integer.parseInt(ordStr);
+		NodeList children = Utils.getPMLChildren(node);
+		if (children == null || children.getLength() < 1) return 0;
+		int smallestOrd = 0;
+		for (int i = 0; i < children.getLength(); i++)
+		{
+			int childOrd = Utils.getDeepOrd(children.item(i));
+			if (childOrd > 0 && childOrd < smallestOrd || smallestOrd == 0)
+				smallestOrd = childOrd;
+		}
+		return smallestOrd;
 	}
 
 	/**
@@ -193,7 +215,7 @@ public class Utils
 		ArrayList<Node> res = new ArrayList<>();
 		for (Node n : nodes)
 		{
-			int ord = getOrd(n);
+			int ord = getDeepOrd(n);
 			if (ord >= begin && ord < end) res.add(n);
 		}
 		return res;
@@ -288,7 +310,7 @@ public class Utils
 
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
-			int smallestOrd = Integer.MAX_VALUE;
+			/*int smallestOrd = Integer.MAX_VALUE;
 			NodeList ords = (NodeList)XPathEngine.get().evaluate(".//ord", nodes.item(i), XPathConstants.NODESET);
 			for (int j = 0; j < ords.getLength(); j ++)
 			{
@@ -297,7 +319,11 @@ public class Utils
 			}
 			if (smallestOrd == Integer.MAX_VALUE) smallestOrd = 0;
 			if (!semiRes.containsKey(smallestOrd)) semiRes.put(smallestOrd, new ArrayList<>());
-			semiRes.get(smallestOrd).add(nodes.item(i));
+			semiRes.get(smallestOrd).add(nodes.item(i));*/
+			Node n = nodes.item(i);
+			int ord = Utils.getDeepOrd(n);
+			if (!semiRes.containsKey(ord)) semiRes.put(ord, new ArrayList<>());
+			semiRes.get(ord).add(n);
 		}
 		ArrayList<Node> res = new ArrayList<>();
 		for (Integer ordKey : semiRes.keySet())

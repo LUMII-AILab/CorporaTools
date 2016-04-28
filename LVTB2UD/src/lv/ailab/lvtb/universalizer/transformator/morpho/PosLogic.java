@@ -34,7 +34,7 @@ public class PosLogic
 			else return UPosTag.PRON;
 		}
 		else if (xpostag.matches("pr.*")) return UPosTag.SCONJ;
-		else if (xpostag.matches("r.*")) return UPosTag.ADJ; // Or sometimes SCONJ
+		else if (xpostag.matches("r.*")) return UPosTag.ADV; // Or sometimes SCONJ
 		else if (xpostag.matches("m[cf].*")) return UPosTag.NUM;
 		else if (xpostag.matches("mo.*")) return UPosTag.ADJ;
 		else if (xpostag.matches("s.*")) return UPosTag.ADP;
