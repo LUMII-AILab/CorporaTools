@@ -120,6 +120,27 @@ public class DepRelLogic
 					}
 				}
 			}
+			// Parent is basElem of some phrase
+			if (parentType.equals(LvtbRoles.BASELEM))
+			{
+				Node xChild = Utils.getPhraseNode(pmlParent);
+				// Parent is complex predicate
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+				{
+					if (parentTag.matches("v..[^p].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
+					if (parentTag.matches("v..[^a].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
+				}
+				// Parent is simple predicate
+				else
+				{
+					if (parentTag.matches("v..[^p].....a.*"))
+						return URelations.NSUBJ;
+					if (parentTag.matches("v..[^p].....p.*"))
+						return URelations.NSUBJPASS;
+					// No participles here, because that is SPC subject thingy.
+				}
+			}
+			// TODO what to do with participal SPC subjects?
 
 		}
 		// Infinitive

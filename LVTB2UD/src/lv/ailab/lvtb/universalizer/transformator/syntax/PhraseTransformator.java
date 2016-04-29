@@ -46,10 +46,11 @@ public class PhraseTransformator
 		//======= PMC ==========================================================
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
-				phraseType.equals(LvtbPmcTypes.UTTER) ||
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
 				phraseType.equals(LvtbPmcTypes.INSPMC))
 			return sentencyToUD(phraseNode, phraseType);
+		if (phraseType.equals(LvtbPmcTypes.UTTER))
+			return utterToUD(phraseNode, phraseType);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.PRED, null, true);
@@ -160,6 +161,97 @@ public class PhraseTransformator
 
 		return newRoot;
 	}
+
+	/**
+	 * Transformation for PMC that can have either basElem or pred - all
+	 * children goes below first pred, r below forst basElem, if there is no
+	 * pred.
+	 * @param pmcNode
+	 * @param pmcType
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException
+	 */
+	protected Node utterToUD(Node pmcNode, String pmcType)
+	throws XPathExpressionException
+	{
+		NodeList children = Utils.getPMLChildren(pmcNode);
+
+		// Find the structure root.
+		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
+		Node newRoot = null;
+		if (basElems != null && basElems.getLength() > 0) newRoot = Utils.getFirstByOrd(basElems);
+		if (newRoot == null)
+		{
+			System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
+					s.id, LvtbRoles.BASELEM, pmcType);
+			newRoot = Utils.getFirstByOrd(children);
+		}
+		if (newRoot == null)
+			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
+
+		if (basElems!= null && basElems.getLength() > 1 && children.getLength() > basElems.getLength())
+		{
+			ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
+			ArrayList<Node> rootChildren = new ArrayList<>();
+			// If utter starts with punct, they are going to be root children.
+			while (sortedChildren.size() > 0)
+			{
+				String role = Utils.getRole(sortedChildren.get(0));
+				if (role.equals(LvtbRoles.PUNCT))
+					rootChildren.add(sortedChildren.remove(0));
+				else break;
+			}
+			// First "clause" until punctuation is going to be root children.
+			while (sortedChildren.size() > 0)
+			{
+				String role = Utils.getRole(sortedChildren.get(0));
+				if (!role.equals(LvtbRoles.PUNCT))
+					rootChildren.add(sortedChildren.remove(0));
+				else break;
+			}
+			// Last punctuation aslo is going to be root children.
+			LinkedList<Node> lastPunct = new LinkedList<>();
+			while (sortedChildren.size() > 0)
+			{
+				String role = Utils.getRole(sortedChildren.get(sortedChildren.size()-1));
+				if (role.equals(LvtbRoles.PUNCT))
+					lastPunct.push(sortedChildren.remove(sortedChildren.size()-1));
+				else break;
+			}
+			rootChildren.addAll(lastPunct);
+			s.allAsDependents(newRoot, rootChildren, pmcType, null);
+
+			// now let's process what is left
+			Token rootTok = s.pmlaToConll.get(Utils.getId(newRoot));
+			while (sortedChildren.size() > 0)
+			{
+				ArrayList<Node> nextPart = new ArrayList<>();
+				Node subroot = null;
+
+				// find next stop
+				while (sortedChildren.size() > 0)
+				{
+					String role = Utils.getRole(sortedChildren.get(0));
+					if (role.equals(LvtbRoles.PUNCT) && nextPart.size() > 0)
+						break;
+					else if (role.equals(LvtbRoles.BASELEM) && subroot == null)
+						subroot = sortedChildren.get(0);
+					nextPart.add(sortedChildren.remove(0));
+				}
+
+				// process found part
+				s.allAsDependents(subroot, nextPart, pmcType, null);
+				Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
+				subrootTok.deprel = URelations.PARATAXIS;
+				subrootTok.head = rootTok.idBegin;
+			}
+		}
+		else s.allAsDependents(newRoot, children, pmcType, null);
+
+		return newRoot;
+	}
+
 
 	/**
 	 * Transformation for coordinated clauses - first coordinated part is used

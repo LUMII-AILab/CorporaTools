@@ -34,7 +34,8 @@ public class Utils
 	}
 
 	/**
-	 *
+	 * Get ord value for given node, if there is one. Otherwise get smallest
+	 * children ord value.
 	 * @param node	node to analyze
 	 * @return	ord value, or 0, if no ord found, or -1 if node is null.
 	 */
@@ -65,6 +66,17 @@ public class Utils
 	{
 		if (node == null) return null;
 		return XPathEngine.get().evaluate("./@id", node);
+	}
+	/**
+	 * Find role for given node.
+	 * @param node node to analyze
+	 * @return	role value
+	 * @throws XPathExpressionException
+	 */
+	public static String getRole(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return XPathEngine.get().evaluate("./role", node);
 	}
 
 	/**
