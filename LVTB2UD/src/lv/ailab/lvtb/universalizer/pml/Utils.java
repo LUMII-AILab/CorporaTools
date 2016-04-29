@@ -208,6 +208,19 @@ public class Utils
 				"../../../..", node, XPathConstants.NODE);
 	}
 
+	/**
+	 * Find great grandparent node (or phrase structure) in PML sense.
+	 * @param node	node to analyze
+	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
+	 * @throws XPathExpressionException
+	 */
+	public static Node getPMLGreatGrandParent(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return (Node) XPathEngine.get().evaluate(
+				"../../../../../..", node, XPathConstants.NODE);
+	}
+
 
 	/**
 	 * Create splice array that contains all nodes from the given array, to whom

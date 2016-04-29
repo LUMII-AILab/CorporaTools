@@ -108,10 +108,11 @@ public class PhrasePartDepLogic
 		{
 			// Because parent is the xSimile itself.
 			Node firstAncestor = Utils.getPMLGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
+			Node secongAncestor = Utils.getPMLGreatGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
 			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/form='vairāk']", firstAncestor, XPathConstants.NODESET);
+					"./children/node[m.rf/form='vairāk']", secongAncestor, XPathConstants.NODESET);
 			String firstAncType = Utils.getAnyLabel(firstAncestor);
-			String secondAncType = Utils.getAnyLabel(Utils.getPMLParent(firstAncestor));
+			String secondAncType = Utils.getAnyLabel(secongAncestor);
 
 			if (LvtbRoles.SPC.equals(firstAncType))
 				return URelations.MARK;
@@ -134,7 +135,8 @@ public class PhrasePartDepLogic
 					lvtbRole.equals(LvtbRoles.MOD)) return URelations.XCOMP;
 		}
 
-		System.err.printf("%s in \"%s\" phrase has no UD label.\n", nodeId, phraseType);
+		System.err.printf("\"%s\" (%s) in \"%s\" has no UD label.\n",
+				lvtbRole, nodeId, phraseType);
 		return URelations.DEP;
 	}
 }

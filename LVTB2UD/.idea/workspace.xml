@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ccb0d92-6049-4ca0-a00a-85cb42c5ad1f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java" afterPath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java" afterPath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" afterPath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" />
     </list>
     <ignored path="LVTB2UD.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SentenceTransformator.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SentenceTransformator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="325" column="0" selection-start-line="325" selection-start-column="0" selection-end-line="325" selection-end-column="0" />
+            <state relative-caret-position="182">
+              <caret line="245" column="27" selection-start-line="245" selection-start-column="21" selection-end-line="245" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -40,8 +40,8 @@
       <file leaf-file-name="PhraseTransformator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="455">
-              <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+            <state relative-caret-position="156">
+              <caret line="483" column="55" selection-start-line="483" selection-start-column="54" selection-end-line="483" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -49,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Utils.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java">
+      <file leaf-file-name="PhrasePartDepLogic.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+            <state relative-caret-position="1887">
+              <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -67,18 +67,6 @@
             <state relative-caret-position="200">
               <caret line="88" column="16" selection-start-line="88" selection-start-column="16" selection-end-line="88" selection-end-column="16" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DepRelLogic.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="268" column="0" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -122,17 +110,17 @@
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/morpho/PosLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/LvtbPmcTypes.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/LvtbCoordTypes.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/PosLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/conllu/UFeat.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/conllu/Token.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/FeatsLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" />
       </list>
     </option>
   </component>
@@ -563,7 +551,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1282" height="768" extended-state="0" />
+    <frame x="0" y="0" width="1282" height="768" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -851,20 +839,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java">
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
+        <state relative-caret-position="65">
+          <caret line="37" column="59" selection-start-line="37" selection-start-column="59" selection-end-line="37" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java">
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="37" column="59" selection-start-line="37" selection-start-column="59" selection-end-line="37" selection-end-column="59" />
+        <state relative-caret-position="182">
+          <caret line="245" column="27" selection-start-line="245" selection-start-column="21" selection-end-line="245" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="483" column="55" selection-start-line="483" selection-start-column="54" selection-end-line="483" selection-end-column="55" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="324" column="42" selection-start-line="324" selection-start-column="40" selection-end-line="324" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="220" column="23" selection-start-line="220" selection-start-column="23" selection-end-line="220" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -879,40 +897,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java">
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="268" column="0" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="325" column="0" selection-start-line="325" selection-start-column="0" selection-end-line="325" selection-end-column="0" />
+        <state relative-caret-position="1887">
+          <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
