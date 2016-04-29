@@ -82,14 +82,14 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
-		Node pmlParent = Utils.getPMLParent(aNode);
-		String parentTag = Utils.getTag(pmlParent);
-		String parentType = Utils.getAnyLabel(pmlParent);
-
 		// Nominal subject
 		if (tag.matches("[nampx].*|v..pd.*") ||
 				(tag.matches("y.*") && Utils.getLemma(aNode).matches("\\p{Lu}+")))
 		{
+			Node pmlParent = Utils.getPMLParent(aNode);
+			String parentTag = Utils.getTag(pmlParent);
+			String parentType = Utils.getAnyLabel(pmlParent);
+
 			// Parent is predicate
 			if (parentType.equals(LvtbRoles.PRED))
 			{
@@ -167,15 +167,17 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
-		Node pmlParent = Utils.getPMLParent(aNode);
-		String parentTag = Utils.getTag(pmlParent);
-		String parentType = Utils.getAnyLabel(pmlParent);
+
 
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))
 		{
-			if ((parentType.equals(LvtbRoles.PRED) ||
-					parentType.equals(LvtbXTypes.XPRED)) &&
+			String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
+			Node pmlEfParent = Utils.getEffectiveAncestor(aNode);
+			String effParentType = Utils.getAnyLabel(pmlEfParent);
+			if ((effParentType.equals(LvtbRoles.PRED) ||
+					(effParentType.equals(LvtbRoles.BASELEM) &&
+					LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
 					parentTag.matches("v..[^p]...[123].*"))
 				return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
 			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;

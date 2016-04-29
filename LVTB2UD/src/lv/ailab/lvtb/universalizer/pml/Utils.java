@@ -141,15 +141,37 @@ public class Utils
 	/**
 	 * Find pmctype, coordtype, xtype or role for a given node.
 	 * @param node	node to analyze
-	 * @return	phrase type or dependency role
+	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
 	 * @throws XPathExpressionException
 	 */
 	public static String getAnyLabel(Node node)
 	throws XPathExpressionException
 	{
 		if (node == null) return null;
+		String name = node.getNodeName();
+		String parentName = Utils.getPMLParent(node).getNodeName();
+		if (name.equals("LM") && parentName.equals("trees") || name.equals("trees"))
+			return LvtbHelperRoles.ROOT;
 		return XPathEngine.get().evaluate(
-				"./role|./pmctype|./coortype|./xtype", node);
+				"./role|./pmctype|./coordtype|./xtype", node);
+	}
+
+	/**
+	 * Find the closest ancestor (given node included), whose label is not
+	 * crdPart, crdParts or crdClauses.
+	 * @param node	node to analyze
+	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
+	 * @throws XPathExpressionException
+	 */
+	public static String getEffectiveLabel(Node node)
+	throws XPathExpressionException
+	{
+		String label = getAnyLabel(node);
+		if (label.equals(LvtbRoles.CRDPART) ||
+				label.equals(LvtbCoordTypes.CRDCLAUSES) ||
+				label.equals(LvtbCoordTypes.CRDPARTS))
+			return getAnyLabel(getEffectiveAncestor(node));
+		return label;
 	}
 
 	/**
@@ -193,6 +215,29 @@ public class Utils
 		if (node == null) return null;
 		return (Node) XPathEngine.get().evaluate(
 				"../..", node, XPathConstants.NODE);
+	}
+
+	/**
+	 * Find parent or the closest ancestor, that is not coordination phrase or
+	 * crdPart node.
+	 * @param node	node to analyze
+	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
+	 * @throws XPathExpressionException
+	 */
+	public static Node getEffectiveAncestor(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		Node res = getPMLParent(node);
+		String resType = getAnyLabel(res);
+		while (resType.equals(LvtbRoles.CRDPART) ||
+				resType.equals(LvtbCoordTypes.CRDCLAUSES) ||
+				resType.equals(LvtbCoordTypes.CRDPARTS))
+		{
+			res = getPMLParent(res);
+			resType = getAnyLabel(res);
+		}
+
+		return res;
 	}
 
 	/**

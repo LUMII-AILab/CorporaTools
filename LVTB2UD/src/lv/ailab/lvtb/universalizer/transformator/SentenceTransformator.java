@@ -7,7 +7,6 @@ import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhraseTransformator;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -31,7 +30,8 @@ public class SentenceTransformator
 {
 	public Sentence s;
 	protected PhraseTransformator pTransf;
-	public boolean debug = false;
+	public static boolean DEBUG = false;
+	public static boolean WARN_OMISSIONS = false;
 	/**
 	 * For already processed nodes without tag set the phrase tag based on node
 	 * chosen as substructure root.
@@ -53,7 +53,7 @@ public class SentenceTransformator
 	 */
 	public boolean transform() throws XPathExpressionException
 	{
-		if (debug) System.out.printf("Working on sentence \"%s\".\n", s.id);
+		if (DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
 		transformTokens();
 		boolean noElipsis = preprocessEllipsis();
@@ -76,7 +76,8 @@ public class SentenceTransformator
 		SentenceTransformator t = new SentenceTransformator(pmlTree);
 		boolean res = t.transform();
 		if (res) return t.s.toConllU();
-		System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+		if (WARN_OMISSIONS)
+			System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
 		return null;
 	}
 
@@ -287,7 +288,7 @@ public class SentenceTransformator
 	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
-		if (debug) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
+		if (DEBUG) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
 
 		NodeList children = Utils.getPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
