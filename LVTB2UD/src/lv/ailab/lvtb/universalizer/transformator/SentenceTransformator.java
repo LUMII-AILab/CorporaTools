@@ -310,14 +310,16 @@ public class SentenceTransformator
 		{
 			String phraseTag = Utils.getTag(aNode);
 			String newRootTag = Utils.getTag(newRoot);
-			if ((phraseTag == null || phraseTag.length() < 1) &&
+			if ((phraseTag == null || phraseTag.length() < 1 || phraseTag.matches("N/[Aa]")) &&
 					newRootTag != null && newRootTag.length() > 0)
 			{
-				System.out.println(phraseTag);
 				String type = phraseNode.getNodeName();
 				if (type.equals("xinfo") || type.equals("coordinfo"))
 				{
-					Element tag = phraseNode.getOwnerDocument().createElement("tag");
+					Node tag = (Node)XPathEngine.get().evaluate("./tag", phraseNode, XPathConstants.NODE);
+					if (tag == null) tag = phraseNode.getOwnerDocument().createElement("tag");
+					while (tag.getFirstChild() != null)
+						tag.removeChild(tag.getFirstChild());
 					tag.appendChild(phraseNode.getOwnerDocument().createTextNode(newRootTag + "[INDUCED]"));
 					phraseNode.appendChild(tag);
 				}
