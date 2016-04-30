@@ -83,8 +83,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 		// Nominal subject
-		if (tag.matches("[nampx].*|v..pd.*") ||
-				(tag.matches("y.*") && Utils.getLemma(aNode).matches("\\p{Lu}+")))
+		if (tag.matches("[nampx].*|v..pd.*|y.*"))
 		{
 			Node pmlParent = Utils.getPMLParent(aNode);
 			String parentTag = Utils.getTag(pmlParent);
@@ -103,7 +102,6 @@ public class DepRelLogic
 				// Parent is simple predicate
 				else
 				{
-
 					// TODO recheck zd.*
 					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
 						return URelations.NSUBJ;
@@ -168,7 +166,6 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))
 		{
@@ -183,8 +180,7 @@ public class DepRelLogic
 			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
 		}
 		// Simple nominal SPC
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*") ||
-				(tag.matches("y.*") && Utils.getLemma(aNode).matches("\\p{Lu}+")))
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y.*"))
 			return URelations.ACL;
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 		// SPC with comparison
@@ -227,7 +223,10 @@ public class DepRelLogic
 			// Participal SPC
 			if (basElemTag.matches("v..p[pu].*")) return URelations.ADVCL;
 			// Nominal SPC
-			if (basElemTag.matches("n.*")) return URelations.APPOS;
+			if (basElemTag.matches("n.*") ||
+					basElemTag.matches("y.*") &&
+					Utils.getLemma(basElems.item(0)).matches("\\p{Lu}+"))
+				return URelations.APPOS;
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..d.*")) return URelations.ACL;
 		}
@@ -241,7 +240,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-		if (tag.matches("n.*")) return URelations.NMOD;
+		if (tag.matches("n.*|y.*")) return URelations.NMOD;
 		if (tag.matches("r.*")) return URelations.ADVMOD;
 		if (tag.matches("m[cf].*|xn.*")) return URelations.NUMMOD;
 		if (tag.matches("mo.*|xo.*|v..p.*")) return URelations.AMOD;
@@ -253,12 +252,12 @@ public class DepRelLogic
 				return URelations.DET;
 			return URelations.AMOD;
 		}
-		if (tag.matches("y.*"))
+		/*if (tag.matches("y.*"))
 		{
 			String lemma = Utils.getLemma(aNode);
 			if (lemma.matches("\\p{Lu}+"))
 				return URelations.NMOD;
-		}
+		}*/
 
 		warn(aNode);
 		return URelations.DEP;
@@ -269,7 +268,9 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*")) return URelations.NMOD;
+		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
+			return URelations.NMOD;
+
 		if (tag.matches("r.*")) return URelations.ADVMOD;
 		if (tag.matches("q.*"))
 		{
@@ -289,7 +290,7 @@ public class DepRelLogic
 		if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
 		if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 			return URelations.DISCOURSE;
-		if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
+		if (tag != null && tag.matches("[qi].*")) return URelations.DISCOURSE;
 
 		warn(aNode);
 		return URelations.DEP;
