@@ -32,6 +32,11 @@ step --ord TOKEN, apply lvpml2tiger.xsl
 CheckW, NormalizeIds, CheckLvPml with param A
 * Preprocessing morphocorpus files before putting in repository: CheckLvPml
 with param M
+* Preparing morphologically tagged data for training the LVTagger system:
+	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus
+	download treebank from https://github.com/LUMII-AILab/Treebank
+	run ./preparePOSTagData.sh
+	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
 
 License
 -------
