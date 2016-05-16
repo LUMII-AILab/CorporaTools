@@ -54,7 +54,7 @@ public class PhrasePartDepLogic
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 					return URelations.DISCOURSE;
 				String tag = Utils.getTag(aNode);
-				if (tag != null && tag.matches("q.*")) return URelations.DISCOURSE;
+				if (tag != null && tag.matches("[qi].*")) return URelations.DISCOURSE;
 			}
 
 		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
