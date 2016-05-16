@@ -7,3 +7,5 @@ node:#{darkblue}${deprel}
 node:<? '#{black}${form} ' if $${form} ?>#{darkred}(${ord})
 node:<? '#{dimgray}[${lemma}]' if $${lemma} ?>
 node:<? '#{darkgreen}${cpostag} ~ ${postag}' if ($${ord} > 0 ) ?>
+
+hint:<? 'feats: '. join(', ', ListV($this->attr('feats'))) if ($${feats}) ?>
