@@ -8,8 +8,8 @@
   <title>CoNLL-2007 Shared Task Data Format Backend</title>
   <version>2.0</version>
   <copyright year="2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
-  <description>Provides full support for viewing and experimental support for
-    editting CoNLL-2007 and CoNLL-U files directly from TrEd.
+  <description>Provides support for viewing and editting CoNLL-2007 and CoNLL-U
+    files directly from TrEd.
   </description>
   <!--<icon>icons/ico.gif</icon>-->
   <require>

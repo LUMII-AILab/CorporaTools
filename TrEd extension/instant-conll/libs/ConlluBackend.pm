@@ -1,4 +1,4 @@
-package ConllBackend;
+package ConlluBackend;
 
 use strict;
 
@@ -28,7 +28,7 @@ sub test
 	#my ($self, $filename, $encoding) = @_;
 	my ($filename, $encoding) = @_;		#TrEd uses package oriented call, not object?
 	# Not very good.
-	return 1 if ($filename =~ /.*\.conll(2007|07)?$/);
+	return 1 if ($filename =~ /.*\.conllu$/);
 	return 0;
 	
 }
@@ -46,18 +46,14 @@ sub read
 	#$fsfile is Treex::PML::Document object.
 	
 	# Prepare Document object with scheme information etc.
-	$fsfile->changeBackend('ConllBackend');
-	$fsfile->changeFileFormat('CoNLL-2007');
+	$fsfile->changeBackend('ConlluBackend');
+	$fsfile->changeFileFormat('CoNLL-U');
 	my $schema = Treex::PML::Factory->createPMLSchema({
-		'filename' => Treex::PML::FindInResourcePaths ('conll2007schema.xml')});
+		'filename' => Treex::PML::FindInResourcePaths ('conlluschema.xml')});
 	$fsfile->changeMetaData('schema', $schema);
-	#my $fsthingy = Treex::PML::Factory->createFSFormat([
-	#	'@N ord', '@V form', '@K lemma', '@K cpostag', '@K postag',
-	#	'@K deprel', '@K phead', '@K pdeprel']);
-	#$fsfile->changeFS($fsthingy);
 	$fsfile->changeFS(&_get_simple_FSformat($schema));
 	
-	print Treex::PML::FindInResourcePaths ('conll2007schema.xml');
+	print Treex::PML::FindInResourcePaths ('conlluschema.xml');
 
 	# Fetch imput data.
 	my @rows = <$filehandle>;
@@ -83,29 +79,52 @@ sub read
 	{
 		my %par2node = ();
 		my %id2node = ();
+		my @surfaceTokRows = ();
 		for my $token (@$sent)
 		{
 			my @fields = split /\t/, $token;
-			$fields[1] =~ tr/_/ / if ($fields[1] !~ /^_$/);
-			$fields[2] =~ tr/_/ / if ($fields[2] !~ /^_$/);
-			my $node = Treex::PML::Factory->createTypedNode('node.type', $fsfile->schema);
-			#my $node = Treex::PML::Factory->createTypedNode($fsfile->FS);
-			$node->set_attr('ord', $fields[0]+0);
-			$node->set_attr('form', $fields[1]);
-			$node->set_attr('lemma', $fields[2]) unless ($fields[2] eq '_');
-			$node->set_attr('cpostag', $fields[3]) unless ($fields[3] eq '_');
-			$node->set_attr('postag', $fields[4]) unless ($fields[4] eq '_');
-			my @feats = ();
-			@feats = split /\s*\|\s*/, $fields[5] unless ($fields[5] eq '_');
-			$node->set_attr ('feats', Treex::PML::Factory->createList(\@feats));
-			$node->set_attr('deprel', $fields[7]) unless ($fields[7] eq '_');
-			$node->set_attr('phead', $fields[8]) unless ($fields[8] eq '_');
-			$node->set_attr('pdeprel', $fields[9]) unless ($fields[9] eq '_');
+			#$fields[1] =~ tr/_/ / if ($fields[1] !~ /^_$/);
+			#$fields[2] =~ tr/_/ / if ($fields[2] !~ /^_$/);
+			if ($fields[0] =~ /^\d+-\d+/)
+			{
+				push @surfaceTokRows, $token;
+			}
+			else
+			{
+				my $node = Treex::PML::Factory->createTypedNode('node.type', $fsfile->schema);
+				$node->set_attr('ord', $fields[0]+0);
+				$node->set_attr('form', $fields[1]);
+				$node->set_attr('lemma', $fields[2]) unless ($fields[2] eq '_');
+				$node->set_attr('upostag', $fields[3]) unless ($fields[3] eq '_');
+				$node->set_attr('xpostag', $fields[4]) unless ($fields[4] eq '_');
+				my @feats = ();
+				@feats = split /\s*\|\s*/, $fields[5] unless ($fields[5] eq '_');
+				$node->set_attr ('feats', Treex::PML::Factory->createList(\@feats));
+				$node->set_attr('deprel', $fields[7]) unless ($fields[7] eq '_');
+				$node->set_attr('deps', $fields[8]) unless ($fields[8] eq '_');
+				my @misc = ();
+				@misc = split /\s*\|\s*/, $fields[9] unless ($fields[9] eq '_');
+				$node->set_attr ('misc', Treex::PML::Factory->createList(\@misc));
+				
+				my $otherChildren = $par2node{$fields[6]} or [];
+				push @$otherChildren, $node;
+				%par2node = (%par2node, $fields[6] => $otherChildren);
+				$id2node{$fields[0]} = $node;
+			}
+		}
+		for my $surfaceToken (@surfaceTokRows)
+		{
+			my @fields = split /\t/, $surfaceToken;
+			my @borders = split /-/, $fields[0];
+			my $struct = Treex::PML::Factory->createTypedNode('surfacetok.type', $fsfile->schema);
+			$struct->set_attr('form', $fields[1]);
+			$struct->set_attr('endord', $borders[1]);
+			my @misc = ();
+			@misc = split /\s*\|\s*/, $fields[9] unless ($fields[9] eq '_');
+			$struct->set_attr ('misc', Treex::PML::Factory->createList(\@misc));
 			
-			my $otherChildren = $par2node{$fields[6]} or [];
-			push @$otherChildren, $node;
-			%par2node = (%par2node, $fields[6] => $otherChildren);
-			$id2node{$fields[0]} = $node;
+			my $node = $id2node{$borders[0]};
+			$node->set_attr('surfaceToken', $struct);
 		}
 
 		# Link the nodes in the tree.
@@ -149,26 +168,38 @@ sub write
 		# Far each node in the tree print attributes (escaped, if needed).
 		for my $n (@nodes)
 		{
+			if ($n->attr('surfaceToken'))
+			{
+				print $filehandle ($n->attr('ord') or '_').'-';
+				print $filehandle ($n->attr('surfaceToken/endord') or '_')."\t";
+				
+				print $filehandle ($n->attr('surfaceToken/form') or '_')."\t_\t_\t_\t_\t_\t_\t_\t";
+				my $misc = join '|', $n->attr('surfaceToken/misc')->values;
+				$misc =~ tr/ /+/;
+				print $filehandle ($misc or '_')."\n";
+			}
 			print $filehandle ($n->attr('ord') or '_')."\t";
-			my $form = $n->attr('form');
-			$form =~ tr/ /_/;
-			print $filehandle ($form or '_')."\t";
+			print $filehandle ($n->attr('form') or '_')."\t";
 			my $lemma = $n->attr('lemma');
 			$lemma =~ tr/ /_/;			
 			print $filehandle ($lemma or '_')."\t";
-			print $filehandle ($n->attr('cpostag') or '_')."\t";
-			print $filehandle ($n->attr('postag') or '_')."\t";
-			my $feats = join '|', $n->attr('feats')->values;
+			print $filehandle ($n->attr('upostag') or '_')."\t";
+			print $filehandle ($n->attr('xpostag') or '_')."\t";
+			my $feats = join '|', sort { "\L$a" cmp "\L$b" } $n->attr('feats')->values;
 			$feats =~ tr/ /+/;
 			print $filehandle ($feats or '_')."\t";
 			print $filehandle ($n->parent->get_order or '0')."\t";
 			print $filehandle ($n->attr('deprel') or '_')."\t";
-			print $filehandle ($n->attr('phead') or '_')."\t";
-			print $filehandle ($n->attr('pdeprel') or '_')."\t\n";
+			print $filehandle ($n->attr('deps') or '_')."\t";
+			my $misc = join '|', $n->attr('misc')->values;
+			$misc =~ tr/ /+/;
+			print $filehandle ($misc or '_')."\n";
 		}
 	
 		print $filehandle "\n";
 	}
+	
+	return 1;
 }
 
 # This must be inhereted from Treex::PML::IO, not sure why it does not happen
