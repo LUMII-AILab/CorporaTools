@@ -1,7 +1,7 @@
 package MorphoTags;
 
 use strict;
-use Data::Dumper;
+#use Data::Dumper;
 
 our %tags = (
 'n' => ['Noun', [
@@ -274,7 +274,6 @@ our $notRecognized = 'NOT RECOGNIZED';
 sub getAVPairs
 {
 	my $tag = shift;
-	print "ping!\n";
 	return 0 unless $tag;
 	return 0 if ($tag =~ m#^N/[Aa]$#);
 	$tag =~ /^(.)(.*)$/;
@@ -300,7 +299,6 @@ sub getAVPairs
 			push(@result, [$tagChar, $notRecognized]);
 		}
 	}
-	print Dumper(\@result);
 	return \@result;
 }
 
