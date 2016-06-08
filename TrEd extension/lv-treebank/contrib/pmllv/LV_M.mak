@@ -6,6 +6,8 @@
 package LV_M;
 use strict;
 
+use MorphoTags;
+
 BEGIN { import TredMacro;}
 
 # Set correct stylesheet when entering this annotation mode.
@@ -22,27 +24,37 @@ sub get_status_line_hook
   # or a pair [ field-definitions, field-styles ]
   return unless $this;
   my @mas = ();
-  if ($this->{id})
+  
+  if ($this->attr('id'))
   {
 	push(@mas, "     id: ");
 	push(@mas, [qw(label)]);
-	push(@mas, $this->{id});
+	push(@mas, $this->attr('id'));
 	push(@mas, [qw({id} value)]);
-  } else
+  }
+  elsif ($this->attr('#content/id'))
+  {
+	push(@mas, "     id: ");
+	push(@mas, [qw(label)]);
+	push(@mas, $this->attr('#content/id'));
+	push(@mas, [qw({id} value)]);
+  }
+  else
   {
 	push(@mas, "     ");
 	push(@mas, [qw(label)]);
 	push(@mas, $this->{'#name'});
 	push(@mas, [qw({#name} value)]);
   }
-  if ($this->attr('lemma'))
+  
+  if ($this->attr('#content/lemma'))
   {
 	push(@mas, "     lemma: ");
 	push(@mas, [qw(label)]);
 	push(@mas, $this->attr('#content/lemma'));
 	push(@mas, [qw({lemma} value)]);
   }
-  if ($this->attr('tag'))
+  if ($this->attr('#content/tag'))
   {
 	push(@mas, "     tag: ");
 	push(@mas, [qw(label)]);
@@ -156,6 +168,11 @@ sub allow_switch_context_hook
 sub node_release_hook
 {
   return 'stop';
+}
+
+sub get_extendend_morpho
+{
+	return MorphoTags::getAVPairs(@_);
 }
 
 #binding-context LV_M

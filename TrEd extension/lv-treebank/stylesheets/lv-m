@@ -21,4 +21,6 @@ style: #{Node-shape:oval}
 
 hint:<? $${#content/lemma} ? 'lemma: ${#content/lemma} ' : '' ?><?
   $${#content/tag} ? 'tag: ${#content/tag}' : '' ?><? 
-  $${#content/form_change} ? "\n".'form_change: ${#content/form_change}' : '' ?>
+  $${#content/form_change} ? "\n".'form_change: ${#content/form_change}' : '' ?><?
+  "\n"?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${#content/tag}) } ?>
