@@ -5,6 +5,8 @@ text:<? $${#content/w/token}eq$${#content/form} ?
   '#{-over:1}#{'.CustomColor('spell').'}['.
      join(" ",map { $_->{token} } ListV($this->attr('#content/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${#content/form}' ?>
+
+node:#{red}<? join "\n", @{ MorphoTags::checkTag($${#content/tag}) }?>
 node:#{darkred}${id}
 node:${#content/form}
 node:#{darkgreen}${#content/tag}

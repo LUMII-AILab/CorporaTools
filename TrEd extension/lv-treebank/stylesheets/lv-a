@@ -5,8 +5,10 @@ text:<? $${m/w/token}eq$${m/form} ?
   '#{-over:1}#{'.CustomColor('spell').'}['.
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
-node:<? LV_A::is_unfinished($this) ? '#{red}!!!' : ''?>
-node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}???' ?>
+  
+node:<? LV_A::is_unfinished($this) ? '#{red}Something is missing!' : ''?>
+node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}Role unsuitable for this parent!' ?>
+node:#{red}<? join "\n", @{ MorphoTags::checkTag($${m/tag}) }?>
 node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
 	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
 	? '#{red}???' : ''?>

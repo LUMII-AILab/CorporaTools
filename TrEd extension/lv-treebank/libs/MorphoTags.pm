@@ -266,18 +266,19 @@ our %tags = (
 	]],
 );
 
+our $notRecognized = 'NOT RECOGNIZED';
+our $missing = 'MISSING';
+
 our %generic = (
 	'0' => 'Not applicable',
-	'_' => 'MISSING',
+	'_' => $missing,
 );
-
-our $notRecognized = 'NOT RECOGNIZED';
 
 sub getAVPairs
 {
 	my $tag = shift;
 	return 0 unless $tag;
-	return 0 if ($tag =~ m#^N/[Aa]$#);
+	return [['POS', $missing]] if ($tag =~ m#^N/[Aa]$#);
 	$tag =~ /^(.)(.*)$/;
 	my $tagTail = $2;
 	my $properties = $tags{$1};
@@ -306,11 +307,22 @@ sub getAVPairs
 	}
 	for my $i ($last+1..@$properties-1)
 	{
-		push(@result, [$properties->[$i][0], $notRecognized]);
+		push(@result, [$properties->[$i][0], $missing]);
 	}
 	
 	return \@result;
 }
 
+sub checkTag
+{
+	my $tag = shift;
+	my @avPairs = @{ getAVPairs($tag) };
+	my @errors = ();
+	
+	push @errors, 'Missing tag values!' if (0 < grep {$_->[1] eq $missing} @avPairs);
+	push @errors, 'Unrecognized tag values!' if (0 < grep {$_->[1] eq $notRecognized} @avPairs);
+	
+	return \@errors;
+}
 
 1;

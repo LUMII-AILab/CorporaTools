@@ -9,9 +9,9 @@ text:<? $${m/w/token}eq$${m/form} ?
   '#{-over:1}#{'.CustomColor('spell').'}['.
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
+  
 node:<?
-  LV_A::is_unfinished($this) ? '#{red}!!! ' : ''?><?
-  LV_A::is_allowed_for_parent($this) ? '' : '#{red}??? '?><?
+  LV_A::is_unfinished($this) or LV_A::is_allowed_for_parent($this) ? '#{red}!!! ' : ''?><?
   (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
   or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
   ? '#{red}??? ' : ''?>#{darkblue}${role}${xtype}${coordtype}${pmctype}
