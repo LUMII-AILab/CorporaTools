@@ -9,6 +9,7 @@ node:#{darkred}${id}
 node:${#content/form}
 node:#{darkgreen}${#content/tag}
 node:<? $${#content/lemma} ? '#{dimgray}[${#content/lemma}]' : ''?>
+node:#{darkblue}<? join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${#content/tag}) } ?>
 
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}
@@ -21,6 +22,4 @@ style: #{Node-shape:oval}
 
 hint:<? $${#content/lemma} ? 'lemma: ${#content/lemma} ' : '' ?><?
   $${#content/tag} ? 'tag: ${#content/tag}' : '' ?><? 
-  $${#content/form_change} ? "\n".'form_change: ${#content/form_change}' : '' ?><?
-  "\n"?><?
-  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${#content/tag}) } ?>
+  $${#content/form_change} ? "\n".'form_change: ${#content/form_change}' : '' ?>

@@ -54,5 +54,7 @@ style: #{Node-shape:oval}
 
 hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
-  $${tag} ? 'x/tag: ${tag}' : '' ?><? 
-  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?>
+  $${tag} ? 'phrase/tag: ${tag}' : '' ?><? 
+  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
+  "\n"?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?>

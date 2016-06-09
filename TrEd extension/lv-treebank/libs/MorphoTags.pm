@@ -1,5 +1,6 @@
 package MorphoTags;
 
+use utf8;
 use strict;
 #use Data::Dumper;
 
@@ -36,12 +37,12 @@ our %tags = (
 'v' => ['Verb', [
 	['Type', {
 		'm' => 'Main',
-		'g' => '\"nebût\", \"trûkt\", \"pietikt\"',
+		'g' => '"nebÅ«t", "trÅ«kt", "pietikt"',
 		'o' => 'Modal',
 		'p' => 'Phasal',
 		'e' => 'Expressional',
-		'c' => 'Auxilliary \"bût\"',
-		't' => 'Auxilliary \"tikt\", \"tapt\", \"kïût\"'}],
+		'c' => 'Auxilliary "bÅ«t"',
+		't' => 'Auxilliary "tikt", "tapt", "kÄ¼Å«t"'}],
 	['Reflexive', {
 		'n' => 'No',
 		'y' => 'Yes'}],
@@ -52,6 +53,11 @@ our %tags = (
 		'd' => 'Debitive/necessitative',
 		'm' => 'Imperative',
 		'n' => 'Infinitive'}],
+	['Tense', {
+		'p' => 'Present',
+		'f' => 'Future',
+		's' => 'Past'}],
+
 	['Transitivity', {
 		't' => 'Transitive',
 		'i' => 'Intransitive'}],
@@ -77,16 +83,12 @@ our %tags = (
 'v..p' => ['Participle', [
 	['Type', {
 		'm' => 'Main',
-		'g' => '\"nebût\", \"trûkt\", \"pietikt\"',
+		'g' => '\"nebÅ«t\", \"trÅ«kt\", \"pietikt\"',
 		'o' => 'Modal',
 		'p' => 'Phasal',
 		'e' => 'Expressional',
-		'c' => 'Auxilliary \"bût\"',
-		't' => 'Auxilliary \"tikt\", \"tapt\", \"kïût\"'}],
-	['Tense', {
-		'p' => 'Present',
-		'f' => 'Future',
-		's' => 'Past'}],
+		'c' => 'Auxilliary \"bÅ«t\"',
+		't' => 'Auxilliary \"tikt\", \"tapt\", \"kÄ¼Å«t\"'}],
 	['Reflexive', {
 		'n' => 'No',
 		'y' => 'Yes'}],
@@ -265,7 +267,7 @@ our %tags = (
 );
 
 our %generic = (
-	'0' => 'Non-referable',
+	'0' => 'Not applicable',
 	'_' => 'MISSING',
 );
 
@@ -285,6 +287,7 @@ sub getAVPairs
 	my @result = (['POS', $properties->[0]]);
 	$properties = $properties->[1];
 	
+	my $last = 0;
 	for my $i (0..length($tagTail)-1)
 	{
 		my $tagChar = substr($tagTail, $i, 1) or '_';
@@ -292,14 +295,22 @@ sub getAVPairs
 		{
 			my $val = $properties->[$i][1]{$tagChar};
 			$val = $generic{$tagChar} unless $val;
+			$val = $notRecognized unless $val;
 			push(@result, [$properties->[$i][0], $val]);
 		}
 		else
 		{
 			push(@result, [$tagChar, $notRecognized]);
 		}
+		$last = $i;
 	}
+	for my $i ($last+1..@$properties-1)
+	{
+		push(@result, [$properties->[$i][0], $notRecognized]);
+	}
+	
 	return \@result;
 }
+
 
 1;
