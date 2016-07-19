@@ -7,7 +7,7 @@
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>CoNLL-2007 Shared Task Data Format Backend</title>
   <version>2.0</version>
-  <copyright year="2014">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
+  <copyright year="2014-2016">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides support for viewing and editting CoNLL-2007 and CoNLL-U
     files directly from TrEd.
   </description>
