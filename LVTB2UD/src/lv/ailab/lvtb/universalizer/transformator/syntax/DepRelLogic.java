@@ -165,11 +165,10 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
-
+		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))
 		{
-			String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
 			Node pmlEfParent = Utils.getEffectiveAncestor(aNode);
 			String effParentType = Utils.getAnyLabel(pmlEfParent);
 			if ((effParentType.equals(LvtbRoles.PRED) ||
@@ -180,8 +179,12 @@ public class DepRelLogic
 			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
 		}
 		// Simple nominal SPC
+		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
+			tag.matches("x.*|y.*") && parentTag.matches("v..p....ps.*"))
+			return URelations.NMOD;
 		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y.*"))
 			return URelations.ACL;
+
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 		// SPC with comparison
 		if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return URelations.ADVCL;
@@ -272,12 +275,15 @@ public class DepRelLogic
 			return URelations.NMOD;
 
 		if (tag.matches("r.*")) return URelations.ADVMOD;
+
+		String lemma = Utils.getLemma(aNode);
 		if (tag.matches("q.*"))
 		{
-			String lemma = Utils.getLemma(aNode);
 			if ("ne".equals(lemma)) return URelations.NEG;
 			return URelations.DISCOURSE;
 		}
+		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
+			return URelations.CONJ;
 
 		warn(aNode);
 		return URelations.DEP;
