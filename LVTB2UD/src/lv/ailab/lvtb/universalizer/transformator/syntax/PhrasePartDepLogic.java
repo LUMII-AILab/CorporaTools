@@ -38,8 +38,8 @@ public class PhrasePartDepLogic
 	public static URelations phrasePartRoleToUD(Node aNode, String phraseType)
 	throws XPathExpressionException
 	{
-		String nodeId = XPathEngine.get().evaluate("./@id", aNode);
-		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		String nodeId = Utils.getId(aNode);
+		String lvtbRole = Utils.getRole(aNode);
 
 		if ((phraseType.equals(LvtbPmcTypes.SENT) ||
 				phraseType.equals(LvtbPmcTypes.UTTER) ||
@@ -85,14 +85,21 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.XAPP) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NMOD;
 		if ((phraseType.equals(LvtbXTypes.XNUM) ||
-				phraseType.equals(LvtbXTypes.COORDANAL) ||
-				phraseType.equals(LvtbXTypes.SUBRANAL)) &&
+				phraseType.equals(LvtbXTypes.COORDANAL)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.COMPOUND;
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.UNSTRUCT)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.MWE;
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return URelations.NAME;
+
+		if (phraseType.equals(LvtbXTypes.SUBRANAL) &&
+				lvtbRole.equals(LvtbRoles.BASELEM))
+		{
+			// NB: "vairāk kā/nekā X" and "tāds kā X" roles for "vairāk" and
+			//     "tāds" are asigned in phrase transformator.
+			return URelations.COMPOUND;
+		}
 
 		if (phraseType.equals(LvtbXTypes.XPREP) &&
 				lvtbRole.equals(LvtbRoles.PREP)) return URelations.CASE;
@@ -110,7 +117,11 @@ public class PhrasePartDepLogic
 			Node firstAncestor = Utils.getPMLGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
 			Node secongAncestor = Utils.getPMLGreatGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
 			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/form='vairāk']", secongAncestor, XPathConstants.NODESET);
+					"./children/node[m.rf/form='vairāk']",
+					secongAncestor, XPathConstants.NODESET);
+			NodeList tSiblings = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[m.rf/lemma='tāds' or m.rf/lemma='tāda']",
+					secongAncestor, XPathConstants.NODESET);
 			String firstAncType = Utils.getAnyLabel(firstAncestor);
 			String secondAncType = Utils.getAnyLabel(secongAncestor);
 
@@ -121,10 +132,13 @@ public class PhrasePartDepLogic
 				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
 						LvtbPmcTypes.INSPMC.equals(secondAncType))
 					return URelations.MARK;
-				if (LvtbXTypes.XPRED.equals(secondAncType))
+				if (LvtbXTypes.XPRED.equals(secondAncType) ||
+						LvtbXTypes.SUBRANAL.equals(secondAncType) && tSiblings != null &&
+						tSiblings.getLength() > 0)
 					return URelations.DISCOURSE;
 				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && vSiblings != null &&
-						vSiblings.getLength() > 0) return URelations.MWE;
+						vSiblings.getLength() > 0)
+					return URelations.MWE;
 			}
 		}
 

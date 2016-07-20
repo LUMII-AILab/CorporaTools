@@ -365,9 +365,12 @@ public class PhraseTransformator
 	}
 
 	/**
-	 * Transformation for subrAnal - special treatment for "vairāk kā/nekā X"
-	 * constructions with xSimile (conj from xSimile is rearanged under
-	 * "vairāk"), otherwise just make first element root.
+	 * Transformation for subrAnal
+	 * - special treatment for
+	 *   -- "vairāk kā/nekā X" constructions with xSimile: conj from xSimile is
+	 *      rearanged under "vairāk"
+	 *   -- "tāds kā X" construction with xSimile: xSimile's basElem is root.
+	 * - otherwise just make first element root.
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
@@ -380,27 +383,38 @@ public class PhraseTransformator
 
 		Node first = Utils.getFirstByOrd(children);
 		Node last = Utils.getLastByOrd(children);
-		if (children != null && children.getLength() == 2 &&
-				"vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)) &&
+		if (children != null && children.getLength() == 2  &&
 				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
 		{
-			// Tricky part, where subordinated xSimile structure also must be
-			// rearanged.
-			NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
-			Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
-			Token vToken = s.pmlaToConll.get(Utils.getId(first));
-			vToken.head = newRootToken.idBegin;
-			vToken.deprel = URelations.ADVMOD;
-			if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
+			if ("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)))
 			{
-				Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
-				conjToken.deprel = URelations.MWE;
-				conjToken.head = vToken.idBegin;
+				// Tricky part, where subordinated xSimile structure also must be
+				// rearanged.
+				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
+				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+				Token vToken = s.pmlaToConll.get(Utils.getId(first));
+				vToken.head = newRootToken.idBegin;
+				vToken.deprel = URelations.ADVMOD;
+				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
+				{
+					Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+					conjToken.deprel = URelations.MWE;
+					conjToken.head = vToken.idBegin;
+				}
+				return last;
 			}
-			return last;
+			else if ("tāds".equals(Utils.getLemma(first)) || "tāda".equals(Utils.getLemma(first)))
+			{
+				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+				Token tToken = s.pmlaToConll.get(Utils.getId(first));
+				tToken.head = newRootToken.idBegin;
+				tToken.deprel = URelations.DET;
+				return last;
+			}
 		}
-		else return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
+
+		return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
 	}
 
 	/**

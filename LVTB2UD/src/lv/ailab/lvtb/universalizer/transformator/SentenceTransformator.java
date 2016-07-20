@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Logic for transforming LVTB sentence annotations to UD.
  * No change is done in PML tree, all results are stored in CoNLL-U table only.
- * Asumes normalized ord values (only morpho tokens are normalized).
+ * Assumes normalized ord values (only morpho tokens are normalized).
  * XPathExpressionException everywhere, because all the navigation in the XML is
  * done with XPaths.
  * Created on 2016-04-17.
@@ -129,7 +129,7 @@ public class SentenceTransformator
 				aNode, XPathConstants.NODE);
 		String mForm = XPathEngine.get().evaluate("./form", mNode);
 		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
-		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		String lvtbRole = Utils.getRole(aNode);
 		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
 		boolean noSpaceAfter = false;
 		if ("1".equals(XPathEngine.get().evaluate(
@@ -155,7 +155,7 @@ public class SentenceTransformator
 				// The last one is different.
 				Token lastTok = new Token(baseOrd + length-1 + offset, forms[length-1],
 						lemmas[length-1], getXpostag(lvtbTag, "_SPLIT_PART"));
-				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, lvtbRole);
+				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, aNode);
 				lastTok.feats = FeatsLogic.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
 				if (noSpaceAfter) lastTok.misc = "SpaceAfter=No";
 				s.pmlaToConll.put(Utils.getId(aNode), lastTok);
@@ -166,7 +166,7 @@ public class SentenceTransformator
 				for (int i = 0; i < length - 1; i++)
 				{
 					Token nextTok = new Token(baseOrd + offset, forms[i], lemmas[i], xpostag);
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = lastTok.idBegin;
 					nextTok.deprel = URelations.COMPOUND;
@@ -183,7 +183,7 @@ public class SentenceTransformator
 				// First one is different.
 				Token firstTok = new Token(baseOrd + offset, forms[0],
 						lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, lvtbRole);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
 				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				s.conll.add(firstTok);
 				s.pmlaToConll.put(Utils.getId(aNode), firstTok);
@@ -194,7 +194,7 @@ public class SentenceTransformator
 					offset++;
 					Token nextTok = new Token(baseOrd + offset, forms[i],
 							lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.head = firstTok.idBegin;
 					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
@@ -210,7 +210,7 @@ public class SentenceTransformator
 			Token nextTok = new Token(
 					Utils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
-			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, lvtbRole);
+			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
 			if (noSpaceAfter)
 				 nextTok.misc = "SpaceAfter=No";

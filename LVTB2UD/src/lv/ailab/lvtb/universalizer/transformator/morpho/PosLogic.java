@@ -1,6 +1,14 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
+import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
+import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import org.w3c.dom.Node;
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
@@ -10,8 +18,10 @@ import lv.ailab.lvtb.universalizer.conllu.UPosTag;
  */
 public class PosLogic
 {
-	public static UPosTag getUPosTag(String lemma, String xpostag, String lvtbRole)
+	public static UPosTag getUPosTag(String lemma, String xpostag, Node aNode)
+	throws XPathExpressionException
 	{
+		String lvtbRole = Utils.getRole(aNode);
 		if (xpostag.matches("N/[Aa]")) return UPosTag.X; // Not given.
 		else if (xpostag.matches("nc.*")) return UPosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UPosTag.PROPN;
@@ -28,9 +38,28 @@ public class PosLogic
 			else return UPosTag.ADJ;
 		}
 		else if (xpostag.matches("p[px].*")) return UPosTag.PRON;
-		else if (xpostag.matches("p[sdiqg].*"))
+		else if (xpostag.matches("pd.*"))
 		{
-			if (lvtbRole.equals("attr")) return UPosTag.DET;
+			if (lvtbRole.equals(LvtbRoles.ATTR)) return UPosTag.DET;
+			else if (lvtbRole.equals(LvtbRoles.BASELEM) && lemma.matches("tād[sa]"))
+			{
+				Node parent = Utils.getPMLParent(aNode);
+				if (!LvtbXTypes.SUBRANAL.equals(Utils.getRole(parent)))
+					return UPosTag.PRON;
+
+				NodeList children = Utils.getPMLChildren(parent);
+				Node first = Utils.getFirstByOrd(children);
+				Node last = Utils.getLastByOrd(children);
+				if (children != null && children.getLength() == 2  &&
+						(aNode.isSameNode(first)) &&
+						LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
+					return UPosTag.DET;
+			}
+			return UPosTag.PRON;
+		}
+		else if (xpostag.matches("p[siqg].*"))
+		{
+			if (lvtbRole.equals(LvtbRoles.ATTR)) return UPosTag.DET;
 			else return UPosTag.PRON;
 		}
 		else if (xpostag.matches("pr.*")) return UPosTag.SCONJ;

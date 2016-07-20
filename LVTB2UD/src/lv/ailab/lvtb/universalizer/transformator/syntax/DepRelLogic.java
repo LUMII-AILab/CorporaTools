@@ -282,8 +282,6 @@ public class DepRelLogic
 			if ("ne".equals(lemma)) return URelations.NEG;
 			return URelations.DISCOURSE;
 		}
-		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
-			return URelations.CONJ;
 
 		warn(aNode);
 		return URelations.DEP;
@@ -292,11 +290,16 @@ public class DepRelLogic
 	public static URelations noToUD(Node aNode) throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		String lemma = Utils.getLemma(aNode);
 		String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
 		if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
 		if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 			return URelations.DISCOURSE;
 		if (tag != null && tag.matches("[qi].*")) return URelations.DISCOURSE;
+
+		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
+			return URelations.CONJ;
+
 
 		warn(aNode);
 		return URelations.DEP;

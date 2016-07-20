@@ -6,6 +6,22 @@ import org.w3c.dom.NodeList;
 import java.io.*;
 
 /**
+ * Overview
+ *
+ * Transformation tool for obtaining Latvian UD Treebank in CoNLL-U format from
+ * knitted-in Latvian Treebank PMLs with normalized ord values (only token nodes
+ * should be numbered).
+ * Transformation on each tree separately. First a CoNLL-U table containing
+ * only tokens and morphological information is built, then syntactic
+ * information is added. To bild UD syntax tree, PML syntax tree is traversed
+ * recursively, starting from the root phrase. For each phrase first its
+ * constituents are processed, then phrase itself is transformed to UD
+ * substructure, and at last phrase dependents are processed. During the process
+ * a n-to-one mapping between pml nodes and CoNLL-U tokens is maintained:
+ * at first mappings between PML token nodes and CoNLL tokens is added, then
+ * each time a root token for phrase representing substructure is determined,
+ * appropriate pairing is added to the mapping.
+ *
  * Created on 2016-04-17.
  *
  * @author Lauma
