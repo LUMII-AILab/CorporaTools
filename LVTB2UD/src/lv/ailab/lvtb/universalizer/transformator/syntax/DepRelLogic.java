@@ -138,7 +138,12 @@ public class DepRelLogic
 					// No participles here, because that is SPC subject thingy.
 				}
 			}
-			// TODO what to do with participal SPC subjects?
+
+			// SPC subject.
+			if (parentType.equals(LvtbRoles.SPC))
+			{
+				return URelations.NMOD;
+			}
 
 		}
 		// Infinitive
