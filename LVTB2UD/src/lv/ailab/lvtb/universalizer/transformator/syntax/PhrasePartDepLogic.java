@@ -69,7 +69,14 @@ public class PhrasePartDepLogic
 				phraseType.equals(LvtbPmcTypes.MAINCL) ||
 				phraseType.equals(LvtbPmcTypes.INSPMC) ||
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC))
-			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.DISCOURSE;
+			if (lvtbRole.equals(LvtbRoles.CONJ))
+			{
+				String tag = Utils.getTag(aNode);
+				if (tag.matches("cc.*"))
+					return URelations.CC;
+				if (tag.matches("cs.*"));
+					return URelations.MARK;
+			}
 
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL))
 			if (lvtbRole.equals(LvtbRoles.CONJ)) return URelations.MARK;

@@ -83,7 +83,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 		// Nominal subject
-		if (tag.matches("[nampx].*|v..pd.*|y.*"))
+		if (tag.matches("[nampxy].*|v..pd.*"))
 		{
 			Node pmlParent = Utils.getPMLParent(aNode);
 			String parentTag = Utils.getTag(pmlParent);
@@ -102,47 +102,48 @@ public class DepRelLogic
 				// Parent is simple predicate
 				else
 				{
-					// TODO recheck zd.*
+					// TODO: check the data if participles is realy appropriate here.
 					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
+					//if (parentTag.matches("v..[^p].....a.*"))
 						return URelations.NSUBJ;
 					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
+					//if (parentTag.matches("v..[^p].....p.*"))
 						return URelations.NSUBJPASS;
 					if (parentTag.matches("z.*"))
 					{
 						String reduction = XPathEngine.get().evaluate(
 								"./reduction", pmlParent);
-						if (reduction.matches("v..[^p].....a.*|v..n.*"))
+						if (reduction.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
 							return URelations.NSUBJ;
-						if (reduction.matches("v..[^p].....p.*"))
+						if (reduction.matches("v..[^p].....p.*||v..pd...p.*"))
 							return URelations.NSUBJPASS;
+						//if (reduction.matches("v..n.*"))
+						//	return  URelations.NMOD;
 					}
 				}
 			}
+
+			// SPC subject.
+			else if (parentType.equals(LvtbRoles.SPC))
+				return URelations.NMOD;
+
 			// Parent is basElem of some phrase
-			if (parentType.equals(LvtbRoles.BASELEM))
+			else if (parentType.equals(LvtbRoles.BASELEM))
 			{
 				Node xChild = Utils.getPhraseNode(pmlParent);
 				// Parent is complex predicate
 				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
 				{
-					if (parentTag.matches("v..[^p].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
-					if (parentTag.matches("v..[^a].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
+					if (parentTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
+					if (parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
 				}
-				// Parent is simple predicate
-				else
-				{
-					if (parentTag.matches("v..[^p].....a.*"))
+				else if (parentTag.matches("v..[^pn].....a.*"))
 						return URelations.NSUBJ;
-					if (parentTag.matches("v..[^p].....p.*"))
+				else if (parentTag.matches("v..[^pn].....p.*"))
 						return URelations.NSUBJPASS;
-					// No participles here, because that is SPC subject thingy.
-				}
-			}
-
-			// SPC subject.
-			if (parentType.equals(LvtbRoles.SPC))
-			{
-				return URelations.NMOD;
+				// Infinitive subjects
+				else if (parentTag.matches("v..[np].*"))
+						return URelations.NMOD;
 			}
 
 		}
