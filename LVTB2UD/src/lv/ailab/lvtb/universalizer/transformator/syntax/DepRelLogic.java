@@ -82,8 +82,10 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
-		// Nominal subject
-		if (tag.matches("[nampxy].*|v..pd.*"))
+		// Nominal++ subject
+		// This procesing is somewhat tricky: it is allowed for nsubj and
+		// nsubjpas to be [rci].*, but it is not allowed for nmod.
+		if (tag.matches("[nampxy].*|v..pd.*|[rci].*"))
 		{
 			Node pmlParent = Utils.getPMLParent(aNode);
 			String parentTag = Utils.getTag(pmlParent);
@@ -124,7 +126,7 @@ public class DepRelLogic
 			}
 
 			// SPC subject.
-			else if (parentType.equals(LvtbRoles.SPC))
+			else if (parentType.equals(LvtbRoles.SPC) && !tag.matches("[rci].*]"))
 				return URelations.NMOD;
 
 			// Parent is basElem of some phrase
@@ -142,7 +144,7 @@ public class DepRelLogic
 				else if (parentTag.matches("v..[^pn].....p.*"))
 						return URelations.NSUBJPASS;
 				// Infinitive subjects
-				else if (parentTag.matches("v..[np].*"))
+				else if (parentTag.matches("v..[np].*") && !tag.matches("[rci].*]"))
 						return URelations.NMOD;
 			}
 
