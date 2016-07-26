@@ -184,7 +184,7 @@ public class DepRelLogic
 					LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
 					parentTag.matches("v..[^p]...[123].*"))
 				return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
-			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
+			if (parentTag.matches("[nampxy].*|v..pd.*")) return URelations.ACL;
 		}
 		// Simple nominal SPC
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
@@ -211,8 +211,10 @@ public class DepRelLogic
 				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
-					&& baseElemTag != null && baseElemTag.matches("[nampx].*"))
+					&& baseElemTag != null && baseElemTag.matches("[nampxy].*"))
 				return URelations.XCOMP;
+			else if (tag.matches("[nampxy].*|v..pd.*"))
+				return URelations.NMOD;
 		}
 		// Participal SPC
 		if (tag.matches("v..p[pu].*")) return URelations.ADVCL;
@@ -250,19 +252,24 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		String lemma = Utils.getLemma(aNode);
 
-		if (tag.matches("n.*|y.*")) return URelations.NMOD;
+		if (tag.matches("n.*|y.*") || lemma.equals("%")) return URelations.NMOD;
 		if (tag.matches("r.*")) return URelations.ADVMOD;
 		if (tag.matches("m[cf].*|xn.*")) return URelations.NUMMOD;
 		if (tag.matches("mo.*|xo.*|v..p.*")) return URelations.AMOD;
 		if (tag.matches("p.*")) return URelations.DET;
 		if (tag.matches("a.*"))
 		{
-			String lemma = Utils.getLemma(aNode);
 			if (lemma != null && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)|(daudz|vairāk|daž)(i|as)"))
 				return URelations.DET;
 			return URelations.AMOD;
 		}
+		// Both cases can provide mistakes, but there is no way to solve this
+		// now.
+		if (tag.matches("xf.*")) return URelations.NMOD;
+		if (tag.matches("xx.*")) return URelations.AMOD;
+		
 		/*if (tag.matches("y.*"))
 		{
 			String lemma = Utils.getLemma(aNode);
@@ -282,9 +289,10 @@ public class DepRelLogic
 		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
 			return URelations.NMOD;
 
-		if (tag.matches("r.*")) return URelations.ADVMOD;
-
 		String lemma = Utils.getLemma(aNode);
+
+		if (tag.matches("r.*") || lemma.equals("%")) return URelations.ADVMOD;
+
 		if (tag.matches("q.*"))
 		{
 			if ("ne".equals(lemma)) return URelations.NEG;
