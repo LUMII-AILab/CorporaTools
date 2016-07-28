@@ -172,8 +172,14 @@ sub node_release_hook
 
 sub get_extendend_morpho
 {
-	return MorphoTags::getAVPairs(@_);
+	return MorphoTags::getAVPairsFromSimpleTag(@_);
 }
+
+sub get_tag_errors
+{
+	return MorphoTags::checkSimpleTag(@_);
+}
+
 
 #binding-context LV_M
 #bind Redraw_All to Alt+r menu Redraw

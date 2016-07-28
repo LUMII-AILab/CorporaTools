@@ -12,6 +12,8 @@ node:#{darkred}${id}${#content/id}
 node:${#content/form}
 node:#{darkgreen}${#content/tag}
 node:<? $${#content/lemma} ? '#{dimgray}[${#content/lemma}]' : ''?>
+node:#{darkblue}<?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${#content/tag}) } ?>
 node:#{red}<? join "\n", @{ LV_M::get_tag_errors($${#content/tag}) }?>
 
 style: #{Node-shape:oval}

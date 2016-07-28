@@ -10,13 +10,20 @@ text:<? $${m/w/token}eq$${m/form} ?
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
   
-node:<?
-  LV_A::is_unfinished($this) or LV_A::is_allowed_for_parent($this) ? '#{red}!!! ' : ''?><?
-  (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
-  or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
-  ? '#{red}??? ' : ''?>#{darkblue}${role}${xtype}${coordtype}${pmctype}
+node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}
 node:<? '#{darkviolet}reduction' if $${reduction}?>
+node:<?
+  '#{red}Data! ' if (LV_A::is_unfinished($this)
+	or @{ LV_A::get_tag_errors($${m/tag})}
+    or @{ LV_A::get_tag_errors($${tag})}
+    or @{ LV_A::get_tag_errors($${reduction})}) ?><?
+  '#{red}Struct! ' if ((($${#name} eq 'xinfo')
+      or ($${#name} eq 'coordinfo') 
+      or ($${#name} eq 'pmcinfo'))
+	and ($this->parent)->attr('m/id')
+    or not LV_A::is_allowed_for_parent($this)) ?>
+
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}
        #{CurrentOval-width:2}
@@ -53,5 +60,7 @@ hint:<? $${comment} ? 'comment: ${comment} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
   $${tag} ? 'phrase/tag: ${tag}' : '' ?><? 
   $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
-  "\n"?><?
-  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?>
+  "\n---\n" if ($${m/tag} or $${tag} or $${reduction}) ?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${tag}) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${reduction}) } ?>

@@ -5,6 +5,8 @@
 
 package LV_A;
 
+use MorphoTags;
+
 BEGIN { import TredMacro; }
 
 # Switch on/of vertical layout, if appropriate stylesheet is provided.
@@ -242,6 +244,16 @@ sub is_allowed_for_parent
 	#return 0;
   #}
   return 1;
+}
+
+sub get_extendend_morpho
+{
+	return MorphoTags::getAVPairsFromAnyTag(@_);
+}
+
+sub get_tag_errors
+{
+	return MorphoTags::checkAnyTag(@_);
 }
 
 # Determine wether the given node (xinfo or pmcinfo) is apropriate for it's
