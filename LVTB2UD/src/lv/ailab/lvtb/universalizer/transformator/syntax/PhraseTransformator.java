@@ -430,6 +430,7 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getPMLChildren(xNode);
+		String xTag = Utils.getTag(xNode);
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
@@ -440,7 +441,7 @@ public class PhraseTransformator
 			throw new IllegalArgumentException(
 					"\"" + xType +"\" in entence \"" + s.id + "\" has no basElem.\n");
 		if (mods == null || mods.getLength() < 1)
-			return noModXPredToUD(Utils.asOrderedList(children), xType);
+			return noModXPredToUD(Utils.asOrderedList(children), xType, xTag);
 
 		ArrayList<Node> ordChildren = Utils.asOrderedList(children);
 		LinkedList<Node> buffer = new LinkedList<>();
@@ -454,7 +455,7 @@ public class PhraseTransformator
 			{
 				Node newRoot = buffer.peek();
 				if (buffer.size() > 1)
-					newRoot = noModXPredToUD(buffer, xType);
+					newRoot = noModXPredToUD(buffer, xType, xTag);
 				Token newR = s.pmlaToConll.get(Utils.getId(newRoot));
 				if (latestRoot != null) // Nothing to add to last xcomp
 				{
@@ -481,7 +482,7 @@ public class PhraseTransformator
 	 * @throws XPathExpressionException
 	 */
 	protected Node noModXPredToUD(
-			List<Node> sortedNodes, String xType)
+			List<Node> sortedNodes, String xType, String xTag)
 	throws XPathExpressionException
 	{
 		Node lastAux = null;
@@ -495,20 +496,31 @@ public class PhraseTransformator
 		String auxLemma = Utils.getLemma(lastAux);
 		String auxTag = Utils.getTag(lastAux);
 
-		boolean nominal = auxTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
-				auxTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
-		boolean passive = auxTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
+		boolean nominal = false;
+		boolean passive = false;
+		if (auxTag == null && xTag.contains("["))
+		{
+			String subtag = xTag.substring(xTag.indexOf("[" + 1));
+			passive = subtag.startsWith("pas");
+			nominal = subtag.startsWith("subst") || subtag.startsWith("adj") || subtag.startsWith("pronom");
+		}
+		else if (lastAux != null)
+		{
+			nominal = auxTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
+					auxTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
+			passive = auxTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
+		}
 
 		Node newRoot = lastBasElem;
-		if (nominal && !auxLemma.matches("(ne)?būt"))
+		if (nominal && lastAux != null && !auxLemma.matches("(ne)?būt"))
 			newRoot = lastAux;
 		s.allAsDependents(newRoot, sortedNodes, xType, null);
-		if (passive)
+		if (passive && lastAux != null)
 		{
 			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = URelations.AUXPASS;
 		}
-		if (nominal && auxLemma.matches("(ne)?būt"))
+		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
 		{
 			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = URelations.COP;

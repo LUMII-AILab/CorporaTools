@@ -67,6 +67,18 @@ public class Utils
 		if (node == null) return null;
 		return XPathEngine.get().evaluate("./@id", node);
 	}
+
+	/**
+	 * Find reduction field value for given node.
+	 * @param node node to analyze
+	 * @return	reduction value
+	 * @throws XPathExpressionException
+	 */
+	public static String getReduction(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return XPathEngine.get().evaluate("./reduction", node);
+	}
 	/**
 	 * Find role for given node.
 	 * @param node node to analyze
@@ -77,6 +89,19 @@ public class Utils
 	{
 		if (node == null) return null;
 		return XPathEngine.get().evaluate("./role", node);
+	}
+
+	/**
+	 * FInd m node for for given node.
+	 * @param node node to analyze
+	 * @return	m node
+	 * @throws XPathExpressionException
+	 */
+	public static Node getMNode(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return (Node) XPathEngine.get().evaluate(
+				"./m.rf", node, XPathConstants.NODE);
 	}
 
 	/**
@@ -93,10 +118,10 @@ public class Utils
 
 	/**
 	 * Find tag attribute A-level node. Use either morphotag or x-word tag or
-	 * coordination tag. For PMC node returns first basElem's tag. Based on
-	 * assumption, that single aNode has no more than one phrase-child.
-	 * For coordinations with no given tag return tag obtained from first
-	 * coordinated part.
+	 * coordination tag. For tokenless reduction nodes returns reduction tag.
+	 * For PMC node returns first basElem's tag. Based on assumption, that
+	 * single aNode has no more than one phrase-child. For coordinations with no
+	 * given tag return tag obtained from first coordinated part.
 	 * @param aNode	node to analyze
 	 * @return	tag
 	 * @throws XPathExpressionException
@@ -106,6 +131,10 @@ public class Utils
 		if (aNode == null) return null;
 		String tag = XPathEngine.get().evaluate("./m.rf/tag|./children/xinfo/tag|./children/coordinfo/tag", aNode);
 		if (tag != null && tag.length() > 0) return tag;
+		tag = Utils.getReduction(aNode);
+		if (tag != null && tag.contains("(")) tag = tag.substring(0, tag.indexOf("(")).trim();
+		if (tag != null && tag.length() > 0) return tag;
+
 		NodeList baseParts = (NodeList) XPathEngine.get().evaluate(
 				"./children/pmcinfo/children/node[role='" + LvtbRoles.PRED + "']",
 				aNode, XPathConstants.NODESET);

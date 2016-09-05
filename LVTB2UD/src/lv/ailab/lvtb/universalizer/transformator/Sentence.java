@@ -91,14 +91,17 @@ public class Sentence
 			URelations childDeprel)
 	throws XPathExpressionException
 	{
+		if (children == null || children.isEmpty()) return;
+
 		// Process root.
 		Token rootToken = pmlaToConll.get(Utils.getId(newRoot));
 
 		// Process children.
 		for (Node child : children)
 		{
-			if (child.equals(newRoot)) continue;
+			if (child.equals(newRoot) || child.isSameNode(newRoot)) continue;
 			Token childToken = pmlaToConll.get(Utils.getId(child));
+
 			childToken.head = rootToken.idBegin;
 			if (childDeprel == null)
 				childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);

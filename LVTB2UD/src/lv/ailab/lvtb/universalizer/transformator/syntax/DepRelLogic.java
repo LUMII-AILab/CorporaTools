@@ -26,7 +26,7 @@ public class DepRelLogic
 	public static URelations depToUD(Node aNode)
 	throws XPathExpressionException
 	{
-		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		String lvtbRole = Utils.getRole(aNode);
 
 		// Simple dependencies.
 		if (lvtbRole.equals(LvtbRoles.SUBJ))
