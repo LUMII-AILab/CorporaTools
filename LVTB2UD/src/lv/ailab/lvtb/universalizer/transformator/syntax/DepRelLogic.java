@@ -174,6 +174,7 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
+		String parentEffRole = Utils.getEffectiveLabel(Utils.getPMLParent(aNode));
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))
 		{
@@ -182,9 +183,10 @@ public class DepRelLogic
 			if ((effParentType.equals(LvtbRoles.PRED) ||
 					(effParentType.equals(LvtbRoles.BASELEM) &&
 					LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
-					parentTag.matches("v..[^p]...[123].*"))
+					parentTag.matches("v..[^pn].*"))
 				return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
-			if (parentTag.matches("[nampxy].*|v..pd.*")) return URelations.ACL;
+			if (parentTag.matches("v..pd.*")) return URelations.XCOMP;
+			if (parentTag.matches("[nampxy].*")) return URelations.ACL;
 		}
 		// Simple nominal SPC
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
@@ -211,7 +213,8 @@ public class DepRelLogic
 				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
-					&& baseElemTag != null && baseElemTag.matches("[nampxy].*"))
+					&& baseElemTag != null && baseElemTag.matches("[nampxy].*")
+					&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
 				return URelations.XCOMP;
 			else if (tag.matches("[nampxy].*|v..pd.*"))
 				return URelations.NMOD;
