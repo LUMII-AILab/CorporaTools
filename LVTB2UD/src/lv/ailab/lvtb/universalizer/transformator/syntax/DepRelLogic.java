@@ -134,8 +134,9 @@ public class DepRelLogic
 				}
 			}
 
-			// SPC subject.
-			else if (parentEffType.equals(LvtbRoles.SPC) && !tag.matches("[rci].*]"))
+			// SPC subject, subject subject ("vienam cīnīties ir grūtāk")
+			else if ((LvtbRoles.SPC.equals(parentEffType) || LvtbRoles.SUBJ.equals(parentEffType))
+					&& !tag.matches("[rci].*]"))
 				return URelations.NMOD;
 
 			// Parent is basElem of some phrase
@@ -282,7 +283,7 @@ public class DepRelLogic
 		}
 		// Both cases can provide mistakes, but there is no way to solve this
 		// now.
-		if (tag.matches("xf.*")) return URelations.NMOD;
+		if (tag.matches("x[fu].*")) return URelations.NMOD;
 		if (tag.matches("xx.*")) return URelations.AMOD;
 		
 		/*if (tag.matches("y.*"))
