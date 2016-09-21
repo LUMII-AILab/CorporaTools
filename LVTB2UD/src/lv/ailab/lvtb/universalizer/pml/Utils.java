@@ -44,7 +44,7 @@ public class Utils
 		if (node == null) return -1;
 		String ordStr = XPathEngine.get().evaluate("./ord", node);
 		if (ordStr != null && ordStr.length() > 0) return Integer.parseInt(ordStr);
-		NodeList children = Utils.getPMLChildren(node);
+		NodeList children = Utils.getAllPMLChildren(node);
 		if (children == null || children.getLength() < 1) return 0;
 		int smallestOrd = 0;
 		for (int i = 0; i < children.getLength(); i++)
@@ -225,7 +225,7 @@ public class Utils
 	 * @return	children set
 	 * @throws XPathExpressionException
 	 */
-	public static NodeList getPMLChildren(Node node)
+	public static NodeList getAllPMLChildren(Node node)
 	throws XPathExpressionException
 	{
 		if (node == null) return null;
@@ -233,6 +233,20 @@ public class Utils
 				"./children/*", node, XPathConstants.NODESET);
 	}
 
+	/**
+	 * Find all node children of the given node in PML sense - for normal node
+	 * this is returns all dependents, for phrase node - all constituents.
+	 * @param node	node to analyze
+	 * @return	children set
+	 * @throws XPathExpressionException
+	 */
+	public static NodeList getPMLNodeChildren(Node node)
+	throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return (NodeList)XPathEngine.get().evaluate(
+				"./children/node", node, XPathConstants.NODESET);
+	}
 	/**
 	 * Find parent node (or phrase structure) in PML sense.
 	 * @param node	node to analyze

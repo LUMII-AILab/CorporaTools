@@ -47,7 +47,7 @@ public class PosLogic
 				if (!LvtbXTypes.SUBRANAL.equals(Utils.getRole(parent)))
 					return UPosTag.PRON;
 
-				NodeList children = Utils.getPMLChildren(parent);
+				NodeList children = Utils.getAllPMLChildren(parent);
 				Node first = Utils.getFirstByOrd(children);
 				Node last = Utils.getLastByOrd(children);
 				if (children != null && children.getLength() == 2  &&

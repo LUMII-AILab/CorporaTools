@@ -112,7 +112,7 @@ public class PhraseTransformator
 	public Node missingTransform(Node phraseNode)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(phraseNode);
+		NodeList children = Utils.getAllPMLChildren(phraseNode);
 		String phraseType = Utils.getPhraseType(phraseNode);
 		Node newRoot = Utils.getFirstByOrd(children);
 		s.allAsDependents(newRoot, children, phraseType, null);
@@ -131,7 +131,7 @@ public class PhraseTransformator
 	protected Node sentencyToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(pmcNode);
+		NodeList children = Utils.getAllPMLChildren(pmcNode);
 
 		// Find the structure root.
 		NodeList preds = (NodeList)XPathEngine.get().evaluate(
@@ -174,7 +174,7 @@ public class PhraseTransformator
 	protected Node utterToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(pmcNode);
+		NodeList children = Utils.getAllPMLChildren(pmcNode);
 
 		// Find the structure root.
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
@@ -264,7 +264,7 @@ public class PhraseTransformator
 	public Node crdPartsToUD(Node coordNode, String coordType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(coordNode);
+		NodeList children = Utils.getAllPMLChildren(coordNode);
 		return coordPartsChildListToUD(Utils.asOrderedList(children), coordType);
 	}
 
@@ -279,7 +279,7 @@ public class PhraseTransformator
 	public Node crdClausesToUD (Node coordNode, String coordType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(coordNode);
+		NodeList children = Utils.getAllPMLChildren(coordNode);
 		NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
 		if (semicolons == null || semicolons.getLength() < 1)
@@ -355,7 +355,7 @@ public class PhraseTransformator
 	public Node unstructToUd(Node xNode, String xType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(xNode);
+		NodeList children = Utils.getAllPMLChildren(xNode);
 		NodeList foreigns = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
 
@@ -379,7 +379,7 @@ public class PhraseTransformator
 	public Node subrAnalToUD(Node xNode, String xType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(xNode);
+		NodeList children = Utils.getAllPMLChildren(xNode);
 
 		Node first = Utils.getFirstByOrd(children);
 		Node last = Utils.getLastByOrd(children);
@@ -429,7 +429,7 @@ public class PhraseTransformator
 	public Node xPredToUD(Node xNode, String xType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getPMLChildren(xNode);
+		NodeList children = Utils.getAllPMLChildren(xNode);
 		String xTag = Utils.getTag(xNode);
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(

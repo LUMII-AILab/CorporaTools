@@ -259,7 +259,7 @@ public class SentenceTransformator
 			Node current = ellipsisChildren.item(i);
 			//Node morpho = Utils.getMNode(current);
 			//Node phraseChild = Utils.getPhraseNode(current);
-			//NodeList children = Utils.getPMLChildren(current);
+			//NodeList children = Utils.getAllPMLChildren(current);
 			//if (morpho == null && phraseChild == null &&
 			//		(children == null || children.getLength() < 1))
 				current.getParentNode().removeChild(current);
@@ -311,7 +311,7 @@ public class SentenceTransformator
 		if (hasFailed) return;
 		if (DEBUG) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
 
-		NodeList children = Utils.getPMLChildren(aNode);
+		NodeList children = Utils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
 
 		Node newRoot = aNode;
