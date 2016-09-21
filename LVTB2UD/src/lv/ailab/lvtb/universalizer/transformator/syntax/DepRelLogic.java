@@ -89,17 +89,26 @@ public class DepRelLogic
 		{
 			Node pmlParent = Utils.getPMLParent(aNode);
 			String parentTag = Utils.getTag(pmlParent);
-			String parentType = Utils.getAnyLabel(pmlParent);
+			String parentEffType = Utils.getEffectiveLabel(pmlParent);
+			Node pmlEffAncestor = Utils.getEffectiveAncestor(aNode);
+			// Hopefully either parent or effective ancestor is tagged as verb
+			// or xPred.
+			Node parentXChild = Utils.getPhraseNode(pmlParent);
+			Node ancXChild = Utils.getPhraseNode(pmlEffAncestor);
 
 			// Parent is predicate
-			if (parentType.equals(LvtbRoles.PRED))
+			if (parentEffType.equals(LvtbRoles.PRED))
 			{
-				Node xChild = Utils.getPhraseNode(pmlParent);
 				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+						LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
 				{
 					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
 					if (parentTag.matches("v.*")) return URelations.NSUBJ;
+					String ancestorTag = Utils.getTag(pmlEffAncestor);
+					if (ancestorTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
+					if (ancestorTag.matches("v.*")) return URelations.NSUBJ;
+
 				}
 				// Parent is simple predicate
 				else
@@ -126,18 +135,21 @@ public class DepRelLogic
 			}
 
 			// SPC subject.
-			else if (parentType.equals(LvtbRoles.SPC) && !tag.matches("[rci].*]"))
+			else if (parentEffType.equals(LvtbRoles.SPC) && !tag.matches("[rci].*]"))
 				return URelations.NMOD;
 
 			// Parent is basElem of some phrase
-			else if (parentType.equals(LvtbRoles.BASELEM))
+			else if (parentEffType.equals(LvtbRoles.BASELEM))
 			{
-				Node xChild = Utils.getPhraseNode(pmlParent);
 				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+						LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
 				{
 					if (parentTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
 					if (parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
+					String ancestorTag = Utils.getTag(pmlEffAncestor);
+					if (ancestorTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
+					if (ancestorTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
 				}
 				else if (parentTag.matches("v..[^pn].....a.*"))
 						return URelations.NSUBJ;
@@ -147,7 +159,6 @@ public class DepRelLogic
 				else if (parentTag.matches("v..[np].*") && !tag.matches("[rci].*]"))
 						return URelations.NMOD;
 			}
-
 		}
 		// Infinitive
 		if (tag.matches("v..n.*"))
@@ -180,10 +191,11 @@ public class DepRelLogic
 		{
 			Node pmlEfParent = Utils.getEffectiveAncestor(aNode);
 			String effParentType = Utils.getAnyLabel(pmlEfParent);
-			if ((effParentType.equals(LvtbRoles.PRED) ||
-					(effParentType.equals(LvtbRoles.BASELEM) &&
-					LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
-					parentTag.matches("v..[^pn].*"))
+			//if ((effParentType.equals(LvtbRoles.PRED) ||
+			//		(effParentType.equals(LvtbRoles.BASELEM) &&
+			//		LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
+			//		parentTag.matches("v..([^p]|p[^d]).*"))
+			if (parentTag.matches("v..([^p]|p[^d]).*") || LvtbXTypes.XPRED.equals(effParentType))
 				return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
 			if (parentTag.matches("v..pd.*")) return URelations.XCOMP;
 			if (parentTag.matches("[nampxy].*")) return URelations.ACL;
@@ -343,18 +355,25 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		Node pmlParent = Utils.getPMLParent(aNode);
-		String parentTag = Utils.getTag(pmlParent);
-		String parentType = Utils.getAnyLabel(pmlParent);
 
-		// Parent is predicate
-		if (parentType.equals(LvtbRoles.PRED))
+		// Effective ancestor is predicate
+		if (LvtbRoles.PRED.equals(Utils.getEffectiveLabel(pmlParent)))
 		{
-			Node xChild = Utils.getPhraseNode(pmlParent);
+			String parentTag = Utils.getTag(pmlParent);
+			Node pmlEffAncestor = Utils.getEffectiveAncestor(aNode);
+			// Hopefully either parent or effective ancestor is tagged as verb
+			// or xPred.
+			Node parentXChild = Utils.getPhraseNode(pmlParent);
+			Node ancXChild = Utils.getPhraseNode(pmlEffAncestor);
 			// Parent is complex predicate
-			if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+			if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+					LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
 			{
 				if (parentTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return URelations.NSUBJPASS;
 				if (parentTag.matches("v.*")) return URelations.NSUBJ;
+				String ancestorTag = Utils.getTag(pmlEffAncestor);
+				if (ancestorTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return URelations.NSUBJPASS;
+				if (ancestorTag.matches("v.*")) return URelations.NSUBJ;
 			}
 			// Parent is simple predicate
 			else
@@ -364,8 +383,7 @@ public class DepRelLogic
 				if (parentTag.matches("v..[^p].....p.*"))
 					return URelations.NSUBJPASS;
 			}
-		}
-		if (parentType.equals(LvtbRoles.SUBJ))
+		} else if (LvtbRoles.SUBJ.equals(Utils.getEffectiveLabel(pmlParent)))
 			return URelations.ACL;
 
 		warn(aNode);

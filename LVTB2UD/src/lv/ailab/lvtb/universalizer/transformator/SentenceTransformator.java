@@ -37,7 +37,7 @@ public class SentenceTransformator
 	public boolean hasFailed;
 	protected PhraseTransformator pTransf;
 	public static boolean DEBUG = false;
-	public static boolean WARN_ELLIPSIS = true;
+	public static boolean WARN_ELLIPSIS = false;
 	public static boolean WARN_OMISSIONS = true;
 	/**
 	 * For already processed nodes without tag set the phrase tag based on node
