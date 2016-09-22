@@ -57,7 +57,7 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
-				phraseType.equals(LvtbPmcTypes.ADRESS) ||
+				phraseType.equals(LvtbPmcTypes.ADDRESS) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ))
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
 

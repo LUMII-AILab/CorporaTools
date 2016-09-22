@@ -324,7 +324,7 @@ public class DepRelLogic
 		String tag = Utils.getTag(aNode);
 		String lemma = Utils.getLemma(aNode);
 		String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
-		if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
+		if (LvtbPmcTypes.ADDRESS.equals(subPmcType)) return URelations.VOCATIVE;
 		if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 			return URelations.DISCOURSE;
 		if (tag != null && tag.matches("[qi].*")) return URelations.DISCOURSE;

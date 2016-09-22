@@ -19,6 +19,6 @@ public class LvtbPmcTypes
 	public final static String PARTICLE = "particle";
 	public final static String DIRSPPMC = "dirSpPmc";
 	public final static String QUOT = "quot";
-	public final static String ADRESS = "adress";
+	public final static String ADDRESS = "address";
 	public final static String INTERJ = "interj";
 }

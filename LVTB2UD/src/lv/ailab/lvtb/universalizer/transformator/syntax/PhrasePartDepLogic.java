@@ -50,7 +50,7 @@ public class PhrasePartDepLogic
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
 				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
-				if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
+				if (LvtbPmcTypes.ADDRESS.equals(subPmcType)) return URelations.VOCATIVE;
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 					return URelations.DISCOURSE;
 				String tag = Utils.getTag(aNode);
@@ -61,7 +61,7 @@ public class PhrasePartDepLogic
 				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.INSPMC)
 				|| phraseType.equals(LvtbPmcTypes.SPCPMC) || phraseType.equals(LvtbPmcTypes.PARTICLE)
 				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
-				|| phraseType.equals(LvtbPmcTypes.ADRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
+				|| phraseType.equals(LvtbPmcTypes.ADDRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return URelations.PUNCT;
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
