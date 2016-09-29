@@ -300,6 +300,7 @@ our %phraseTags = (
 'phase' => ['Phasal predicate', $xPredHelper],
 'expr' => ['Expressional predicate', $xPredHelper],
 'adv' => ['Adverbial predicate', $xPredHelper],
+'num' => ['Numeral predicate', $xPredHelper],
 #xSimile table
 'spk' => ['Secondary predicative component', [
 	['Subtype', {
