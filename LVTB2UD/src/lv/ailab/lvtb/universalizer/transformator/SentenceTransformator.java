@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
+import lv.ailab.lvtb.universalizer.conllu.UPosTag;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
@@ -193,8 +194,16 @@ public class SentenceTransformator
 				// First one is different.
 				Token firstTok = new Token(baseOrd + offset, forms[0],
 						lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				if (lvtbTag.matches("xf.*"))
+				{
+					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
+					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				}
+				else
+				{
+					firstTok.upostag = UPosTag.PART;
+					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode);
+				}
 				s.conll.add(firstTok);
 				s.pmlaToConll.put(Utils.getId(aNode), firstTok);
 
@@ -204,8 +213,16 @@ public class SentenceTransformator
 					offset++;
 					Token nextTok = new Token(baseOrd + offset, forms[i],
 							lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("xf.*"))
+					{
+						nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
+						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					}
+					else
+					{
+						nextTok.upostag = UPosTag.PART;
+						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode);
+					}
 					nextTok.head = firstTok.idBegin;
 					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
 						nextTok.misc = "SpaceAfter=No";

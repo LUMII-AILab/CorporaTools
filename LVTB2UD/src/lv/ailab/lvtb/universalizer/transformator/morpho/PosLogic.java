@@ -18,6 +18,12 @@ import javax.xml.xpath.XPathExpressionException;
  */
 public class PosLogic
 {
+	/* TODO: izcelt no SentenceTransformator ārā arī sadalāmo tokenu POS loģiku.
+	public static UPosTag getUPostTagForPart(String lemma, String xpostag, Node aNode, boolean isLast)
+	throws XPathExpressionException
+	{
+	}*/
+
 	public static UPosTag getUPosTag(String lemma, String xpostag, Node aNode)
 	throws XPathExpressionException
 	{
