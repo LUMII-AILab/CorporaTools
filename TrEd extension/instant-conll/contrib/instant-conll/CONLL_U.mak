@@ -42,7 +42,7 @@ sub allow_switch_context_hook
 # Check (by schema) if the file opened is suitable for this mode.
 sub is_conll_u_file
 {
-	return ((PML::SchemaName or '') eq 'conlludata');
+	return ((PML::SchemaName() or '') eq 'conlludata');
 }
 
 
