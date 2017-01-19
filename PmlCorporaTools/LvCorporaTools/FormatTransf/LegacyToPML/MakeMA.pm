@@ -1,6 +1,7 @@
 ﻿#!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::FormatTransf::LegacyToPML::MakeMA;
 
+use warnings;
 use utf8;
 use strict;
 
