@@ -22,8 +22,21 @@ import java.util.List;
 public class Sentence
 {
 	public static boolean CHANGE_IDS = true;
+	/**
+	 * Sentence ID.
+	 */
 	public String id;
+	/**
+	 * Original text.
+	 */
+	public String text;
+	/**
+	 * LVTB PML representation of the tree.
+	 */
 	public Node pmlTree;
+	/**
+	 * UD dependency tree as and conll-style array.
+	 */
 	public ArrayList<Token> conll = new ArrayList<>();
 	//public HashMap<Token, Node> conllToPmla = new HashMap<>();
 	/**
@@ -42,9 +55,12 @@ public class Sentence
 	public String toConllU()
 	{
 		StringBuilder res = new StringBuilder();
-		res.append("# ");
+		res.append("# sent_id = ");
 		if (CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
 		else res.append(id);
+		res.append("\n");
+		res.append("# text = ");
+		res.append(text);
 		res.append("\n");
 		for (Token t : conll)
 			res.append(t.toConllU());

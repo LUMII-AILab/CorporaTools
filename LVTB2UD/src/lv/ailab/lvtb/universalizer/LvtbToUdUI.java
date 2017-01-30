@@ -22,6 +22,8 @@ import java.io.*;
  * each time a root token for phrase representing substructure is determined,
  * appropriate pairing is added to the mapping.
  *
+ * Rework to UD v2 in progress.
+ *
  * Created on 2016-04-17.
  *
  * @author Lauma

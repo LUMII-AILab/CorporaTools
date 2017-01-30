@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * Logic for transforming LVTB sentence annotations to UD.
  * No change is done in PML tree, all results are stored in CoNLL-U table only.
  * Assumes normalized ord values (only morpho tokens are normalized).
+ * TODO: switch to full ord values?
  * XPathExpressionException everywhere, because all the navigation in the XML is
  * done with XPaths.
  * Created on 2016-04-17.
@@ -58,13 +59,16 @@ public class SentenceTransformator
 	 * @return	true, if tree has no untranformable ellipsis; false if tree
 	 * 			contains untransformable ellipsis and, thus, result data
 	 * 		    has garbage syntax.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public boolean transform() throws XPathExpressionException
 	{
 		if (DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
 		transformTokens();
+		extractSendenceText();
 		boolean noMoreEllipsis = preprocessEllipsis();
 		if (WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
@@ -79,7 +83,9 @@ public class SentenceTransformator
 	 * @param pmlTree	tree to transform
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String treeToConll(Node pmlTree)
 	throws XPathExpressionException
@@ -95,7 +101,9 @@ public class SentenceTransformator
 	/**
 	 * Create CoNLL-U token table, fill in ID, FORM, LEMMA, XPOSTAG, UPOSTAG and
 	 * FEATS fields.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void transformTokens() throws XPathExpressionException
 	{
@@ -125,13 +133,33 @@ public class SentenceTransformator
 	}
 
 	/**
+	 * Currently extracted from pre-made CoNLL table.
+	 * TODO: use PML tree instead?
+	 */
+	public void extractSendenceText()
+	{
+		s.text = "";
+		for (Token t : s.conll)
+		{
+			s.text = s.text + t.form;
+			if (t.misc == null || !t.misc.matches(".*?\\bSpaceAfter=No\\b.*"))
+				s.text = s.text + " ";
+		}
+		s.text = s.text.trim();
+	}
+
+
+
+	/**
 	 * Helper method: Create CoNLL-U table entry for one token, fill in ID,
 	 * FORM, LEMMA, XPOSTAG, UPOSTAG and FEATS fields.
 	 * @param aNode		PML A-level node for which CoNLL entry must be created.
 	 * @param offset	Difference between PML node's ord value and ID value for
 	 *                  CoNLL token to be created.
 	 * @return Offset for next token.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected int transformCurrentToken(Node aNode, int offset)
 	throws XPathExpressionException
@@ -264,7 +292,9 @@ public class SentenceTransformator
 	/**
 	 * Remove the ellipsis nodes that can be ignored in latter processing.
 	 * @return	 true if all ellipsis was removed
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public boolean preprocessEllipsis() throws XPathExpressionException
 	{
@@ -298,7 +328,9 @@ public class SentenceTransformator
 
 	/**
 	 * Fill in DEPREL and HEAD fields in CoNLL-U table.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void transformSyntax() throws XPathExpressionException
 	{
@@ -321,7 +353,9 @@ public class SentenceTransformator
 	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for given
 	 * subtree.
 	 * @param aNode	root of the subtree to process
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
@@ -396,7 +430,9 @@ public class SentenceTransformator
 	 * @param parentANode	node whose dependency children will be processed
 	 * @param newRoot		node that will be the root of the coresponding UD
 	 *                  	structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected void transformDependents(Node parentANode, Node newRoot)
 	throws XPathExpressionException
@@ -422,7 +458,9 @@ public class SentenceTransformator
 	/**
 	 * Helper method: process subtrees under each part of PML phrase.
 	 * @param phraseInfoNode	node whose dependency children will be processed
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected void transformPhraseParts(Node phraseInfoNode)
 	throws XPathExpressionException
