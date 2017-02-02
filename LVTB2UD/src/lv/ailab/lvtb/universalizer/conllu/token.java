@@ -54,7 +54,7 @@ public class Token
 	 * inventory or from a defined language-specific extension; underscore if
 	 * not available.
 	 */
-	public ArrayList<UFeat> feats = null;
+	public ArrayList<UDv2Feat> feats = null;
 	/**
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
@@ -123,7 +123,7 @@ public class Token
 		if (feats == null || feats.size() < 1) res.append("_");
 		else
 		{
-			HashMap<String, HashSet<String>> compact = UFeat.toMap(feats);
+			HashMap<String, HashSet<String>> compact = UDv2Feat.toMap(feats);
 			res.append(compact.keySet().stream()
 					.map(k -> k + "=" + compact.get(k).stream().sorted(String.CASE_INSENSITIVE_ORDER).reduce((v1, v2) -> v1 + "," + v2).orElse(""))
 					.sorted(String.CASE_INSENSITIVE_ORDER)
