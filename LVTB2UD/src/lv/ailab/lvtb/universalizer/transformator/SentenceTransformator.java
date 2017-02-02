@@ -2,7 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.conllu.UPosTag;
+import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
@@ -236,7 +236,7 @@ public class SentenceTransformator
 				}
 				else
 				{
-					firstTok.upostag = UPosTag.PART;
+					firstTok.upostag = UDv2PosTag.PART;
 					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode);
 				}
 				s.conll.add(firstTok);
@@ -255,7 +255,7 @@ public class SentenceTransformator
 					}
 					else
 					{
-						nextTok.upostag = UPosTag.PART;
+						nextTok.upostag = UDv2PosTag.PART;
 						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode);
 					}
 					nextTok.head = firstTok.idBegin;

@@ -1,11 +1,8 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Format definition: http://universaldependencies.org/format.html
@@ -44,7 +41,7 @@ public class Token
 	 * UPOSTAG: Universal part-of-speech tag drawn from our revised version of
 	 * the Google universal POS tags.
 	 */
-	public UPosTag upostag = null;
+	public UDv2PosTag upostag = null;
 	/**
 	 * 5th column.
 	 * XPOSTAG: Language-specific part-of-speech tag; underscore if not
