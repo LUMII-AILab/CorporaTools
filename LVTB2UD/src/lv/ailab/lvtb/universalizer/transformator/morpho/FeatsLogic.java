@@ -189,6 +189,10 @@ public class FeatsLogic
 		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
 			res.add(UDv2Feat.POSS_YES);
 
+		if (xpostag.matches("xf.*")) res.add(UDv2Feat.FOREIGN_YES);
+
+		if (xpostag.matches("y.*")) res.add(UDv2Feat.ABBR_YES);
+
 		if (xpostag.matches("px.*|v.y.*")) res.add(UDv2Feat.REFLEX_YES); // Currently it is impossible to split out "reflexive particle" of each verb.
 
 		return res;

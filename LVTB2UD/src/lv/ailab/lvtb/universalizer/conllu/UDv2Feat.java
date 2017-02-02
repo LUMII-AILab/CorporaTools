@@ -13,7 +13,8 @@ import java.util.List;
  */
 public enum UDv2Feat
 {
-    //ANIMACY("Animacy"),
+	ABBR_YES("Abbr", "Yes"),
+	//ANIMACY("Animacy"),
     ASPECT_IMP("Aspect", "Imp"),
     ASPECT_PERF("Aspect", "Perf"),
     CASE_NOM("Case", "Nom"),
@@ -30,6 +31,7 @@ public enum UDv2Feat
     DEGREE_SUP("Degree", "Sup"),
     EVIDENT_FH("Evident", "Fh"),
     EVIDENT_NFH("Evident", "Nfh"),
+    FOREIGN_YES("Foreign", "Yes"),
     GENDER_MASC("Gender", "Masc"),
     GENDER_FEM("Gender", "Fem"),
 	MOOD_IND("Mood", "Ind"),
