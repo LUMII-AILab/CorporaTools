@@ -175,7 +175,11 @@ public class SentenceTransformator
 				"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", mNode)))
 			noSpaceAfter = true;
 
-		if (mForm.contains(" ") || mLemma.contains(" "))
+		// Starting from UD v2 numbers and certain abbrieavations are allowed to
+		// be tokens with spaces.
+		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
+				!lvtbTag.matches("xn.*") &&
+				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 		{
 			int baseOrd = Utils.getOrd(aNode);
 			if (baseOrd < 1)
@@ -189,8 +193,9 @@ public class SentenceTransformator
 			int length = Math.min(forms.length, lemmas.length);
 
 			// If the root is last token.
-			if (lvtbTag.matches("xn.*"))
+			/*if (lvtbTag.matches("xn.*"))
 			{
+
 				// The last one is different.
 				Token lastTok = new Token(baseOrd + length-1 + offset, forms[length-1],
 						lemmas[length-1], getXpostag(lvtbTag, "_SPLIT_PART"));
@@ -215,15 +220,16 @@ public class SentenceTransformator
 					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
 				}
 				s.conll.add(lastTok);
-			}
+			}*/
 			// If the root is first token.
-			else
-			{
+			//else
+			//{
 				// First one is different.
 				Token firstTok = new Token(baseOrd + offset, forms[0],
 						lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 				if (lvtbTag.matches("xf.*"))
 				{
+					System.out.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
 					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
 					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				}
@@ -258,7 +264,7 @@ public class SentenceTransformator
 					else nextTok.deprel = URelations.MWE;
 					s.conll.add(nextTok);
 				}
-			}
+			//}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
