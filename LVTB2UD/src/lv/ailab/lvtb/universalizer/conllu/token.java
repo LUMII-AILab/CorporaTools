@@ -68,7 +68,8 @@ public class Token
 	 * DEPREL: Universal Stanford dependency relation to the HEAD
 	 * (root iff HEAD = 0) or a defined language-specific subtype of one.
 	 */
-	public URelations deprel = null;
+	// TODO change to UDv2Relations
+	public Enum deprel = null;
 	/**
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).

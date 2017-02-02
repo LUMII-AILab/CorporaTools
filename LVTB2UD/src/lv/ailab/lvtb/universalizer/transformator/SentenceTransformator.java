@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.conllu.UPosTag;
 import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
@@ -261,7 +262,7 @@ public class SentenceTransformator
 					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
 						nextTok.misc = "SpaceAfter=No";
 					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
-					else nextTok.deprel = URelations.MWE;
+					else nextTok.deprel = UDv2Relations.FIXED;
 					s.conll.add(nextTok);
 				}
 			//}
