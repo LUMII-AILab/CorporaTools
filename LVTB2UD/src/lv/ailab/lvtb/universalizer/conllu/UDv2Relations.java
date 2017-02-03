@@ -33,6 +33,7 @@ public enum UDv2Relations
 	 * aux: auxiliary
 	 */
 	AUX ("aux"),
+	AUX_PASS ("aux:pass"),
 	/**
 	 * case: case marking
 	 */
@@ -65,6 +66,7 @@ public enum UDv2Relations
 	 * csubj: clausal subject
 	 */
 	CSUBJ ("csubj"),
+	CSUBJ_PASS ("csubj:pass"),
 	/**
 	 * dep: unspecified dependency
 	 */
@@ -93,6 +95,8 @@ public enum UDv2Relations
 	 * flat: flat multiword expression
 	 */
 	FLAT ("flat"),
+	FLAT_FOREIGN ("flat:foreign"),
+	FLAT_NAME ("flat:name"),
 	/**
 	 * goeswith: goes with
 	 */
@@ -117,6 +121,7 @@ public enum UDv2Relations
 	 * nsubj: nominal subject
 	 */
 	NSUBJ ("nsubj"),
+	NSUBJ_PASS ("nsubj:pass"),
 	/**
 	 * nummod: numeric modifier
 	 */
@@ -124,11 +129,11 @@ public enum UDv2Relations
 	/**
 	 * 	obj: object
 	 */
-	OBJ ("OBJ"),
+	OBJ ("obj"),
 	/**
 	 * obl: oblique nominal
 	 */
-	OBL ("OBL"),
+	OBL ("obl"),
 	/**
 	 * orphan: orphan
 	 */

@@ -3,7 +3,6 @@ package lv.ailab.lvtb.universalizer.transformator;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
-import lv.ailab.lvtb.universalizer.conllu.URelations;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.pml.Utils;
@@ -179,7 +178,7 @@ public class SentenceTransformator
 		// Starting from UD v2 numbers and certain abbrieavations are allowed to
 		// be tokens with spaces.
 		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
-				!lvtbTag.matches("xn.*") &&
+				!lvtbTag.matches("x[no].*") &&
 				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 		{
 			int baseOrd = Utils.getOrd(aNode);
@@ -191,7 +190,7 @@ public class SentenceTransformator
 			if (forms.length != lemmas.length)
 				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
 						s.id, mForm, mLemma);
-			int length = Math.min(forms.length, lemmas.length);
+			//int length = Math.min(forms.length, lemmas.length);
 
 			// If the root is last token.
 			/*if (lvtbTag.matches("xn.*"))
@@ -234,6 +233,11 @@ public class SentenceTransformator
 					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
 					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				}
+				else if (lvtbTag.matches("x[ux].*"))
+				{
+					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
+					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				}
 				else
 				{
 					firstTok.upostag = UDv2PosTag.PART;
@@ -248,7 +252,7 @@ public class SentenceTransformator
 					offset++;
 					Token nextTok = new Token(baseOrd + offset, forms[i],
 							lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-					if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("xf.*"))
+					if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 					{
 						nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
@@ -261,7 +265,8 @@ public class SentenceTransformator
 					nextTok.head = firstTok.idBegin;
 					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
 						nextTok.misc = "SpaceAfter=No";
-					if (lvtbTag.matches("xf.*")) nextTok.deprel = URelations.FOREIGN;
+					if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
+					else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
 					else nextTok.deprel = UDv2Relations.FIXED;
 					s.conll.add(nextTok);
 				}
@@ -352,7 +357,7 @@ public class SentenceTransformator
 		Token conllRoot = s.pmlaToConll.get(Utils.getId(newRoot));
 		s.pmlaToConll.put(Utils.getId(s.pmlTree), conllRoot);
 		conllRoot.head = 0;
-		conllRoot.deprel = URelations.ROOT;
+		conllRoot.deprel = UDv2Relations.ROOT;
 		transformDependents(s.pmlTree, newRoot);
 	}
 

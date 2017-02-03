@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
@@ -36,7 +36,9 @@ public class PhraseTransformator
 	/**
 	 * Transform phrase to the UD structure.
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node anyPhraseToUD(Node phraseNode)
 	throws XPathExpressionException
@@ -107,7 +109,9 @@ public class PhraseTransformator
 	 * Default phrase transformation: used when no phrase transformation rule
 	 * is defined.
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node missingTransform(Node phraseNode)
 	throws XPathExpressionException
@@ -126,7 +130,9 @@ public class PhraseTransformator
 	 * @param pmcNode
 	 * @param pmcType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected Node sentencyToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
@@ -169,7 +175,9 @@ public class PhraseTransformator
 	 * @param pmcNode
 	 * @param pmcType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected Node utterToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
@@ -243,7 +251,7 @@ public class PhraseTransformator
 				// process found part
 				s.allAsDependents(subroot, nextPart, pmcType, null);
 				Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
-				subrootTok.deprel = URelations.PARATAXIS;
+				subrootTok.deprel = UDv2Relations.PARATAXIS;
 				subrootTok.head = rootTok.idBegin;
 			}
 		}
@@ -259,7 +267,9 @@ public class PhraseTransformator
 	 * @param coordNode
 	 * @param coordType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node crdPartsToUD(Node coordNode, String coordType)
 	throws XPathExpressionException
@@ -274,7 +284,9 @@ public class PhraseTransformator
 	 * @param coordNode
 	 * @param coordType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node crdClausesToUD (Node coordNode, String coordType)
 	throws XPathExpressionException
@@ -296,7 +308,7 @@ public class PhraseTransformator
 			Node newSubroot = coordPartsChildListToUD(
 					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType);
 			Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
-			subrootToken.deprel = URelations.PARATAXIS;
+			subrootToken.deprel = UDv2Relations.PARATAXIS;
 			subrootToken.head = newRootToken.idBegin;
 			semicOrd = nextSemicOrd;
 		}
@@ -304,7 +316,7 @@ public class PhraseTransformator
 		Node newSubroot = coordPartsChildListToUD(
 				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType);
 		Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
-		subrootToken.deprel = URelations.PARATAXIS;
+		subrootToken.deprel = UDv2Relations.PARATAXIS;
 		subrootToken.head = newRootToken.idBegin;
 
 		return newRoot;
@@ -315,7 +327,9 @@ public class PhraseTransformator
 	 * transformation, assuming that resulting structure has one root and
 	 * everything else is directly depending on that one root.
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected Node coordPartsChildListToUD(
 			List<Node> sortedNodes, String coordType)
@@ -350,7 +364,9 @@ public class PhraseTransformator
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node unstructToUd(Node xNode, String xType)
 	throws XPathExpressionException
@@ -360,7 +376,7 @@ public class PhraseTransformator
 				"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
 
 		if (foreigns != null && children.getLength() == foreigns.getLength())
-			return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, URelations.FOREIGN, false);
+			return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, UDv2Relations.FLAT_FOREIGN, false);
 		else return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
 	}
 
@@ -374,7 +390,9 @@ public class PhraseTransformator
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node subrAnalToUD(Node xNode, String xType)
 	throws XPathExpressionException
@@ -395,11 +413,11 @@ public class PhraseTransformator
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token vToken = s.pmlaToConll.get(Utils.getId(first));
 				vToken.head = newRootToken.idBegin;
-				vToken.deprel = URelations.ADVMOD;
+				vToken.deprel = UDv2Relations.ADVMOD;
 				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 				{
 					Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
-					conjToken.deprel = URelations.MWE;
+					conjToken.deprel = UDv2Relations.FIXED;
 					conjToken.head = vToken.idBegin;
 				}
 				return last;
@@ -409,7 +427,7 @@ public class PhraseTransformator
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token tToken = s.pmlaToConll.get(Utils.getId(first));
 				tToken.head = newRootToken.idBegin;
-				tToken.deprel = URelations.DET;
+				tToken.deprel = UDv2Relations.DET;
 				return last;
 			}
 		}
@@ -424,7 +442,9 @@ public class PhraseTransformator
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node xPredToUD(Node xNode, String xType)
 	throws XPathExpressionException
@@ -461,7 +481,7 @@ public class PhraseTransformator
 				{
 					Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
 					oldR.head = newR.idBegin;
-					oldR.deprel = URelations.XCOMP;
+					oldR.deprel = UDv2Relations.XCOMP;
 				}
 				latestRoot = newRoot;
 				buffer = new LinkedList<>();
@@ -479,7 +499,9 @@ public class PhraseTransformator
 	 * @param sortedNodes
 	 * @param xType
 	 * @return	PML A-level node: root of the corresponding UD structure.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	protected Node noModXPredToUD(
 			List<Node> sortedNodes, String xType, String xTag)
@@ -518,12 +540,12 @@ public class PhraseTransformator
 		if (passive && lastAux != null)
 		{
 			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = URelations.AUXPASS;
+			lastAuxTok.deprel = UDv2Relations.AUX_PASS;
 		}
 		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
 		{
 			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = URelations.COP;
+			lastAuxTok.deprel = UDv2Relations.COP;
 		}
 		return newRoot;
 	}

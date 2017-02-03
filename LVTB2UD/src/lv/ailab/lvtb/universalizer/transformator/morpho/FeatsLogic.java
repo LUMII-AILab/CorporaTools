@@ -123,8 +123,12 @@ public class FeatsLogic
 		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UDv2Feat.PERSON_3);
 		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UDv2Feat.PERSON_3);
 
-		if (xpostag.matches("v..[^p]......y.*")) res.add(UDv2Feat.POLARITY_POS); // Minimal annotations, for nomens manual labor is needed.
-		if (xpostag.matches("v..[^p]......n.*")) res.add(UDv2Feat.POLARITY_NEG); // Minimal annotations, for nomens manual labor is needed.
+		// Minimal annotations, for nomens manual labor is needed.
+		if (xpostag.matches("v..[^p]......y.*")) res.add(UDv2Feat.POLARITY_POS);
+		if (xpostag.matches("is.*") && lemma.matches("^jā&")) res.add(UDv2Feat.POLARITY_NEG);
+		if (xpostag.matches("v..[^p]......n.*")) res.add(UDv2Feat.POLARITY_NEG);
+		if (xpostag.matches("qs.*") && lemma.matches("^n[eē]&")) res.add(UDv2Feat.POLARITY_NEG);
+		if (xpostag.matches("is.*") && lemma.matches("^n[eē]&")) res.add(UDv2Feat.POLARITY_NEG);
 
 		// Lexical features
 

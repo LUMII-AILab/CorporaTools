@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import org.w3c.dom.Node;
@@ -79,11 +79,13 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, NodeList children, String phraseType,
-			URelations childDeprel)
+			UDv2Relations childDeprel)
 	throws XPathExpressionException
 	{
 		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel);
@@ -100,11 +102,13 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, List<Node> children, String phraseType,
-			URelations childDeprel)
+			UDv2Relations childDeprel)
 	throws XPathExpressionException
 	{
 		if (children == null || children.isEmpty()) return;
@@ -139,11 +143,13 @@ public class Sentence
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node allUnderFirst(
 			Node phraseNode, String phraseType, String newRootType,
-			URelations childDeprel, boolean warnMoreThanOne)
+			UDv2Relations childDeprel, boolean warnMoreThanOne)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -181,11 +187,13 @@ public class Sentence
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node allUnderLast(
 			Node phraseNode, String phraseType, String newRootType,
-			URelations childDeprel, boolean warnMoreThanOne)
+			UDv2Relations childDeprel, boolean warnMoreThanOne)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
