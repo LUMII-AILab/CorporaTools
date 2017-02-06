@@ -22,7 +22,9 @@ public class Utils
 	 * Find ord value for given node, if there is one.
 	 * @param node node to analyze
 	 * @return	ord value, or 0, if no ord found, or -1 if node is null.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static int getOrd(Node node) throws XPathExpressionException
 	{
@@ -60,7 +62,9 @@ public class Utils
 	 * Find id attribute for given node.
 	 * @param node node to analyze
 	 * @return	attribute value
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getId(Node node) throws XPathExpressionException
 	{
@@ -72,7 +76,9 @@ public class Utils
 	 * Find reduction field value for given node.
 	 * @param node node to analyze
 	 * @return	reduction value
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getReduction(Node node) throws XPathExpressionException
 	{
@@ -80,10 +86,28 @@ public class Utils
 		return XPathEngine.get().evaluate("./reduction", node);
 	}
 	/**
+	 * Check, if given node is a reduction node
+	 * @param node node to analyze
+	 * @return	true, if node has no morphology field and has nonempty reduction
+	 * 			field.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static boolean isReductionNode(Node node)
+	throws XPathExpressionException
+	{
+		if (node == null) return false;
+		String reduction = getReduction(node);
+		return (Utils.getMNode(node) == null && reduction != null && reduction.length() > 0);
+	}
+	/**
 	 * Find role for given node.
 	 * @param node node to analyze
 	 * @return	role value
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getRole(Node node) throws XPathExpressionException
 	{
@@ -95,7 +119,9 @@ public class Utils
 	 * FInd m node for for given node.
 	 * @param node node to analyze
 	 * @return	m node
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getMNode(Node node) throws XPathExpressionException
 	{
@@ -108,7 +134,9 @@ public class Utils
 	 * Find lemma for given node.
 	 * @param node node to analyze
 	 * @return	lemma
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getLemma(Node node) throws XPathExpressionException
 	{
@@ -124,7 +152,9 @@ public class Utils
 	 * given tag return tag obtained from first coordinated part.
 	 * @param aNode	node to analyze
 	 * @return	tag
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getTag(Node aNode) throws XPathExpressionException
 	{
@@ -157,7 +187,9 @@ public class Utils
 	 * Find pmctype, coordtype or xtype for a given node.
 	 * @param phraseNode	node to analyze
 	 * @return	phrase type
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getPhraseType(Node phraseNode)
 	throws XPathExpressionException
@@ -171,7 +203,9 @@ public class Utils
 	 * Find pmctype, coordtype, xtype or role for a given node.
 	 * @param node	node to analyze
 	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getAnyLabel(Node node)
 	throws XPathExpressionException
@@ -190,7 +224,9 @@ public class Utils
 	 * crdPart, crdParts or crdClauses.
 	 * @param node	node to analyze
 	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static String getEffectiveLabel(Node node)
 	throws XPathExpressionException
@@ -208,7 +244,9 @@ public class Utils
 	 * structure.
 	 * @param aNode	node to analyze
 	 * @return	phrase, coordination or x-word structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getPhraseNode(Node aNode)
 	throws XPathExpressionException
@@ -223,7 +261,9 @@ public class Utils
 	 * coordinfo are included in result, if present.
 	 * @param node	node to analyze
 	 * @return	children set
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static NodeList getAllPMLChildren(Node node)
 	throws XPathExpressionException
@@ -238,7 +278,9 @@ public class Utils
 	 * this is returns all dependents, for phrase node - all constituents.
 	 * @param node	node to analyze
 	 * @return	children set
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static NodeList getPMLNodeChildren(Node node)
 	throws XPathExpressionException
@@ -251,7 +293,9 @@ public class Utils
 	 * Find parent node (or phrase structure) in PML sense.
 	 * @param node	node to analyze
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getPMLParent(Node node) throws XPathExpressionException
 	{
@@ -265,7 +309,9 @@ public class Utils
 	 * crdPart node.
 	 * @param node	node to analyze
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getEffectiveAncestor(Node node) throws XPathExpressionException
 	{
@@ -287,7 +333,9 @@ public class Utils
 	 * Find grandparent node (or phrase structure) in PML sense.
 	 * @param node	node to analyze
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getPMLGrandParent(Node node) throws XPathExpressionException
 	{
@@ -300,7 +348,9 @@ public class Utils
 	 * Find great grandparent node (or phrase structure) in PML sense.
 	 * @param node	node to analyze
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getPMLGreatGrandParent(Node node) throws XPathExpressionException
 	{
@@ -318,7 +368,9 @@ public class Utils
 	 * @param end	largest index (excluse)
 	 * @return	list with all elements satisfying the criterion, ordered in the
 	 * 			same order as in input data
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 
 	public static ArrayList<Node> ordSplice(List<Node> nodes, int begin, int end)
@@ -338,7 +390,9 @@ public class Utils
 	 * Find node with the smallest ord value in its descendants.
 	 * @param nodes list of nodes where to search
 	 * @return	node with smallest given ord value
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getFirstByOrd(NodeList nodes)
 	throws XPathExpressionException
@@ -369,7 +423,9 @@ public class Utils
 	 * Nodes with no ord are ignored.
 	 * @param nodes list of nodes where to search
 	 * @return	node with largest given ord value
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static Node getLastByOrd(NodeList nodes)
 	throws XPathExpressionException
@@ -413,7 +469,9 @@ public class Utils
 	 * Transform NodeList to ArrayList of Node and sort list by ord values.
 	 * @param nodes	list to sort
 	 * @return	sorted list
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public static ArrayList<Node> asOrderedList(NodeList nodes)
 	throws XPathExpressionException

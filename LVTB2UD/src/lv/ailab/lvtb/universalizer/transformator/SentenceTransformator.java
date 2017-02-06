@@ -381,7 +381,6 @@ public class SentenceTransformator
 
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
 		Node phraseNode = Utils.getPhraseNode(aNode);
-		String reduction = Utils.getReduction(aNode);
 
 		//// Process phrase overlords.
 		if (phraseNode != null)
@@ -414,10 +413,10 @@ public class SentenceTransformator
 			}
 		}
 		//// Process reduction nodes.
-		else if (Utils.getMNode(aNode) == null && reduction != null && reduction.length() > 0)
+		else if (Utils.isReductionNode(aNode))
 		{
 			//System.out.println ("reduction " + reduction);
-			Node redRoot = EllipsisLogic.newParent(aNode);
+			Node redRoot = EllipsisLogic.newParent(aNode, s);
 			if (redRoot == null)
 			{
 				hasFailed = true;

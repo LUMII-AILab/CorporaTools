@@ -20,12 +20,40 @@ public class DepRelLogic
 	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param aNode	node for which UD DEPREL should be obtained
-	 * @return	UD DEPREL
+	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
+	 * 			representing a core argument).
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public static UDv2Relations depToUD(Node aNode)
+	throws XPathExpressionException
+	{
+		UDv2Relations prelaminaryRole = depToUDNoRed(aNode);
+		Node pmlParent = Utils.getPMLParent(aNode);
+		if (Utils.isReductionNode(pmlParent)
+				&& (prelaminaryRole.equals(UDv2Relations.NSUBJ)
+					|| prelaminaryRole.equals(UDv2Relations.NSUBJ_PASS)
+					|| prelaminaryRole.equals(UDv2Relations.OBJ)
+					|| prelaminaryRole.equals(UDv2Relations.IOBJ)
+					|| prelaminaryRole.equals(UDv2Relations.CSUBJ)
+					|| prelaminaryRole.equals(UDv2Relations.CSUBJ_PASS)
+					|| prelaminaryRole.equals(UDv2Relations.CCOMP)
+					|| prelaminaryRole.equals(UDv2Relations.XCOMP)))
+			return UDv2Relations.ORPHAN;
+		return prelaminaryRole;
+	}
+
+	/**
+	 * Generic relation between LVTB dependency roles and UD DEPREL. Orphan
+	 * roles are not assigned.
+	 * @param aNode	node for which UD DEPREL should be obtained
+	 * @return	UD DEPREL before reduction postprocessing
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static UDv2Relations depToUDNoRed(Node aNode)
 	throws XPathExpressionException
 	{
 		String lvtbRole = Utils.getRole(aNode);
