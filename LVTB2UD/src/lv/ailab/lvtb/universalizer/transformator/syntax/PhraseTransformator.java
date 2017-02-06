@@ -291,11 +291,17 @@ public class PhraseTransformator
 	public Node crdClausesToUD (Node coordNode, String coordType)
 	throws XPathExpressionException
 	{
+		// Get all the children.
 		NodeList children = Utils.getAllPMLChildren(coordNode);
+		// Check if there are any semicolons.
 		NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
+		// No semicolons => process as ordinary coordination.
 		if (semicolons == null || semicolons.getLength() < 1)
 			return coordPartsChildListToUD(Utils.asOrderedList(children), coordType);
+
+		// If semicolon(s) is (are) present, split on semicolon and then process
+		// each part as ordinary coordination.
 		ArrayList<Node> sortedSemicolons = Utils.asOrderedList(semicolons);
 		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
 		int semicOrd = Utils.getOrd(sortedSemicolons.get(0));
@@ -324,8 +330,10 @@ public class PhraseTransformator
 
 	/**
 	 * Specific helper function, split out from coordination processing: do the
-	 * transformation, assuming that resulting structure has one root and
-	 * everything else is directly depending on that one root.
+	 * transformation, assuming that the nodes provided as input node must be
+	 * ordered as standard coordination structure, i.e., first crdPart is the
+	 * root, all other crdPart-s are directly under it, all conj and punct are
+	 * under the following crdPart.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
@@ -337,24 +345,40 @@ public class PhraseTransformator
 	{
 		// Find the structure root.
 		Node newRoot = null;
+		Node lastSubroot = null;
+		ArrayList<Node> postponed = new ArrayList<>();
+		// First process all nodes that are followed by a crdPart node.
 		for (Node n : sortedNodes)
+		{
 			if (LvtbRoles.CRDPART.equals(XPathEngine.get().evaluate("./role", n)))
 			{
-				newRoot = n;
-				break;
-			}
-		if (newRoot == null)
-		{
-			System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
-					s.id, LvtbRoles.CRDPART, coordType);
-			newRoot = sortedNodes.get(0);
+				s.allAsDependents(n, postponed, coordType, null);
+				lastSubroot = n;
+				if (newRoot == null)
+					newRoot = n;
+				else
+					s.addAsDependent(newRoot, n, coordType, null);
+				postponed = new ArrayList<>();
+			} else postponed.add(n);
 		}
-		if (newRoot == null)
-			throw new IllegalArgumentException(
-					"\"" + coordType +"\" in entence \"" + s.id + "\" seems to be empty.\n");
-
-		// Create dependency structure in conll table.
-		s.allAsDependents(newRoot, sortedNodes, coordType, null);
+		// Then process what is left.
+		if (!postponed.isEmpty())
+		{
+			if (lastSubroot != null)
+				s.allAsDependents(lastSubroot, postponed, coordType, null);
+			else
+			{
+				System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
+						s.id, LvtbRoles.CRDPART, coordType);
+				if (sortedNodes.get(0) != null )
+				{
+					newRoot = sortedNodes.get(0);
+					s.allAsDependents(newRoot, sortedNodes, coordType, null);
+				}
+				else throw new IllegalArgumentException(
+						"\"" + coordType +"\" in entence \"" + s.id + "\" seems to be empty.\n");
+			}
+		}
 		return newRoot;
 	}
 

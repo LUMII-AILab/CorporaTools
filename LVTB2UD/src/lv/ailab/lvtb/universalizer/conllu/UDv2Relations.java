@@ -149,7 +149,7 @@ public enum UDv2Relations
 	/**
 	 * reparandum: overridden disfluency
 	 */
-	REPARANDUM ("overridden disfluency"),
+	REPARANDUM ("reparandum"),
 	/**
 	 * root: root
 	 */

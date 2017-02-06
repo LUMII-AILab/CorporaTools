@@ -113,20 +113,44 @@ public class Sentence
 	{
 		if (children == null || children.isEmpty()) return;
 
-		// Process root.
-		Token rootToken = pmlaToConll.get(Utils.getId(newRoot));
-
 		// Process children.
 		for (Node child : children)
 		{
-			if (child.equals(newRoot) || child.isSameNode(newRoot)) continue;
-			Token childToken = pmlaToConll.get(Utils.getId(child));
-
-			childToken.head = rootToken.idBegin;
-			if (childDeprel == null)
-				childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
-			else childToken.deprel = childDeprel;
+			addAsDependent(newRoot, child, phraseType, childDeprel);
 		}
+	}
+	/**
+	 * Make a given node a child of the designated parent. Set UD for the child.
+	 * If designated parent is the same as child node, circular dependency is
+	 * not made, role is not set.
+	 * @param newRoot		designated parent
+	 * @param child			designated child
+	 * @param phraseType    phrase type from PML data, used for obtaining
+	 *                      correct UD role for children.
+	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
+	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
+	 *                      be used to obtain DEPREL for child nodes.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void addAsDependent (
+			Node newRoot, Node child, String phraseType, UDv2Relations childDeprel)
+	throws XPathExpressionException
+	{
+		if (child == null ) return;
+
+		// Process root.
+		Token rootToken = pmlaToConll.get(Utils.getId(newRoot));
+
+		// Process child.
+		if (child.equals(newRoot) || child.isSameNode(newRoot)) return;
+
+		Token childToken = pmlaToConll.get(Utils.getId(child));
+		childToken.head = rootToken.idBegin;
+		if (childDeprel == null)
+			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
+		else childToken.deprel = childDeprel;
 	}
 
 	/**
