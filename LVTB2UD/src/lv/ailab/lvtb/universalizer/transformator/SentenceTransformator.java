@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Logic for transforming LVTB sentence annotations to UD.
  * No change is done in PML tree, all results are stored in CoNLL-U table only.
- * Assumes normalized ord values (only morpho tokens are normalized).
+ * Assumes normalized ord values (only morpho tokens are numbered).
  * TODO: switch to full ord values?
  * XPathExpressionException everywhere, because all the navigation in the XML is
  * done with XPaths.
@@ -38,6 +38,7 @@ public class SentenceTransformator
 	 */
 	public boolean hasFailed;
 	protected PhraseTransformator pTransf;
+	protected DepRelLogic drLogic;
 	public static boolean DEBUG = false;
 	public static boolean WARN_ELLIPSIS = false;
 	public static boolean WARN_OMISSIONS = true;
@@ -52,6 +53,7 @@ public class SentenceTransformator
 		s = new Sentence(pmlTree);
 		hasFailed = false;
 		pTransf = new PhraseTransformator(s);
+		drLogic = new DepRelLogic();
 	}
 
 	/**
@@ -348,6 +350,8 @@ public class SentenceTransformator
 	{
 		Node pmlPmc = (Node)XPathEngine.get().evaluate(
 				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
+		transformDepSubtrees(s.pmlTree);
+		if (hasFailed) return;
 		transformPhraseParts(pmlPmc);
 		if (hasFailed) return;
 
@@ -358,7 +362,7 @@ public class SentenceTransformator
 		s.pmlaToConll.put(Utils.getId(s.pmlTree), conllRoot);
 		conllRoot.head = 0;
 		conllRoot.deprel = UDv2Relations.ROOT;
-		transformDependents(s.pmlTree, newRoot);
+		relinkDependents(s.pmlTree, newRoot);
 	}
 
 	/**
@@ -377,8 +381,10 @@ public class SentenceTransformator
 		NodeList children = Utils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
 
-		Node newRoot = aNode;
+		transformDepSubtrees(aNode);
+		if (hasFailed) return;
 
+		Node newRoot = aNode;
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
 		Node phraseNode = Utils.getPhraseNode(aNode);
 
@@ -416,7 +422,7 @@ public class SentenceTransformator
 		else if (Utils.isReductionNode(aNode))
 		{
 			//System.out.println ("reduction " + reduction);
-			Node redRoot = EllipsisLogic.newParent(aNode, s);
+			Node redRoot = EllipsisLogic.newParent(aNode, drLogic);
 			if (redRoot == null)
 			{
 				hasFailed = true;
@@ -431,7 +437,7 @@ public class SentenceTransformator
 		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));
 
 		//// Process dependants (except the newRoot).
-		transformDependents(aNode, newRoot);
+		relinkDependents(aNode, newRoot);
 	}
 
 	/**
@@ -445,7 +451,7 @@ public class SentenceTransformator
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	protected void transformDependents(Node parentANode, Node newRoot)
+	protected void relinkDependents(Node parentANode, Node newRoot)
 	throws XPathExpressionException
 	{
 		if (hasFailed) return;
@@ -457,13 +463,32 @@ public class SentenceTransformator
 		{
 			// This happens in case of ellipsis.
 			if (pmlDependents.item(i).isSameNode(newRoot)) continue;
-
-			transformSubtree(pmlDependents.item(i));
-			if (hasFailed) return;
 			Token conllTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
-			conllTok.deprel = DepRelLogic.depToUD(pmlDependents.item(i));
+			conllTok.deprel = drLogic.depToUD(pmlDependents.item(i));
 			conllTok.head = newRootTok.idBegin;
 		}
+	}
+
+	/**
+	 * Helper method: find all dependency children and process subtrees they are
+	 * heads of.
+	 * @param parentANode	node whose dependency children will be processed
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	protected void transformDepSubtrees(Node parentANode)
+	throws XPathExpressionException
+	{
+		if (hasFailed) return;
+		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
+				"./children/node", parentANode, XPathConstants.NODESET);
+		if (pmlDependents != null && pmlDependents.getLength() > 0)
+			for (int i = 0; i < pmlDependents.getLength(); i++)
+			{
+				transformSubtree(pmlDependents.item(i));
+				if (hasFailed) return;
+			}
 	}
 
 	/**

@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.util.HashSet;
 
 /**
  * Relations between dependency labeling used in LVTB and UD.
@@ -18,6 +19,14 @@ import javax.xml.xpath.XPathExpressionException;
 public class DepRelLogic
 {
 	/**
+	 * To avoid repetitive messages, any message once printed are remembered.
+	 * Set this to null to avoid this.
+	 */
+	public HashSet<String> warnRegister;
+
+	public DepRelLogic() { warnRegister = new HashSet<>(); }
+
+	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param aNode	node for which UD DEPREL should be obtained
 	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
@@ -26,12 +35,13 @@ public class DepRelLogic
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static UDv2Relations depToUD(Node aNode)
+	public UDv2Relations depToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		UDv2Relations prelaminaryRole = depToUDNoRed(aNode);
 		Node pmlParent = Utils.getPMLParent(aNode);
-		if (Utils.isReductionNode(pmlParent)
+		Node pmlEffParent = Utils.getEffectiveAncestor(aNode);
+		if ((Utils.isReductionNode(pmlParent) || Utils.isReductionNode(pmlEffParent))
 				&& (prelaminaryRole.equals(UDv2Relations.NSUBJ)
 					|| prelaminaryRole.equals(UDv2Relations.NSUBJ_PASS)
 					|| prelaminaryRole.equals(UDv2Relations.OBJ)
@@ -53,7 +63,7 @@ public class DepRelLogic
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static UDv2Relations depToUDNoRed(Node aNode)
+	public UDv2Relations depToUDNoRed(Node aNode)
 	throws XPathExpressionException
 	{
 		String lvtbRole = Utils.getRole(aNode);
@@ -108,7 +118,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations subjToUD(Node aNode)
+	public UDv2Relations subjToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -199,7 +209,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations objToUD(Node aNode)
+	public UDv2Relations objToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -211,7 +221,7 @@ public class DepRelLogic
 		return UDv2Relations.IOBJ;
 	}
 
-	public static UDv2Relations spcToUD(Node aNode)
+	public UDv2Relations spcToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -294,7 +304,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations attrToUD(Node aNode)
+	public UDv2Relations attrToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -327,7 +337,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations advSitToUD(Node aNode)
+	public UDv2Relations advSitToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -338,14 +348,14 @@ public class DepRelLogic
 		String lemma = Utils.getLemma(aNode);
 
 		if (tag.matches("r.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
-
 		if (tag.matches("q.*")) return UDv2Relations.DISCOURSE;
 
 		warn(aNode);
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations noToUD(Node aNode) throws XPathExpressionException
+	public UDv2Relations noToUD(Node aNode)
+	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
 		String lemma = Utils.getLemma(aNode);
@@ -363,7 +373,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations predClToUD(Node aNode)
+	public UDv2Relations predClToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String parentType = Utils.getAnyLabel(Utils.getPMLParent(aNode));
@@ -378,7 +388,7 @@ public class DepRelLogic
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations subjClToUD(Node aNode)
+	public UDv2Relations subjClToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		Node pmlParent = Utils.getPMLParent(aNode);
@@ -436,11 +446,16 @@ public class DepRelLogic
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	protected static void warn(Node node) throws XPathExpressionException
+	protected void warn(Node node) throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(node);
 		String role = XPathEngine.get().evaluate("./role", node);
-		System.err.printf("Role \"%s\" for node %s was not transformed.\n", role, nodeId);
+		String warning = String.format("Role \"%s\" for node %s was not transformed.", role, nodeId);
+		if (warnRegister!= null && !warnRegister.contains(warning))
+		{
+			System.err.println(warning);
+			warnRegister.add(warning);
+		}
 	}
 
 }

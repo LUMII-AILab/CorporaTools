@@ -19,7 +19,8 @@ import java.util.ArrayList;
  */
 public class EllipsisLogic
 {
-	public static Node newParent (Node aNode, Sentence s) throws XPathExpressionException
+	public static Node newParent (Node aNode, DepRelLogic drLogic)
+	throws XPathExpressionException
 	{
 		// This method should not be used for transforming phrase nodes or nodes
 		// with morphology.
@@ -30,18 +31,19 @@ public class EllipsisLogic
 		if (children == null) return null;
 
 		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
-		String lvtbRole = Utils.getRole(aNode);
+		String lvtbEffRole = Utils.getEffectiveLabel(aNode);
+		//String lvtbRole = Utils.getRole(aNode);
 
 		// Rules for specific parents.
-		if (LvtbRoles.PRED.equals(lvtbRole))
+		if (LvtbRoles.PRED.equals(lvtbEffRole))
 		{
 			// Search if there is an aux or cop.
 			for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = DepRelLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Unfinished token is accessed during ellipsis processing for " + Utils
+							"Could not determine potential UD role during ellipsis processing for " + Utils
 									.getId(n));
 				if (noRedUDrole.equals(UDv2Relations.AUX) || noRedUDrole.equals(UDv2Relations.COP))
 					return n;
@@ -56,10 +58,10 @@ public class EllipsisLogic
 					UDv2Relations.CCOMP, UDv2Relations.ADVCL};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = DepRelLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Unfinished token is accessed during ellipsis processing for " + Utils.getId(n));
+							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
 
@@ -101,10 +103,10 @@ public class EllipsisLogic
 					UDv2Relations.NMOD, UDv2Relations.CASE};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = DepRelLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Unfinished token is accessed during ellipsis processing for " + Utils.getId(n));
+							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
 /*			// List of attributes.

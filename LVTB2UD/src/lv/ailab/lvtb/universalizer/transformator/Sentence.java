@@ -123,7 +123,7 @@ public class Sentence
 	 * Make a given node a child of the designated parent. Set UD for the child.
 	 * If designated parent is the same as child node, circular dependency is
 	 * not made, role is not set.
-	 * @param newRoot		designated parent
+	 * @param parent		designated parent
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
@@ -135,16 +135,16 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public void addAsDependent (
-			Node newRoot, Node child, String phraseType, UDv2Relations childDeprel)
+			Node parent, Node child, String phraseType, UDv2Relations childDeprel)
 	throws XPathExpressionException
 	{
 		if (child == null ) return;
 
 		// Process root.
-		Token rootToken = pmlaToConll.get(Utils.getId(newRoot));
+		Token rootToken = pmlaToConll.get(Utils.getId(parent));
 
 		// Process child.
-		if (child.equals(newRoot) || child.isSameNode(newRoot)) return;
+		if (child.equals(parent) || child.isSameNode(parent)) return;
 
 		Token childToken = pmlaToConll.get(Utils.getId(child));
 		childToken.head = rootToken.idBegin;
@@ -231,7 +231,7 @@ public class Sentence
 		if (newRoot == null)
 		{
 			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
-					phraseType, id, newRoot);
+					phraseType, id, newRootType);
 			newRoot = Utils.getLastByOrd(children);
 		}
 		if (newRoot == null)
