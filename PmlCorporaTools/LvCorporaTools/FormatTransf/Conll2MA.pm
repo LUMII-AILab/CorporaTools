@@ -131,7 +131,7 @@ END
 			#print Dumper($wTok);
 			$wTok->{'id'} =~ /-p(\d+)w\d+$/;
 			$paraId = $1;
-			if ($line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
+			if ($line and $line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
 			{
 				my ($conllToken, $lemma, $simpleTag, $tag) = ($2, $3, $4, $5);
 				$conllToken =~ s/_/ /g;
