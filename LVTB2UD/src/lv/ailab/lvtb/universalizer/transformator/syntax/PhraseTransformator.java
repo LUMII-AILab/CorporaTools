@@ -59,9 +59,11 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
-				phraseType.equals(LvtbPmcTypes.ADDRESS) ||
-				phraseType.equals(LvtbPmcTypes.INTERJ))
+				phraseType.equals(LvtbPmcTypes.ADDRESS))
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
+		if (phraseType.equals(LvtbPmcTypes.INTERJ) ||
+				phraseType.equals(LvtbPmcTypes.PARTICLE))
+			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, false);
 
 		//======= COORD ========================================================
 

@@ -57,13 +57,15 @@ public class PhrasePartDepLogic
 					return UDv2Relations.DISCOURSE;
 				String tag = Utils.getTag(aNode);
 				if (tag != null && tag.matches("[qi].*")) return UDv2Relations.DISCOURSE;
+				if (tag != null && tag.matches("n...v.*")) return UDv2Relations.VOCATIVE;
 			}
 
-		if ((phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
-				|| phraseType.equals(LvtbPmcTypes.SUBRCL)) || phraseType.equals(LvtbPmcTypes.INSPMC)
-				|| phraseType.equals(LvtbPmcTypes.SPCPMC) || phraseType.equals(LvtbPmcTypes.PARTICLE)
+		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
+				|| phraseType.equals(LvtbPmcTypes.SUBRCL) || phraseType.equals(LvtbPmcTypes.MAINCL)
+				|| phraseType.equals(LvtbPmcTypes.INSPMC) || phraseType.equals(LvtbPmcTypes.SPCPMC)
 				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
-				|| phraseType.equals(LvtbPmcTypes.ADDRESS) || phraseType.equals(LvtbPmcTypes.INTERJ))
+				|| phraseType.equals(LvtbPmcTypes.ADDRESS) || phraseType.equals(LvtbPmcTypes.INTERJ)
+				|| phraseType.equals(LvtbPmcTypes.PARTICLE))
 			if (lvtbRole.equals(LvtbRoles.PUNCT)) return UDv2Relations.PUNCT;
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
@@ -97,7 +99,9 @@ public class PhrasePartDepLogic
 				phraseType.equals(LvtbXTypes.COORDANAL)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.COMPOUND;
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
-				phraseType.equals(LvtbXTypes.UNSTRUCT)) &&
+				phraseType.equals(LvtbXTypes.UNSTRUCT) ||
+				phraseType.equals(LvtbPmcTypes.INTERJ) ||
+				phraseType.equals(LvtbPmcTypes.PARTICLE)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.FLAT;
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.FLAT_NAME;

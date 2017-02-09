@@ -342,12 +342,12 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 
-		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
+		if (tag.matches("n.*|x[nf].*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
 			return UDv2Relations.OBL;
 
 		String lemma = Utils.getLemma(aNode);
 
-		if (tag.matches("r.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
+		if (tag.matches("r.*|xo.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
 		if (tag.matches("q.*")) return UDv2Relations.DISCOURSE;
 
 		warn(aNode);
