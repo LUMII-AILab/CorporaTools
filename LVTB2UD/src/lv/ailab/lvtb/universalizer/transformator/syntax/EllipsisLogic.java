@@ -32,7 +32,6 @@ public class EllipsisLogic
 
 		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
 		String lvtbEffRole = Utils.getEffectiveLabel(aNode);
-		//String lvtbRole = Utils.getRole(aNode);
 
 		// Rules for specific parents.
 		if (LvtbRoles.PRED.equals(lvtbEffRole))
@@ -64,35 +63,7 @@ public class EllipsisLogic
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
-
-/*			NodeList selChildren = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.SUBJ + "']",
-					aNode, XPathConstants.NODESET);
-			if (selChildren != null && selChildren.getLength() > 0)
-				return Utils.getFirstByOrd(selChildren);
-
-			selChildren = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.OBJ + "']",
-					aNode, XPathConstants.NODESET);
-			if (selChildren != null && selChildren.getLength() > 0)
-			{
-				// Search for first direct object.
-				ArrayList <Node> sorted = Utils.asOrderedList(selChildren);
-				for (Node obj : sorted)
-				{
-					String tag = Utils.getTag(obj);
-					if (tag.matches("[na]...a.*|[pm]....a.*|v..p...a.*"))
-						return obj;
-					String parentTag = Utils.getTag(aNode);
-					if (tag.matches("[na]...n.*|[pm]....n.*|v..p...n.*") && parentTag.matches("v..d.*"))
-						return obj;
-				}
-				// Return first (indirect) object.
-				return Utils.getFirstByOrd(selChildren);
-			}//*/
 		}
-
-
 
 		// Rules for specific sequences.
 		if (children.getLength() > 1)
@@ -109,37 +80,7 @@ public class EllipsisLogic
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
-/*			// List of attributes.
-			NodeList selChildren = (NodeList) XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.ATTR + "']",
-					aNode, XPathConstants.NODESET);
-			if (selChildren.getLength() == children.getLength())
-			{
-				return Utils.getLastByOrd(selChildren);
-			}
-			// List of adverbial modifiers.
-			else if (selChildren.getLength() < 1)
-			{
-				selChildren = (NodeList) XPathEngine.get().evaluate(
-						"./children/node[role='" + LvtbRoles.ADV +
-								"' or role='" + LvtbRoles.PLACECL +
-								"' or role='" + LvtbRoles.TIMECL +
-								"' or role='" + LvtbRoles.MANCL +
-								"' or role='" + LvtbRoles.DEGCL +
-								"' or role='" + LvtbRoles.CAUSCL +
-								"' or role='" + LvtbRoles.PURPCL +
-								"' or role='" + LvtbRoles.CONDCL + "']",
-						aNode, XPathConstants.NODESET);
-				if (selChildren.getLength() == children.getLength())
-				{
-					NodeList advChildren = (NodeList) XPathEngine.get().evaluate(
-							"./children/node[role='" + LvtbRoles.ADV + "']",
-							aNode, XPathConstants.NODESET);
-					if (advChildren.getLength() > 0)
-						return Utils.getFirstByOrd(advChildren);
-				}
-			}
-//*/	}
+		}
 
 		// Rules for parents with only one child.
 		if (children.getLength() == 1)

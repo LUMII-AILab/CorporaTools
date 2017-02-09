@@ -77,7 +77,7 @@ public class PhraseTransformator
 		// Multiple basElem, root is the last.
 		if (phraseType.equals(LvtbXTypes.XAPP) ||
 				phraseType.equals(LvtbXTypes.XNUM))
-			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, false);
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null,null, false);
 
 		// Multiple basElem, root is the first.
 		if (phraseType.equals(LvtbXTypes.PHRASELEM) ||
@@ -86,13 +86,14 @@ public class PhraseTransformator
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, false);
 
 		// Only one basElem
-		if (phraseType.equals(LvtbXTypes.XPREP) ||
-				phraseType.equals(LvtbXTypes.XPARTICLE))
-			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
+		if (phraseType.equals(LvtbXTypes.XPARTICLE))
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null,null, true);
+		if (phraseType.equals(LvtbXTypes.XPREP))
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, LvtbRoles.CONJ, null, true);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
 			// If relinking (for "vairāk nekā" constructions) will be needed, it
 			// will be done when processing the parent node.
-			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null,null, true);
 
 		// Specific.
 		if (phraseType.equals(LvtbXTypes.UNSTRUCT))

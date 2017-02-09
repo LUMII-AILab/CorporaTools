@@ -289,8 +289,8 @@ public class DepRelLogic
 
 			// SPC with comparison
 			if (LvtbXTypes.XSIMILE.equals(basElemXType)) return UDv2Relations.ADVCL;
-			// Participal SPC
-			if (basElemTag.matches("v..p[pu].*")) return UDv2Relations.ADVCL;
+			// Participal SPC, adverbs in commas
+			if (basElemTag.matches("v..p[pu].*|r.*")) return UDv2Relations.ADVCL;
 			// Nominal SPC
 			if (basElemTag.matches("n.*") ||
 					basElemTag.matches("y.*") &&

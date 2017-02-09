@@ -203,8 +203,9 @@ public class Sentence
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
 	 *                      	correct UD role for children
-	 * @param newRootType		rubroot for new UD structure will be searched
+	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
+	 * @param newRootBackUpType backUpRole, if no nodes of newRootType is found
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
 	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
@@ -216,7 +217,7 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public Node allUnderLast(
-			Node phraseNode, String phraseType, String newRootType,
+			Node phraseNode, String phraseType, String newRootType, String newRootBackUpType,
 			UDv2Relations childDeprel, boolean warnMoreThanOne)
 	throws XPathExpressionException
 	{
@@ -224,6 +225,10 @@ public class Sentence
 				"./children/*", phraseNode, XPathConstants.NODESET);
 		NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
+		if (newRootBackUpType != null &&
+				(potentialRoots == null || potentialRoots.getLength() < 1))
+			potentialRoots = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
 		Node newRoot = Utils.getLastByOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
