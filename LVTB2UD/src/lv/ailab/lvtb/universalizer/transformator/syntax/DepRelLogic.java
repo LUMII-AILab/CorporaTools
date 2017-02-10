@@ -226,6 +226,16 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
+
+		// If parent is something reduced to punctuation mark, use reduction
+		// tag instead.
+		if (parentTag.matches("z.*"))
+		{
+			String parentRed = Utils.getReduction(Utils.getPMLParent(aNode));
+			if (parentRed != null && parentRed.length() > 0)
+				parentTag = parentRed;
+		}
+
 		String parentEffRole = Utils.getEffectiveLabel(Utils.getPMLParent(aNode));
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))

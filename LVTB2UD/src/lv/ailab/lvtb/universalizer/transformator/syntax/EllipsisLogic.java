@@ -32,12 +32,15 @@ public class EllipsisLogic
 
 		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
 		String lvtbEffRole = Utils.getEffectiveLabel(aNode);
-
+		String lvtbTag = Utils.getTag(aNode);
+		
 		// Rules for specific parents.
-		if (LvtbRoles.PRED.equals(lvtbEffRole))
+		if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*")
+				|| LvtbRoles.SPC.equals(lvtbEffRole) && lvtbTag.matches("v..(n|p[up]).*"))
 		{
-			// Search if there is an aux or cop.
-			for (Node n : sortedChildren)
+			// In case of reduced predicte, search if there is an aux or cop.
+			if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*"))
+				for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
 				if (noRedUDrole == null)
