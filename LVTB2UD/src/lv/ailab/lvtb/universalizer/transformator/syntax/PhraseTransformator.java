@@ -57,7 +57,6 @@ public class PhraseTransformator
 				phraseType.equals(LvtbPmcTypes.MAINCL))
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.PRED, null, true);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
-				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
 			return s.allUnderFirst(phraseNode, phraseType, LvtbRoles.BASELEM, null, true);
@@ -89,7 +88,7 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbXTypes.XPARTICLE))
 			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null,null, true);
 		if (phraseType.equals(LvtbXTypes.XPREP))
-			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, LvtbRoles.CONJ, null, true);
+			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, LvtbRoles.PREP, null, true);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
 			// If relinking (for "vairāk nekā" constructions) will be needed, it
 			// will be done when processing the parent node.
