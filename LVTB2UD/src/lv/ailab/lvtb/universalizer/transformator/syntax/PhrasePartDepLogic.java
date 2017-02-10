@@ -135,8 +135,7 @@ public class PhrasePartDepLogic
 			String firstAncType = Utils.getAnyLabel(firstAncestor);
 			String secondAncType = Utils.getAnyLabel(secongAncestor);
 
-			if (LvtbRoles.SPC.equals(firstAncType))
-				return UDv2Relations.MARK;
+			// Check the specific roles
 			if (LvtbRoles.BASELEM.equals(firstAncType))
 			{
 				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
@@ -150,6 +149,18 @@ public class PhrasePartDepLogic
 						vSiblings.getLength() > 0)
 					return UDv2Relations.COMPOUND;
 			}
+			// In generic SPC case use mark.
+			if (LvtbRoles.SPC.equals(firstAncType))
+				return UDv2Relations.MARK;
+			
+			Node effAncestor = Utils.getEffectiveAncestor(firstAncestor);
+			if (LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(effAncestor)))
+				effAncestor = Utils.getEffectiveAncestor(effAncestor);
+			String effAncLabel = Utils.getAnyLabel(effAncestor);
+
+			if (LvtbRoles.SPC.equals(effAncLabel) || LvtbPmcTypes.SPCPMC.equals(effAncLabel)
+					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
+				return UDv2Relations.MARK;
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
