@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
+import lv.ailab.lvtb.universalizer.LvtbToUdUI;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
@@ -21,7 +22,6 @@ import java.util.List;
  */
 public class Sentence
 {
-	public static boolean CHANGE_IDS = true;
 	/**
 	 * Sentence ID.
 	 */
@@ -56,7 +56,7 @@ public class Sentence
 	{
 		StringBuilder res = new StringBuilder();
 		res.append("# sent_id = ");
-		if (CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
+		if (LvtbToUdUI.CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
 		else res.append(id);
 		res.append("\n");
 		res.append("# text = ");
@@ -183,12 +183,12 @@ public class Sentence
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRootType);
-		Node newRoot = Utils.getFirstByOrd(potentialRoots);
+		Node newRoot = Utils.getFirstByDescOrd(potentialRoots);
 		if (newRoot == null)
 		{
 			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
-			newRoot = Utils.getFirstByOrd(children);
+			newRoot = Utils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(

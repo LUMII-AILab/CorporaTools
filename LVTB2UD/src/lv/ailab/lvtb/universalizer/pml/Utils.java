@@ -73,6 +73,20 @@ public class Utils
 	}
 
 	/**
+	 * Find m level id attribute for given node.
+	 * @param node node to analyze
+	 * @return	attribute value
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static String getMId(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return XPathEngine.get().evaluate("./m.rf/@id", node);
+	}
+
+	/**
 	 * Find reduction field value for given node.
 	 * @param node node to analyze
 	 * @return	reduction value
@@ -169,17 +183,17 @@ public class Utils
 				"./children/pmcinfo/children/node[role='" + LvtbRoles.PRED + "']",
 				aNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
-			return getTag(getFirstByOrd(baseParts));
+			return getTag(getFirstByDescOrd(baseParts));
 		baseParts = (NodeList) XPathEngine.get().evaluate(
 				"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 				aNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
-			return getTag(getFirstByOrd(baseParts));
+			return getTag(getFirstByDescOrd(baseParts));
 		baseParts = (NodeList) XPathEngine.get().evaluate(
 				"./children/coordinfo/children/node[role='" + LvtbRoles.CRDPART + "']",
 				aNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
-			return getTag(getFirstByOrd(baseParts));
+			return getTag(getFirstByDescOrd(baseParts));
 		return null;
 	}
 
@@ -271,6 +285,22 @@ public class Utils
 		if (node == null) return null;
 		return (NodeList)XPathEngine.get().evaluate(
 				"./children/*", node, XPathConstants.NODESET);
+	}
+	/**
+	 * Find all descendants of the given node in PML sense. xinfo, pmcinfo and
+	 * coordinfo are included in result, if present.
+	 * @param node	node to analyze
+	 * @return	ancestor set
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static NodeList getAllPMLDescendants(Node node)
+	throws XPathExpressionException
+	{
+		if (node == null) return null;
+		return (NodeList)XPathEngine.get().evaluate(
+				".//children/*", node, XPathConstants.NODESET);
 	}
 
 	/**
@@ -389,12 +419,12 @@ public class Utils
 	/**
 	 * Find node with the smallest ord value in its descendants.
 	 * @param nodes list of nodes where to search
-	 * @return	node with smallest given ord value
+	 * @return	node with smallest given ord value in descendants
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static Node getFirstByOrd(NodeList nodes)
+	public static Node getFirstByDescOrd(NodeList nodes)
 	throws XPathExpressionException
 	{
 		if (nodes == null) return null;
@@ -419,8 +449,7 @@ public class Utils
 	}
 
 	/**
-	 * Find node with the biggest ord value in its descendants.
-	 * Nodes with no ord are ignored.
+	 * Find node with the biggest ord value. Nodes with no ord are ignored.
 	 * @param nodes list of nodes where to search
 	 * @return	node with largest given ord value
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
@@ -436,16 +465,11 @@ public class Utils
 		Node bestNode = null;
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
-			NodeList ords = (NodeList) XPathEngine.get().evaluate(
-					".//ord", nodes.item(i), XPathConstants.NODESET);
-			for (int j = 0; j < ords.getLength(); j ++)
+			int ord = Utils.getOrd(nodes.item(i));
+			if (ord > 0 && ord > biggestOrd)
 			{
-				int ord = Integer.parseInt(ords.item(j).getTextContent());
-				if (ord > biggestOrd)
-				{
-					biggestOrd = ord;
-					bestNode = nodes.item(i);
-				}
+				biggestOrd = ord;
+				bestNode = nodes.item(i);
 			}
 		}
 		return bestNode;

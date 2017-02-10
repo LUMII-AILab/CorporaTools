@@ -122,15 +122,32 @@ public class SentenceTransformator
 		ords = ords.stream().sorted().collect(Collectors.toList());
 		// Finds all nodes and makes CoNLL-U tokens from them.
 		int offset = 0;
-		for (int ord : ords)
+		String prevMId = null;
+		for (int currentOrd : ords)
 		{
-			if (ord < 1) continue;
-			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + ord + "]",
+			if (currentOrd < 1) continue;
+
+			// Find the m node to be processed.
+			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
 					s.pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
 				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
-						s.id, ord);
-			offset = transformCurrentToken(nodes.item(0), offset);
+						s.id, currentOrd);
+
+			// Determine, if paragraph has border before this token.
+			boolean paragraphChange = false;
+			String mId = Utils.getMId(nodes.item(0));
+			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
+				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
+			else System.err.println(
+					"Node id \"" + mId + "\"does not match paragraph searching pattern.");
+			if (prevMId!= null && !prevMId.equals(mId))
+				paragraphChange = true;
+
+			// Make new token.
+			offset = transformCurrentToken(nodes.item(0), offset, paragraphChange);
+
+			prevMId = mId;
 		}
 	}
 
@@ -158,19 +175,20 @@ public class SentenceTransformator
 	 * @param aNode		PML A-level node for which CoNLL entry must be created.
 	 * @param offset	Difference between PML node's ord value and ID value for
 	 *                  CoNLL token to be created.
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
 	 * @return Offset for next token.
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	protected int transformCurrentToken(Node aNode, int offset)
+	protected int transformCurrentToken(Node aNode, int offset, boolean paragraphChange)
 	throws XPathExpressionException
 	{
 		Node mNode = (Node)XPathEngine.get().evaluate("./m.rf[1]",
 				aNode, XPathConstants.NODE);
 		String mForm = XPathEngine.get().evaluate("./form", mNode);
 		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
-		String lvtbRole = Utils.getRole(aNode);
 		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
 		boolean noSpaceAfter = false;
 		if ("1".equals(XPathEngine.get().evaluate(
@@ -192,87 +210,54 @@ public class SentenceTransformator
 			if (forms.length != lemmas.length)
 				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
 						s.id, mForm, mLemma);
-			//int length = Math.min(forms.length, lemmas.length);
 
-			// If the root is last token.
-			/*if (lvtbTag.matches("xn.*"))
+			// First one is different.
+			Token firstTok = new Token(baseOrd + offset, forms[0],
+					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
+			if (lvtbTag.matches("xf.*"))
 			{
+				System.out.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+			}
+			else if (lvtbTag.matches("x[ux].*"))
+			{
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+			}
+			else
+			{
+				firstTok.upostag = UDv2PosTag.PART;
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode);
+			}
+			if (paragraphChange) firstTok.misc = "NewPar=Yes";
+			s.conll.add(firstTok);
+			s.pmlaToConll.put(Utils.getId(aNode), firstTok);
 
-				// The last one is different.
-				Token lastTok = new Token(baseOrd + length-1 + offset, forms[length-1],
-						lemmas[length-1], getXpostag(lvtbTag, "_SPLIT_PART"));
-				lastTok.upostag = PosLogic.getUPosTag(lastTok.lemma, lastTok.xpostag, aNode);
-				lastTok.feats = FeatsLogic.getUFeats(lastTok.form, lastTok.lemma, lastTok.xpostag, aNode);
-				if (noSpaceAfter) lastTok.misc = "SpaceAfter=No";
-				s.pmlaToConll.put(Utils.getId(aNode), lastTok);
-
-				// Process the rest.
-				// First one has different xpostag.
-				String xpostag = getXpostag(lvtbTag, "_SPLIT_FIRST");
-				for (int i = 0; i < length - 1; i++)
+			// The rest
+			for (int i = 1; i < forms.length && i < lemmas.length; i++)
+			{
+				offset++;
+				Token nextTok = new Token(baseOrd + offset, forms[i],
+						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
+				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
-					Token nextTok = new Token(baseOrd + offset, forms[i], lemmas[i], xpostag);
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
-					nextTok.head = lastTok.idBegin;
-					nextTok.deprel = URelations.COMPOUND;
-					s.conll.add(nextTok);
-					// Get ready for next token.
-					offset++;
-					xpostag = getXpostag(lvtbTag, "_SPLIT_PART");
-				}
-				s.conll.add(lastTok);
-			}*/
-			// If the root is first token.
-			//else
-			//{
-				// First one is different.
-				Token firstTok = new Token(baseOrd + offset, forms[0],
-						lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-				if (lvtbTag.matches("xf.*"))
-				{
-					System.out.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
-					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
-					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
-				}
-				else if (lvtbTag.matches("x[ux].*"))
-				{
-					firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
-					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
 				}
 				else
 				{
-					firstTok.upostag = UDv2PosTag.PART;
-					firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode);
+					nextTok.upostag = UDv2PosTag.PART;
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode);
 				}
-				s.conll.add(firstTok);
-				s.pmlaToConll.put(Utils.getId(aNode), firstTok);
-
-				// The rest
-				for (int i = 1; i < forms.length && i < lemmas.length; i++)
-				{
-					offset++;
-					Token nextTok = new Token(baseOrd + offset, forms[i],
-							lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-					if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
-					{
-						nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
-						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
-					}
-					else
-					{
-						nextTok.upostag = UDv2PosTag.PART;
-						nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode);
-					}
-					nextTok.head = firstTok.idBegin;
-					if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
-						nextTok.misc = "SpaceAfter=No";
-					if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
-					else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
-					else nextTok.deprel = UDv2Relations.FIXED;
-					s.conll.add(nextTok);
-				}
-			//}
+				nextTok.head = firstTok.idBegin;
+				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
+					nextTok.misc = "SpaceAfter=No";
+				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
+				else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
+				else nextTok.deprel = UDv2Relations.FIXED;
+				s.conll.add(nextTok);
+			}
 			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
 		} else
 		{
@@ -281,8 +266,12 @@ public class SentenceTransformator
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
-			if (noSpaceAfter)
-				 nextTok.misc = "SpaceAfter=No";
+			if (noSpaceAfter && paragraphChange)
+				 nextTok.misc = "NewPar=Yes|SpaceAfter=No";
+			else if (noSpaceAfter)
+				nextTok.misc = "SpaceAfter=No";
+			else if (paragraphChange)
+				nextTok.misc = "NewPar=Yes";
 			s.conll.add(nextTok);
 			s.pmlaToConll.put(Utils.getId(aNode), nextTok);
 		}

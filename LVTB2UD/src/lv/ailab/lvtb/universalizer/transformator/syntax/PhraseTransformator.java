@@ -121,7 +121,7 @@ public class PhraseTransformator
 	{
 		NodeList children = Utils.getAllPMLChildren(phraseNode);
 		String phraseType = Utils.getPhraseType(phraseNode);
-		Node newRoot = Utils.getFirstByOrd(children);
+		Node newRoot = Utils.getFirstByDescOrd(children);
 		s.allAsDependents(newRoot, children, phraseType, null);
 		return newRoot;
 	}
@@ -149,18 +149,18 @@ public class PhraseTransformator
 		if (preds != null && preds.getLength() > 1)
 			System.err.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.PRED, pmcType);
-		if (preds != null && preds.getLength() > 0) newRoot = Utils.getFirstByOrd(preds);
+		if (preds != null && preds.getLength() > 0) newRoot = Utils.getFirstByDescOrd(preds);
 		else
 		{
 			preds = (NodeList)XPathEngine.get().evaluate(
 					"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
-			newRoot = Utils.getFirstByOrd(preds);
+			newRoot = Utils.getFirstByDescOrd(preds);
 		}
 		if (newRoot == null)
 		{
 			System.err.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
-			newRoot = Utils.getFirstByOrd(children);
+			newRoot = Utils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
@@ -191,12 +191,12 @@ public class PhraseTransformator
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
 		Node newRoot = null;
-		if (basElems != null && basElems.getLength() > 0) newRoot = Utils.getFirstByOrd(basElems);
+		if (basElems != null && basElems.getLength() > 0) newRoot = Utils.getFirstByDescOrd(basElems);
 		if (newRoot == null)
 		{
 			System.err.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.BASELEM, pmcType);
-			newRoot = Utils.getFirstByOrd(children);
+			newRoot = Utils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
@@ -426,7 +426,7 @@ public class PhraseTransformator
 	{
 		NodeList children = Utils.getAllPMLChildren(xNode);
 
-		Node first = Utils.getFirstByOrd(children);
+		Node first = Utils.getFirstByDescOrd(children);
 		Node last = Utils.getLastByOrd(children);
 		if (children != null && children.getLength() == 2  &&
 				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))

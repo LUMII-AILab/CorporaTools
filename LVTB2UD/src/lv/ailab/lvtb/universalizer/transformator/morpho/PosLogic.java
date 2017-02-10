@@ -54,7 +54,7 @@ public class PosLogic
 					return UDv2PosTag.PRON;
 
 				NodeList children = Utils.getAllPMLChildren(parent);
-				Node first = Utils.getFirstByOrd(children);
+				Node first = Utils.getFirstByDescOrd(children);
 				Node last = Utils.getLastByOrd(children);
 				if (children != null && children.getLength() == 2  &&
 						(aNode.isSameNode(first)) &&
