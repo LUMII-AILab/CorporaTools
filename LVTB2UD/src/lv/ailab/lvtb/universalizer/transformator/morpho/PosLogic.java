@@ -63,12 +63,11 @@ public class PosLogic
 			}
 			return UDv2PosTag.PRON;
 		}
-		else if (xpostag.matches("p[siqg].*"))
+		else if (xpostag.matches("p[siqgr].*"))
 		{
 			if (lvtbRole.equals(LvtbRoles.ATTR)) return UDv2PosTag.DET;
 			else return UDv2PosTag.PRON;
 		}
-		else if (xpostag.matches("pr.*")) return UDv2PosTag.SCONJ;
 		else if (xpostag.matches("r.*")) return UDv2PosTag.ADV; // Or sometimes SCONJ
 		else if (xpostag.matches("m[cf].*")) return UDv2PosTag.NUM;
 		else if (xpostag.matches("mo.*")) return UDv2PosTag.ADJ;
