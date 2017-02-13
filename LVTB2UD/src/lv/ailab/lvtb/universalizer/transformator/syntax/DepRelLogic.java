@@ -214,7 +214,13 @@ public class DepRelLogic
 	{
 		String tag = Utils.getTag(aNode);
 		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
-
+		Node phraseChild = Utils.getPhraseNode(aNode);
+		if (phraseChild != null)
+		{
+			String constLabel = Utils.getAnyLabel(phraseChild);
+			if (LvtbXTypes.XPREP.matches(constLabel)) return UDv2Relations.IOBJ;
+		}
+		if (tag.matches(".*?\\[(pre|post).*]")) return UDv2Relations.IOBJ;
 		if (tag.matches("[na]...a.*|[pm]....a.*|v..p...a.*")) return UDv2Relations.OBJ;
 		if (tag.matches("[na]...n.*|[pm]....n.*|v..p...n.*") && parentTag.matches("v..d.*"))
 			return UDv2Relations.OBJ;
