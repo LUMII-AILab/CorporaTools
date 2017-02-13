@@ -351,13 +351,15 @@ public class DepRelLogic
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		if (tag.matches("mc.*|xn.*"))
+			return UDv2Relations.NUMMOD;
 
-		if (tag.matches("n.*|x[nf].*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
+		if (tag.matches("n.*|x[fo].*|p.*|.*\\[(pre|post|rel).*|y.*|mo.*"))
 			return UDv2Relations.OBL;
 
 		String lemma = Utils.getLemma(aNode);
 
-		if (tag.matches("r.*|xo.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
+		if (tag.matches("r.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
 		if (tag.matches("q.*")) return UDv2Relations.DISCOURSE;
 
 		warn(aNode);
