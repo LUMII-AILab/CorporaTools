@@ -55,7 +55,7 @@ public class PosLogic
 
 				NodeList children = Utils.getAllPMLChildren(parent);
 				Node first = Utils.getFirstByDescOrd(children);
-				Node last = Utils.getLastByOrd(children);
+				Node last = Utils.getLastByDescOrd(children);
 				if (children != null && children.getLength() == 2  &&
 						(aNode.isSameNode(first)) &&
 						LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))

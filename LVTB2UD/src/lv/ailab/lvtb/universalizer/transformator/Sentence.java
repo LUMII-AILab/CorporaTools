@@ -229,7 +229,7 @@ public class Sentence
 				(potentialRoots == null || potentialRoots.getLength() < 1))
 			potentialRoots = (NodeList)XPathEngine.get().evaluate(
 					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
-		Node newRoot = Utils.getLastByOrd(potentialRoots);
+		Node newRoot = Utils.getLastByDescOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRoot);
@@ -237,7 +237,7 @@ public class Sentence
 		{
 			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
-			newRoot = Utils.getLastByOrd(children);
+			newRoot = Utils.getLastByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(

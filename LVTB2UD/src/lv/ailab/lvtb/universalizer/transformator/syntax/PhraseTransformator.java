@@ -426,7 +426,7 @@ public class PhraseTransformator
 		NodeList children = Utils.getAllPMLChildren(xNode);
 
 		Node first = Utils.getFirstByDescOrd(children);
-		Node last = Utils.getLastByOrd(children);
+		Node last = Utils.getLastByDescOrd(children);
 		if (children != null && children.getLength() == 2  &&
 				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
 		{
@@ -482,7 +482,7 @@ public class PhraseTransformator
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
 		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
-		Node basElem = Utils.getLastByOrd(basElems);
+		Node basElem = Utils.getLastByDescOrd(basElems);
 		if (basElem == null)
 			throw new IllegalArgumentException(
 					"\"" + xType +"\" in entence \"" + s.id + "\" has no basElem.\n");

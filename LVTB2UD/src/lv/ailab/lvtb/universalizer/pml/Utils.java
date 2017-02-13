@@ -449,6 +449,38 @@ public class Utils
 	}
 
 	/**
+	 * Find node with the biggest ord value in its descendants.
+	 * @param nodes list of nodes where to search
+	 * @return	node with smallest given ord value in descendants
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static Node getLastByDescOrd(NodeList nodes)
+	throws XPathExpressionException
+	{
+		if (nodes == null) return null;
+		if (nodes.getLength() == 1) return nodes.item(0);
+		int biggestOrd = Integer.MIN_VALUE;
+		Node bestNode = null;
+		for (int i = 0; i < nodes.getLength(); i++)
+		{
+			NodeList ords = (NodeList)XPathEngine.get().evaluate(
+					".//ord", nodes.item(i), XPathConstants.NODESET);
+			for (int j = 0; j < ords.getLength(); j ++)
+			{
+				int ord = Integer.parseInt(ords.item(j).getTextContent());
+				if (ord > biggestOrd)
+				{
+					biggestOrd = ord;
+					bestNode = nodes.item(i);
+				}
+			}
+		}
+		return bestNode;
+	}
+
+	/**
 	 * Find node with the biggest ord value. Nodes with no ord are ignored.
 	 * @param nodes list of nodes where to search
 	 * @return	node with largest given ord value
