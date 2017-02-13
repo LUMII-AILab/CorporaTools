@@ -400,8 +400,12 @@ public class PhraseTransformator
 		NodeList children = Utils.getAllPMLChildren(xNode);
 		NodeList foreigns = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
+		NodeList punct = (NodeList)XPathEngine.get().evaluate(
+				"./children/node[starts-with(m.rf/tag,'z')]", xNode, XPathConstants.NODESET);
 
-		if (foreigns != null && children.getLength() == foreigns.getLength())
+		if (foreigns != null && (children.getLength() == foreigns.getLength()
+			|| punct != null && foreigns.getLength() > 0
+				&& children.getLength() == foreigns.getLength() + punct.getLength()))
 			return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, UDv2Relations.FLAT_FOREIGN, false);
 		else return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false);
 	}
