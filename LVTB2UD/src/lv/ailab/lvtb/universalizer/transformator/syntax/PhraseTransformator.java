@@ -431,15 +431,45 @@ public class PhraseTransformator
 
 		Node first = Utils.getFirstByDescOrd(children);
 		Node last = Utils.getLastByDescOrd(children);
+		Node lastPhrase = Utils.getPhraseNode(last);
 		if (children != null && children.getLength() == 2  &&
-				LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
+				LvtbXTypes.XSIMILE.equals(Utils.getAnyLabel(lastPhrase)))
 		{
-			if ("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)))
+			Node firstPhrase = Utils.getPhraseNode(first);
+			if (firstPhrase != null)
+			{
+				NodeList firstChildren = Utils.getAllPMLChildren(firstPhrase);
+				//Node firstOfFirst = Utils.getFirstByDescOrd(firstChildren);
+				Node lastOfFirst = Utils.getLastByDescOrd(firstChildren);
+				// "Ne vairāk kā x"
+				if (firstChildren != null && firstChildren.getLength() == 2  &&
+						LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(firstPhrase)) &&
+						("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", lastOfFirst)) ||
+						"Vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", lastOfFirst))))
+				{
+					NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
+							"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
+					Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+					Token vToken = s.pmlaToConll.get(Utils.getId(lastOfFirst));
+					vToken.head = newRootToken.idBegin;
+					vToken.deprel = UDv2Relations.ADVMOD;
+					if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
+					{
+						Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+						//conjToken.deprel = UDv2Relations.FIXED;
+						conjToken.head = vToken.idBegin;
+					}
+					return last;
+				}
+			}
+			// "vairāk kā x"
+			else if ("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)) ||
+					"Vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)))
 			{
 				// Tricky part, where subordinated xSimile structure also must be
 				// rearanged.
 				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
-						"./children/node[role='" + LvtbRoles.CONJ + "']", last, XPathConstants.NODESET);
+						"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token vToken = s.pmlaToConll.get(Utils.getId(first));
 				vToken.head = newRootToken.idBegin;
@@ -447,11 +477,12 @@ public class PhraseTransformator
 				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 				{
 					Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
-					conjToken.deprel = UDv2Relations.FIXED;
+					//conjToken.deprel = UDv2Relations.FIXED;
 					conjToken.head = vToken.idBegin;
 				}
 				return last;
 			}
+			// "tāds kā x"
 			else if ("tāds".equals(Utils.getLemma(first)) || "tāda".equals(Utils.getLemma(first)))
 			{
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
@@ -547,20 +578,21 @@ public class PhraseTransformator
 		}
 		String auxLemma = Utils.getLemma(lastAux);
 		String auxTag = Utils.getTag(lastAux);
+		String basElemTag = Utils.getTag(lastBasElem);
 
 		boolean nominal = false;
 		boolean passive = false;
-		if (auxTag == null && xTag.contains("["))
+		if (xTag != null && xTag.contains("["))
 		{
 			String subtag = xTag.substring(xTag.indexOf("[" + 1));
 			passive = subtag.startsWith("pas");
 			nominal = subtag.startsWith("subst") || subtag.startsWith("adj") || subtag.startsWith("pronom");
 		}
-		else if (lastAux != null)
+		else if (basElemTag != null)
 		{
-			nominal = auxTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
-					auxTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
-			passive = auxTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
+			nominal = basElemTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
+					basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
+			passive = basElemTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
 		}
 
 		Node newRoot = lastBasElem;

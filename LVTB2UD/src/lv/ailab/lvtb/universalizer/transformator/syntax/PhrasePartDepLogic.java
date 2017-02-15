@@ -26,8 +26,6 @@ public class PhrasePartDepLogic
 	 * PhraseTransform class.
 	 * Case when a part of unstruct basElem maps to foreign is handled in
 	 * PhraseTransform class.
-	 * Case when subrAnal is "vairāk" + xSimile is handled in
-	 * PhraseTransform class.
 	 * All specific cases with xPred are handled in PhraseTransform class.
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
@@ -123,17 +121,29 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
 				lvtbRole.equals(LvtbRoles.CONJ))
 		{
-			// Because parent is the xSimile itself.
-			Node firstAncestor = Utils.getPMLGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
-			Node secongAncestor = Utils.getPMLGreatGrandParent(aNode); // node/xinfo/pmcinfo/phraseinfo
+			// For now lets assume, that conjunction can't be coordinated.
+			// Then parent in this situation is the xSimile itself.
+			Node firstAncestor = Utils.getEffectiveAncestor(Utils.getPMLParent(aNode)); // node/xinfo/pmcinfo/phraseinfo
+			Node secondAncestor = Utils.getEffectiveAncestor(firstAncestor); // node/xinfo/pmcinfo/phraseinfo
+			String firstAncType = Utils.getAnyLabel(firstAncestor);
+			String secondAncType = Utils.getAnyLabel(secondAncestor);
+
+			// "vairāk kā trīs"
 			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/form='vairāk']",
-					secongAncestor, XPathConstants.NODESET);
+					"./children/node[m.rf/form='vairāk' or m.rf/form='Vairāk']",
+					secondAncestor, XPathConstants.NODESET);
+			// "ne vairāk kā trīs"
+			NodeList vSiblings2 = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[role='basElem']/children/xinfo[xtype='xParticle']/children/node[m.rf/form='vairāk' or m.rf/form='Vairāk']",
+					secondAncestor, XPathConstants.NODESET);
+			// "tāds kā dumjš"
 			NodeList tSiblings = (NodeList)XPathEngine.get().evaluate(
 					"./children/node[m.rf/lemma='tāds' or m.rf/lemma='tāda']",
-					secongAncestor, XPathConstants.NODESET);
-			String firstAncType = Utils.getAnyLabel(firstAncestor);
-			String secondAncType = Utils.getAnyLabel(secongAncestor);
+					secondAncestor, XPathConstants.NODESET);
+			// "tāda paraduma kā nagu graušana
+			//NodeList tSiblings2 = (NodeList)XPathEngine.get().evaluate(
+			//		"./children/node[role='basElem']/children/node[role='attr' and (m.rf/lemma='tāds' or m.rf/lemma='tāda')]",
+			//		secongAncestor, XPathConstants.NODESET);
 
 			// Check the specific roles
 			if (LvtbRoles.BASELEM.equals(firstAncType))
@@ -141,19 +151,21 @@ public class PhrasePartDepLogic
 				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
 						LvtbPmcTypes.INSPMC.equals(secondAncType))
 					return UDv2Relations.MARK;
-				if (LvtbXTypes.XPRED.equals(secondAncType) ||
+				if (LvtbXTypes.XPRED.equals(secondAncType) || LvtbPmcTypes.UTTER.equals(secondAncType) ||
 						LvtbXTypes.SUBRANAL.equals(secondAncType) && tSiblings != null &&
 						tSiblings.getLength() > 0)
 					return UDv2Relations.DISCOURSE;
-				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && vSiblings != null &&
-						vSiblings.getLength() > 0)
-					return UDv2Relations.COMPOUND;
+				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && (vSiblings != null &&
+						vSiblings.getLength() > 0 || vSiblings2 != null && vSiblings2.getLength() > 0))
+					return UDv2Relations.FIXED;
 			}
-			// In generic SPC case use mark.
+			// In generic SPC case use mark, in generic ADV we use discourse.
 			if (LvtbRoles.SPC.equals(firstAncType))
 				return UDv2Relations.MARK;
+			if (LvtbRoles.ADV.equals(firstAncType))
+				return UDv2Relations.DISCOURSE;
 			
-			Node effAncestor = Utils.getEffectiveAncestor(firstAncestor);
+			Node effAncestor = secondAncestor;
 			if (LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(effAncestor)))
 				effAncestor = Utils.getEffectiveAncestor(effAncestor);
 			String effAncLabel = Utils.getAnyLabel(effAncestor);
@@ -161,6 +173,8 @@ public class PhrasePartDepLogic
 			if (LvtbRoles.SPC.equals(effAncLabel) || LvtbPmcTypes.SPCPMC.equals(effAncLabel)
 					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
 				return UDv2Relations.MARK;
+			if (LvtbRoles.ADV.equals(effAncLabel))
+				return UDv2Relations.DISCOURSE;
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
