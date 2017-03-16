@@ -5,7 +5,7 @@ LETA_intervija_02_20130211
 LETA_izgriezums_09_20130211
 LETA_reliize_60_20130211
 LETA_zinjas_40_20130211
-Latv_Veestn_p134
-Latv_Veestn_p136
-p980
-p1299
+Latv_Veestn_p133
+Latv_Veestn_p135
+p967
+p1094
