@@ -5,7 +5,7 @@ set -o errexit
 if [ $# -ge 1 ]
 then sourceFolder="$1"
 # should come from https://github.com/LUMII-AILab/Morphocorpus
-else sourceFolder="../Morphocorpus/Corpora" 
+else sourceFolder="../../Morphocorpus/Corpora" 
 fi
 
 pmlFolder="$sourceFolder/Merged"
@@ -20,7 +20,7 @@ cp $sourceFolder/Balanseetais/Jaunaakais/*.m $pmlFolder
 cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.m $pmlFolder
 
 #treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
-treebankFolder="../Treebank/Corpora"
+treebankFolder="../../Treebank/Corpora"
 # shopt -s globstar
 # cp $treebankFolder/Corpora/**/*.m $pmlFolder
 find $treebankFolder/ -name "*.m" -exec cp {} $pmlFolder ";"
