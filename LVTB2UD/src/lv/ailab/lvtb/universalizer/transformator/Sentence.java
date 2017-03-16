@@ -1,7 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
+import lv.ailab.lvtb.universalizer.LvtbToUdUI;
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import org.w3c.dom.Node;
@@ -21,9 +22,21 @@ import java.util.List;
  */
 public class Sentence
 {
-	public static boolean CHANGE_IDS = true;
+	/**
+	 * Sentence ID.
+	 */
 	public String id;
+	/**
+	 * Original text.
+	 */
+	public String text;
+	/**
+	 * LVTB PML representation of the tree.
+	 */
 	public Node pmlTree;
+	/**
+	 * UD dependency tree as and conll-style array.
+	 */
 	public ArrayList<Token> conll = new ArrayList<>();
 	//public HashMap<Token, Node> conllToPmla = new HashMap<>();
 	/**
@@ -42,9 +55,12 @@ public class Sentence
 	public String toConllU()
 	{
 		StringBuilder res = new StringBuilder();
-		res.append("# ");
-		if (CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
+		res.append("# sent_id = ");
+		if (LvtbToUdUI.CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
 		else res.append(id);
+		res.append("\n");
+		res.append("# text = ");
+		res.append(text);
 		res.append("\n");
 		for (Token t : conll)
 			res.append(t.toConllU());
@@ -63,11 +79,13 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, NodeList children, String phraseType,
-			URelations childDeprel)
+			UDv2Relations childDeprel)
 	throws XPathExpressionException
 	{
 		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel);
@@ -84,26 +102,55 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, List<Node> children, String phraseType,
-			URelations childDeprel)
+			UDv2Relations childDeprel)
 	throws XPathExpressionException
 	{
-		// Process root.
-		Token rootToken = pmlaToConll.get(Utils.getId(newRoot));
+		if (children == null || children.isEmpty()) return;
 
 		// Process children.
 		for (Node child : children)
 		{
-			if (child.equals(newRoot)) continue;
-			Token childToken = pmlaToConll.get(Utils.getId(child));
-			childToken.head = rootToken.idBegin;
-			if (childDeprel == null)
-				childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
-			else childToken.deprel = childDeprel;
+			addAsDependent(newRoot, child, phraseType, childDeprel);
 		}
+	}
+	/**
+	 * Make a given node a child of the designated parent. Set UD for the child.
+	 * If designated parent is the same as child node, circular dependency is
+	 * not made, role is not set.
+	 * @param parent		designated parent
+	 * @param child			designated child
+	 * @param phraseType    phrase type from PML data, used for obtaining
+	 *                      correct UD role for children.
+	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
+	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
+	 *                      be used to obtain DEPREL for child nodes.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void addAsDependent (
+			Node parent, Node child, String phraseType, UDv2Relations childDeprel)
+	throws XPathExpressionException
+	{
+		if (child == null ) return;
+
+		// Process root.
+		Token rootToken = pmlaToConll.get(Utils.getId(parent));
+
+		// Process child.
+		if (child.equals(parent) || child.isSameNode(parent)) return;
+
+		Token childToken = pmlaToConll.get(Utils.getId(child));
+		childToken.head = rootToken.idBegin;
+		if (childDeprel == null)
+			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
+		else childToken.deprel = childDeprel;
 	}
 
 	/**
@@ -120,11 +167,13 @@ public class Sentence
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node allUnderFirst(
 			Node phraseNode, String phraseType, String newRootType,
-			URelations childDeprel, boolean warnMoreThanOne)
+			UDv2Relations childDeprel, boolean warnMoreThanOne)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -134,12 +183,12 @@ public class Sentence
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRootType);
-		Node newRoot = Utils.getFirstByOrd(potentialRoots);
+		Node newRoot = Utils.getFirstByDescOrd(potentialRoots);
 		if (newRoot == null)
 		{
 			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
-			newRoot = Utils.getFirstByOrd(children);
+			newRoot = Utils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
@@ -154,34 +203,41 @@ public class Sentence
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
 	 *                      	correct UD role for children
-	 * @param newRootType		rubroot for new UD structure will be searched
+	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
+	 * @param newRootBackUpType backUpRole, if no nodes of newRootType is found
 	 * @param childDeprel		value to sent for DEPREL field for child nodes,
 	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
 	public Node allUnderLast(
-			Node phraseNode, String phraseType, String newRootType,
-			URelations childDeprel, boolean warnMoreThanOne)
+			Node phraseNode, String phraseType, String newRootType, String newRootBackUpType,
+			UDv2Relations childDeprel, boolean warnMoreThanOne)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
 				"./children/*", phraseNode, XPathConstants.NODESET);
 		NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
-		Node newRoot = Utils.getLastByOrd(potentialRoots);
+		if (newRootBackUpType != null &&
+				(potentialRoots == null || potentialRoots.getLength() < 1))
+			potentialRoots = (NodeList)XPathEngine.get().evaluate(
+					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
+		Node newRoot = Utils.getLastByDescOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRoot);
 		if (newRoot == null)
 		{
 			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
-					phraseType, id, newRoot);
-			newRoot = Utils.getLastByOrd(children);
+					phraseType, id, newRootType);
+			newRoot = Utils.getLastByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(

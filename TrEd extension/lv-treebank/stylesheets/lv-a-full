@@ -5,12 +5,16 @@ text:<? $${m/w/token}eq$${m/form} ?
   '#{-over:1}#{'.CustomColor('spell').'}['.
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
+  
 node: <? '#{black}${comment}' if $${comment}?>
-node:<? LV_A::is_unfinished($this) ? '#{red}!!!' : ''?>
-node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}???' ?>
+node:<? LV_A::is_unfinished($this) ? '#{red}Something is missing!' : ''?>
+node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}Role unsuitable for this parent!' ?>
 node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
 	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
-	? '#{red}???' : ''?>
+	? '#{red}Wrong tree structure!' : ''?>
+node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${m/tag}) }?>
+node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
+node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}<?
   ' ' if $${ord} and $${m/form} ?><?
@@ -52,5 +56,10 @@ style: #{Node-shape:oval}
 
 hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
-  $${tag} ? 'x/tag: ${tag}' : '' ?><? 
-  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?>
+  $${tag} ? 'phrase/tag: ${tag}' : '' ?><? 
+  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
+  "\n---\n" if ($${m/tag} or $${tag} or $${reduction}) ?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${tag}) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${reduction}) } ?>
+  

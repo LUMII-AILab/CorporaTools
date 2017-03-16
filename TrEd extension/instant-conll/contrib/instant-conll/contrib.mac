@@ -6,4 +6,7 @@ package InstantConll;
 #binding-context CoNLL_2007
 #include "CONLL_2007.mak"
 
+#binding-context CoNLL_U
+#include "CONLL_U.mak"
+
 #endif instant-conll

@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.URelations;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import org.w3c.dom.Node;
@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.util.HashSet;
 
 /**
  * Relations between dependency labeling used in LVTB and UD.
@@ -18,15 +19,54 @@ import javax.xml.xpath.XPathExpressionException;
 public class DepRelLogic
 {
 	/**
+	 * To avoid repetitive messages, any message once printed are remembered.
+	 * Set this to null to avoid this.
+	 */
+	public HashSet<String> warnRegister;
+
+	public DepRelLogic() { warnRegister = new HashSet<>(); }
+
+	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param aNode	node for which UD DEPREL should be obtained
-	 * @return	UD DEPREL
-	 * @throws XPathExpressionException
+	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
+	 * 			representing a core argument).
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
-	public static URelations depToUD(Node aNode)
+	public UDv2Relations depToUD(Node aNode)
 	throws XPathExpressionException
 	{
-		String lvtbRole = XPathEngine.get().evaluate("./role", aNode);
+		UDv2Relations prelaminaryRole = depToUDNoRed(aNode);
+		Node pmlParent = Utils.getPMLParent(aNode);
+		Node pmlEffParent = Utils.getEffectiveAncestor(aNode);
+		if ((Utils.isReductionNode(pmlParent) || Utils.isReductionNode(pmlEffParent))
+				&& (prelaminaryRole.equals(UDv2Relations.NSUBJ)
+					|| prelaminaryRole.equals(UDv2Relations.NSUBJ_PASS)
+					|| prelaminaryRole.equals(UDv2Relations.OBJ)
+					|| prelaminaryRole.equals(UDv2Relations.IOBJ)
+					|| prelaminaryRole.equals(UDv2Relations.CSUBJ)
+					|| prelaminaryRole.equals(UDv2Relations.CSUBJ_PASS)
+					|| prelaminaryRole.equals(UDv2Relations.CCOMP)
+					|| prelaminaryRole.equals(UDv2Relations.XCOMP)))
+			return UDv2Relations.ORPHAN;
+		return prelaminaryRole;
+	}
+
+	/**
+	 * Generic relation between LVTB dependency roles and UD DEPREL. Orphan
+	 * roles are not assigned.
+	 * @param aNode	node for which UD DEPREL should be obtained
+	 * @return	UD DEPREL before reduction postprocessing
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public UDv2Relations depToUDNoRed(Node aNode)
+	throws XPathExpressionException
+	{
+		String lvtbRole = Utils.getRole(aNode);
 
 		// Simple dependencies.
 		if (lvtbRole.equals(LvtbRoles.SUBJ))
@@ -41,7 +81,7 @@ public class DepRelLogic
 				lvtbRole.equals(LvtbRoles.SIT))
 			return advSitToUD(aNode);
 		if (lvtbRole.equals(LvtbRoles.DET))
-			return URelations.NMOD;
+			return UDv2Relations.OBL;
 		if (lvtbRole.equals(LvtbRoles.NO))
 			return noToUD(aNode);
 
@@ -51,9 +91,9 @@ public class DepRelLogic
 		if (lvtbRole.equals(LvtbRoles.SUBJCL))
 			return subjClToUD(aNode);
 		if (lvtbRole.equals(LvtbRoles.OBJCL))
-			return URelations.CCOMP;
+			return UDv2Relations.CCOMP;
 		if (lvtbRole.equals(LvtbRoles.ATTRCL))
-			return URelations.ACL;
+			return UDv2Relations.ACL;
 		if (lvtbRole.equals(LvtbRoles.PLACECL) ||
 				lvtbRole.equals(LvtbRoles.TIMECL) ||
 				lvtbRole.equals(LvtbRoles.MANCL) ||
@@ -66,125 +106,167 @@ public class DepRelLogic
 				lvtbRole.equals(LvtbRoles.MOTIVCL) ||
 				lvtbRole.equals(LvtbRoles.COMPCL) ||
 				lvtbRole.equals(LvtbRoles.QUASICL))
-			return URelations.ADVCL;
+			return UDv2Relations.ADVCL;
 
 		// Semi-clausal dependencies.
 		if (lvtbRole.equals(LvtbRoles.INS))
 			return insToUD(aNode);
 		if (lvtbRole.equals(LvtbRoles.DIRSP))
-			return URelations.PARATAXIS;
+			return UDv2Relations.PARATAXIS;
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations subjToUD(Node aNode)
+	public UDv2Relations subjToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
-		// Nominal subject
-		if (tag.matches("[nampx].*|v..pd.*|y.*"))
+		// Nominal++ subject
+		// This procesing is somewhat tricky: it is allowed for nsubj and
+		// nsubjpas to be [rci].*, but it is not allowed for nmod.
+		if (tag.matches("[nampxy].*|v..pd.*|[rci].*"))
 		{
 			Node pmlParent = Utils.getPMLParent(aNode);
 			String parentTag = Utils.getTag(pmlParent);
-			String parentType = Utils.getAnyLabel(pmlParent);
+			String parentEffType = Utils.getEffectiveLabel(pmlParent);
+			Node pmlEffAncestor = Utils.getEffectiveAncestor(aNode);
+			// Hopefully either parent or effective ancestor is tagged as verb
+			// or xPred.
+			Node parentXChild = Utils.getPhraseNode(pmlParent);
+			Node ancXChild = Utils.getPhraseNode(pmlEffAncestor);
 
 			// Parent is predicate
-			if (parentType.equals(LvtbRoles.PRED))
+			if (parentEffType.equals(LvtbRoles.PRED))
 			{
-				Node xChild = Utils.getPhraseNode(pmlParent);
 				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+						LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
 				{
-					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return URelations.NSUBJPASS;
-					if (parentTag.matches("v.*")) return URelations.NSUBJ;
+					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return UDv2Relations.NSUBJ_PASS;
+					if (parentTag.matches("v.*")) return UDv2Relations.NSUBJ;
+					String ancestorTag = Utils.getTag(pmlEffAncestor);
+					if (ancestorTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return UDv2Relations.NSUBJ_PASS;
+					if (ancestorTag.matches("v.*")) return UDv2Relations.NSUBJ;
+
 				}
 				// Parent is simple predicate
 				else
 				{
-					// TODO recheck zd.*
+					// TODO: check the data if participles is realy appropriate here.
 					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
-						return URelations.NSUBJ;
+					//if (parentTag.matches("v..[^p].....a.*"))
+						return UDv2Relations.NSUBJ;
 					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
-						return URelations.NSUBJPASS;
+					//if (parentTag.matches("v..[^p].....p.*"))
+						return UDv2Relations.NSUBJ_PASS;
 					if (parentTag.matches("z.*"))
 					{
 						String reduction = XPathEngine.get().evaluate(
 								"./reduction", pmlParent);
-						if (reduction.matches("v..[^p].....a.*|v..n.*"))
-							return URelations.NSUBJ;
-						if (reduction.matches("v..[^p].....p.*"))
-							return URelations.NSUBJPASS;
+						if (reduction.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
+							return UDv2Relations.NSUBJ;
+						if (reduction.matches("v..[^p].....p.*||v..pd...p.*"))
+							return UDv2Relations.NSUBJ_PASS;
+						//if (reduction.matches("v..n.*"))
+						//	return  URelations.NMOD;
 					}
 				}
 			}
-			// Parent is basElem of some phrase
-			if (parentType.equals(LvtbRoles.BASELEM))
-			{
-				Node xChild = Utils.getPhraseNode(pmlParent);
-				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
-				{
-					if (parentTag.matches("v..[^p].....p.*|v[^\\[]+\\[pas.*")) return URelations.NSUBJPASS;
-					if (parentTag.matches("v..[^a].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return URelations.NSUBJ;
-				}
-				// Parent is simple predicate
-				else
-				{
-					if (parentTag.matches("v..[^p].....a.*"))
-						return URelations.NSUBJ;
-					if (parentTag.matches("v..[^p].....p.*"))
-						return URelations.NSUBJPASS;
-					// No participles here, because that is SPC subject thingy.
-				}
-			}
-			// TODO what to do with participal SPC subjects?
 
+			// SPC subject, subject subject ("vienam cīnīties ir grūtāk")
+			else if ((LvtbRoles.SPC.equals(parentEffType) || LvtbRoles.SUBJ.equals(parentEffType))
+					&& !tag.matches("[rci].*]"))
+				return UDv2Relations.OBL;
+
+			// Parent is basElem of some phrase
+			else if (parentEffType.equals(LvtbRoles.BASELEM))
+			{
+				// Parent is complex predicate
+				if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+						LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
+				{
+					if (parentTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return UDv2Relations.NSUBJ_PASS;
+					if (parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return UDv2Relations.NSUBJ;
+					String ancestorTag = Utils.getTag(pmlEffAncestor);
+					if (ancestorTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return UDv2Relations.NSUBJ_PASS;
+					if (ancestorTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return UDv2Relations.NSUBJ;
+				}
+				else if (parentTag.matches("v..[^pn].....a.*"))
+						return UDv2Relations.NSUBJ;
+				else if (parentTag.matches("v..[^pn].....p.*"))
+						return UDv2Relations.NSUBJ_PASS;
+				// Infinitive subjects
+				else if (parentTag.matches("v..[np].*") && !tag.matches("[rci].*]"))
+						return UDv2Relations.OBL;
+			}
 		}
 		// Infinitive
 		if (tag.matches("v..n.*"))
-			return URelations.CCOMP;
+			return UDv2Relations.CCOMP;
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations objToUD(Node aNode)
+	public UDv2Relations objToUD(Node aNode)
+	throws XPathExpressionException
+	{
+		String tag = Utils.getTag(aNode);
+		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
+		Node phraseChild = Utils.getPhraseNode(aNode);
+		if (phraseChild != null)
+		{
+			String constLabel = Utils.getAnyLabel(phraseChild);
+			if (LvtbXTypes.XPREP.matches(constLabel)) return UDv2Relations.IOBJ;
+		}
+		if (tag.matches(".*?\\[(pre|post).*]")) return UDv2Relations.IOBJ;
+		if (tag.matches("[na]...a.*|[pm]....a.*|v..p...a.*")) return UDv2Relations.OBJ;
+		if (tag.matches("[na]...n.*|[pm]....n.*|v..p...n.*") && parentTag.matches("v..d.*"))
+			return UDv2Relations.OBJ;
+		return UDv2Relations.IOBJ;
+	}
+
+	public UDv2Relations spcToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
 		String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
 
-		if (tag.matches("[na]...a.*|[pm]....a.*|v..p...a.*")) return URelations.DOBJ;
-		if (tag.matches("[na]...n.*|[pm]....n.*|v..p...n.*") && parentTag.matches("v..d.*"))
-			return URelations.DOBJ;
-		return URelations.IOBJ;
-	}
+		// If parent is something reduced to punctuation mark, use reduction
+		// tag instead.
+		if (parentTag.matches("z.*"))
+		{
+			String parentRed = Utils.getReduction(Utils.getPMLParent(aNode));
+			if (parentRed != null && parentRed.length() > 0)
+				parentTag = parentRed;
+		}
 
-	public static URelations spcToUD(Node aNode)
-	throws XPathExpressionException
-	{
-		String tag = Utils.getTag(aNode);
-
+		String parentEffRole = Utils.getEffectiveLabel(Utils.getPMLParent(aNode));
 		// Infinitive SPC
 		if (tag.matches("v..n.*"))
 		{
-			String parentTag = Utils.getTag(Utils.getPMLParent(aNode));
 			Node pmlEfParent = Utils.getEffectiveAncestor(aNode);
 			String effParentType = Utils.getAnyLabel(pmlEfParent);
-			if ((effParentType.equals(LvtbRoles.PRED) ||
-					(effParentType.equals(LvtbRoles.BASELEM) &&
-					LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
-					parentTag.matches("v..[^p]...[123].*"))
-				return URelations.CCOMP; // It is impposible safely to distinguish xcomp for now.
-			if (parentTag.matches("[nampx].*|v..pd.*")) return URelations.ACL;
+			//if ((effParentType.equals(LvtbRoles.PRED) ||
+			//		(effParentType.equals(LvtbRoles.BASELEM) &&
+			//		LvtbXTypes.XPRED.equals(Utils.getEffectiveLabel(Utils.getPMLParent(pmlEfParent))))) &&
+			//		parentTag.matches("v..([^p]|p[^d]).*"))
+			if (parentTag.matches("v..([^p]|p[^d]).*") || LvtbXTypes.XPRED.equals(effParentType))
+				return UDv2Relations.CCOMP; // It is impposible safely to distinguish xcomp for now.
+			if (parentTag.matches("v..pd.*")) return UDv2Relations.XCOMP;
+			if (parentTag.matches("[nampxy].*")) return UDv2Relations.ACL;
 		}
 		// Simple nominal SPC
+		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
+			tag.matches("x.*|y.*") && parentTag.matches("v..p....ps.*"))
+			return UDv2Relations.OBL;
 		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y.*"))
-			return URelations.ACL;
+			return UDv2Relations.ACL;
+
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 		// SPC with comparison
-		if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return URelations.ADVCL;
+		if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return UDv2Relations.ADVCL;
 		// prepositional SPC
 		if (xType != null && xType.equals(LvtbXTypes.XPREP))
 		{
@@ -200,11 +282,14 @@ public class DepRelLogic
 				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
-					&& baseElemTag != null && baseElemTag.matches("[nampx].*"))
-				return URelations.XCOMP;
+					&& baseElemTag != null && baseElemTag.matches("[nampxy].*")
+					&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
+				return UDv2Relations.XCOMP;
+			else if (parentTag.matches("[nampxy].*|v..pd.*"))
+				return UDv2Relations.NMOD;
 		}
 		// Participal SPC
-		if (tag.matches("v..p[pu].*")) return URelations.ADVCL;
+		if (tag.matches("v..p[pu].*")) return UDv2Relations.ADVCL;
 
 		// SPC with punctuation.
 		String pmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
@@ -219,39 +304,44 @@ public class DepRelLogic
 			String basElemXType = Utils.getPhraseType(basElems.item(0));
 
 			// SPC with comparison
-			if (LvtbXTypes.XSIMILE.equals(basElemXType)) return URelations.ADVCL;
-			// Participal SPC
-			if (basElemTag.matches("v..p[pu].*")) return URelations.ADVCL;
+			if (LvtbXTypes.XSIMILE.equals(basElemXType)) return UDv2Relations.ADVCL;
+			// Participal SPC, adverbs in commas
+			if (basElemTag.matches("v..p[pu].*|r.*")) return UDv2Relations.ADVCL;
 			// Nominal SPC
 			if (basElemTag.matches("n.*") ||
 					basElemTag.matches("y.*") &&
 					Utils.getLemma(basElems.item(0)).matches("\\p{Lu}+"))
-				return URelations.APPOS;
+				return UDv2Relations.APPOS;
 			// Adjective SPC
-			if (basElemTag.matches("a.*|v..d.*")) return URelations.ACL;
+			if (basElemTag.matches("a.*|v..d.*")) return UDv2Relations.ACL;
 		}
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations attrToUD(Node aNode)
+	public UDv2Relations attrToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		String lemma = Utils.getLemma(aNode);
 
-		if (tag.matches("n.*|y.*")) return URelations.NMOD;
-		if (tag.matches("r.*")) return URelations.ADVMOD;
-		if (tag.matches("m[cf].*|xn.*")) return URelations.NUMMOD;
-		if (tag.matches("mo.*|xo.*|v..p.*")) return URelations.AMOD;
-		if (tag.matches("p.*")) return URelations.DET;
+		if (tag.matches("n.*|y.*") || lemma.equals("%")) return UDv2Relations.NMOD;
+		if (tag.matches("r.*")) return UDv2Relations.ADVMOD;
+		if (tag.matches("m[cf].*|xn.*")) return UDv2Relations.NUMMOD;
+		if (tag.matches("mo.*|xo.*|v..p.*")) return UDv2Relations.AMOD;
+		if (tag.matches("p.*")) return UDv2Relations.DET;
 		if (tag.matches("a.*"))
 		{
-			String lemma = Utils.getLemma(aNode);
 			if (lemma != null && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)|(daudz|vairāk|daž)(i|as)"))
-				return URelations.DET;
-			return URelations.AMOD;
+				return UDv2Relations.DET;
+			return UDv2Relations.AMOD;
 		}
+		// Both cases can provide mistakes, but there is no way to solve this
+		// now.
+		if (tag.matches("x[fu].*")) return UDv2Relations.NMOD;
+		if (tag.matches("xx.*")) return UDv2Relations.AMOD;
+		
 		/*if (tag.matches("y.*"))
 		{
 			String lemma = Utils.getLemma(aNode);
@@ -260,91 +350,102 @@ public class DepRelLogic
 		}*/
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations advSitToUD(Node aNode)
+	public UDv2Relations advSitToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		if (tag.matches("mc.*|xn.*"))
+			return UDv2Relations.NUMMOD;
 
-		if (tag.matches("n.*|xn.*|p.*|.*\\[(pre|post|rel).*|mc.*|y.*"))
-			return URelations.NMOD;
+		if (tag.matches("n.*|x[fo].*|p.*|.*\\[(pre|post|rel).*|y.*|mo.*"))
+			return UDv2Relations.OBL;
 
-		if (tag.matches("r.*")) return URelations.ADVMOD;
-		if (tag.matches("q.*"))
-		{
-			String lemma = Utils.getLemma(aNode);
-			if ("ne".equals(lemma)) return URelations.NEG;
-			return URelations.DISCOURSE;
-		}
+		String lemma = Utils.getLemma(aNode);
+
+		if (tag.matches("r.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
+		if (tag.matches("q.*")) return UDv2Relations.DISCOURSE;
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations noToUD(Node aNode) throws XPathExpressionException
+	public UDv2Relations noToUD(Node aNode)
+	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
+		String lemma = Utils.getLemma(aNode);
 		String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
-		if (LvtbPmcTypes.ADRESS.equals(subPmcType)) return URelations.VOCATIVE;
+		if (LvtbPmcTypes.ADDRESS.equals(subPmcType)) return UDv2Relations.VOCATIVE;
 		if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
-			return URelations.DISCOURSE;
-		if (tag != null && tag.matches("[qi].*")) return URelations.DISCOURSE;
+			return UDv2Relations.DISCOURSE;
+		if (tag != null && tag.matches("[qi].*")) return UDv2Relations.DISCOURSE;
+
+		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
+			return UDv2Relations.CONJ;
+
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations predClToUD(Node aNode)
+	public UDv2Relations predClToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		String parentType = Utils.getAnyLabel(Utils.getPMLParent(aNode));
 
 		// Parent is simple predicate
-		if (parentType.equals(LvtbRoles.PRED)) return URelations.CCOMP;
+		if (parentType.equals(LvtbRoles.PRED)) return UDv2Relations.CCOMP;
 		// Parent is complex predicate
 		String grandPatentType = Utils.getAnyLabel(Utils.getPMLGrandParent(aNode));
-		if (grandPatentType.equals(LvtbXTypes.XPRED)) return URelations.ACL;
+		if (grandPatentType.equals(LvtbXTypes.XPRED)) return UDv2Relations.ACL;
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations subjClToUD(Node aNode)
+	public UDv2Relations subjClToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		Node pmlParent = Utils.getPMLParent(aNode);
-		String parentTag = Utils.getTag(pmlParent);
-		String parentType = Utils.getAnyLabel(pmlParent);
 
-		// Parent is predicate
-		if (parentType.equals(LvtbRoles.PRED))
+		// Effective ancestor is predicate
+		if (LvtbRoles.PRED.equals(Utils.getEffectiveLabel(pmlParent)))
 		{
-			Node xChild = Utils.getPhraseNode(pmlParent);
+			String parentTag = Utils.getTag(pmlParent);
+			Node pmlEffAncestor = Utils.getEffectiveAncestor(aNode);
+			// Hopefully either parent or effective ancestor is tagged as verb
+			// or xPred.
+			Node parentXChild = Utils.getPhraseNode(pmlParent);
+			Node ancXChild = Utils.getPhraseNode(pmlEffAncestor);
 			// Parent is complex predicate
-			if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(xChild)))
+			if (LvtbXTypes.XPRED.equals(Utils.getPhraseType(parentXChild)) ||
+					LvtbXTypes.XPRED.equals(Utils.getPhraseType(ancXChild)))
 			{
-				if (parentTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return URelations.NSUBJPASS;
-				if (parentTag.matches("v.*")) return URelations.NSUBJ;
+				if (parentTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return UDv2Relations.CSUBJ_PASS;
+				if (parentTag.matches("v.*")) return UDv2Relations.CSUBJ;
+				String ancestorTag = Utils.getTag(pmlEffAncestor);
+				if (ancestorTag.matches("v..[^p].....p.*|v.*?\\[pas.*")) return UDv2Relations.CSUBJ_PASS;
+				if (ancestorTag.matches("v.*")) return UDv2Relations.CSUBJ;
 			}
 			// Parent is simple predicate
 			else
 			{
 				if (parentTag.matches("v..[^p].....a.*|v..n.*"))
-					return URelations.NSUBJ;
+					return UDv2Relations.CSUBJ;
 				if (parentTag.matches("v..[^p].....p.*"))
-					return URelations.NSUBJPASS;
+					return UDv2Relations.CSUBJ_PASS;
 			}
-		}
-		if (parentType.equals(LvtbRoles.SUBJ))
-			return URelations.ACL;
+		} else if (LvtbRoles.SUBJ.equals(Utils.getEffectiveLabel(pmlParent)))
+			return UDv2Relations.ACL;
 
 		warn(aNode);
-		return URelations.DEP;
+		return UDv2Relations.DEP;
 	}
 
-	public static URelations insToUD(Node aNode)
+	public static UDv2Relations insToUD(Node aNode)
 	throws XPathExpressionException
 	{
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
@@ -352,20 +453,27 @@ public class DepRelLogic
 				aNode, XPathConstants.NODESET);
 		if (basElems!= null && basElems.getLength() > 1)
 			System.err.printf("\"%s\" has multiple \"%s\"", LvtbPmcTypes.INSPMC, LvtbRoles.PRED);
-		if (basElems != null) return URelations.PARATAXIS;
-		return URelations.DISCOURSE; // Washington (CNN) is left unidentified.
+		if (basElems != null) return UDv2Relations.PARATAXIS;
+		return UDv2Relations.DISCOURSE; // Washington (CNN) is left unidentified.
 	}
 
 	/**
 	 * Print out the warning that role was not tranformed.
 	 * @param node	node about which to warn
-	 * @throws XPathExpressionException
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
 	 */
-	protected static void warn(Node node) throws XPathExpressionException
+	protected void warn(Node node) throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(node);
 		String role = XPathEngine.get().evaluate("./role", node);
-		System.err.printf("Role \"%s\" for node %s was not transformed.\n", role, nodeId);
+		String warning = String.format("Role \"%s\" for node %s was not transformed.", role, nodeId);
+		if (warnRegister!= null && !warnRegister.contains(warning))
+		{
+			System.err.println(warning);
+			warnRegister.add(warning);
+		}
 	}
 
 }

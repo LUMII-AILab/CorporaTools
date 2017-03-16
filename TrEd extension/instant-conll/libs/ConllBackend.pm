@@ -11,17 +11,17 @@ use Treex::PML;
 
 #use Moose;
 #extends qw (Treex::PML::IO);
-#our @ISA = qw(Treex::PML::IO);
-use parent qw(Treex::PML::IO);
+our @ISA = qw(Treex::PML::IO);
+#use parent qw(Treex::PML::IO);
 
-#sub new
-#{
-#	my $class = shift;
-#	#my $self = Treex::PML::IO->new;
-#	my $self = $class->SUPER::new;
-#	bless $self, $class;
-#	return $self, $class;
-#}
+sub new
+{
+	my $class = shift;
+	#my $self = Treex::PML::IO->new;
+	my $self = $class->SUPER::new;
+	bless $self, $class;
+	return $self, $class;
+}
 
 sub test
 {

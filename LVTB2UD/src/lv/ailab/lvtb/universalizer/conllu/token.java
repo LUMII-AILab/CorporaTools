@@ -1,11 +1,8 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Format definition: http://universaldependencies.org/format.html
@@ -44,7 +41,7 @@ public class Token
 	 * UPOSTAG: Universal part-of-speech tag drawn from our revised version of
 	 * the Google universal POS tags.
 	 */
-	public UPosTag upostag = null;
+	public UDv2PosTag upostag = null;
 	/**
 	 * 5th column.
 	 * XPOSTAG: Language-specific part-of-speech tag; underscore if not
@@ -57,7 +54,7 @@ public class Token
 	 * inventory or from a defined language-specific extension; underscore if
 	 * not available.
 	 */
-	public ArrayList<UFeat> feats = null;
+	public ArrayList<UDv2Feat> feats = null;
 	/**
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
@@ -68,7 +65,7 @@ public class Token
 	 * DEPREL: Universal Stanford dependency relation to the HEAD
 	 * (root iff HEAD = 0) or a defined language-specific subtype of one.
 	 */
-	public URelations deprel = null;
+	public UDv2Relations deprel = null;
 	/**
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).
@@ -125,7 +122,7 @@ public class Token
 		if (feats == null || feats.size() < 1) res.append("_");
 		else
 		{
-			HashMap<String, HashSet<String>> compact = UFeat.toMap(feats);
+			HashMap<String, HashSet<String>> compact = UDv2Feat.toMap(feats);
 			res.append(compact.keySet().stream()
 					.map(k -> k + "=" + compact.get(k).stream().sorted(String.CASE_INSENSITIVE_ORDER).reduce((v1, v2) -> v1 + "," + v2).orElse(""))
 					.sorted(String.CASE_INSENSITIVE_ORDER)

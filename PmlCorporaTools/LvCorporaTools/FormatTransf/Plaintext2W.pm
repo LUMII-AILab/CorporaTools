@@ -1,6 +1,7 @@
 ﻿#!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::FormatTransf::Plaintext2W;
 
+use warnings;
 use utf8;
 use strict;
 
@@ -118,7 +119,7 @@ END
 	}
 
 	# Open input file.
-	my $in = IO::File->new("$dirPrefix/$oldName", "< :encoding(UTF-8)")
+	my $in = IO::File->new("$dirPrefix/$oldName", "< :encoding($encoding)")
 		or die "Could not open file $oldName: $!";
 	# Open output file.
 	File::Path::mkpath("$dirPrefix/res/");

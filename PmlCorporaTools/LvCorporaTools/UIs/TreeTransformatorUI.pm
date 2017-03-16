@@ -423,7 +423,7 @@ sub knit
 	
 	# Set parameters.
 	my $schemaDir = $params->{'path'};
-	$schemaDir = 'TrEd extension/lv-treebank/resources' unless $schemaDir;
+	$schemaDir = '../TrEd extension/lv-treebank/resources' unless $schemaDir;
 	
 	# Convert.
 	LvCorporaTools::PMLUtils::Knit::processDir($source, 'a', $schemaDir);

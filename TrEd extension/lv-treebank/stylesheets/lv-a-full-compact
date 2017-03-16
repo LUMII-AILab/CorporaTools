@@ -57,5 +57,9 @@ style: #{Node-shape:oval}
 
 hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
-  $${tag} ? 'x/tag: ${tag}' : '' ?><? 
-  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?>
+  LV_A::has_nondep_child($this)->attr('tag') ? 'tag: ' . LV_A::has_nondep_child($this)->attr('tag') : '' ?><? 
+  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
+  "\n---\n" if ($${m/tag} or LV_A::has_nondep_child($this)->attr('tag') or $${reduction}) ?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho(LV_A::has_nondep_child($this)->attr('tag')) } ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${reduction}) } ?>
