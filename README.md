@@ -19,6 +19,11 @@ Dependencies;
 * MorphoVerificator - java written tool implementing various heuristics for
 searching human errors in morphological corpora.
 
+Prerequisites
+------------
+Perl
+XSLT module (on Ubuntu, run 'cpan XML::libXSLT')
+
 Main work-flows
 ---------------
 
@@ -40,10 +45,10 @@ CheckW, NormalizeIds, CheckLvPml with param A
 * Preprocessing morphocorpus files before putting in repository: CheckLvPml
 with param M
 * Preparing morphologically tagged data for training the LVTagger system:
-	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus
-	download treebank from https://github.com/LUMII-AILab/Treebank
-	run ./preparePOSTagData.sh
-	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
+**	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
+**	download treebank from https://github.com/LUMII-AILab/Treebank
+**	run ./preparePOSTagData.sh
+**	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
 
 License
 -------
