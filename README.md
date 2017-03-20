@@ -22,7 +22,7 @@ searching human errors in morphological corpora.
 Prerequisites
 ------------
 Perl
-XSLT module (on Ubuntu, run 'cpan XML::libXSLT')
+XSLT module (on Ubuntu, run 'sudo apt-get install libxml-libxslt-perl')
 
 Main work-flows
 ---------------
