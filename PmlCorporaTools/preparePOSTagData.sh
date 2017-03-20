@@ -21,9 +21,10 @@ cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.m $pmlFolder
 
 #treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
 treebankFolder="../../Treebank/Corpora"
-# shopt -s globstar
-# cp $treebankFolder/Corpora/**/*.m $pmlFolder
-find $treebankFolder/ -name "*.m" -exec cp {} $pmlFolder ";"
+tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
+do
+	cp "$treebankFolder/$file" $pmlFolder
+done
 
 # We use a predefined file split between train/dev/test
 for file in $(<LvCorporaTools/corpus_devset.txt); do 
