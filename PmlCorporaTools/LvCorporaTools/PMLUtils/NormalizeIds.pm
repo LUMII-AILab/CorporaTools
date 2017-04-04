@@ -101,10 +101,10 @@ END
 	print "Starting...\n";
 	
 	my $xmls = &load($dirPrefix, $oldName, $newName);
-	#my $res = 
+	
 	&process(
 		$newName, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
-		$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);
+		$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);	
 
 	&doOutput($dirPrefix, $newName, $xmls);
 	
@@ -132,11 +132,16 @@ sub load
 	my $m = loadXml ("$dirPrefix\\$oldName.m", ['s', 'm','reffile','schema', 'LM']);
 	print "M file loaded.\n";
 		
-	# Load the a-level.
-	my $a = loadXml ("$dirPrefix\\$oldName.a", ['node', 'LM','reffile','schema']);
-	print "A file loaded.\n";
+	
+	if (-f "$dirPrefix\\$oldName.a")
+	{
+		# Load the a-level.
+		my $a = loadXml ("$dirPrefix\\$oldName.a", ['node', 'LM','reffile','schema']);
+		print "A file loaded.\n";
 
-	return {'w' => $w, 'm' => $m, 'a' => $a};
+		return {'w' => $w, 'm' => $m, 'a' => $a};
+	}
+	return {'w' => $w, 'm' => $m};
 }
 # process (new file name, w data, m data, a data, [ID of the first paragraph],
 #		[ID of the first sentence], [ID of the first token])
@@ -164,14 +169,22 @@ sub process
 		$m, $newName, $wRes->{'idMap'}, $firstPara, $firstSent);
 	print "M file processed.\n";
 	
-	# Process the a-level XML.
-	my $aRes = &_normalizeA(
-		$a, $newName, $mRes->{'idMap'}, $firstPara, $firstSent);
-	print "A file processed.\n";
+	if ($a)
+	{
+		# Process the a-level XML.
+		my $aRes = &_normalizeA(
+			$a, $newName, $mRes->{'idMap'}, $firstPara, $firstSent);
+		print "A file processed.\n";
 
-	return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'}, 'a' => $aRes->{'xml'},
-			'nextPara' => $wRes->{'nextPara'}, 'nextSent' => $mRes->{'nextSent'},
-			'nextTree' => $aRes->{'nextTree'},};
+		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'}, 'a' => $aRes->{'xml'},
+				'nextPara' => $wRes->{'nextPara'}, 'nextSent' => $mRes->{'nextSent'},
+				'nextTree' => $aRes->{'nextTree'},};
+	}
+	else
+	{
+		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'},
+					'nextPara' => $wRes->{'nextPara'}, 'nextSent' => $mRes->{'nextSent'}};
+	}	
 }
 
 sub doOutput
@@ -189,10 +202,12 @@ sub doOutput
 	printXml ("$dirPrefix/res/$newName.m", $xmls->{'m'}->{'handler'},
 			$xmls->{'m'}->{'xml'}, 'lvmdata', $xmls->{'m'}->{'header'});
 	print "M file printed.\n";
-	printXml ("$dirPrefix/res/$newName.a", $xmls->{'a'}->{'handler'},
-			$xmls->{'a'}->{'xml'}, 'lvadata', $xmls->{'a'}->{'header'});
-	print "A file printed.\n";
-
+	if ($xmls->{'a'} and $xmls->{'a'}->{'xml'})
+	{
+		printXml ("$dirPrefix/res/$newName.a", $xmls->{'a'}->{'handler'},
+				$xmls->{'a'}->{'xml'}, 'lvadata', $xmls->{'a'}->{'header'});
+		print "A file printed.\n";
+	}
 }
 
 ###############################################################################
