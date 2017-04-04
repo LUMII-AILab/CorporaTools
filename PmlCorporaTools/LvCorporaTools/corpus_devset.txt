@@ -5,7 +5,7 @@ LETA_intervija_06_20130208
 LETA_izgriezums_94_20130211
 LETA_reliize_20121108
 LETA_20120605
-Latv_Veestn_p133
-Latv_Veestn_p135
-p967
-p1094
+Latv_Veestn_p134
+Latv_Veestn_p136
+p980
+p1299
