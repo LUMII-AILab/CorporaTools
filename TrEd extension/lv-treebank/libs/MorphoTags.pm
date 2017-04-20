@@ -27,8 +27,7 @@ our %tags = (
 		'd' => 'Dative',
 		'a' => 'Accusative',
 		'l' => 'Locative',
-		'v' => 'Vocative',
-		's' => 'Genitiveling'}],
+		'v' => 'Vocative'}],
 	['Declension', {
 		'1' => '1',
 		'2' => '2',
@@ -36,7 +35,8 @@ our %tags = (
 		'4' => '4',
 		'5' => '5',
 		'6' => '6',
-		'r' => 'Reflexive'}],
+		'r' => 'Reflexive',
+		's' => 'Genitiveling'}],
 	]],
 'v' => ['Verb', [
 	['Type', {
@@ -123,7 +123,11 @@ our %tags = (
 		's' => 'Past'}],
 	['Definite', {
 		'n' => 'No',
-		'y' => 'Yes'}]
+		'y' => 'Yes'}],
+	['Degree', {
+		'p' => 'Positive',
+		'c' => 'Comparative',
+		's' => 'Superlative'}],
 	]],
 'a' => ['Adjective', [
 	['Type', {
@@ -232,21 +236,10 @@ our %tags = (
 	['Type', {
 		'c' => 'Coordinating',
 		's' => 'Subordinating'}],
-	['Make up', {
-		's' => 'Simple',
-		'c' => 'Compound',
-		'd' => 'Double',
-		'r' => 'Repetit'}],
 	]],
 'i' => ['Interjection', [
-	['Make up', {
-		's' => 'Simple',
-		'c' => 'Compound'}],
 	]],
 'q' => ['Particle', [
-	['Make up', {
-		's' => 'Simple',
-		'c' => 'Compound'}],
 	]],
 'z' => ['Punctuation', [
 	['Type', {
@@ -259,6 +252,13 @@ our %tags = (
 		'x' => 'Other'}],
 	]],
 'y' => ['Abbreviation', [
+	['Type', {
+		'n' => 'Common noun',
+		'p' => 'Proper noun',
+		'a' => 'Adjectival',
+		'v' => 'Verbal',
+		'r' => 'Adverbial',
+		'd' => 'Discourse marker'}],
 	]],
 'x' => ['Residual', [
 	['Type', {
@@ -284,9 +284,6 @@ my $xPredHelper = [
 ];
 
 my $xPrepHelper = [
-['Place adverbial', {
-	'y' => 'Is possible',
-	'n' => 'Not possible'}],
 ];
 
 our %phraseTags = (
