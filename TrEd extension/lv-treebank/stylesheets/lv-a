@@ -51,13 +51,13 @@ style: #{Node-shape:oval}
 	  #{Line-arrow:first}'
   } ?>
 
-hint:<? $${comment} ? 'comment: ${comment} ' : '' ?><?
-  $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
+hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
   $${tag} ? 'phrase/tag: ${tag}' : '' ?><? 
   $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
-  "\n---\n" if ($${m/tag} or $${tag} or $${reduction}) ?><?
+  "\n-----\n" if ($${m/tag} or $${tag} or $${reduction}) ?><?
   join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?><?
+  "\n-----\n" if ($${m/tag} and ($${tag} or $${reduction})) ?><?
   join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${tag}) } ?><?
+  "\n-----\n" if ($${tag} and $${reduction}) ?><?
   join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${reduction}) } ?>
- 
