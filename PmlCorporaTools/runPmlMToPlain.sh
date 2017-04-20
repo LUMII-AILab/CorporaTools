@@ -5,7 +5,7 @@ then filelist="$1"
 else filelist="testdata/LegacyToPml/zeens.m"
 fi
 
-resultfile="`echo "$filelist" | sed -e 's/^\(.*\)\.m$/\1\.txt/g'`"
+resultfile="`echo "$filelist" | sed -e 's/^\(.*\)\.pml$/\1\.txt/g'`"
 
 echo "PML->plain: Converting $filelist to $resultfile"
 

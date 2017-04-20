@@ -21,6 +21,14 @@
 					<xsl:text>&#09;</xsl:text>
 					<xsl:value-of select="./@id"/>
 					<xsl:text>&#10;</xsl:text>
+					<xsl:if test="./pml:w.rf/pml:no_space_after">
+					  <!-- output <g \> if there's no_space_after marker. Requires knitted pml files, but should be backwards compatible with PML-M files that will never have this marker -->
+						<xsl:text>&lt;g /&gt;&#10;</xsl:text>
+					</xsl:if>
+					<xsl:if test="./pml:w.rf/pml:LM[last()]/pml:no_space_after">
+					  <!-- for multitokens in LM tag, look at the last element -->
+						<xsl:text>&lt;g /&gt;&#10;</xsl:text>
+					</xsl:if>
 				</xsl:for-each>
 				<xsl:text>&lt;/s&gt;&#10;</xsl:text>
 			</xsl:for-each>
