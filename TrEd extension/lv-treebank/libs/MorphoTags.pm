@@ -399,8 +399,8 @@ sub getAVPairsFromSimpleTag
 	$properties = $properties->[1];
 	
 	# Process other features.
-	my $last = 0;
-	for my $i (0..length($tagTail)-1)
+	my $last = -1;
+	for my $i (0 .. (length($tagTail)-1))
 	{
 		my $tagChar = substr($tagTail, $i, 1) or '_';
 		if ($properties->[$i])
@@ -417,7 +417,7 @@ sub getAVPairsFromSimpleTag
 		$last = $i;
 	}
 	# Process missing features.
-	for my $i ($last+1..@$properties-1)
+	for my $i (($last + 1) .. (@$properties - 1))
 	{
 		push(@result, [$properties->[$i][0], $missing]);
 	}
