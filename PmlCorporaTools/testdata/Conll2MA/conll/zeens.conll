@@ -1,0 +1,721 @@
+# newDoc id=zeens
+# newpar
+# sent_id = a-zeens-p1s1
+# text = Zēns gāja uz skolu.
+1	Zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	2	nsubj	_	_
+2	gāja	iet	VERB	vmnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	uz	uz	ADP	spsay	_	4	case	_	_
+4	skolu	skola	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	2	obl	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p2s1
+# text = Meitene ņēma ābolu.
+1	Meitene	meitene	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	2	nsubj	_	_
+2	ņēma	ņemt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	ābolu	ābols	NOUN	ncmsa1	Case=Acc|Gender=Masc|Number=Sing	2	obj	_	SpaceAfter=No
+4	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p3s1
+# text = Vasarā zēns gāja.
+1	Vasarā	vasara	NOUN	ncfsl4	Case=Loc|Gender=Fem|Number=Sing	3	obl	_	_
+2	zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+3	gāja	iet	VERB	vmnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+4	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p4s1
+# text = Skaists zēns gāja.
+1	Skaists	skaists	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	2	amod	_	_
+2	zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+3	gāja	iet	VERB	vmnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+4	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p5s1
+# text = Zēns ātri gāja.
+1	Zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+2	ātri	ātri	ADV	rpt	Degree=Pos	3	advmod	_	_
+3	gāja	iet	VERB	vmnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+4	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p6s1
+# text = Zēns un miegainā meitene gāja uz skolu.
+1	Zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	5	nsubj	_	_
+2	un	un	CCONJ	ccs	_	4	cc	_	_
+3	miegainā	miegains	ADJ	affsnyp	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing	4	amod	_	_
+4	meitene	meitene	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	1	conj	_	_
+5	gāja	iet	VERB	vmnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+6	uz	uz	ADP	spsay	_	7	case	_	_
+7	skolu	skola	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	5	obl	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	5	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p7s1
+# text = Zēns ir gājis uz skolu laikā, kad dzīvoja pilsētā.
+1	Zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+2	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	aux	_	_
+3	gājis	iet	VERB	vmnpdmsnasn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	0	root	_	_
+4	uz	uz	ADP	spsay	_	5	case	_	_
+5	skolu	skola	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	3	obl	_	_
+6	laikā	laiks	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	3	obl	_	SpaceAfter=No
+7	,	,	PUNCT	zc	_	9	punct	_	_
+8	kad	kad	ADV	r0t	PronType=Int	9	advmod	_	_
+9	dzīvoja	dzīvot	VERB	vmnisi230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	6	acl	_	_
+10	pilsētā	pilsēta	NOUN	ncfsl4	Case=Loc|Gender=Fem|Number=Sing	9	iobj	_	SpaceAfter=No
+11	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p8s1
+# text = Mani brāļi un māsas guļ, skaļi krākdami.
+1	Mani	mans	DET	ps10pnn	Case=Nom|Number=Plur|Person=1|Poss=Yes|PronType=Prs	2	det	_	_
+2	brāļi	brālis	NOUN	ncmpn2	Case=Nom|Gender=Masc|Number=Plur	5	nsubj	_	_
+3	un	un	CCONJ	ccs	_	4	cc	_	_
+4	māsas	māsa	NOUN	ncfpn4	Case=Nom|Gender=Fem|Number=Plur	2	conj	_	_
+5	guļ	gulēt	VERB	vmnipt330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+6	,	,	PUNCT	zc	_	8	punct	_	_
+7	skaļi	skaļi	ADV	rpm	Degree=Pos	8	advmod	_	_
+8	krākdami	krākt	VERB	vmnppmpnap0	Case=Nom|Gender=Masc|Number=Plur|VerbForm=Conv|Voice=Pass	5	acl	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	5	punct	_	_
+
+# sent_id = a-zeens-p8s2
+# text = Vakaros ūdens ir silts.
+1	Vakaros	vakars	NOUN	ncmpl1	Case=Loc|Gender=Masc|Number=Plur	4	obl	_	_
+2	ūdens	ūdens	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	4	nsubj:pass	_	_
+3	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	cop	_	_
+4	silts	silts	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	0	root	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p9s1
+# text = Zēns iet uz skolu, bet meitene paliek mājās, skatīdamās, kā viņš aiziet.
+1	Zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	2	nsubj	_	_
+2	iet	iet	VERB	vmnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	uz	uz	ADP	spsay	_	4	case	_	_
+4	skolu	skola	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	2	obl	_	SpaceAfter=No
+5	,	,	PUNCT	zc	_	8	punct	_	_
+6	bet	bet	CCONJ	ccs	_	8	cc	_	_
+7	meitene	meitene	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	8	nsubj	_	_
+8	paliek	palikt	VERB	vmnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	2	conj	_	_
+9	mājās	māja	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	8	obl	_	SpaceAfter=No
+10	,	,	PUNCT	zc	_	11	punct	_	_
+11	skatīdamās	skatīties	VERB	vmyppfsnap0	Case=Nom|Gender=Fem|Number=Sing|Reflex=Yes|VerbForm=Conv|Voice=Pass	8	acl	_	SpaceAfter=No
+12	,	,	PUNCT	zc	_	15	punct	_	_
+13	kā	kā	ADV	r0m	PronType=Int	15	advmod	_	_
+14	viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	15	nsubj	_	_
+15	aiziet	aiziet	VERB	vmnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	11	ccomp	_	SpaceAfter=No
+16	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p10s1
+# text = Vakaros zēns iet uz kino, bet meitene brauc ar divriteni, taču pusdienlaikos viņi satiekas.
+1	Vakaros	vakars	NOUN	ncmpl1	Case=Loc|Gender=Masc|Number=Plur	3	obl	_	_
+2	zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+3	iet	iet	VERB	vmnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+4	uz	uz	ADP	spsay	_	5	case	_	_
+5	kino	kino	NOUN	nc_sa0	Case=Acc|Number=Sing	3	obl	_	SpaceAfter=No
+6	,	,	PUNCT	zc	_	9	punct	_	_
+7	bet	bet	CCONJ	ccs	_	9	cc	_	_
+8	meitene	meitene	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	9	nsubj	_	_
+9	brauc	braukt	VERB	vmnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	conj	_	_
+10	ar	ar	ADP	spsan	_	11	case	_	_
+11	divriteni	divritenis	NOUN	ncmsa2	Case=Acc|Gender=Masc|Number=Sing	9	obl	_	SpaceAfter=No
+12	,	,	PUNCT	zc	_	16	punct	_	_
+13	taču	taču	CCONJ	ccs	_	16	cc	_	_
+14	pusdienlaikos	pusdienlaiks	NOUN	ncmpl1	Case=Loc|Gender=Masc|Number=Plur	16	obl	_	_
+15	viņi	viņš	PRON	pp3mpnn	Case=Nom|Gender=Masc|Number=Plur|Person=3|PronType=Prs	16	nsubj	_	_
+16	satiekas	satikties	VERB	vmyipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Pres|VerbForm=Fin|Voice=Act	3	conj	_	SpaceAfter=No
+17	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p11s1
+# text = Ziemās snieg, bet vasarās līst, jo vasarās ir silti.
+1	Ziemās	ziema	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	2	obl	_	_
+2	snieg	snigt	VERB	vmnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	6	punct	_	_
+4	bet	bet	CCONJ	ccs	_	6	cc	_	_
+5	vasarās	vasara	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	6	obl	_	_
+6	līst	līt	VERB	vmnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	2	conj	_	SpaceAfter=No
+7	,	,	PUNCT	zc	_	10	punct	_	_
+8	jo	jo	SCONJ	css	_	10	mark	_	_
+9	vasarās	vasara	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	10	obl	_	_
+10	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	6	advcl	_	_
+11	silti	silti	ADV	rpm	Degree=Pos	10	xcomp	_	SpaceAfter=No
+12	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p12s1
+# text = Ak!
+1	Ak	ak	INTJ	is	_	0	root	_	SpaceAfter=No
+2	!	!	PUNCT	zs	_	1	punct	_	_
+
+# sent_id = a-zeens-p12s2
+# text = Vai, zēns paņēma manu "Mājas Viesi"...
+1	Vai	Vai	INTJ	is	_	4	discourse	_	SpaceAfter=No
+2	,	,	PUNCT	zc	_	1	punct	_	_
+3	zēns	zēns	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	4	nsubj	_	_
+4	paņēma	paņemt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+5	manu	mans	DET	ps0msan	Case=Acc|Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs	8	det	_	_
+6	"	"	PUNCT	zq	_	8	punct	_	SpaceAfter=No
+7	Mājas	māja	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	8	nmod	_	_
+8	Viesi	viesis	NOUN	ncmsa2	Case=Acc|Gender=Masc|Number=Sing	4	obj	_	SpaceAfter=No
+9	"	"	PUNCT	zq	_	8	punct	_	SpaceAfter=No
+10	...	...	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p13s1
+# text = Viņa teica: "Iesim."
+1	Viņa	viņa	PRON	pp3fsnn	Case=Nom|Gender=Fem|Number=Sing|Person=3|PronType=Prs	2	nsubj	_	_
+2	teica	teikt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+3	:	:	PUNCT	zo	_	5	punct	_	_
+4	"	"	PUNCT	zq	_	5	punct	_	SpaceAfter=No
+5	Iesim	iet	VERB	vmnifii1pan	Evident=Fh,Nfh|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	2	parataxis	_	SpaceAfter=No
+6	.	.	PUNCT	zs	_	5	punct	_	SpaceAfter=No
+7	"	"	PUNCT	zq	_	5	punct	_	_
+
+# sent_id = a-zeens-p13s2
+# text = "Nē, šonakt labāk paliksim tepat," viņš nepiekrita.
+1	"	"	PUNCT	zq	_	6	punct	_	SpaceAfter=No
+2	Nē	nē	PART	qs	Polarity=Neg	6	discourse	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	2	punct	_	_
+4	šonakt	šonakt	ADV	r0t	_	6	advmod	_	_
+5	labāk	labi	ADV	rcq	Degree=Cmp	6	advmod	_	_
+6	paliksim	palikt	VERB	vmnifi11pan	Evident=Fh,Nfh|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	11	parataxis	_	_
+7	tepat	tepat	ADV	r0p	_	6	advmod	_	SpaceAfter=No
+8	,	,	PUNCT	zc	_	6	punct	_	SpaceAfter=No
+9	"	"	PUNCT	zq	_	6	punct	_	_
+10	viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	11	nsubj	_	_
+11	nepiekrita	nepiekrist	VERB	vmnisi130ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+12	.	.	PUNCT	zs	_	11	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p14s1
+# text = "Mēs," viņš turpināja, "nu iesim mājās, lai gan, Maija, tu vari palikt."
+1	"	"	PUNCT	zq	_	10	punct	_	SpaceAfter=No
+2	Mēs	mēs	PRON	pp10pnn	Case=Nom|Number=Plur|Person=1|PronType=Prs	10	nsubj	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	6	punct	_	SpaceAfter=No
+4	"	"	PUNCT	zq	_	10	punct	_	_
+5	viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	6	nsubj	_	_
+6	turpināja	turpināt	VERB	vmnist330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+7	,	,	PUNCT	zc	_	6	punct	_	_
+8	"	"	PUNCT	zq	_	10	punct	_	SpaceAfter=No
+9	nu	nu	ADV	r0t	_	10	advmod	_	_
+10	iesim	iet	VERB	vmnifii1pan	Evident=Fh,Nfh|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	6	parataxis	_	_
+11	mājās	māja	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	10	obl	_	SpaceAfter=No
+12	,	,	PUNCT	zc	_	19	punct	_	_
+13	lai	lai	PART	csc_SPLIT_FIRST	_	19	cc	_	_
+14	gan	gan	SCONJ	csc_SPLIT_PART	_	13	fixed	_	SpaceAfter=No
+15	,	,	PUNCT	zc	_	16	punct	_	_
+16	Maija	Maija	PROPN	npfsv4	Case=Voc|Gender=Fem|Number=Sing	19	vocative	_	SpaceAfter=No
+17	,	,	PUNCT	zc	_	16	punct	_	_
+18	tu	tu	PRON	pp20snn	Case=Nom|Number=Sing|Person=2|PronType=Prs	19	nsubj	_	_
+19	vari	varēt	VERB	vonipt32san	Evident=Fh,Nfh|Mood=Ind|Number=Sing|Person=2|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	10	conj	_	_
+20	palikt	palikt	VERB	vmnn0i1000n	Polarity=Pos|VerbForm=Inf	19	xcomp	_	SpaceAfter=No
+21	.	.	PUNCT	zs	_	10	punct	_	SpaceAfter=No
+22	"	"	PUNCT	zq	_	10	punct	_	_
+
+# sent_id = a-zeens-p14s2
+# text = Anna nomurmināja: "Gan jau būs labi! Rīt skaidrosies," un turpināja adīt.
+1	Anna	Anna	PROPN	npfsn4	Case=Nom|Gender=Fem|Number=Sing	2	nsubj	_	_
+2	nomurmināja	nomurmināt	VERB	vmnist330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+3	:	:	PUNCT	zo	_	8	punct	_	_
+4	"	"	PUNCT	zq	_	8	punct	_	SpaceAfter=No
+5	Gan	gan	PART	qc_SPLIT_FIRST	_	8	discourse	_	_
+6	jau	jau	PART	qc_SPLIT_PART	_	5	fixed	_	_
+7	būs	būt	VERB	vcnifii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	8	aux	_	_
+8	labi	labi	ADV	rpm	Degree=Pos	2	parataxis	_	SpaceAfter=No
+9	!	!	PUNCT	zs	_	8	punct	_	_
+10	Rīt	rīt	ADV	r0t	_	11	advmod	_	_
+11	skaidrosies	skaidroties	VERB	vmyifi330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Fut|VerbForm=Fin|Voice=Act	8	dep	_	SpaceAfter=No
+12	,	,	PUNCT	zc	_	11	punct	_	SpaceAfter=No
+13	"	"	PUNCT	zq	_	8	punct	_	_
+14	un	un	CCONJ	ccs	_	15	cc	_	_
+15	turpināja	turpināt	VERB	vpnist330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	2	conj	_	_
+16	adīt	adīt	VERB	vmnn0t3000n	Polarity=Pos|VerbForm=Inf	15	xcomp	_	SpaceAfter=No
+17	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p15s1
+# text = 17:40 bioķīmiķis Kārlis fon Kabacis paņēma 17.atslēgu un izņēma no skapīša 15,7 miligramus reakcijas katalizatora.
+1	17:40	17:40	NUM	xn	NumType=Card	6	nummod	_	_
+2	bioķīmiķis	bioķīmiķis	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	3	nmod	_	_
+3	Kārlis	Kārlis	PROPN	npmsn2	Case=Nom|Gender=Masc|Number=Sing	6	nsubj	_	_
+4	fon	fon	X	xf	Foreign=Yes	3	flat:name	_	_
+5	Kabacis	Kabacis	PROPN	npmsn2	Case=Nom|Gender=Masc|Number=Sing	3	flat:name	_	_
+6	paņēma	paņemt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+7	17.	17.	ADJ	xo	NumType=Ord	8	amod	_	SpaceAfter=No
+8	atslēgu	atslēga	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	6	obj	_	_
+9	un	un	CCONJ	ccs	_	10	cc	_	_
+10	izņēma	izņemt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	6	conj	_	_
+11	no	no	ADP	spsgy	_	12	case	_	_
+12	skapīša	skapītis	NOUN	ncmsg2	Case=Gen|Gender=Masc|Number=Sing	10	obl	_	_
+13	15,7	15,7	NUM	xn	NumType=Card	14	nummod	_	_
+14	miligramus	miligrams	NOUN	ncmpa1	Case=Acc|Gender=Masc|Number=Plur	10	obj	_	_
+15	reakcijas	reakcija	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	16	nmod	_	_
+16	katalizatora	katalizators	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	14	nmod	_	SpaceAfter=No
+17	.	.	PUNCT	zs	_	6	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p16s1
+# text = Viņš, kas pērn noslimoja visu ziemu, pavasari, labi tiek klasei līdzi mācībās.
+1	Viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	12	nsubj	_	SpaceAfter=No
+2	,	,	PUNCT	zc	_	5	punct	_	_
+3	kas	kas	PRON	pr000nn	Case=Nom|PronType=Rel	5	nsubj	_	_
+4	pērn	pērn	ADV	r0t	_	5	advmod	_	_
+5	noslimoja	noslimot	VERB	vmnisi230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	1	acl	_	_
+6	visu	viss	NOUN	ncmpg1	Case=Gen|Gender=Masc|Number=Plur	7	nmod	_	_
+7	ziemu	ziema	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	5	obl	_	SpaceAfter=No
+8	,	,	PUNCT	zc	_	9	punct	_	_
+9	pavasari	pavasaris	NOUN	ncmsa2	Case=Acc|Gender=Masc|Number=Sing	7	conj	_	SpaceAfter=No
+10	,	,	PUNCT	zc	_	5	punct	_	_
+11	labi	labi	ADV	rpm	Degree=Pos	12	advmod	_	_
+12	tiek	tikt	VERB	vtnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+13	klasei	klase	NOUN	ncfsd5	Case=Dat|Gender=Fem|Number=Sing	12	iobj	_	_
+14	līdzi	līdzi	ADV	rrp	_	13	case	_	_
+15	mācībās	mācība	NOUN	ncfpl4	Case=Loc|Gender=Fem|Number=Plur	12	obl	_	SpaceAfter=No
+16	.	.	PUNCT	zs	_	12	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p17s1
+# text = Ja rīt nelīs un ja Jānis būs atgriezies, mēs rīkosim balli dārzā.
+1	Ja	ja	SCONJ	css	_	3	mark	_	_
+2	rīt	rīt	ADV	r0t	_	11	advmod	_	_
+3	nelīs	nelīt	VERB	vmnifi130ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Tense=Fut|VerbForm=Fin|Voice=Act	11	advcl	_	_
+4	un	un	CCONJ	ccs	_	8	cc	_	_
+5	ja	ja	SCONJ	css	_	8	mark	_	_
+6	Jānis	Jānis	PROPN	npmsn2	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	_	_
+7	būs	būt	VERB	vcnifii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	8	aux	_	_
+8	atgriezies	atgriezties	VERB	vmypdmsnasn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Sing|Reflex=Yes|Tense=Past|VerbForm=Part	3	conj	_	SpaceAfter=No
+9	,	,	PUNCT	zc	_	8	punct	_	_
+10	mēs	mēs	PRON	pp10pnn	Case=Nom|Number=Plur|Person=1|PronType=Prs	11	nsubj	_	_
+11	rīkosim	rīkot	VERB	vmnift21pan	Evident=Fh,Nfh|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	0	root	_	_
+12	balli	balle	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	11	obj	_	_
+13	dārzā	dārzs	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	11	obl	_	SpaceAfter=No
+14	.	.	PUNCT	zs	_	11	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p18s1
+# text = "Čārlza Cukini gurķu kantoris" (turpmāk tekstā - ČCGK) pārtrauc matraču ražošanu, savukārt šokolādes fabrika - zefīra.
+1	"	"	PUNCT	zq	_	5	punct	_	SpaceAfter=No
+2	Čārlza	Čārlzs	PROPN	npmsg1	Case=Gen|Gender=Masc|Number=Sing	5	nmod	_	_
+3	Cukini	cukini	NOUN	nc___0	_	2	flat:name	_	_
+4	gurķu	gurķis	NOUN	ncmpg2	Case=Gen|Gender=Masc|Number=Plur	5	nmod	_	_
+5	kantoris	kantoris	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	13	nsubj	_	SpaceAfter=No
+6	"	"	PUNCT	zq	_	5	punct	_	_
+7	(	(	PUNCT	zb	_	10	punct	_	SpaceAfter=No
+8	turpmāk	turpmāk	ADV	r0t	_	10	advmod	_	_
+9	tekstā	teksts	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	10	obl	_	_
+10	-	-	PUNCT	zd	_	5	parataxis	_	_
+11	ČCGK	ČCGK	PROPN	y	Abbr=Yes	10	nsubj:pass	_	SpaceAfter=No
+12	)	)	PUNCT	zb	_	10	punct	_	_
+13	pārtrauc	pārtraukt	VERB	vmnipt130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+14	matraču	matracis	NOUN	ncmpg2	Case=Gen|Gender=Masc|Number=Plur	15	nmod	_	_
+15	ražošanu	ražošana	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	13	obj	_	SpaceAfter=No
+16	,	,	PUNCT	zc	_	20	punct	_	_
+17	savukārt	savukārt	ADV	r0c	_	20	advmod	_	_
+18	šokolādes	šokolāde	NOUN	ncfsg5	Case=Gen|Gender=Fem|Number=Sing	19	nmod	_	_
+19	fabrika	fabrika	NOUN	ncfsn4	Case=Nom|Gender=Fem|Number=Sing	20	nsubj	_	_
+20	-	-	PUNCT	zd	_	13	conj	_	_
+21	zefīra	zefīrs	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	20	obj	_	SpaceAfter=No
+22	.	.	PUNCT	zs	_	13	punct	_	_
+
+# sent_id = a-zeens-p18s2
+# text = Juris - ČCGK labākais konditors.
+1	Juris	Juris	PROPN	npmsn2	Case=Nom|Gender=Masc|Number=Sing	2	nsubj	_	_
+2	-	-	PUNCT	zd	_	0	root	_	_
+3	ČCGK	ČCGK	PROPN	y	Abbr=Yes	5	nmod	_	_
+4	labākais	labākais	ADJ	afmsnyc	Case=Nom|Degree=Cmp|Gender=Masc|Number=Sing	5	amod	_	_
+5	konditors	konditors	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	2	xcomp	_	SpaceAfter=No
+6	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p19s1
+# text = Debesis ir tik zilas (kuru gan tas interesē?).
+1	Debesis	debess	NOUN	ncfpn6	Case=Nom|Gender=Fem|Number=Plur	4	nsubj	_	_
+2	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	cop	_	_
+3	tik	tik	ADV	r0q	PronType=Dem	4	advmod	_	_
+4	zilas	zila	ADJ	affpnnp	Case=Nom|Degree=Pos|Gender=Fem|Number=Plur	0	root	_	_
+5	(	(	PUNCT	zb	_	9	punct	_	SpaceAfter=No
+6	kuru	kurš	PRON	pq0msan	Case=Acc|Gender=Masc|Number=Sing|PronType=Int	9	obj	_	_
+7	gan	gan	PART	qs	_	9	discourse	_	_
+8	tas	tas	PRON	pd0msnn	Case=Nom|Gender=Masc|Number=Sing|PronType=Dem	9	nsubj	_	_
+9	interesē	interesēt	VERB	vmnipt230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	parataxis	_	SpaceAfter=No
+10	?	?	PUNCT	zs	_	9	punct	_	SpaceAfter=No
+11	)	)	PUNCT	zb	_	9	punct	_	SpaceAfter=No
+12	.	.	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p20s1
+# text = Mēs zinām, kā.
+1	Mēs	mēs	PRON	pp10pnn	Case=Nom|Number=Plur|Person=1|PronType=Prs	2	nsubj	_	_
+2	zinām	zināt	VERB	vmnipt31pan	Evident=Fh,Nfh|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	4	punct	_	_
+4	kā	kā	ADV	r0m	PronType=Int	2	ccomp	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p21s1
+# text = Līst.
+1	Līst	līt	VERB	vmnn0i1000n	Polarity=Pos|VerbForm=Inf	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	zs	_	1	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p22s1
+# text = Paldies par ogām!
+1	Paldies	paldies	INTJ	is	_	0	root	_	_
+2	par	par	ADP	sppd	_	3	case	_	_
+3	ogām	oga	NOUN	ncfpd4	Case=Dat|Gender=Fem|Number=Plur	1	iobj	_	SpaceAfter=No
+4	!	!	PUNCT	zs	_	1	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p23s1
+# text = Tādas sēnes kā gailenes, baravikas un bērzlapes ir ēdamas.
+1	Tādas	tāda	DET	pd0fpnn	Case=Nom|Gender=Fem|Number=Plur|PronType=Dem	2	det	_	_
+2	sēnes	sēne	NOUN	ncfpn5	Case=Nom|Gender=Fem|Number=Plur	10	nsubj	_	_
+3	kā	kā	SCONJ	css	_	4	mark	_	_
+4	gailenes	gailene	NOUN	ncfpn5	Case=Nom|Gender=Fem|Number=Plur	2	acl	_	SpaceAfter=No
+5	,	,	PUNCT	zc	_	6	punct	_	_
+6	baravikas	baravika	NOUN	ncfpn4	Case=Nom|Gender=Fem|Number=Plur	4	conj	_	_
+7	un	un	CCONJ	ccs	_	8	cc	_	_
+8	bērzlapes	bērzlape	NOUN	ncfpn5	Case=Nom|Gender=Fem|Number=Plur	4	conj	_	_
+9	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	10	aux	_	_
+10	ēdamas	ēst	VERB	vmnpdfpnppn	Case=Nom|Definite=Ind|Degree=Pos|Gender=Fem|Number=Plur|Tense=Pres|VerbForm=Part|Voice=Pass	0	root	_	SpaceAfter=No
+11	.	.	PUNCT	zs	_	10	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p24s1
+# text = Bērnam var dot ne vairāk kā divus vārdus.
+1	Bērnam	bērns	NOUN	ncmsd1	Case=Dat|Gender=Masc|Number=Sing	3	iobj	_	_
+2	var	varēt	VERB	vonipt330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	dot	dot	VERB	vmnn0ti000n	Polarity=Pos|VerbForm=Inf	2	xcomp	_	_
+4	ne	ne	PART	qs	Polarity=Neg	5	discourse	_	_
+5	vairāk	daudz	ADV	rcq	Degree=Cmp	7	advmod	_	_
+6	kā	kā	SCONJ	css	_	5	fixed	_	_
+7	divus	divi	NUM	mcsmpav	Case=Acc|Gender=Masc|Number=Plur|NumType=Card	8	advmod	_	_
+8	vārdus	vārds	NOUN	ncmpa1	Case=Acc|Gender=Masc|Number=Plur	3	obj	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p25s1
+# text = Spēle noslēdzās ar vairāk nekā pārliecinošu uzvaru.
+1	Spēle	spēle	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	2	nsubj	_	_
+2	noslēdzās	noslēgties	VERB	vmyisi230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	ar	ar	ADP	spsa	_	7	case	_	_
+4	vairāk	daudz	ADV	rcq	Degree=Cmp	6	advmod	_	_
+5	nekā	nekā	SCONJ	css	_	4	fixed	_	_
+6	pārliecinošu	pārliecinoša	ADJ	affsanp	Case=Acc|Degree=Pos|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	7	advmod	_	_
+7	uzvaru	uzvara	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	2	obl	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p26s1
+# text = Latvijā vairāk nekā jebkur citur ļaudis mīl labi paēst.
+1	Latvijā	Latvija	PROPN	npfsl4	Case=Loc|Gender=Fem|Number=Sing	7	obl	_	_
+2	vairāk	daudz	ADV	rcq	Degree=Cmp	7	advmod	_	_
+3	nekā	nekā	SCONJ	css	_	4	mark	_	_
+4	jebkur	jebkur	ADV	r0p	_	7	advcl	_	_
+5	citur	citur	ADV	r0p	_	4	compound	_	_
+6	ļaudis	ļaudis	NOUN	ncmdn6	Case=Nom|Gender=Masc|Number=Ptan	7	nsubj	_	_
+7	mīl	mīlēt	VERB	vmnipt330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+8	labi	labi	ADV	rpm	Degree=Pos	9	advmod	_	_
+9	paēst	paēst	VERB	vmnn0t1000n	Polarity=Pos|VerbForm=Inf	7	ccomp	_	SpaceAfter=No
+10	.	.	PUNCT	zs	_	7	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p27s1
+# text = Es esmu kļuvusi veca.
+1	Es	es	PRON	pp10snn	Case=Nom|Number=Sing|Person=1|PronType=Prs	3	nsubj	_	_
+2	esmu	būt	VERB	vcnipii1san	Evident=Fh,Nfh|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	aux	_	_
+3	kļuvusi	kļūt	VERB	vtnpdfsnasn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part	0	root	_	_
+4	veca	veca	ADJ	affsnnp	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing	3	xcomp	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	3	punct	_	_
+
+# sent_id = a-zeens-p27s2
+# text = Viņš negrib kļūt vecs.
+1	Viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	2	nsubj	_	_
+2	negrib	negribēt	VERB	vonipt330ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	kļūt	kļūt	VERB	vtnn0i1000n	Polarity=Pos|VerbForm=Inf	2	xcomp	_	_
+4	vecs	vecs	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	3	xcomp	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p28s1
+# text = Dzīvnieks bija mazs un slimīgs.
+1	Dzīvnieks	dzīvnieks	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	3	nsubj	_	_
+2	bija	būt	VERB	vcnisii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	3	cop	_	_
+3	mazs	mazs	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	0	root	_	_
+4	un	un	CCONJ	ccs	_	5	cc	_	_
+5	slimīgs	slimīgs	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	3	conj	_	SpaceAfter=No
+6	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p29s1
+# text = Man ir skaista māja un kādreiz piederēs arī suns.
+1	Man	es	PRON	pp10sdn	Case=Dat|Number=Sing|Person=1|PronType=Prs	2	obl	_	_
+2	ir	būt	VERB	vmnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	skaista	skaists	ADJ	affsnnp	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing	4	amod	_	_
+4	māja	māja	NOUN	ncfsn4	Case=Nom|Gender=Fem|Number=Sing	2	nsubj	_	_
+5	un	un	CCONJ	ccs	_	7	cc	_	_
+6	kādreiz	kādreiz	ADV	r0t	_	7	advmod	_	_
+7	piederēs	piederēt	VERB	vmnifi330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Fut|VerbForm=Fin|Voice=Act	2	conj	_	_
+8	arī	arī	PART	qs	_	9	discourse	_	_
+9	suns	suns	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	7	nsubj	_	SpaceAfter=No
+10	.	.	PUNCT	zs	_	2	punct	_	_
+
+# sent_id = a-zeens-p29s2
+# text = Man salst.
+1	Man	es	PRON	pp10sdn	Case=Dat|Number=Sing|Person=1|PronType=Prs	2	obl	_	_
+2	salst	salt	VERB	vmnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+3	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p30s1
+# text = Saulei austot, putni sāka čivināt un kļuva siltāks.
+1	Saulei	saule	NOUN	ncfsd5	Case=Dat|Gender=Fem|Number=Sing	2	obl	_	_
+2	austot	aust	VERB	vmnpu000000	VerbForm=Conv	5	advcl	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	2	punct	_	_
+4	putni	putns	NOUN	ncmpn1	Case=Nom|Gender=Masc|Number=Plur	5	nsubj	_	_
+5	sāka	sākt	VERB	vpnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+6	čivināt	čivināt	VERB	vmnn0t3000n	Polarity=Pos|VerbForm=Inf	5	xcomp	_	_
+7	un	un	CCONJ	ccs	_	8	cc	_	_
+8	kļuva	kļūt	VERB	vcnisi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	5	conj	_	_
+9	siltāks	silts	ADJ	afmsnnc	Case=Nom|Degree=Cmp|Gender=Masc|Number=Sing	8	xcomp	_	SpaceAfter=No
+10	.	.	PUNCT	zs	_	5	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p31s1
+# text = Pa ielu, skaņu signāliem griezīgi kaucot un zibinot oranžas bākugunis, traucas ātrās palīdzības mašīna.
+1	Pa	pa	ADP	spsa	_	2	case	_	_
+2	ielu	iela	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	13	obl	_	SpaceAfter=No
+3	,	,	PUNCT	zc	_	7	punct	_	_
+4	skaņu	skaņa	NOUN	ncfpg4	Case=Gen|Gender=Fem|Number=Plur	5	nmod	_	_
+5	signāliem	signāls	NOUN	ncmpd1	Case=Dat|Gender=Masc|Number=Plur	7	obl	_	_
+6	griezīgi	griezīgi	ADV	rpm	Degree=Pos	7	advmod	_	_
+7	kaucot	kaukt	VERB	vmnpu00000n	Definite=Ind|VerbForm=Conv	13	advcl	_	_
+8	un	un	CCONJ	ccs	_	9	cc	_	_
+9	zibinot	zibināt	VERB	vmnpu00000n	Definite=Ind|VerbForm=Conv	7	conj	_	_
+10	oranžas	oranža	ADJ	arfpanp	Case=Acc|Degree=Pos|Gender=Fem|Number=Plur	11	amod	_	_
+11	bākugunis	bākuguns	NOUN	ncfpa6	Case=Acc|Gender=Fem|Number=Plur	9	obj	_	SpaceAfter=No
+12	,	,	PUNCT	zc	_	9	punct	_	_
+13	traucas	traukties	VERB	vmyipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+14	ātrās	ātra	ADJ	affsgyp	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing	15	amod	_	_
+15	palīdzības	palīdzība	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	16	nmod	_	_
+16	mašīna	mašīna	NOUN	ncfsn4	Case=Nom|Gender=Fem|Number=Sing	13	nsubj	_	SpaceAfter=No
+17	.	.	PUNCT	zs	_	13	punct	_	_
+
+# sent_id = a-zeens-p31s2
+# text = Aptaustījis un apostījis maisiņu, pērtiķis to atvēra.
+1	Aptaustījis	aptaustīt	VERB	vmnpdmsnasn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	8	acl	_	_
+2	un	un	CCONJ	ccs	_	3	cc	_	_
+3	apostījis	apostīt	VERB	vmnpdmsnasn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	1	conj	_	_
+4	maisiņu	maisiņš	NOUN	ncmsa1	Case=Acc|Gender=Masc|Number=Sing	1	obj	_	SpaceAfter=No
+5	,	,	PUNCT	zc	_	1	punct	_	_
+6	pērtiķis	pērtiķis	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	_	_
+7	to	tas	PRON	pd0msan	Case=Acc|Gender=Masc|Number=Sing|PronType=Dem	8	obj	_	_
+8	atvēra	atvērt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	8	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p32s1
+# text = Man jāiet prom.
+1	Man	es	PRON	pp10sdn	Case=Dat|Number=Sing|Person=1|PronType=Prs	2	nsubj	_	_
+2	jāiet	iet	VERB	vmnd0ii00an	Mood=Nec|Polarity=Pos|VerbForm=Fin|Voice=Act	0	root	_	_
+3	prom	prom	ADV	r0p	_	2	advmod	_	SpaceAfter=No
+4	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p33s1
+# text = Laukā temperatūra ir ap nulli.
+1	Laukā	laukā	ADV	r0p	_	5	advmod	_	_
+2	temperatūra	temperatūra	NOUN	ncfsn4	Case=Nom|Gender=Fem|Number=Sing	5	nsubj	_	_
+3	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	5	cop	_	_
+4	ap	ap	ADP	spsa	_	5	case	_	_
+5	nulli	nulle	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	0	root	_	SpaceAfter=No
+6	.	.	PUNCT	zs	_	5	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p34s1
+# text = Par ko man tas ir, es domāju, par ko.
+1	Par	par	ADP	spsan	_	2	case	_	_
+2	ko	kas	PRON	pq000an	Case=Acc|PronType=Int	5	iobj	_	_
+3	man	es	PRON	pp10sdn	Case=Dat|Number=Sing|Person=1|PronType=Prs	5	obl	_	_
+4	tas	tas	PRON	pd0msnn	Case=Nom|Gender=Masc|Number=Sing|PronType=Dem	5	nsubj	_	_
+5	ir	būt	VERB	vmnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	ccomp	_	SpaceAfter=No
+6	,	,	PUNCT	zc	_	5	punct	_	_
+7	es	es	PRON	pp10snn	Case=Nom|Number=Sing|Person=1|PronType=Prs	8	nsubj	_	_
+8	domāju	domāt	VERB	vmnipt21san	Evident=Fh,Nfh|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+9	,	,	PUNCT	zc	_	11	punct	_	_
+10	par	par	ADP	spsan	_	11	case	_	_
+11	ko	kas	PRON	pq000an	Case=Acc|PronType=Int	8	ccomp	_	SpaceAfter=No
+12	.	.	PUNCT	zs	_	8	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p35s1
+# text = Man ienāca prātā, ka vajag nopirkt sodu.
+1	Man	es	PRON	pp10sdn	Case=Dat|Number=Sing|Person=1|PronType=Prs	2	obl	_	_
+2	ienāca	ienākt	VERB	vmnisi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	prātā	prāts	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	2	obl	_	SpaceAfter=No
+4	,	,	PUNCT	zc	_	6	punct	_	_
+5	ka	ka	SCONJ	css	_	6	mark	_	_
+6	vajag	vajadzēt	VERB	vonipt330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	2	csubj	_	_
+7	nopirkt	nopirkt	VERB	vmnn0t1000n	Polarity=Pos|VerbForm=Inf	6	xcomp	_	_
+8	sodu	soda	NOUN	ncfsa4	Case=Acc|Gender=Fem|Number=Sing	7	obj	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p36s1
+# text = Pasniedzējs likās gudrs esam.
+1	Pasniedzējs	pasniedzējs	NOUN	ncmsn1	Case=Nom|Gender=Masc|Number=Sing	2	nsubj	_	_
+2	likās	likties	VERB	vmyisi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	gudrs	gudrs	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	2	acl	_	_
+4	esam	būt	VERB	vcnpu000000	VerbForm=Conv	3	cop	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p37s1
+# text = No tādas situācijas nav ko gaidīt.
+1	No	no	ADP	spsgy	_	3	case	_	_
+2	tādas	tāda	DET	pd0fsgn	Case=Gen|Gender=Fem|Number=Sing|PronType=Dem	3	det	_	_
+3	situācijas	situācija	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	4	iobj	_	_
+4	nav	nebūt	VERB	vmnipii30ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+5	ko	kas	PRON	pi000an	Case=Acc|PronType=Ind	4	nsubj	_	_
+6	gaidīt	gaidīt	VERB	vmnn0t3000n	Polarity=Pos|VerbForm=Inf	5	compound	_	SpaceAfter=No
+7	.	.	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p38s1
+# text = Ar Balvi vismaz nebija garlaicīgi.
+1	Ar	ar	ADP	spsan	_	2	case	_	_
+2	Balvi	Balvis	PROPN	npmsa2	Case=Acc|Gender=Masc|Number=Sing	5	obl	_	_
+3	vismaz	vismaz	ADV	r0q	_	5	advmod	_	_
+4	nebija	nebūt	VERB	vcnisii30ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Tense=Past|VerbForm=Fin|Voice=Act	5	aux	_	_
+5	garlaicīgi	garlaicīgi	ADV	r0m	_	0	root	_	SpaceAfter=No
+6	.	.	PUNCT	zs	_	5	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p39s1
+# text = Vēlāk Sofija ieguva pundurpapagailīšus vārdā Smits un Smulē.
+1	Vēlāk	vēlāk	ADV	r0t	_	3	advmod	_	_
+2	Sofija	Sofija	PROPN	npfsn4	Case=Nom|Gender=Fem|Number=Sing	3	nsubj	_	_
+3	ieguva	iegūt	VERB	vmnist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+4	pundurpapagailīšus	pundurpapagailītis	NOUN	ncmpa2	Case=Acc|Gender=Masc|Number=Plur	6	nmod	_	_
+5	vārdā	vārds	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	6	nmod	_	_
+6	Smits	Smits	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	3	obj	_	_
+7	un	un	CCONJ	ccs	_	8	cc	_	_
+8	Smulē	Smulē	PROPN	npmsn0	Case=Nom|Gender=Masc|Number=Sing	6	conj	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p40s1
+# text = Meiteni grāmatā sauc Emīlija.
+1	Meiteni	meitene	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	3	obj	_	_
+2	grāmatā	grāmata	NOUN	ncfsl4	Case=Loc|Gender=Fem|Number=Sing	1	acl	_	_
+3	sauc	saukt	VERB	vmnipt130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+4	Emīlija	Emīlija	PROPN	npfsn4	Case=Nom|Gender=Fem|Number=Sing	3	acl	_	SpaceAfter=No
+5	.	.	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p41s1
+# text = Es dzīvoju laukos desmit gadus atpakaļ.
+1	Es	es	PRON	pp10snn	Case=Nom|Number=Sing|Person=1|PronType=Prs	2	nsubj	_	_
+2	dzīvoju	dzīvot	VERB	vmnist21san	Evident=Fh,Nfh|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	laukos	lauks	NOUN	ncmpl1	Case=Loc|Gender=Masc|Number=Plur	2	obl	_	_
+4	desmit	desmit	NUM	mcs0p0d	Number=Plur|NumType=Card	5	nummod	_	_
+5	gadus	gads	NOUN	ncmpa1	Case=Acc|Gender=Masc|Number=Plur	2	obl	_	_
+6	atpakaļ	atpakaļ	ADV	r0p	_	5	advmod	_	SpaceAfter=No
+7	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p42s1
+# text = Neviens no viņiem nevēlējās uzņemties administratīvos pienākumus.
+1	Neviens	neviens	PRON	pi0msny	Case=Nom|Gender=Masc|Number=Sing|PronType=Ind,Neg	4	nsubj	_	_
+2	no	no	ADP	sppdy	_	3	case	_	_
+3	viņiem	viņš	PRON	pp3mpdn	Case=Dat|Gender=Masc|Number=Plur|Person=3|PronType=Prs	1	acl	_	_
+4	nevēlējās	nevēlēties	VERB	voyist230ay	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Neg|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+5	uzņemties	uzņemties	VERB	vmyn0i1000n	Polarity=Pos|Reflex=Yes|VerbForm=Inf	4	xcomp	_	_
+6	administratīvos	administratīvs	ADJ	armpayp	Case=Acc|Degree=Pos|Gender=Masc|Number=Plur	7	amod	_	_
+7	pienākumus	pienākums	NOUN	ncmpa1	Case=Acc|Gender=Masc|Number=Plur	5	obj	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p43s1
+# text = Lai top izpirkti arī simt divdesmit septiņi grēki!
+1	Lai	lai	PART	qs	_	3	discourse	_	_
+2	top	tapt	VERB	vtnipi130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	aux	_	_
+3	izpirkti	izpirkt	VERB	vmnpdmpnpsn	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part	0	root	_	_
+4	arī	arī	PART	qs	_	8	discourse	_	_
+5	simt	simt	NUM	mcs0p0s	Number=Plur|NumType=Card	7	compound	_	_
+6	divdesmit	divdesmit	NUM	mcc0p0d	Number=Plur|NumType=Card	7	compound	_	_
+7	septiņi	septiņi	NUM	mcsmpnv	Case=Nom|Gender=Masc|Number=Plur|NumType=Card	8	nummod	_	_
+8	grēki	grēks	NOUN	ncmpn1	Case=Nom|Gender=Masc|Number=Plur	3	nsubj:pass	_	SpaceAfter=No
+9	!	!	PUNCT	zs	_	3	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p44s1
+# text = Atrast piecus desmit latus ir cūkas laime.
+1	Atrast	atrast	VERB	vmnn0t1000n	Polarity=Pos|VerbForm=Inf	7	ccomp	_	_
+2	piecus	pieci	NUM	mcsmpav	Case=Acc|Gender=Masc|Number=Plur|NumType=Card	4	nummod	_	_
+3	desmit	desmit	NUM	mcs0p0d	Number=Plur|NumType=Card	2	compound	_	_
+4	latus	lats	NOUN	ncmpa1	Case=Acc|Gender=Masc|Number=Plur	1	obj	_	_
+5	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	7	cop	_	_
+6	cūkas	cūka	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	_
+7	laime	laime	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	0	root	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	7	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p45s1
+# text = Funkc. f(x) ir augoša visā definīcijas apgabalā.
+1	Funkc.	funkc.	SYM	y	Abbr=Yes	2	nmod	_	_
+2	f(x)	f(x)	SYM	xx	_	4	nsubj	_	_
+3	ir	būt	VERB	vcnipii30an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	aux	_	_
+4	augoša	augt	VERB	vmnpdfsnapn	Aspect=Imp|Case=Nom|Definite=Ind|Degree=Pos|Gender=Fem|Number=Sing|Tense=Pres|VerbForm=Part|Voice=Pass	0	root	_	_
+5	visā	viss	DET	pg0msln	Case=Loc|Gender=Masc|Number=Sing|PronType=Tot	7	det	_	_
+6	definīcijas	definīcija	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	_
+7	apgabalā	apgabals	NOUN	ncmsl1	Case=Loc|Gender=Masc|Number=Sing	4	obl	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	4	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p46s1
+# text = Latvijas Universitāte (LU) rīkosies atbilstoši.
+1	Latvijas	Latvija	PROPN	npfsg4	Case=Gen|Gender=Fem|Number=Sing	2	nmod	_	_
+2	Universitāte	universitāte	NOUN	ncfsn5	Case=Nom|Gender=Fem|Number=Sing	6	nsubj	_	_
+3	(	(	PUNCT	zb	_	4	punct	_	SpaceAfter=No
+4	LU	LU	PROPN	y	Abbr=Yes	2	parataxis	_	SpaceAfter=No
+5	)	)	PUNCT	zb	_	4	punct	_	_
+6	rīkosies	rīkoties	VERB	vmyifi230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Fut|VerbForm=Fin|Voice=Act	0	root	_	_
+7	atbilstoši	atbilstoši	ADV	r0m	_	6	advmod	_	SpaceAfter=No
+8	.	.	PUNCT	zs	_	6	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p47s1
+# text = Strādājot radu prieku gan sev, gan citiem.
+1	Strādājot	strādāt	VERB	vmnpu000000	VerbForm=Conv	2	advcl	_	_
+2	radu	radīt	VERB	vmnipt31san	Evident=Fh,Nfh|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	prieku	prieks	NOUN	ncmsa1	Case=Acc|Gender=Masc|Number=Sing	2	obj	_	_
+4	gan	gan	CCONJ	ccr	_	5	cc	_	_
+5	sev	sevis	PRON	px000dn	Case=Dat|PronType=Rcp|Reflex=Yes	2	iobj	_	SpaceAfter=No
+6	,	,	PUNCT	zc	_	8	punct	_	_
+7	gan	gan	CCONJ	ccr	_	8	cc	_	_
+8	citiem	Cits	PRON	pi0mpdn	Case=Dat|Gender=Masc|Number=Plur|PronType=Ind	5	conj	_	SpaceAfter=No
+9	.	.	PUNCT	zs	_	2	punct	_	_
+
+# newpar
+# sent_id = a-zeens-p48s1
+# text = Viņš noskurinājās un nosprauslājās kā liels suns un apsēdās starp durvīm un bāru.
+1	Viņš	viņš	PRON	pp3msnn	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	2	nsubj	_	_
+2	noskurinājās	noskurināties	VERB	vmyisi330an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+3	un	un	CCONJ	ccs	_	4	cc	_	_
+4	nosprauslājās	nosprauslāties	VERB	vmyisi230an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	2	conj	_	_
+5	kā	kā	SCONJ	css	_	7	mark	_	_
+6	liels	liels	ADJ	afmsnnp	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	7	amod	_	_
+7	suns	suns	NOUN	ncmsn2	Case=Nom|Gender=Masc|Number=Sing	2	acl	_	_
+8	un	un	CCONJ	ccs	_	9	cc	_	_
+9	apsēdās	apsēsties	VERB	vmyist130an	Evident=Fh,Nfh|Mood=Ind|Person=3|Polarity=Pos|Reflex=Yes|Tense=Past|VerbForm=Fin|Voice=Act	2	conj	_	_
+10	starp	starp	ADP	sppdy	_	11	case	_	_
+11	durvīm	durvis	NOUN	ncfdd6	Case=Dat|Gender=Fem|Number=Ptan	9	obl	_	_
+12	un	un	CCONJ	ccs	_	13	cc	_	_
+13	bāru	bārs	NOUN	ncmsa1	Case=Acc|Gender=Masc|Number=Sing	11	conj	_	SpaceAfter=No
+14	.	.	PUNCT	zs	_	2	punct	_	_
+

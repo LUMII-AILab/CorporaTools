@@ -14,9 +14,6 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(processDir processFileSet);
 
-our $vers = 0.1;
-our $progname = "CoNLL automātiskais konvertors, $vers";
-
 ###############################################################################
 # This program creates PML M and A files, if CONLL file containing morphology
 # and w files are provided. All input files must be UTF-8.
@@ -29,6 +26,56 @@ our $progname = "CoNLL automātiskais konvertors, $vers";
 # Licenced under GPL.
 ###############################################################################
 # TODO: drukāt m un a failus ar simpleXML?
+
+our $vers = 0.1;
+our $progname = "CoNLL automātiskais konvertors, $vers";
+
+our $udRole2LvtbRole = {
+	#TODO for all clauses subrCl + pred?
+	'acl' => 'attrCl',
+	'advcl' => 'spc', # all kinds of adverbial clauses and several kinds of SPCs
+	'advmod' => 'adv',
+	'amod' => 'attr',
+	'appos' => 'basElem', # TODO: xApp
+	'aux' => 'auxVerb', #TODO xPred
+	'aux:pass' => 'auxVerb', #TODO xPred
+	'case' => 'prep', #TODO xPrep
+	'cc' => 'conj', #TODO coordParts ??
+	'ccomp' => 'objCl', # subject clause, predicate clause, some kinds of subjects and SPCs.
+	'clf' => 'N/A',
+	'compound' => 'basElem', #TODO subrAnal/coordAnal + xNum
+	'conj' => 'crdPart', #TODO coordParts/coordClauses?
+	'cop' => 'auxVerb', #TODO xPred
+	'csubj' => 'subjCl',
+	'csubj:pass' => 'subjCl',
+	'dep' => 'N/A',
+	'det' => 'attr',
+	'discourse' => 'no', # also insertions and free-use conjunctions
+	'dislocated' => 'N/A',
+	'expl' => 'N/A',
+	'fixed' => 'conj', # a specific case of xSimile only?
+	'flat' => 'basElem', #TODO phrasElem/unstruct/interj?
+	'flat:foreign' => 'basElem', #TODO unstruct
+	'flat:name' => 'basElem', #TODO namedEnt
+	'goeswith' => 'N/A',
+	'iobj' => 'obj',
+	'list' => 'N/A',
+	'mark' => 'conj', #TODO subrCl/sent/xSimile?
+	'nmod' => 'attr', # also some SPCs
+	'nsubj' => 'subj',
+	'nsubj:pass' => 'subj',
+	'nummod' => 'attr', # also some SPCs
+	'obj' => 'obj',
+	'obl' => 'spc', # also adverbial modifiers, situants, determinants, SPC subjects. TODO det if dative
+	'orphan' => 'subj', # subjects, objects, spcs, subject clauses, object clauses, predicate clauses
+	'parataxis' => 'basElem', # TODO coordClauses/insertions/utter?S
+	'punct' => 'punct', # TODO pmc?
+	'reparandum' => 'N/A',
+	'root' => 'pred', # TODO basElem, if not verb #TODO sent/utter
+	'vocative' => 'no', #TODO address
+	'xcomp' => 'spc' # also predicate parts
+};
+
 sub processDir
 {
 	if (not @_ or @_ < 3)
@@ -41,7 +88,20 @@ Corresponding files must have corresponding filenames.
 Params:
    w files directory (.w files)
    morphology directory (.conll files)
-   output directory
+   	  expected columns in conll file:
+         1 - ID (word index, integer starting at 1 for each new sentence)
+         2 - FORM
+         3 - LEMMA
+         4 - UPOSTAG or other short tag (currently not used)
+         5 - XPOSTAG (SemTi-Kamols style part-of-speech tag)
+         (further columns are optional)
+         6 - FEATS (currently not used)
+         7 - HEAD (head of the current word, which is either a value of ID
+                   or zero; currentlu not used)
+         8 - DEPREL (Universal dependency relation to the HEAD)
+         9 - DEPS (currently not used)
+        10 - MISC (currently not used)
+        (any further columns are ignored)   output directory
 
 Latvian Treebank project, LUMII, 2017, provided under GPL
 END
@@ -71,7 +131,7 @@ sub processFileSet
 	{
 		print <<END;
 Script for creating PML M and A files, if and w file and (optional) CoNLL file
-are provided. Currently only morphology is used. All input files must be UTF-8.
+are provided. Currently only morphology and UD roles are used. All input files must be UTF-8.
 Corresponding files must have corresponding filenames.
 
 Params:
@@ -79,6 +139,21 @@ Params:
    output folder
    .w file name [opt, stub + .w used otherwise]
    .conll file name [opt, stub + .conll used otherwise]
+   	  expected columns in conll file:
+         1 - ID (word index, integer starting at 1 for each new sentence)
+         2 - FORM
+         3 - LEMMA
+         4 - UPOSTAG or other short tag (currently not used)
+         5 - XPOSTAG (SemTi-Kamols style part-of-speech tag)
+         (further columns are optional)
+         6 - FEATS (currently not used)
+         7 - HEAD (head of the current word, which is either a value of ID
+                   or zero; currentlu not used)
+         8 - DEPREL (Universal dependency relation to the HEAD)
+         9 - DEPS (currently not used)
+        10 - MISC (currently not used)
+        (any further columns are ignored)
+
 
 Latvian Treebank project, LUMII, 2017, provided under GPL
 END
@@ -131,9 +206,9 @@ END
 			#print Dumper($wTok);
 			$wTok->{'id'} =~ /-p(\d+)w\d+$/;
 			$paraId = $1;
-			if ($line and $line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
+			if ($line and $line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
 			{
-				my ($conllToken, $lemma, $simpleTag, $tag) = ($2, $3, $4, $5);
+				my ($conllToken, $lemma, $tag, $role) = ($2, $3, $5, $8);
 				$conllToken =~ s/_/ /g;
 				$lemma =~ s/_/ /g;
 				unless($insideOfSent)
@@ -152,10 +227,11 @@ END
 				if ($1 eq $conllToken)
 				{
 					$wordCounter++;
+					my $pmlRole = &_transformRole($role, $conllName);
 					&_printMDataNode($mOut, $nameStub, $paraId, $sentCounter,
 						$wordCounter, \@unusedWIds, $conllToken, $lemma, $tag);
 					&_printADataSimple($aOut, $nameStub, $paraId, $sentCounter,
-						$wordCounter, $conllToken);
+						$wordCounter, $conllToken, $pmlRole);
 					@unusedWIds = ();
 					$unusedTokens = '';
 					$unusedConll = '';
@@ -167,9 +243,9 @@ END
 			}
 		}
 		# Process unused CoNLL lines in the end of the paragraph and warn
-		if ($unusedConll =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t/)
+		if ($unusedConll =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
 		{
-			my ($conllToken, $lemma, $tag) = ($2, $3, $4);
+			my ($conllToken, $lemma, $tag, $role) = ($2, $3, $5, $8);
 			die "CoNLL token $conllToken and W tokens $unusedTokens found unused after the end of paragraph! $!";
 			$conllToken =~ s/_/ /g;
 			$lemma =~ s/_/ /g;
@@ -184,10 +260,11 @@ END
 			if ($1 eq $conllToken)
 			{
 				$wordCounter++;
+				my $pmlRole = &_transformRole($role, $conllName);
 				&_printMDataNode($mOut, $nameStub, $paraId, $sentCounter,
 					$wordCounter, ${@unusedWIds}, $conllToken, $lemma, $tag);
 				&_printADataSimple($aOut, $nameStub, $paraId, $sentCounter,
-					$wordCounter, $conllToken);
+					$wordCounter, $conllToken, $pmlRole);
 				@unusedWIds = ();
 				$unusedTokens = '';
 				$unusedConll = '';
@@ -205,6 +282,22 @@ END
 	$mOut->close();
 	&_printAEnd($aOut);
 	$aOut->close();
+}
+
+sub _transformRole
+{
+	my ($udRole, $conllName) = @_;
+	my $pmlRole = 'N/A';
+	if ($udRole and $udRole ne '_')
+	{
+		$pmlRole = $udRole2LvtbRole->{$udRole};
+		unless ($pmlRole)
+		{
+			warn "File $conllName contains unknown role $udRole.\n";
+			return 'N/A';
+		}
+	}
+	return $pmlRole;
 }
 
 sub _printMBegin
@@ -352,11 +445,12 @@ END
 
 sub _printADataSimple
 {
-	my ($output, $docId, $parId, $sentId, $tokId, $token) = @_;
+	my ($output, $docId, $parId, $sentId, $tokId, $token, $role) = @_;
+	$role = 'N/A' unless $role;
 	print $output <<END;
 						<node id="a-${docId}-p${parId}s${sentId}w$tokId">\t<!-- $token -->
 							<m.rf>m#m-${docId}-p${parId}s${sentId}w$tokId</m.rf>
-							<role>N/A</role>
+							<role>$role</role>
 							<ord>$tokId</ord>
 						</node>
 END
