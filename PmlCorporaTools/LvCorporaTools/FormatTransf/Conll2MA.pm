@@ -97,7 +97,7 @@ Params:
          (further columns are optional)
          6 - FEATS (currently not used)
          7 - HEAD (head of the current word, which is either a value of ID
-                   or zero; currentlu not used)
+                   or zero; currently not used)
          8 - DEPREL (Universal dependency relation to the HEAD)
          9 - DEPS (currently not used)
         10 - MISC (currently not used)
@@ -148,7 +148,7 @@ Params:
          (further columns are optional)
          6 - FEATS (currently not used)
          7 - HEAD (head of the current word, which is either a value of ID
-                   or zero; currentlu not used)
+                   or zero; currently not used)
          8 - DEPREL (Universal dependency relation to the HEAD)
          9 - DEPS (currently not used)
         10 - MISC (currently not used)
@@ -181,6 +181,7 @@ END
 	my @unusedWIds = ();
 	my $unusedTokens = '';
 	my $unusedConll = '';
+	my @unprocessedATokens = ();
 
 	# A and M files are made by going through W file.
 	for my $wPara (@{$w->{'xml'}->{'doc'}->{'para'}})
@@ -190,10 +191,12 @@ END
 			# Read a new CoNLL line, if previous one has been used.
 			my $line = ($unusedConll or <$conllIn>);
 			# Process empty lines, if there any.
-			while ($line and $line !~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t/)
+			while ($line and $line !~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
 			{
 				if ($insideOfSent)
 				{
+					&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
+						if (@unprocessedATokens);
 					&_printMSentEnd($mOut);
 					&_printASentEnd($aOut);
 					$insideOfSent = 0;
@@ -208,7 +211,7 @@ END
 			$paraId = $1;
 			if ($line and $line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
 			{
-				my ($conllToken, $lemma, $tag, $role) = ($2, $3, $5, $8);
+				my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
 				$conllToken =~ s/_/ /g;
 				$lemma =~ s/_/ /g;
 				unless($insideOfSent)
@@ -217,6 +220,7 @@ END
 					$sentCounter++;
 					&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
 					&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter);
+					@unprocessedATokens = ();
 				}
 				push @unusedWIds, $wTok->{'id'};
 				$unusedTokens = $unusedTokens . $wTok->{'token'}->{'content'};
@@ -227,11 +231,20 @@ END
 				if ($1 eq $conllToken)
 				{
 					$wordCounter++;
-					my $pmlRole = &_transformRole($role, $conllName);
-					&_printMDataNode($mOut, $nameStub, $paraId, $sentCounter,
-						$wordCounter, \@unusedWIds, $conllToken, $lemma, $tag);
-					&_printADataSimple($aOut, $nameStub, $paraId, $sentCounter,
-						$wordCounter, $conllToken, $pmlRole);
+					#my $pmlRole = &_transformRole($role, $conllName);
+					my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
+					my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
+					&_printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
+						$conllToken, $lemma, $tag);
+					#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
+					$unprocessedATokens[$conllId] = {
+							'aId' => $aId,
+							'mId' => $mId,
+							'ord' => $wordCounter,
+							'token' => $conllToken,
+							'UD-DEPREL' =>$role,
+							'UD-HEAD' => $headId,
+						};
 					@unusedWIds = ();
 					$unusedTokens = '';
 					$unusedConll = '';
@@ -245,8 +258,8 @@ END
 		# Process unused CoNLL lines in the end of the paragraph and warn
 		if ($unusedConll =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
 		{
-			my ($conllToken, $lemma, $tag, $role) = ($2, $3, $5, $8);
-			die "CoNLL token $conllToken and W tokens $unusedTokens found unused after the end of paragraph! $!";
+			my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
+			warn "CoNLL token $conllToken and W tokens $unusedTokens found unused after the end of paragraph! $!";
 			$conllToken =~ s/_/ /g;
 			$lemma =~ s/_/ /g;
 			unless($insideOfSent)
@@ -255,16 +268,26 @@ END
 				$sentCounter++;
 				&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
 				&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter);
+				@unprocessedATokens = ();
 			}
 			$unusedTokens =~ /^\s*(.*?)\s*$/;
 			if ($1 eq $conllToken)
 			{
 				$wordCounter++;
-				my $pmlRole = &_transformRole($role, $conllName);
-				&_printMDataNode($mOut, $nameStub, $paraId, $sentCounter,
-					$wordCounter, ${@unusedWIds}, $conllToken, $lemma, $tag);
-				&_printADataSimple($aOut, $nameStub, $paraId, $sentCounter,
-					$wordCounter, $conllToken, $pmlRole);
+				#my $pmlRole = &_transformRole($role, $conllName);
+				my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
+				my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
+				&_printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
+					$conllToken, $lemma, $tag); # ${@unusedWIds}
+				#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
+				$unprocessedATokens[$conllId] = {
+					'aId' => $aId,
+					'mId' => $mId,
+					'ord' => $wordCounter,
+					'token' => $conllToken,
+					'UD-DEPREL' =>$role,
+					'UD-HEAD' => $headId,
+				};
 				@unusedWIds = ();
 				$unusedTokens = '';
 				$unusedConll = '';
@@ -274,6 +297,8 @@ END
 	}
 	if ($insideOfSent)
 	{
+		&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
+			if (@unprocessedATokens);
 		&_printMSentEnd($mOut);
 		&_printASentEnd($aOut);
 	}
@@ -300,87 +325,68 @@ sub _transformRole
 	return $pmlRole;
 }
 
-sub _printMBegin
+sub _getANodeId
 {
-	my ($output, $docId) = @_;
-	my $timeNow = localtime time;
-	print $output <<END;
-<?xml version="1.0" encoding="utf-8"?>
-<lvmdata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
-	<head>
-		<schema href="lvmschema.xml" />
-		<references>
-			<reffile id="w" name="wdata" href="$docId.w" />
-		</references>
-	</head>
-	<meta>
-		<lang>lv</lang>
-		<annotation_info id="semi-automatic">$progname,  $timeNow</annotation_info>
-	</meta>
+	my ($docId, $parId, $sentId, $tokId) = @_;
+	return "a-${docId}-p${parId}s${sentId}w$tokId";
+}
 
+sub _getMNodeId
+{
+	my ($docId, $parId, $sentId, $tokId) = @_;
+	return "m-${docId}-p${parId}s${sentId}w$tokId";
+}
+
+sub _printANodesFromArray
+{
+	my ($aOut, $aNodes, $conllName) = @_;
+	for my $aNode (@$aNodes)
+	{
+		if ($aNode)
+		{
+			my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
+			&_printADataSimple($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
+				$aNode->{'token'}, $pmlRole);
+		}
+
+	}
+}
+
+sub _printADataSimple
+{
+	my ($output, $aId, $mId, $ord, $token, $role) = @_;
+	$role = 'N/A' unless $role;
+	print $output <<END;
+						<node id="$aId">\t<!-- $token -->
+							<m.rf>m#$mId</m.rf>
+							<role>$role</role>
+							<ord>$ord</ord>
+						</node>
 END
 }
 
-sub _printMEnd
-{
-	my $output = shift @_;
-	print $output <<END;
-</lvmdata>
-END
-
-}
-
-sub _printMSentBegin
+sub _printASentBegin
 {
 	my ($output, $docId, $parId, $sentId) = @_;
 	print $output <<END;
-	<s id="m-${docId}-p${parId}s${sentId}">
+
+		<LM id="a-${docId}-p${parId}s${sentId}">
+			<s.rf>m#m-${docId}-p${parId}s${sentId}</s.rf>
+			<children>
+				<pmcinfo>
+					<pmctype>sent</pmctype>
+					<children>
 END
 }
 
-sub _printMSentEnd
+sub _printASentEnd
 {
-	my $output = shift @_;
+	my $output = shift;
 	print $output <<END;
-	</s>
-END
-}
-
-sub _printMDataNode
-{
-	my ($output, $docId, $parId, $sentId, $tokId, $wIds, $token, $lemma, $tag) = @_;
-	$lemma = 'N/A' unless ($lemma and $lemma !~ /^\s*$/);
-	$tag = 'N/A' unless ($tag and $tag !~ /^\s*$/);
-	my $wIdString = '';
-	if (@$wIds > 1)
-	{
-		$wIdString = '<LM>w#' . join('</LM><LM>w#', @$wIds) . '</LM>';
-	}
-	elsif (@$wIds == 1)
-	{
-		$wIdString = "w#@$wIds[0]";
-	}
-	print $output <<END;
-		<m id="m-$docId-p${parId}s${sentId}w$tokId">
-			<src.rf>$docId</src.rf>
-END
-	if ($wIdString)
-	{
-		print $output <<END;
-			<w.rf>$wIdString</w.rf>
-END
-	}
-	if (@$wIds > 1)
-	{
-		print $output <<END;
-			<form_change>union</form_change>
-END
-	}
-	print $output <<END;
-			<form>$token</form>
-			<lemma>$lemma</lemma>
-			<tag>$tag</tag>
-		</m>
+					</children>
+				</pmcinfo>
+			</children>
+		</LM>
 END
 }
 
@@ -418,41 +424,86 @@ sub _printAEnd
 END
 }
 
-sub _printASentBegin
+sub _printMDataNode
+{
+	my ($output, $docId, $mId, $wIds, $token, $lemma, $tag) = @_;
+	$lemma = 'N/A' unless ($lemma and $lemma !~ /^\s*$/);
+	$tag = 'N/A' unless ($tag and $tag !~ /^\s*$/);
+	my $wIdString = '';
+	if (@$wIds > 1)
+	{
+		$wIdString = '<LM>w#' . join('</LM><LM>w#', @$wIds) . '</LM>';
+	}
+	elsif (@$wIds == 1)
+	{
+		$wIdString = "w#@$wIds[0]";
+	}
+	print $output <<END;
+		<m id="$mId">
+			<src.rf>$docId</src.rf>
+END
+	if ($wIdString)
+	{
+		print $output <<END;
+			<w.rf>$wIdString</w.rf>
+END
+	}
+	if (@$wIds > 1)
+	{
+		print $output <<END;
+			<form_change>union</form_change>
+END
+	}
+	print $output <<END;
+			<form>$token</form>
+			<lemma>$lemma</lemma>
+			<tag>$tag</tag>
+		</m>
+END
+}
+
+sub _printMSentBegin
 {
 	my ($output, $docId, $parId, $sentId) = @_;
 	print $output <<END;
-
-		<LM id="a-${docId}-p${parId}s${sentId}">
-			<s.rf>m#m-${docId}-p${parId}s${sentId}</s.rf>
-			<children>
-				<pmcinfo>
-					<pmctype>sent</pmctype>
-					<children>
+	<s id="m-${docId}-p${parId}s${sentId}">
 END
 }
 
-sub _printASentEnd
+sub _printMSentEnd
 {
-	my $output = shift;
+	my $output = shift @_;
 	print $output <<END;
-					</children>
-				</pmcinfo>
-			</children>
-		</LM>
+	</s>
 END
 }
 
-sub _printADataSimple
+sub _printMBegin
 {
-	my ($output, $docId, $parId, $sentId, $tokId, $token, $role) = @_;
-	$role = 'N/A' unless $role;
+	my ($output, $docId) = @_;
+	my $timeNow = localtime time;
 	print $output <<END;
-						<node id="a-${docId}-p${parId}s${sentId}w$tokId">\t<!-- $token -->
-							<m.rf>m#m-${docId}-p${parId}s${sentId}w$tokId</m.rf>
-							<role>$role</role>
-							<ord>$tokId</ord>
-						</node>
+<?xml version="1.0" encoding="utf-8"?>
+<lvmdata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
+	<head>
+		<schema href="lvmschema.xml" />
+		<references>
+			<reffile id="w" name="wdata" href="$docId.w" />
+		</references>
+	</head>
+	<meta>
+		<lang>lv</lang>
+		<annotation_info id="semi-automatic">$progname,  $timeNow</annotation_info>
+	</meta>
+
+END
+}
+
+sub _printMEnd
+{
+	my $output = shift @_;
+	print $output <<END;
+</lvmdata>
 END
 }
 
