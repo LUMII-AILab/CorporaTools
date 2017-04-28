@@ -16,7 +16,7 @@ our @EXPORT_OK = qw(processDir processFileSet);
 
 ###############################################################################
 # This program creates PML M and A files, if CONLL file containing morphology
-# and w files are provided. All input files must be UTF-8.
+# (and optional syntax) and w files are provided. All input files must be UTF-8.
 #
 # Input parameters: conll dir, w dir, otput dir.
 #
@@ -25,11 +25,11 @@ our @EXPORT_OK = qw(processDir processFileSet);
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
-# TODO: drukāt m un a failus ar simpleXML?
 
 our $vers = 0.1;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 
+# Corse mapping from UDv2 roles to roles used in Latvian Treebank.
 our $udRole2LvtbRole = {
 	#TODO for all clauses subrCl + pred?
 	'acl' => 'attrCl',
@@ -310,6 +310,8 @@ END
 	$aOut->close();
 }
 
+# Get LVTB role from UD role by applying $udRole2LvtbRole mapping.
+# Warn if provided role was not found in the mapping.
 sub _transformRole
 {
 	my ($udRole, $conllName) = @_;
@@ -326,18 +328,27 @@ sub _transformRole
 	return $pmlRole;
 }
 
+# Form an ID for a-node by using given numerical parameters.
 sub _getANodeId
 {
 	my ($docId, $parId, $sentId, $tokId) = @_;
 	return "a-${docId}-p${parId}s${sentId}w$tokId";
 }
 
+# Form an ID for m-node by using given numerical parameters.
 sub _getMNodeId
 {
 	my ($docId, $parId, $sentId, $tokId) = @_;
 	return "m-${docId}-p${parId}s${sentId}w$tokId";
 }
 
+# &_printANodesFromArray(output stream, list of node data from conll, conll
+#                        file name)
+# Form a tree structure (and print it out as PML-A) from array containing conll
+# data. Each array element is supposed to have following keys: aId, mId,
+# conllId (token number from CoNLL file), ord, token (wordform), UD-DEPREL,
+# UD-HEAD. conllId is expected to be equal with the index number for that node
+# in this array.
 sub _printANodesFromArray
 {
 	my ($aOut, $aNodes, $conllName) = @_;
@@ -378,6 +389,7 @@ sub _printANodesFromArray
 				warn 'Node with CoNLL_ID='.$aNode->{'conllId'}.
 						' and PML_A_ID='.$aNode->{'aId'}.
 						" in file $conllName was not reachable through DFS; is the CoNLL tree valid?\n";
+				$aNode->{'printed'} = 1;
 			}
 		}
 
@@ -396,6 +408,14 @@ sub _printANodesFromArray
 #	}
 }
 
+# &_printASubtree(output stream, list of node data from conll, conll ID for
+#                 subtree root,conll file name)
+# Form a tree structure (and print it out as PML-A) for a given subroot. All
+# nodes' data is obtainend from array containing conll data. Each array element
+# is supposed to have following keys: aId, mId, conllId (token number from CoNLL
+# file), ord, token (wordform), UD-DEPREL, UD-HEAD, children (list of children
+# conllIds. conllId is expected to be equal with the index number for that node
+# in this array.
 sub _printASubtree
 {
 	my ($aOut, $aNodesWithChildLists, $conllId, $conllName) = @_;
@@ -420,6 +440,7 @@ sub _printASubtree
 	}
 }
 
+# Just print stuff in output stream.
 sub _printANodeWithChildrenStart
 {
 	my ($output, $aId, $mId, $ord, $token, $role) = @_;
@@ -433,6 +454,7 @@ sub _printANodeWithChildrenStart
 END
 }
 
+# Just print stuff in output stream.
 sub _printANodeWithChildrenEnd
 {
 	my $output = shift;
@@ -442,6 +464,7 @@ sub _printANodeWithChildrenEnd
 END
 }
 
+# Just print stuff in output stream.
 sub _printANodeLeaf
 {
 	my ($output, $aId, $mId, $ord, $token, $role) = @_;
@@ -455,6 +478,7 @@ sub _printANodeLeaf
 END
 }
 
+# Just print stuff in output stream.
 sub _printASentBegin
 {
 	my ($output, $docId, $parId, $sentId) = @_;
@@ -469,6 +493,7 @@ sub _printASentBegin
 END
 }
 
+# Just print stuff in output stream.
 sub _printASentEnd
 {
 	my $output = shift;
@@ -480,6 +505,7 @@ sub _printASentEnd
 END
 }
 
+# Just print stuff in output stream.
 sub _printABegin
 {
 	my ($output, $docId) = @_;
@@ -505,6 +531,7 @@ sub _printABegin
 END
 }
 
+# Just print stuff in output stream.
 sub _printAEnd
 {
 	my $output = shift @_;
@@ -514,6 +541,7 @@ sub _printAEnd
 END
 }
 
+# Just print stuff in output stream.
 sub _printMDataNode
 {
 	my ($output, $docId, $mId, $wIds, $token, $lemma, $tag) = @_;
@@ -552,6 +580,7 @@ END
 END
 }
 
+# Just print stuff in output stream.
 sub _printMSentBegin
 {
 	my ($output, $docId, $parId, $sentId) = @_;
@@ -560,6 +589,7 @@ sub _printMSentBegin
 END
 }
 
+# Just print stuff in output stream.
 sub _printMSentEnd
 {
 	my $output = shift @_;
@@ -568,6 +598,7 @@ sub _printMSentEnd
 END
 }
 
+# Just print stuff in output stream.
 sub _printMBegin
 {
 	my ($output, $docId) = @_;
@@ -589,6 +620,7 @@ sub _printMBegin
 END
 }
 
+# Just print stuff in output stream.
 sub _printMEnd
 {
 	my $output = shift @_;
