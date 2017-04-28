@@ -240,6 +240,7 @@ END
 					$unprocessedATokens[$conllId] = {
 							'aId' => $aId,
 							'mId' => $mId,
+							'conllId' => $conllId,
 							'ord' => $wordCounter,
 							'token' => $conllToken,
 							'UD-DEPREL' =>$role,
@@ -283,6 +284,7 @@ END
 				$unprocessedATokens[$conllId] = {
 					'aId' => $aId,
 					'mId' => $mId,
+					'conllId' => $conllId,
 					'ord' => $wordCounter,
 					'token' => $conllToken,
 					'UD-DEPREL' =>$role,
@@ -340,19 +342,108 @@ sub _getMNodeId
 sub _printANodesFromArray
 {
 	my ($aOut, $aNodes, $conllName) = @_;
+	my @rootChildren = ();
+	# Populate childlist for each node.
 	for my $aNode (@$aNodes)
 	{
 		if ($aNode)
 		{
-			my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
-			&_printADataSimple($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
-				$aNode->{'token'}, $pmlRole);
+			my $headId = $aNode->{'UD-HEAD'};
+			if ($headId and $headId ne '0' and $headId ne '_' and $aNodes->[$headId])
+			{
+				my @tmpCh = ();
+				@tmpCh = @{$aNodes->[$headId]->{'children'}}
+					if ($aNodes->[$headId]->{'children'});
+				push @tmpCh, $aNode->{'conllId'};
+				$aNodes->[$headId]->{'children'} = \@tmpCh;
+			}
+			else
+			{
+				push @rootChildren, $aNode->{'conllId'};
+			}
+		}
+	}
+	# Print out everything reachable from root.
+	for my $rootChild (@rootChildren)
+	{
+		&_printASubtree($aOut, $aNodes, $aNodes->[$rootChild]->{'conllId'}, $conllName);
+	}
+
+	for my $aNode (@$aNodes)
+	{
+		if ($aNode)
+		{
+			unless ($aNode->{'printed'})
+			{
+				&_printASubtree($aOut, $aNodes, $aNode->{'conllId'}, $conllName);
+				warn 'Node with CoNLL_ID='.$aNode->{'conllId'}.
+						' and PML_A_ID='.$aNode->{'aId'}.
+						" in file $conllName was not reachable through DFS; is the CoNLL tree valid?\n";
+			}
 		}
 
 	}
+
+	# Print out each node.
+#	for my $aNode (@$aNodes)
+#	{
+#		if ($aNode)
+#		{
+#			#print Dumper($aNode->{'children'});
+#			my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
+#			&_printANodeLeaf($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
+#				$aNode->{'token'}, $pmlRole);
+#		}
+#	}
 }
 
-sub _printADataSimple
+sub _printASubtree
+{
+	my ($aOut, $aNodesWithChildLists, $conllId, $conllName) = @_;
+	my $aNode = $aNodesWithChildLists->[$conllId];
+	my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
+	if ($aNode->{'children'})
+	{
+		&_printANodeWithChildrenStart($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
+			$aNode->{'token'}, $pmlRole);
+		for my $childConllId (@{$aNode->{'children'}})
+		{
+			&_printASubtree($aOut, $aNodesWithChildLists, $childConllId, $conllName);
+		}
+		&_printANodeWithChildrenEnd($aOut);
+		$aNode->{'printed'} = 1;
+	}
+	else
+	{
+		&_printANodeLeaf($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
+			$aNode->{'token'}, $pmlRole);
+		$aNode->{'printed'} = 1;
+	}
+}
+
+sub _printANodeWithChildrenStart
+{
+	my ($output, $aId, $mId, $ord, $token, $role) = @_;
+	$role = 'N/A' unless $role;
+	print $output <<END;
+						<node id="$aId">\t<!-- $token -->
+							<m.rf>m#$mId</m.rf>
+							<role>$role</role>
+							<ord>$ord</ord>
+							<children>
+END
+}
+
+sub _printANodeWithChildrenEnd
+{
+	my $output = shift;
+	print $output <<END;
+							</children>
+						</node>
+END
+}
+
+sub _printANodeLeaf
 {
 	my ($output, $aId, $mId, $ord, $token, $role) = @_;
 	$role = 'N/A' unless $role;
