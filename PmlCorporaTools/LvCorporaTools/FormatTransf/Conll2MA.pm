@@ -82,8 +82,8 @@ sub processDir
 	{
 		print <<END;
 Script for batch creating PML M and A files, if CONLL files and w files are
-provided. Currently only morphology is used. All input files must be UTF-8.
-Corresponding files must have corresponding filenames.
+provided. Currently morphology is mandatory, syntax is optional. All input files
+must be UTF-8. Corresponding files must have corresponding filenames.
 
 Params:
    w files directory (.w files)
@@ -97,7 +97,7 @@ Params:
          (further columns are optional)
          6 - FEATS (currently not used)
          7 - HEAD (head of the current word, which is either a value of ID
-                   or zero; currently not used)
+                   or zero)
          8 - DEPREL (Universal dependency relation to the HEAD)
          9 - DEPS (currently not used)
         10 - MISC (currently not used)
@@ -131,8 +131,8 @@ sub processFileSet
 	{
 		print <<END;
 Script for creating PML M and A files, if and w file and (optional) CoNLL file
-are provided. Currently only morphology and UD roles are used. All input files must be UTF-8.
-Corresponding files must have corresponding filenames.
+are provided. Currently morphology is mandatory, syntax is optional. All input
+files must be UTF-8.
 
 Params:
    file name stub for output
@@ -148,12 +148,11 @@ Params:
          (further columns are optional)
          6 - FEATS (currently not used)
          7 - HEAD (head of the current word, which is either a value of ID
-                   or zero; currently not used)
+                   or zero)
          8 - DEPREL (Universal dependency relation to the HEAD)
          9 - DEPS (currently not used)
         10 - MISC (currently not used)
         (any further columns are ignored)
-
 
 Latvian Treebank project, LUMII, 2017, provided under GPL
 END
