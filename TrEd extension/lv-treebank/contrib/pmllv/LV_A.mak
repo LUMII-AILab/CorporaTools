@@ -295,6 +295,24 @@ sub has_nondep_child
   return '';
 }
 
+# Finds, if node has x-node or pmc-node or coord-node as children.
+sub count_nondep_child
+{
+  my $node = shift;
+  my $count = 0;
+  foreach $ch ($node->children)
+  {
+	if ($ch->{'#name'} eq 'xinfo'
+	 or $ch->{'#name'} eq 'pmcinfo'
+	 or $ch->{'#name'} eq 'coordinfo')
+	{
+	  $count++;
+	}
+  }
+  return $count;
+}
+
+
 # Status line mesidge.
 sub get_status_line_hook
 {

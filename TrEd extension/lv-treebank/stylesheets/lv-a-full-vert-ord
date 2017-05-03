@@ -21,7 +21,8 @@ node:<?
       or ($${#name} eq 'coordinfo') 
       or ($${#name} eq 'pmcinfo'))
 	and ($this->parent)->attr('m/id')
-    or not LV_A::is_allowed_for_parent($this)) ?>
+    or not LV_A::is_allowed_for_parent($this)
+    or LV_A::count_nondep_child($this) > 1) ?>
 
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}
