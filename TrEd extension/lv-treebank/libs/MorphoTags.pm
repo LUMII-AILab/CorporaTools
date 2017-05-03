@@ -36,7 +36,7 @@ our %tags = (
 		'5' => '5',
 		'6' => '6',
 		'r' => 'Reflexive',
-		's' => 'Genitiveling'}],
+		'g' => 'Genitiveling'}],
 	]],
 'v' => ['Verb', [
 	['Type', {
