@@ -8,7 +8,7 @@ use strict;
 
 use MorphoTags;
 
-BEGIN { import TredMacro;}
+BEGIN { import TredMacro; import PML; }
 
 # Set correct stylesheet when entering this annotation mode.
 sub switch_context_hook

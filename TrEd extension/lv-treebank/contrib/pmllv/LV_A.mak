@@ -7,7 +7,7 @@ package LV_A;
 
 use MorphoTags;
 
-BEGIN { import TredMacro; }
+BEGIN { import TredMacro; import PML; }
 
 # Switch on/of vertical layout, if appropriate stylesheet is provided.
 sub swich_styles_vert
@@ -380,7 +380,7 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
   my ($hook)=@_;
   my $resuming = ($hook eq 'file_resumed_hook');
   my $current = CurrentContext();
-  if (LV_A::is_lva_file)
+  if (LV_A::is_lva_file())
   {
     SetCurrentStylesheet('lv-a') if $resuming;
     return 'LV_A_View';
