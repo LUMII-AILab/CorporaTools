@@ -28,6 +28,7 @@ our @EXPORT_OK = qw(processDir processFileSet);
 
 our $vers = 0.1;
 our $progname = "CoNLL automātiskais konvertors, $vers";
+our $firstSentComment = "AUTO";
 
 # Corse mapping from UDv2 roles to roles used in Latvian Treebank.
 our $udRole2LvtbRole = {
@@ -181,6 +182,7 @@ END
 	my $unusedTokens = '';
 	my $unusedConll = '';
 	my @unprocessedATokens = ();
+	my $isFirstTree = 1;
 
 	# A and M files are made by going through W file.
 	for my $wPara (@{$w->{'xml'}->{'doc'}->{'para'}})
@@ -194,8 +196,12 @@ END
 			{
 				if ($insideOfSent)
 				{
-					&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
-						if (@unprocessedATokens);
+					if (@unprocessedATokens)
+					{
+						&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName, $isFirstTree);
+						$isFirstTree = 0;
+					}
+
 					&_printMSentEnd($mOut);
 					&_printASentEnd($aOut);
 					$insideOfSent = 0;
@@ -218,7 +224,8 @@ END
 					$insideOfSent = 1;
 					$sentCounter++;
 					&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
-					&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter);
+					&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter, $isFirstTree);
+					$isFirstTree = 0;
 					@unprocessedATokens = ();
 				}
 				push @unusedWIds, $wTok->{'id'};
@@ -267,7 +274,8 @@ END
 				$insideOfSent = 1;
 				$sentCounter++;
 				&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
-				&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter);
+				&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter, $isFirstTree);
+				$isFirstTree = 0;
 				@unprocessedATokens = ();
 			}
 			$unusedTokens =~ /^\s*(.*?)\s*$/;
@@ -481,11 +489,19 @@ END
 # Just print stuff in output stream.
 sub _printASentBegin
 {
-	my ($output, $docId, $parId, $sentId) = @_;
+	my ($output, $docId, $parId, $sentId, $isFirst) = @_;
 	print $output <<END;
 
 		<LM id="a-${docId}-p${parId}s${sentId}">
 			<s.rf>m#m-${docId}-p${parId}s${sentId}</s.rf>
+END
+	if ($isFirst)
+	{
+		print $output <<END;
+			<comment>$firstSentComment</comment>
+END
+	}
+	print $output <<END;
 			<children>
 				<pmcinfo>
 					<pmctype>sent</pmctype>
