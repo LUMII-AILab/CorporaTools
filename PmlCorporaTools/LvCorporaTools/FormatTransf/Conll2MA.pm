@@ -324,6 +324,7 @@ sub _printATreeFromHash
 	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
 		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
 
+	# Depending on node type varies the processing order of children.
 	if ($rootType eq 'root')
 	{
 		_printARootFromHash($aOut, $nodeMap, $rootId, $isFirst);
@@ -347,19 +348,21 @@ sub _printARootFromHash
 {
 	my ($aOut, $nodeMap, $rootId, $isFirst) = @_;
 	my $rootNode = $nodeMap->{$rootId};
-
 	my $parentType = 0;
 	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
 		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
 
+	# 1. Start sentence enclosing part.
 	printASentBegin($aOut, $rootNode->{'aId'}, $rootNode->{'mId'}, $isFirst ? $firstSentComment : 0);
 	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
 	{
+		# 2. Print out (hopefully only one) phrase children.
 		for my $nodeId (keys %{$rootNode->{'children'}})
 		{
 			_printATreeFromHash($aOut, $nodeMap, $nodeId, 0)
 				if ($nodeMap->{$nodeId}->{'nodeType'} ne 'node');
 		}
+		# 3. Print out sentence dependents.
 		for my $nodeId (keys %{$rootNode->{'children'}})
 		{
 			_printATreeFromHash($aOut, $nodeMap, $nodeId, 0)
@@ -370,6 +373,7 @@ sub _printARootFromHash
 	{
 		warn "Root node $rootId with type has no children!"
 	}
+	# 4. End sentence enclosing part.
 	printASentEnd($aOut);
 }
 # &_printAPhraseFromHash(output stream, maping from PML IDs to nodes, ID of the
@@ -381,14 +385,16 @@ sub _printAPhraseFromHash
 	my ($aOut, $nodeMap, $rootId) = @_;
 	my $rootNode = $nodeMap->{$rootId};
 	my $rootType = $rootNode->{'nodeType'};
-
 	my $parentType = 0;
 	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
 		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
 
+	# 1. Start phrase enclosing dependency node.
 	printANodeStart($aOut, $rootNode->{'aId'}, $rootNode->{'role'})
 		if ($parentType ne 'root');
+	# 2. Start phrase node.
 	printAPhraseBegin($aOut, $rootType, $rootNode->{'phraseSubType'});
+	# 3. Print out phrase constituents.
 	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
 	{
 		for my $nodeId (keys %{$rootNode->{'children'}})
@@ -401,7 +407,9 @@ sub _printAPhraseFromHash
 	{
 		warn "Node $rootId with type \'$rootType\' has no children!"
 	}
+	# 4. End phrase node.
 	printAPhraseEnd($aOut, $rootType);
+	# 5. Print out phrase dependents.
 	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
 	{
 		for my $nodeId (keys %{$rootNode->{'children'}})
@@ -411,6 +419,7 @@ sub _printAPhraseFromHash
 				if ($relType ne 'phrase');
 		}
 	}
+	# 6. End phrase enclosing dependency node.
 	printANodeEnd($aOut) if ($parentType ne 'root');
 }
 
@@ -422,21 +431,25 @@ sub _printANodeFromHash
 	my ($aOut, $nodeMap, $rootId) = @_;
 	my $rootNode = $nodeMap->{$rootId};
 
-	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
-	{
-		printANodeStart($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
-			$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'});
-		for my $nodeId (keys %{$rootNode->{'children'}})
-		{
-			_printATreeFromHash($aOut, $nodeMap, $nodeId, 0);
-		}
-		printANodeEnd($aOut);
-	}
-	else
+	# Just print out the node, if there are no children for it.
+	unless (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
 	{
 		printALeaf($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
-			$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'})
+			$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'});
+		return;
 	}
+
+	# If there are some children...
+	# 1. Start the node.
+	printANodeStart($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
+		$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'});
+	# 2. Print out the children.
+	for my $nodeId (keys %{$rootNode->{'children'}})
+	{
+		_printATreeFromHash($aOut, $nodeMap, $nodeId, 0);
+	}
+	# 3. End the node.
+	printANodeEnd($aOut);
 }
 
 1;
