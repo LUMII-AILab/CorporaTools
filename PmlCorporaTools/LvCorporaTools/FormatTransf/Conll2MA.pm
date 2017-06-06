@@ -239,13 +239,10 @@ END
 						my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
 						my $nodeMap = &_buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
 						&_printANodesFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
-						#&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName, $isFirstTree);
 						$isFirstTree = 0;
 					}
 
 					printMSentEnd($mOut);
-					#printAPhraseEnd($aOut, 'pmc');
-					#printASentEnd($aOut);
 					$insideOfSent = 0;
 					$wordCounter = 0;
 				}
@@ -268,8 +265,6 @@ END
 					my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
 					my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
 					printMSentBegin($mOut, $mSentId);
-					#printASentBegin($aOut, $aSentId, $mSentId, $isFirstTree ? $firstSentComment : 0);
-					#printAPhraseBegin($aOut, 'pmc', 'sent');
 					$isFirstTree = 0;
 					@unprocessedATokens = ();
 				}
@@ -280,12 +275,10 @@ END
 				if ($1 eq $conllToken)
 				{
 					$wordCounter++;
-					#my $pmlRole = &_transformRole($role, $conllName);
 					my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 					my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 					printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
 						$conllToken, $lemma, $tag);
-					#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
 					$unprocessedATokens[$conllId] = {
 							'aId' => $aId,
 							'mId' => $mId,
@@ -317,11 +310,8 @@ END
 			{
 				$insideOfSent = 1;
 				$sentCounter++;
-				my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
 				my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
 				printMSentBegin($mOut, $mSentId);
-				#printASentBegin($aOut, $aSentId, $mSentId, $isFirstTree ? $firstSentComment : 0);
-				#printAPhraseBegin($aOut, 'pmc', 'sent');
 				$isFirstTree = 0;
 				@unprocessedATokens = ();
 			}
@@ -329,12 +319,10 @@ END
 			if ($1 eq $conllToken)
 			{
 				$wordCounter++;
-				#my $pmlRole = &_transformRole($role, $conllName);
 				my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 				my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 				printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
 					$conllToken, $lemma, $tag); # ${@unusedWIds}
-				#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
 				$unprocessedATokens[$conllId] = {
 					'aId' => $aId,
 					'mId' => $mId,
@@ -358,11 +346,7 @@ END
 		my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
 		my $nodeMap = &_buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
 		&_printANodesFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
-		#&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
-		#	if (@unprocessedATokens);
 		printMSentEnd($mOut);
-		#printAPhraseEnd($aOut, 'pmc');
-		#printASentEnd($aOut);
 	}
 
 	printMEnd($mOut);
@@ -689,6 +673,11 @@ sub _makePhrase
 	return $newId;
 }
 
+# $_printANodesFromHash(output stream, maping from PML IDs to nodes, ID of the
+#                       tree root (only ancestors of this node are printed),
+#                       should the first sentence comment be added?)
+# Prints out as XML the tree which described in the mapping and rooted in the
+# given ID.
 sub _printANodesFromHash
 {
 	my ($aOut, $nodeMap, $rootId, $isFirst) = @_;
@@ -767,91 +756,6 @@ sub _printANodesFromHash
 			printLeafANode($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
 				$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'})
 		}
-	}
-}
-
-# &_printANodesFromArray(output stream, list of node data from conll, conll
-#                        file name)
-# Form a tree structure (and print it out as PML-A) from array containing conll
-# data. Each array element is supposed to have following keys: aId, mId,
-# conllId (token number from CoNLL file), ord, token (wordform), UD-DEPREL,
-# UD-HEAD. conllId is expected to be equal with the index number for that node
-# in this array.
-sub _printANodesFromArray
-{
-	my ($aOut, $aNodes, $conllName) = @_;
-	my @rootChildren = ();
-	# Populate childlist for each node.
-	for my $aNode (@$aNodes)
-	{
-		if ($aNode)
-		{
-			my $headId = $aNode->{'UD-HEAD'};
-			if ($headId and $headId ne '0' and $headId ne '_' and $aNodes->[$headId])
-			{
-				my @tmpCh = ();
-				@tmpCh = @{$aNodes->[$headId]->{'children'}}
-					if ($aNodes->[$headId]->{'children'});
-				push @tmpCh, $aNode->{'conllId'};
-				$aNodes->[$headId]->{'children'} = \@tmpCh;
-			}
-			else
-			{
-				push @rootChildren, $aNode->{'conllId'};
-			}
-		}
-	}
-	# Print out everything reachable from root.
-	for my $rootChild (@rootChildren)
-	{
-		&_printASubtree($aOut, $aNodes, $aNodes->[$rootChild]->{'conllId'}, $conllName);
-	}
-
-	for my $aNode (@$aNodes)
-	{
-		if ($aNode)
-		{
-			unless ($aNode->{'printed'})
-			{
-				&_printASubtree($aOut, $aNodes, $aNode->{'conllId'}, $conllName);
-				warn 'Node with CoNLL_ID='.$aNode->{'conllId'}.
-						' and PML_A_ID='.$aNode->{'aId'}.
-						" in file $conllName was not reachable through DFS; is the CoNLL tree valid?\n";
-				$aNode->{'printed'} = 1;
-			}
-		}
-	}
-}
-
-# &_printASubtree(output stream, list of node data from conll, conll ID for
-#                 subtree root,conll file name)
-# Form a tree structure (and print it out as PML-A) for a given subroot. All
-# nodes' data is obtainend from array containing conll data. Each array element
-# is supposed to have following keys: aId, mId, conllId (token number from CoNLL
-# file), ord, token (wordform), UD-DEPREL, UD-HEAD, children (list of children
-# conllIds. conllId is expected to be equal with the index number for that node
-# in this array.
-sub _printASubtree
-{
-	my ($aOut, $aNodesWithChildLists, $conllId, $conllName) = @_;
-	my $aNode = $aNodesWithChildLists->[$conllId];
-	my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
-	if ($aNode->{'children'})
-	{
-		printInnerANodeStart($aOut, $aNode->{'aId'}, $pmlRole, $aNode->{'mId'}, $aNode->{'ord'},
-			$aNode->{'token'});
-		for my $childConllId (@{$aNode->{'children'}})
-		{
-			&_printASubtree($aOut, $aNodesWithChildLists, $childConllId, $conllName);
-		}
-		printInnerANodeEnd($aOut);
-		$aNode->{'printed'} = 1;
-	}
-	else
-	{
-		printLeafANode($aOut, $aNode->{'aId'},  $pmlRole, $aNode->{'mId'}, $aNode->{'ord'},
-			$aNode->{'token'});
-		$aNode->{'printed'} = 1;
 	}
 }
 
