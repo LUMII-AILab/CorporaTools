@@ -36,7 +36,8 @@ our @EXPORT_OK = qw(processDir processFileSet);
 # Licenced under GPL.
 ###############################################################################
 
-our $vers = 0.1;
+
+our $vers = 0.2;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
@@ -47,7 +48,7 @@ sub processDir
 		print <<END;
 Script for batch creating PML M and A files, if CONLL files and w files are
 provided. Currently morphology is mandatory, syntax is optional. All input files
-must be UTF-8. Corresponding files must have corresponding filenames.
+must be UTF-8. Corresponding files must have corresponding filenames and texts.
 
 Params:
    w files directory (.w files)
@@ -96,7 +97,7 @@ sub processFileSet
 		print <<END;
 Script for creating PML M and A files, if and w file and (optional) CoNLL file
 are provided. Currently morphology is mandatory, syntax is optional. All input
-files must be UTF-8.
+files must be UTF-8. Fileset must have the same text in both W and CoNLL file.
 
 Params:
    file name stub for output
@@ -138,147 +139,164 @@ END
 	my $aOut = IO::File->new("$outDirName/$nameStub.a", '> :encoding(UTF-8)');
 	printAFileBegin($aOut, $nameStub, "$progname,  $timeNow");
 
-	my $insideOfSent = 0;
-	my $paraId = 1;
-	my $sentCounter = 0;
-	my $wordCounter = 0;
-	my @unusedWIds = ();
-	my $unusedTokens = '';
-	my $unusedConll = '';
-	my @unprocessedATokens = ();
-	my $isFirstTree = 1;
+	my %status = (
+		'paraId' => 1,
+		'sentenceCounter' => 0,
+		'wordCounter' => 0,
+		'isInsideOfSentence' => 0,
+		'isFirstTree' => 1,
+		'unprocessedATokens' => [],
+		'unprocessedWIds' => [],
+		'unusedConll' => '',
+		'unusedTokens' => '',
+	);
 
-	# A and M files are made by going through W file.
+	# A and M files are made by going through W  and CoNLL files at the same time.
 	for my $wPara (@{$w->{'xml'}->{'doc'}->{'para'}})
 	{
 		for my $wTok (@{$wPara->{w}})
 		{
-			# Read a new CoNLL line, if previous one has been used.
-			my $line = ($unusedConll or <$conllIn>);
-			# Process empty lines, if there any.
-			while ($line and $line !~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
-			{
-				if ($insideOfSent)
-				{
-					if (@unprocessedATokens)
-					{
-						my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
-						my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
-						my $nodeMap = buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
-						&_printATreeFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
-						$isFirstTree = 0;
-					}
-
-					printMSentEnd($mOut);
-					$insideOfSent = 0;
-					$wordCounter = 0;
-				}
-				$unusedConll = '';
-				$line = <$conllIn>;
-			}
-
+			# Get the next conll line to use - either the unused one from
+			# previous loop or read a new one.
+			my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
+			&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+				if ($mustEndSentence);
 			#print Dumper($wTok);
 			$wTok->{'id'} =~ /-p(\d+)w\d+$/;
-			$paraId = $1;
-			if ($line and $line =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
-			{
-				my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
-				$conllToken =~ s/_/ /g;
-				$lemma =~ s/_/ /g;
-				unless($insideOfSent)
-				{
-					$insideOfSent = 1;
-					$sentCounter++;
-					my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
-					printMSentBegin($mOut, $mSentId);
-					$isFirstTree = 0;
-					@unprocessedATokens = ();
-				}
-				push @unusedWIds, $wTok->{'id'};
-				$unusedTokens = $unusedTokens . $wTok->{'token'}->{'content'};
-				$unusedTokens = "$unusedTokens " unless ($wTok->{'no_space_after'});
-				$unusedTokens =~ /^\s*(.*?)\s*$/;
-				if ($1 eq $conllToken)
-				{
-					$wordCounter++;
-					my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-					my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-					printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
-						$conllToken, $lemma, $tag);
-					$unprocessedATokens[$conllId] = {
-							'aId' => $aId,
-							'mId' => $mId,
-							'conllId' => $conllId,
-							'ord' => $wordCounter,
-							'token' => $conllToken,
-							'UD-DEPREL' =>$role,
-							'UD-HEAD' => $headId,
-							'nodeType' => 'node',
-					};
-					@unusedWIds = ();
-					$unusedTokens = '';
-					$unusedConll = '';
-				}
-				else
-				{
-					$unusedConll = $line;
-				}
-			}
+			$status{'paraId'} = $1;
+			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut, $wTok);
 		}
-		# Process unused CoNLL lines in the end of the paragraph and warn
-		if ($unusedConll =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/)
-		{
-			my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
-			warn "CoNLL token $conllToken and W tokens $unusedTokens found unused after the end of paragraph! $!";
-			$conllToken =~ s/_/ /g;
-			$lemma =~ s/_/ /g;
-			unless($insideOfSent)
-			{
-				$insideOfSent = 1;
-				$sentCounter++;
-				my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
-				printMSentBegin($mOut, $mSentId);
-				$isFirstTree = 0;
-				@unprocessedATokens = ();
-			}
-			$unusedTokens =~ /^\s*(.*?)\s*$/;
-			if ($1 eq $conllToken)
-			{
-				$wordCounter++;
-				my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-				my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-				printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
-					$conllToken, $lemma, $tag); # ${@unusedWIds}
-				$unprocessedATokens[$conllId] = {
-					'aId' => $aId,
-					'mId' => $mId,
-					'conllId' => $conllId,
-					'ord' => $wordCounter,
-					'token' => $conllToken,
-					'UD-DEPREL' =>$role,
-					'UD-HEAD' => $headId,
-					'nodeType' => 'node',
-				};
-				@unusedWIds = ();
-				$unusedTokens = '';
-				$unusedConll = '';
-			}
-		}
+	}
 
-	}
-	if ($insideOfSent)
+	# Process unused CoNLL lines in the end of the file and warn
+	$status{'paraId'}++;
+	my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
+	&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+		if ($mustEndSentence);
+	while ($line)
 	{
-		my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
-		my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
-		my $nodeMap = buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
-		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
-		printMSentEnd($mOut);
+		&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
+		($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
+		&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+			if ($mustEndSentence);
 	}
+
+	# Warn about spare w nodes
+	warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
+		if ($status{'unusedTokens'});
+
+	&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+		if ($status{'isInsideOfSentence'});
 
 	printMFileEnd($mOut);
 	$mOut->close();
 	printAFileEnd($aOut);
 	$aOut->close();
+}
+
+sub _getNextConllContentLine
+{
+	my ($status, $conllIn) = @_;
+	# Read a new CoNLL line, if previous one has been used.
+	my $line = ($status->{'unusedConll'} or <$conllIn>);
+	my $mustEndSentence = 0;
+	# Process empty lines, if there any.
+	while ($line and $line !~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
+	{
+		$mustEndSentence = 1 if ($status->{'isInsideOfSentence'});
+		$status->{'unusedConll'} = '';
+		$line = <$conllIn>;
+	}
+	return ($line, $mustEndSentence);
+}
+sub _startSentence
+{
+	my ($status, $nameStub, $mOut) = @_;
+	$status->{'isInsideOfSentence'} = 1;
+	$status->{'sentenceCounter'}++;
+	my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
+	printMSentBegin($mOut, $mSentId);
+	$status->{'isFirstTree'} = 0;
+	$status->{'unprocessedATokens'} = [];
+}
+
+sub _endSentence
+{
+	my ($status, $nameStub, $mOut, $aOut, $conllName) = @_;
+	if (@{$status->{'unprocessedATokens'}})
+	{
+		my $aSentId = &_getASentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
+		my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
+		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);
+		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $status->{'isFirstTree'});
+		$status->{'isFirstTree'} = 0;
+	}
+
+	printMSentEnd($mOut);
+	$status->{'isInsideOfSentence'} = 0;
+	$status->{'wordCounter'} = 0;
+}
+
+sub _doOneTokenOrLine
+{
+	my ($status, $conllLine, $nameStub, $mOut, $wNode) = @_;
+
+	# Preprocess given w node - add its contents as jet to be processed.
+	if ($wNode)
+	{
+		# If corresponding token from w file is available, add it to "to-process".
+		push @{$status->{'unusedWIds'}}, $wNode->{'id'};
+		$status->{'unusedTokens'} = $status->{'unusedTokens'} . $wNode->{'token'}->{'content'};
+		$status->{'unusedTokens'} = "$status->{'unusedTokens'} " unless ($wNode->{'no_space_after'});
+	}
+	else
+	{
+		warn "W tokens ".$status->{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
+			if ($status->{'unusedTokens'});
+	}
+
+	# If the provided CoNLL line do not match, there is nothing more to do.
+	return unless ($conllLine and $conllLine =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/);
+
+	my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
+	$conllToken =~ s/_/ /g;
+	$lemma =~ s/_/ /g;
+	# This usually happens if at the end of the file something is missing,
+	# or some kind of mismatch has happened.
+	warn "CoNLL token $conllToken from dataset $nameStub found unused after the end of paragraph!"
+		if ($conllToken and not $wNode);
+
+	# Start sentence if needed.
+	&_startSentence ($status, $nameStub, $mOut)
+		unless ($status->{'isInsideOfSentence'});
+
+	$status->{'unusedTokens'} =~ /^\s*(.*?)\s*$/;
+	if ($1 eq $conllToken or (not $wNode and not $status->{'unusedTokens'}))
+	{
+		# If conll token and unused w token matches, print next PML node.
+		$status->{'wordCounter'}++;
+		my $mId = &_getMNodeId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
+		my $aId = &_getANodeId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
+		printMDataNode($mOut, $nameStub, $mId, $status->{'unusedWIds'},
+			$conllToken, $lemma, $tag);
+		$status->{'unprocessedATokens'}->[$conllId] = {
+			'aId' => $aId,
+			'mId' => $mId,
+			'conllId' => $conllId,
+			'ord' => $status->{'wordCounter'},
+			'token' => $conllToken,
+			'UD-DEPREL' =>$role,
+			'UD-HEAD' => $headId,
+			'nodeType' => 'node',
+		};
+		$status->{'unusedWIds'} = [];
+		$status->{'unusedTokens'} = '';
+		$status->{'unusedConll'} = '';
+	}
+	else
+	{
+		$status->{'unusedConll'} = $conllLine;
+	}
 }
 
 # Form an ID for a-node by using given numerical parameters.
