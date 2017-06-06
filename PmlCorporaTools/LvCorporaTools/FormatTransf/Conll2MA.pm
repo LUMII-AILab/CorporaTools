@@ -8,6 +8,10 @@ use strict;
 use IO::File;
 use IO::Dir;
 use LvCorporaTools::GenericUtils::SimpleXmlIo;
+use LvCorporaTools::FormatTransf::Conll2MAHelpers::MPrinter
+	qw(printMBegin printMEnd printMSentBegin printMSentEnd printMDataNode);
+use LvCorporaTools::FormatTransf::Conll2MAHelpers::APrinter
+	qw(printABegin printAEnd printASentBegin printASentEnd printAPhraseBegin printAPhraseEnd printInnerANodeStart printInnerANodeEnd printLeafANode);
 use Data::Dumper;
 
 use Exporter();
@@ -30,6 +34,38 @@ our $vers = 0.1;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
+our $udChildToPhrase = {
+	'appos' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'xApp', 'childRole' => 'basElem', 'parentRole' => 'basElem',}],
+	'aux' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'xPred', 'childRole' => 'auxVerb', 'parentRole' => 'basElem',}],
+	'aux:pass' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'xPred', 'childRole' => 'auxVerb', 'parentRole' => 'basElem',}],
+	'case' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'xPrep', 'childRole' => 'prep', 'parentRole' => 'basElem',}],
+	'cc' => [
+		{'nodeType' => 'coord', 'phraseSubType' => 'N/A', 'childRole' => 'conj', 'parentRole' => 'crdPart',}], #TODO crdParts/crdClauses ??
+	'compound' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'subrAnal', 'childRole' => 'basElem', 'parentRole' => 'basElem',}], #TODO subrAnal/coordAnal + xNum
+	'conj' => [
+		{'nodeType' => 'coord', 'phraseSubType' => 'N/A', 'childRole' => 'crdPart', 'parentRole' => 'crdPart',}], #TODO crdParts/crdClauses?
+	'cop' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'xPred', 'childRole' => 'auxVerb', 'parentRole' => 'basElem',}],
+	'flat' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'phrasElem', 'childRole' => 'basElem', 'parentRole' => 'basElem',}], #TODO phrasElem/unstruct/interj?
+	'flat:foreign' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'unstruct', 'childRole' => 'basElem', 'parentRole' => 'basElem',}],
+	'flat:name' => [
+		{'nodeType' => 'x', 'phraseSubType' => 'namedEnt', 'childRole' => 'basElem', 'parentRole' => 'basElem',}],
+	'mark' => [
+		{'nodeType' => 'pmc', 'phraseSubType' => 'subrCl', 'childRole' => 'conj', 'parentRole' => 'basElem',}], #TODO subrCl/sent/xSimile?
+	'punct' => [
+		{'nodeType' => 'pmc', 'phraseSubType' => 'N/A', 'childRole' => 'punct', 'parentRole' => 'basElem',},
+		{'nodeType' => 'coord', 'phraseSubType' => 'N/A', 'childRole' => 'punct', 'parentRole' => 'crdPart',}], #TODO subrCl/sent/xSimile?
+	'root' => [
+		{'nodeType' => 'pmc', 'phraseSubType' => 'sent', 'childRole' => 'pred',}], #TODO basElem & utter
+};
+
 # Corse mapping from UDv2 roles to roles used in Latvian Treebank.
 our $udRole2LvtbRole = {
 	#TODO for all clauses subrCl + pred?
@@ -37,16 +73,16 @@ our $udRole2LvtbRole = {
 	'advcl' => 'spc', # all kinds of adverbial clauses and several kinds of SPCs
 	'advmod' => 'adv',
 	'amod' => 'attr',
-	'appos' => 'basElem', # TODO: xApp
-	'aux' => 'auxVerb', #TODO xPred
-	'aux:pass' => 'auxVerb', #TODO xPred
-	'case' => 'prep', #TODO xPrep
-	'cc' => 'conj', #TODO coordParts ??
+	#'appos' => 'basElem', # TODO: xApp
+	#'aux' => 'auxVerb', #TODO xPred
+	#'aux:pass' => 'auxVerb', #TODO xPred
+	#'case' => 'prep', #TODO xPrep
+	#'cc' => 'conj', #TODO coordParts ??
 	'ccomp' => 'objCl', # subject clause, predicate clause, some kinds of subjects and SPCs.
 	'clf' => 'N/A',
-	'compound' => 'basElem', #TODO subrAnal/coordAnal + xNum
-	'conj' => 'crdPart', #TODO coordParts/coordClauses?
-	'cop' => 'auxVerb', #TODO xPred
+	#'compound' => 'basElem', #TODO subrAnal/coordAnal + xNum
+	#'conj' => 'crdPart', #TODO coordParts/coordClauses?
+	#'cop' => 'auxVerb', #TODO xPred
 	'csubj' => 'subjCl',
 	'csubj:pass' => 'subjCl',
 	'dep' => 'N/A',
@@ -55,13 +91,13 @@ our $udRole2LvtbRole = {
 	'dislocated' => 'N/A',
 	'expl' => 'N/A',
 	'fixed' => 'conj', # a specific case of xSimile only?
-	'flat' => 'basElem', #TODO phrasElem/unstruct/interj?
-	'flat:foreign' => 'basElem', #TODO unstruct
-	'flat:name' => 'basElem', #TODO namedEnt
+	#'flat' => 'basElem', #TODO phrasElem/unstruct/interj?
+	#'flat:foreign' => 'basElem', #TODO unstruct
+	#'flat:name' => 'basElem', #TODO namedEnt
 	'goeswith' => 'N/A',
 	'iobj' => 'obj',
 	'list' => 'N/A',
-	'mark' => 'conj', #TODO subrCl/sent/xSimile?
+	#'mark' => 'conj', #TODO subrCl/sent/xSimile?
 	'nmod' => 'attr', # also some SPCs
 	'nsubj' => 'subj',
 	'nsubj:pass' => 'subj',
@@ -70,9 +106,9 @@ our $udRole2LvtbRole = {
 	'obl' => 'spc', # also adverbial modifiers, situants, determinants, SPC subjects. TODO det if dative
 	'orphan' => 'subj', # subjects, objects, spcs, subject clauses, object clauses, predicate clauses
 	'parataxis' => 'basElem', # TODO coordClauses/insertions/utter?S
-	'punct' => 'punct', # TODO pmc?
+	#'punct' => 'punct', # TODO pmc?
 	'reparandum' => 'N/A',
-	'root' => 'pred', # TODO basElem, if not verb #TODO sent/utter
+	#'root' => 'pred', # TODO basElem, if not verb #TODO sent/utter
 	'vocative' => 'no', #TODO address
 	'xcomp' => 'spc' # also predicate parts
 };
@@ -170,9 +206,10 @@ END
 		or die "Could not open file $conllName: $!";
 
 	my $mOut = IO::File->new("$outDirName/$nameStub.m", '> :encoding(UTF-8)');
-	&_printMBegin($mOut, $nameStub);
+	my $timeNow = localtime time;
+	printMBegin($mOut, $nameStub, "$progname,  $timeNow");
 	my $aOut = IO::File->new("$outDirName/$nameStub.a", '> :encoding(UTF-8)');
-	&_printABegin($aOut, $nameStub);
+	printABegin($aOut, $nameStub, "$progname,  $timeNow");
 
 	my $insideOfSent = 0;
 	my $paraId = 1;
@@ -198,12 +235,17 @@ END
 				{
 					if (@unprocessedATokens)
 					{
-						&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName, $isFirstTree);
+						my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
+						my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
+						my $nodeMap = &_buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
+						&_printANodesFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
+						#&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName, $isFirstTree);
 						$isFirstTree = 0;
 					}
 
-					&_printMSentEnd($mOut);
-					&_printASentEnd($aOut);
+					printMSentEnd($mOut);
+					#printAPhraseEnd($aOut, 'pmc');
+					#printASentEnd($aOut);
 					$insideOfSent = 0;
 					$wordCounter = 0;
 				}
@@ -223,8 +265,11 @@ END
 				{
 					$insideOfSent = 1;
 					$sentCounter++;
-					&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
-					&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter, $isFirstTree);
+					my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
+					my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
+					printMSentBegin($mOut, $mSentId);
+					#printASentBegin($aOut, $aSentId, $mSentId, $isFirstTree ? $firstSentComment : 0);
+					#printAPhraseBegin($aOut, 'pmc', 'sent');
 					$isFirstTree = 0;
 					@unprocessedATokens = ();
 				}
@@ -232,15 +277,13 @@ END
 				$unusedTokens = $unusedTokens . $wTok->{'token'}->{'content'};
 				$unusedTokens = "$unusedTokens " unless ($wTok->{'no_space_after'});
 				$unusedTokens =~ /^\s*(.*?)\s*$/;
-				#print 'CoNLL ' . Dumper($conllToken);
-				#print 'W-W-W ' . Dumper($unusedTokens);
 				if ($1 eq $conllToken)
 				{
 					$wordCounter++;
 					#my $pmlRole = &_transformRole($role, $conllName);
 					my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 					my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-					&_printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
+					printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
 						$conllToken, $lemma, $tag);
 					#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
 					$unprocessedATokens[$conllId] = {
@@ -251,7 +294,8 @@ END
 							'token' => $conllToken,
 							'UD-DEPREL' =>$role,
 							'UD-HEAD' => $headId,
-						};
+							'nodeType' => 'node',
+					};
 					@unusedWIds = ();
 					$unusedTokens = '';
 					$unusedConll = '';
@@ -273,8 +317,11 @@ END
 			{
 				$insideOfSent = 1;
 				$sentCounter++;
-				&_printMSentBegin($mOut, $nameStub, $paraId, $sentCounter);
-				&_printASentBegin($aOut, $nameStub, $paraId, $sentCounter, $isFirstTree);
+				my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
+				my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
+				printMSentBegin($mOut, $mSentId);
+				#printASentBegin($aOut, $aSentId, $mSentId, $isFirstTree ? $firstSentComment : 0);
+				#printAPhraseBegin($aOut, 'pmc', 'sent');
 				$isFirstTree = 0;
 				@unprocessedATokens = ();
 			}
@@ -285,7 +332,7 @@ END
 				#my $pmlRole = &_transformRole($role, $conllName);
 				my $mId = &_getMNodeId($nameStub, $paraId, $sentCounter, $wordCounter);
 				my $aId = &_getANodeId($nameStub, $paraId, $sentCounter, $wordCounter);
-				&_printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
+				printMDataNode($mOut, $nameStub, $mId, \@unusedWIds,
 					$conllToken, $lemma, $tag); # ${@unusedWIds}
 				#&_printADataSimple($aOut, $aId, $mId, $wordCounter, $conllToken, $pmlRole);
 				$unprocessedATokens[$conllId] = {
@@ -296,6 +343,7 @@ END
 					'token' => $conllToken,
 					'UD-DEPREL' =>$role,
 					'UD-HEAD' => $headId,
+					'nodeType' => 'node',
 				};
 				@unusedWIds = ();
 				$unusedTokens = '';
@@ -306,34 +354,40 @@ END
 	}
 	if ($insideOfSent)
 	{
-		&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
-			if (@unprocessedATokens);
-		&_printMSentEnd($mOut);
-		&_printASentEnd($aOut);
+		my $aSentId = &_getASentId($nameStub, $paraId, $sentCounter);
+		my $mSentId = &_getMSentId($nameStub, $paraId, $sentCounter);
+		my $nodeMap = &_buildATreeFromConllArray(\@unprocessedATokens, $aSentId, $mSentId, $conllName);
+		&_printANodesFromHash($aOut, $nodeMap, $aSentId, $isFirstTree);
+		#&_printANodesFromArray($aOut, \@unprocessedATokens, $conllName)
+		#	if (@unprocessedATokens);
+		printMSentEnd($mOut);
+		#printAPhraseEnd($aOut, 'pmc');
+		#printASentEnd($aOut);
 	}
 
-	&_printMEnd($mOut);
+	printMEnd($mOut);
 	$mOut->close();
-	&_printAEnd($aOut);
+	printAEnd($aOut);
 	$aOut->close();
 }
 
-# Get LVTB role from UD role by applying $udRole2LvtbRole mapping.
-# Warn if provided role was not found in the mapping.
+# &_transformRole(role to transform, conll file name for error reporting)
+# Get LVTB role from UD role by applying $udRole2LvtbRole and $udChildToPhrase
+# mapping.
+# Warn if provided role was not found in any mapping.
 sub _transformRole
 {
 	my ($udRole, $conllName) = @_;
-	my $pmlRole = 'N/A';
-	if ($udRole and $udRole ne '_')
-	{
-		$pmlRole = $udRole2LvtbRole->{$udRole};
-		unless ($pmlRole)
-		{
-			warn "File $conllName contains unknown role $udRole.\n";
-			return 'N/A';
-		}
-	}
-	return $pmlRole;
+	return 'N/A' unless ($udRole and $udRole ne '_');
+	my $pmlRole;
+	$pmlRole = $udChildToPhrase->{$udRole}->[0]->{'childRole'}
+		if (exists $udChildToPhrase->{$udRole} and
+			exists $udChildToPhrase->{$udRole}->[0]->{'childRole'});
+	$pmlRole = $udRole2LvtbRole->{$udRole}
+		if (not $pmlRole and exists $udRole2LvtbRole->{$udRole});
+	return $pmlRole if ($pmlRole);
+	warn "File $conllName contains unknown role $udRole.\n";
+	return 'N/A';
 }
 
 # Form an ID for a-node by using given numerical parameters.
@@ -348,6 +402,372 @@ sub _getMNodeId
 {
 	my ($docId, $parId, $sentId, $tokId) = @_;
 	return "m-${docId}-p${parId}s${sentId}w$tokId";
+}
+
+# Form an ID for a-root by using given numerical parameters.
+# To get stub for x node, just add 'x' to the end.
+sub _getASentId
+{
+	my ($docId, $parId, $sentId) = @_;
+	return "a-${docId}-p${parId}s${sentId}";
+}
+
+# Form an ID for m-root by using given numerical parameters.
+sub _getMSentId
+{
+	my ($docId, $parId, $sentId) = @_;
+	return "m-${docId}-p${parId}s${sentId}";
+}
+
+# &_buildATreeFromConllArray (conll node array, PML a level sentence ID, conll
+#                             file name for error reporting
+# Build a PML tree. Return it as hash from PML node IDs to nodes themselves.
+sub _buildATreeFromConllArray
+{
+	my ($aNodes, $aSentId, $mSentId, $conllName) = @_;
+	my %nodeMap = ();
+
+	# Make fictional root node in the hashmap.
+	$nodeMap{$aSentId} = {
+		'aId' => $aSentId,
+		'mId' => $mSentId,
+		'nodeType' => 'root',
+	};
+
+	# Populate node hashmap.
+	for my $aNode (@$aNodes)
+	{
+		$nodeMap{$aNode->{'aId'}} = $aNode if ($aNode);
+	}
+
+	# Populate childlist, parent for each node.
+	for my $aNode (@$aNodes)
+	{
+		if ($aNode)
+		{
+			my $conllHeadId = $aNode->{'UD-HEAD'};
+			my $pmlParentId = $aSentId;
+			$pmlParentId = $aNodes->[$conllHeadId]->{'aId'}
+				if ($conllHeadId and $conllHeadId ne '0' and $conllHeadId ne '_'
+					and $aNodes->[$conllHeadId]);
+			$nodeMap{$pmlParentId}->{'children'}->{$aNode->{'aId'}} = 'dep';
+			$aNode->{'parent'} = $pmlParentId;
+		}
+	}
+
+	# Build tree structure.
+	&_buildASubtreeFromMap($aSentId, \%nodeMap, $aSentId.'x', $conllName);
+
+	#Check if right below the root is a PMC node.
+	my $hasPmc = 0;
+	for my $nodeId (keys %{$nodeMap{$aSentId}->{'children'}})
+	{
+		$hasPmc ++ if ($nodeMap{$nodeId}->{'nodeType'} eq 'pmc');
+	}
+	# If no PMC node found, add one.
+	unless ($hasPmc)
+	{
+		my $newId = 1;
+		$newId++ while (exists $nodeMap{"${aSentId}x$newId"});
+		$newId = "${aSentId}x$newId";
+		$nodeMap{$newId} = {
+			'aId' => $newId,
+			'nodeType' => 'pmc',
+			'phraseSubType' => 'sent',
+			'parent' => $aSentId,
+		};
+		for my $nodeId (keys %{$nodeMap{$aSentId}->{'children'}})
+		{
+			$nodeMap{$newId}->{'children'}->{$nodeId} = 'phrase';
+			delete $nodeMap{$aSentId}->{'children'}->{$nodeId};
+		}
+		$nodeMap{$aSentId}->{'children'}->{$newId} = 'dep';
+	}
+	return \%nodeMap;
+}
+
+# &_buildASubtreeFromMap (PML ID of the subtree root, maping from PML IDs to
+#                         nodes, stub for forming PML IDs for the new (phrase)
+#                         nodes, conll file name for error reporting)
+# Transform a dependency subtree to a LVTB hybrid model subtree.
+# DFS + actual processing is done before traversing each all the children of the
+# node.
+sub _buildASubtreeFromMap
+{
+	my ($currentNodeId, $nodeMap, $xIdStub, $conllName) = @_;
+	my $currentNode = $nodeMap->{$currentNodeId};
+	#print "Entered _buildASubtreeFromMap : ". Dumper($nodeMap);
+
+	if (exists $currentNode->{'children'})
+	{
+		my @childrenToProcess = keys %{$currentNode->{'children'}};
+		# First thing: let's make some phrases in this level.
+		# First process children signaling only one possible type of phrase.
+		for my $childId (@childrenToProcess)
+		{
+			my $child = $nodeMap->{$childId};
+			&_makePhraseFromDepLink($childId, $nodeMap, $xIdStub, $conllName)
+				if ($child->{'UD-DEPREL'} and
+					exists $udChildToPhrase->{$child->{'UD-DEPREL'}} and
+					@{$udChildToPhrase->{$child->{'UD-DEPREL'}}} == 1);
+		}
+		# Then process children that can be invoked in multiple types of phrases.
+		for my $childId (@childrenToProcess)
+		{
+			my $child = $nodeMap->{$childId};
+			&_makePhraseFromDepLink($childId, $nodeMap, $xIdStub, $conllName)
+				if ($child->{'UD-DEPREL'} and
+					exists $udChildToPhrase->{$child->{'UD-DEPREL'}} and
+					@{$udChildToPhrase->{$child->{'UD-DEPREL'}}} > 1);
+		}
+
+		# After current level is processed, let's do recursion.
+		# First process the unambiguous children.
+		for my $childId (@childrenToProcess)
+		{
+			my $child = $nodeMap->{$childId};
+			&_buildASubtreeFromMap($childId, $nodeMap, $xIdStub, $conllName)
+				if (not $child->{'UD-DEPREL'} or
+					not exists $udChildToPhrase->{$child->{'UD-DEPREL'}} or
+					@{$udChildToPhrase->{$child->{'UD-DEPREL'}}} <= 1);
+		}
+		# Then process children that can be invoked in multiple types of phrases.
+		for my $childId (@childrenToProcess)
+		{
+			my $child = $nodeMap->{$childId};
+			&_buildASubtreeFromMap($childId, $nodeMap, $xIdStub, $conllName)
+				if ($child->{'UD-DEPREL'} and
+					exists $udChildToPhrase->{$child->{'UD-DEPREL'}} and
+					@{$udChildToPhrase->{$child->{'UD-DEPREL'}}} > 1);
+		}
+	}
+
+	# Current node gets a PML role. Later iterations may rename this when making
+	# new phrases.
+	$currentNode->{'role'} = &_transformRole($currentNode->{'UD-DEPREL'}, $conllName)
+		if ($currentNode->{'UD-DEPREL'} and not exists $currentNode->{'role'});
+}
+
+# $_makePhraseFromDepLink(PML ID of the node to process, maping from PML IDs to
+#                         nodes, stub for forming PML IDs for the new (phrase)
+#                         nodes, conll file name for error reporting)
+# Given a childId, make a phrase from dependency link connesting given node with
+# its parent. For some children parent is not included in phrase.
+sub _makePhraseFromDepLink
+{
+	my ($childId, $nodeMap, $xIdStub, $conllName) = @_;
+	my $child = $nodeMap->{$childId};
+	# Check if given child should be transformed as a part of phrase.
+	return unless ($child->{'UD-DEPREL'});
+	return unless (exists $udChildToPhrase->{$child->{'UD-DEPREL'}});
+	my @phrasePatterns = @{$udChildToPhrase->{$child->{'UD-DEPREL'}}};
+	return unless (@phrasePatterns);
+
+	# Search if suitable phrase has already been made.
+	my ($premadePhraseId, $phrasePattern) = @{&_findPhrase($childId, $nodeMap) or [0, 0]};
+	$nodeMap->{$premadePhraseId}->{'phraseSubType'} = $phrasePattern->{'phraseSubType'}
+		if ($premadePhraseId and $nodeMap->{$premadePhraseId}->{'phraseSubType'} eq 'N/A');
+
+	my $parentId = $child->{'parent'};
+	my $parent = $nodeMap->{$parentId};
+
+	# If no phrase found, make one.
+	unless ($premadePhraseId)
+	{
+		$phrasePattern = $phrasePatterns[0];
+		my $isParentIncluded = (exists $phrasePattern->{'parentRole'} and $phrasePattern->{'parentRole'});
+		my $newId = $isParentIncluded ?
+			&_makePhrase($parentId, $nodeMap, $phrasePattern, $xIdStub, $conllName) :
+			&_makePhrase($childId, $nodeMap, $phrasePattern, $xIdStub, $conllName);
+
+		# If parent for dependency link is moved (this happens only for newly
+		# made phrases), it must be given LVTB role
+		$parent->{'role'} = $phrasePattern->{'parentRole'} if ($isParentIncluded);
+		$premadePhraseId = $newId;
+	}
+
+	# Anyway, now we need to move the child to the found or newly-made phrase.
+	my $phraseNode = $nodeMap->{$premadePhraseId};
+	for my $nodeId (keys %$nodeMap)
+	{
+		delete $nodeMap->{$nodeId}->{'children'}->{$childId};
+	}
+	$child->{'parent'} = $premadePhraseId;
+	$phraseNode->{'children'}->{$childId} = 'phrase';
+
+	# And set the child role.
+	$child->{'role'} = $phrasePattern->{'childRole'};
+}
+
+# $_findPhrase(PML ID of the child node to process (phrases will be searched in
+#              the grandparent level and above), maping from PML IDs to nodes)
+# For given child finds the parent phrase sattisfing conditions given in
+# $udChildToPhrase.
+# Taken out from &_makePhraseFromDepLink for readability.
+sub _findPhrase
+{
+	my ($childId, $nodeMap) = @_;
+	my $child = $nodeMap->{$childId};
+	# Check if given child has any description what kinf of phrase should
+	# be searched for.
+	return unless ($child->{'UD-DEPREL'});
+	return unless (exists $udChildToPhrase->{$child->{'UD-DEPREL'}});
+	my @phrasePatterns = @{$udChildToPhrase->{$child->{'UD-DEPREL'}}};
+	return unless (@phrasePatterns);
+
+	my $parent = $nodeMap->{$child->{'parent'}}; # Parent is always 'node'
+	# TODO check if everything works when more "parentless" phrases are used
+	my $phraseIdTocheck = $parent->{'parent'};
+	my $resultPhraseId = 0;
+	my $resultPhrasePattern = 0;
+	while ($phraseIdTocheck)
+	{
+		my $nodeToCheck = $nodeMap->{$phraseIdTocheck};
+		my $nodeType = $nodeToCheck->{'nodeType'};
+		last if ($nodeType eq 'root' or $nodeType eq 'node');
+		for my $pattern (@phrasePatterns)
+		{
+			if ($nodeType eq $pattern->{'nodeType'}
+				and ($nodeToCheck->{'phraseSubType'} eq $pattern->{'phraseSubType'}
+				or $nodeToCheck->{'phraseSubType'} eq 'N/A' or $pattern->{'phraseSubType'} eq 'N/A'))
+			{
+				$resultPhraseId = $phraseIdTocheck;
+				$resultPhrasePattern = $pattern;
+				last;
+			}
+		}
+		last unless (exists $nodeToCheck->{'parent'});
+		# Check phrase parent, too.
+		$phraseIdTocheck = $nodeToCheck->{'parent'};
+	}
+	return [$resultPhraseId, $resultPhrasePattern];
+}
+
+# $_makePhrase(PML ID of the node above which phrase will be inserted, maping
+#              from PML IDs to nodes, phrase pattern from $udChildToPhrase,
+#              sufix for new PML id (next free integer will be added
+#              automatically), conll file name for error reporting)
+# For given node and given pattern from $udChildToPhrase make a phrase node
+# between given node and it's ancestor.
+# Taken out from &_makePhraseFromDepLink for readability.
+sub _makePhrase
+{
+	my ($nodeId, $nodeMap, $phrasePattern, $xIdStub, $conllName) = @_;
+	my $node = $nodeMap->{$nodeId};
+	#print "Entered _makePhrase for node $nodeId: ". Dumper($nodeMap);
+
+	# Find free ID.
+	my $newId = 1;
+	$newId++ while (exists $nodeMap->{"$xIdStub$newId"});
+	$newId = "$xIdStub$newId";
+
+	# Make structural fields
+	$nodeMap->{$newId} = {
+		'aId' => $newId,
+		'nodeType' => $phrasePattern->{'nodeType'},
+		'phraseSubType' => $phrasePattern->{'phraseSubType'},
+		'children' => {$nodeId => 'phrase'},
+		'UD-DEPREL' => $node->{'UD-DEPREL'},
+		'role' => &_transformRole($node->{'UD-DEPREL'}, $conllName),
+		'parent' => $nodeMap->{$nodeId}->{'parent'},
+	};
+
+	# Put the new phrase in the tree between parent and grandparent
+	for my $tmpId (keys %$nodeMap)
+	{
+		if ($tmpId ne $newId and
+			exists $nodeMap->{$tmpId}->{'children'}->{$nodeId})
+		{
+			$nodeMap->{$tmpId}->{'children'}->{$newId} =
+				$nodeMap->{$tmpId}->{'children'}->{$nodeId};
+			delete $nodeMap->{$tmpId}->{'children'}->{$nodeId};
+		}
+	}
+	$node->{'parent'} = $newId;
+	#print "Exiting _makePhrase : ". Dumper($nodeMap);
+
+	return $newId;
+}
+
+sub _printANodesFromHash
+{
+	my ($aOut, $nodeMap, $rootId, $isFirst) = @_;
+	my $rootNode = $nodeMap->{$rootId};
+	my $rootType = $rootNode->{'nodeType'};
+	my $parentType = 0;
+	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
+		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
+
+	if ($rootType eq 'root')
+	{
+		printASentBegin($aOut, $rootNode->{'aId'}, $rootNode->{'mId'}, $isFirst ? $firstSentComment : 0);
+		if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+		{
+			for my $nodeId (keys %{$rootNode->{'children'}})
+			{
+				_printANodesFromHash($aOut, $nodeMap, $nodeId, 0)
+					if ($nodeMap->{$nodeId}->{'nodeType'} ne 'node');
+			}
+			for my $nodeId (keys %{$rootNode->{'children'}})
+			{
+				_printANodesFromHash($aOut, $nodeMap, $nodeId, 0)
+					if ($nodeMap->{$nodeId}->{'nodeType'} eq 'node');
+			}
+		}
+		else
+		{
+			warn "Node $rootId with type \'$rootType\' has no children!"
+		}
+		printASentEnd($aOut);
+	}
+	elsif ($rootType eq 'pmc' or $rootType eq 'x' or $rootType eq 'coord')
+	{
+		printInnerANodeStart($aOut, $rootNode->{'aId'}, $rootNode->{'role'})
+			if ($parentType ne 'root');
+		printAPhraseBegin($aOut, $rootType, $rootNode->{'phraseSubType'});
+		if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+		{
+			for my $nodeId (keys %{$rootNode->{'children'}})
+			{
+				_printANodesFromHash($aOut, $nodeMap, $nodeId, 0)
+					if ($rootNode->{'children'}->{$nodeId} eq 'phrase');
+			}
+		}
+		else
+		{
+			warn "Node $rootId with type \'$rootType\' has no children!"
+		}
+		printAPhraseEnd($aOut, $rootType);
+		if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+		{
+			for my $nodeId (keys %{$rootNode->{'children'}})
+			{
+				my $relType = $rootNode->{'children'}->{$nodeId};
+				_printANodesFromHash($aOut, $nodeMap, $nodeId, 0)
+					if ($relType ne 'phrase');
+			}
+		}
+		printInnerANodeEnd($aOut) if ($parentType ne 'root');
+	}
+	else
+	{
+		warn "Node $rootId has unrecognized type \'$rootType\'!" unless ($rootType eq 'node');
+		if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+		{
+			printInnerANodeStart($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
+				$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'});
+			for my $nodeId (keys %{$rootNode->{'children'}})
+			{
+				_printANodesFromHash($aOut, $nodeMap, $nodeId, 0);
+			}
+			printInnerANodeEnd($aOut);
+		}
+		else
+		{
+			printLeafANode($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
+				$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'})
+		}
+	}
 }
 
 # &_printANodesFromArray(output stream, list of node data from conll, conll
@@ -400,20 +820,7 @@ sub _printANodesFromArray
 				$aNode->{'printed'} = 1;
 			}
 		}
-
 	}
-
-	# Print out each node.
-#	for my $aNode (@$aNodes)
-#	{
-#		if ($aNode)
-#		{
-#			#print Dumper($aNode->{'children'});
-#			my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
-#			&_printANodeLeaf($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
-#				$aNode->{'token'}, $pmlRole);
-#		}
-#	}
 }
 
 # &_printASubtree(output stream, list of node data from conll, conll ID for
@@ -431,218 +838,21 @@ sub _printASubtree
 	my $pmlRole = &_transformRole($aNode->{'UD-DEPREL'}, $conllName);
 	if ($aNode->{'children'})
 	{
-		&_printANodeWithChildrenStart($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
-			$aNode->{'token'}, $pmlRole);
+		printInnerANodeStart($aOut, $aNode->{'aId'}, $pmlRole, $aNode->{'mId'}, $aNode->{'ord'},
+			$aNode->{'token'});
 		for my $childConllId (@{$aNode->{'children'}})
 		{
 			&_printASubtree($aOut, $aNodesWithChildLists, $childConllId, $conllName);
 		}
-		&_printANodeWithChildrenEnd($aOut);
+		printInnerANodeEnd($aOut);
 		$aNode->{'printed'} = 1;
 	}
 	else
 	{
-		&_printANodeLeaf($aOut, $aNode->{'aId'}, $aNode->{'mId'}, $aNode->{'ord'},
-			$aNode->{'token'}, $pmlRole);
+		printLeafANode($aOut, $aNode->{'aId'},  $pmlRole, $aNode->{'mId'}, $aNode->{'ord'},
+			$aNode->{'token'});
 		$aNode->{'printed'} = 1;
 	}
-}
-
-# Just print stuff in output stream.
-sub _printANodeWithChildrenStart
-{
-	my ($output, $aId, $mId, $ord, $token, $role) = @_;
-	$role = 'N/A' unless $role;
-	print $output <<END;
-						<node id="$aId">\t<!-- $token -->
-							<m.rf>m#$mId</m.rf>
-							<role>$role</role>
-							<ord>$ord</ord>
-							<children>
-END
-}
-
-# Just print stuff in output stream.
-sub _printANodeWithChildrenEnd
-{
-	my $output = shift;
-	print $output <<END;
-							</children>
-						</node>
-END
-}
-
-# Just print stuff in output stream.
-sub _printANodeLeaf
-{
-	my ($output, $aId, $mId, $ord, $token, $role) = @_;
-	$role = 'N/A' unless $role;
-	print $output <<END;
-						<node id="$aId">\t<!-- $token -->
-							<m.rf>m#$mId</m.rf>
-							<role>$role</role>
-							<ord>$ord</ord>
-						</node>
-END
-}
-
-# Just print stuff in output stream.
-sub _printASentBegin
-{
-	my ($output, $docId, $parId, $sentId, $isFirst) = @_;
-	print $output <<END;
-
-		<LM id="a-${docId}-p${parId}s${sentId}">
-			<s.rf>m#m-${docId}-p${parId}s${sentId}</s.rf>
-END
-	if ($isFirst)
-	{
-		print $output <<END;
-			<comment>$firstSentComment</comment>
-END
-	}
-	print $output <<END;
-			<children>
-				<pmcinfo>
-					<pmctype>sent</pmctype>
-					<children>
-END
-}
-
-# Just print stuff in output stream.
-sub _printASentEnd
-{
-	my $output = shift;
-	print $output <<END;
-					</children>
-				</pmcinfo>
-			</children>
-		</LM>
-END
-}
-
-# Just print stuff in output stream.
-sub _printABegin
-{
-	my ($output, $docId) = @_;
-	my $timeNow = localtime time;
-	print $output <<END;
-<?xml version="1.0" encoding="utf-8"?>
-
-<lvadata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
-	<head>
-		<schema href="lvaschema.xml" />
-		<references>
-			<reffile id="m" name="mdata" href="$docId.m" />
-			<reffile id="w" name="wdata" href="$docId.w" />
-		</references>
-	</head>
-	<meta>
-		<annotation_info>
-			<desc>$progname, $timeNow</desc>
-		</annotation_info>
-	</meta>
-
-	<trees>
-END
-}
-
-# Just print stuff in output stream.
-sub _printAEnd
-{
-	my $output = shift @_;
-	print $output <<END;
-	</trees>
-</lvadata>
-END
-}
-
-# Just print stuff in output stream.
-sub _printMDataNode
-{
-	my ($output, $docId, $mId, $wIds, $token, $lemma, $tag) = @_;
-	$lemma = 'N/A' unless ($lemma and $lemma !~ /^\s*$/);
-	$tag = 'N/A' unless ($tag and $tag !~ /^\s*$/);
-	my $wIdString = '';
-	if (@$wIds > 1)
-	{
-		$wIdString = '<LM>w#' . join('</LM><LM>w#', @$wIds) . '</LM>';
-	}
-	elsif (@$wIds == 1)
-	{
-		$wIdString = "w#@$wIds[0]";
-	}
-	print $output <<END;
-		<m id="$mId">
-			<src.rf>$docId</src.rf>
-END
-	if ($wIdString)
-	{
-		print $output <<END;
-			<w.rf>$wIdString</w.rf>
-END
-	}
-	if (@$wIds > 1)
-	{
-		print $output <<END;
-			<form_change>union</form_change>
-END
-	}
-	print $output <<END;
-			<form>$token</form>
-			<lemma>$lemma</lemma>
-			<tag>$tag</tag>
-		</m>
-END
-}
-
-# Just print stuff in output stream.
-sub _printMSentBegin
-{
-	my ($output, $docId, $parId, $sentId) = @_;
-	print $output <<END;
-	<s id="m-${docId}-p${parId}s${sentId}">
-END
-}
-
-# Just print stuff in output stream.
-sub _printMSentEnd
-{
-	my $output = shift @_;
-	print $output <<END;
-	</s>
-END
-}
-
-# Just print stuff in output stream.
-sub _printMBegin
-{
-	my ($output, $docId) = @_;
-	my $timeNow = localtime time;
-	print $output <<END;
-<?xml version="1.0" encoding="utf-8"?>
-<lvmdata xmlns="http://ufal.mff.cuni.cz/pdt/pml/">
-	<head>
-		<schema href="lvmschema.xml" />
-		<references>
-			<reffile id="w" name="wdata" href="$docId.w" />
-		</references>
-	</head>
-	<meta>
-		<lang>lv</lang>
-		<annotation_info id="semi-automatic">$progname,  $timeNow</annotation_info>
-	</meta>
-
-END
-}
-
-# Just print stuff in output stream.
-sub _printMEnd
-{
-	my $output = shift @_;
-	print $output <<END;
-</lvmdata>
-END
 }
 
 1;
