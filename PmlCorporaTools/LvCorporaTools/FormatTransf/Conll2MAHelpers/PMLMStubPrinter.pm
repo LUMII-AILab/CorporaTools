@@ -1,18 +1,19 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::FormatTransf::Conll2MAHelpers::MPrinter;
+package LvCorporaTools::FormatTransf::Conll2MAHelpers::PMLMStubPrinter;
 
 use strict;
 use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(printMBegin printMEnd printMSentBegin printMSentEnd printMDataNode);
+our @EXPORT_OK =
+	qw(printMFileBegin printMFileEnd printMSentBegin printMSentEnd printMDataNode);
 
 #TODO rework in proper OOP way.
 # Mostly these functions just print stuff in output stream to create PML-M files.
 
 # PML-M file header.
-sub printMBegin
+sub printMFileBegin
 {
 	my ($output, $docId, $annotationInfo) = @_;
 	print $output <<END;
@@ -33,7 +34,7 @@ END
 }
 
 # PML-M file footer.
-sub printMEnd
+sub printMFileEnd
 {
 	my $output = shift @_;
 	print $output <<END;

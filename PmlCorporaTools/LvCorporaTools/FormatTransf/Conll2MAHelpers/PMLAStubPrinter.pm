@@ -1,17 +1,19 @@
 #!C:\strawberry\perl\bin\perl -w
-package LvCorporaTools::FormatTransf::Conll2MAHelpers::APrinter;
+package LvCorporaTools::FormatTransf::Conll2MAHelpers::PMLAStubPrinter;
 use strict;
 use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(printABegin printAEnd printASentBegin printASentEnd printAPhraseBegin printAPhraseEnd printInnerANodeStart printInnerANodeEnd printLeafANode);
+our @EXPORT_OK =
+	qw(printAFileBegin printAFileEnd printASentBegin printASentEnd
+		printAPhraseBegin printAPhraseEnd printANodeStart printANodeEnd printALeaf);
 
 #TODO rework in proper OOP way.
-# Mostly these functions just print stuff in output stream to create PML-M files.
+# Mostly these functions just print stuff in output stream to create PML-A files.
 
 # PML A file header.
-sub printABegin
+sub printAFileBegin
 {
 	my ($output, $docId, $annotationDesc) = @_;
 	print $output <<END;
@@ -36,7 +38,7 @@ END
 }
 
 # PML-A file footer.
-sub printAEnd
+sub printAFileEnd
 {
 	my $output = shift @_;
 	print $output <<END;
@@ -105,7 +107,7 @@ END
 }
 
 # Single PML-A data node - leaf in the tree.
-sub printLeafANode
+sub printALeaf
 {
 	my ($output, $aId, $role, $mId, $ord, $token) = @_;
 	$role = 'N/A' unless $role;
@@ -119,7 +121,7 @@ END
 }
 
 # Header and the data for single PML-A data node - non-leaf node.
-sub printInnerANodeStart
+sub printANodeStart
 {
 	my ($output, $aId, $role, $mId, $ord, $token) = @_;
 	$role = 'N/A' unless $role;
@@ -141,7 +143,7 @@ END
 }
 
 # Footer for single PML-A data node - non-leaf node.
-sub printInnerANodeEnd
+sub printANodeEnd
 {
 	my $output = shift;
 	print $output <<END;
