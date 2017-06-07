@@ -194,6 +194,11 @@ END
 	$aOut->close();
 }
 
+# _getNextConllContentLine(hash with file processing status variables, CoNLL
+#                          input flow)
+# Finds the next CoNLL line to be processed - either $status->{'unusedConll'}
+# or next nonempty line, if there is one.
+# Returns the found line and flag, if &_endSentence should be called.
 sub _getNextConllContentLine
 {
 	my ($status, $conllIn) = @_;
@@ -209,6 +214,11 @@ sub _getNextConllContentLine
 	}
 	return ($line, $mustEndSentence);
 }
+
+# _startSentence(hash with file processing status variables, PML dateset name,
+#                PML-M output flow)
+# Writes sentence begining in the PML-M flow and resets status variables
+# appropriately.
 sub _startSentence
 {
 	my ($status, $nameStub, $mOut) = @_;
@@ -220,6 +230,12 @@ sub _startSentence
 	$status->{'unprocessedATokens'} = [];
 }
 
+# _endSentence(hash with file processing status variables, PML dateset name,
+#              PML-M output flow, PML-A output flow, CoNLL file name for error
+#              reporting)
+# Transforms previously collected CoNLL data to PML-A tree, writes it into PML-A
+# flow. Then writes sentence ending in both PML-M and PML-A flow and resets
+# status variables appropriately.
 sub _endSentence
 {
 	my ($status, $nameStub, $mOut, $aOut, $conllName) = @_;
@@ -237,11 +253,17 @@ sub _endSentence
 	$status->{'wordCounter'} = 0;
 }
 
+# _doOneTokenOrLine(hash with file processing status variables, optional CoNLL
+#                   line to process, PML dateset name, PML-M output flow,
+#                   optional PML-W node)
+# Process the given CoNLL line and PML-W node. If everything fits nicely, a
+# PML-M node is printed out and data for PML-A tree is added to the status hash.
+# Otherwise the available data is put in the status hash for later use.
 sub _doOneTokenOrLine
 {
 	my ($status, $conllLine, $nameStub, $mOut, $wNode) = @_;
 
-	# Preprocess given w node - add its contents as jet to be processed.
+	# Preprocess given w node - add its contents as yet to be processed.
 	if ($wNode)
 	{
 		# If corresponding token from w file is available, add it to "to-process".
