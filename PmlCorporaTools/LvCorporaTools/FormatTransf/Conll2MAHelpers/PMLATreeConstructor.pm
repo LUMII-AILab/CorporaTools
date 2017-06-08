@@ -149,13 +149,18 @@ sub buildATreeFromConllArray
 	&_buildASubtreeFromMap($aSentId, \%nodeMap, $aSentId.'x', $conllName);
 
 	#Check if right below the root is a PMC node.
-	my $hasPmc = 0;
+	my $rootPmc = 0;
 	for my $nodeId (keys %{$nodeMap{$aSentId}->{'children'}})
 	{
-		$hasPmc ++ if ($nodeMap{$nodeId}->{'nodeType'} eq 'pmc');
+		if ($nodeMap{$nodeId}->{'nodeType'} eq 'pmc')
+		{
+			$rootPmc = $nodeId;
+			last;
+		};
 	}
+	
 	# If no PMC node found, add one.
-	unless ($hasPmc)
+	unless ($rootPmc)
 	{
 		my $newId = 1;
 		$newId++ while (exists $nodeMap{"${aSentId}x$newId"});
@@ -172,6 +177,19 @@ sub buildATreeFromConllArray
 			delete $nodeMap{$aSentId}->{'children'}->{$nodeId};
 		}
 		$nodeMap{$aSentId}->{'children'}->{$newId} = 'dep';
+		$rootPmc = $newId;
+	}
+
+	# If there are multiple phrases below root, leave just one pmc and move all
+	# other below it.
+	for my $nodeId (keys %{$nodeMap{$aSentId}->{'children'}})
+	{
+		if ($nodeId ne $rootPmc and $nodeMap{$nodeId}->{'nodeType'} ne 'node')
+		{
+			$nodeMap{$nodeId}->{'parent'} = $rootPmc;
+			$nodeMap{$rootPmc}->{'children'}->{$nodeId} = $nodeMap{$aSentId}->{'children'}->{$nodeId};
+			delete $nodeMap{$aSentId}->{'children'}->{$nodeId};
+		}
 	}
 	return \%nodeMap;
 }
