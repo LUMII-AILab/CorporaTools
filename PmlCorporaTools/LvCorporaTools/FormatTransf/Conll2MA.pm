@@ -226,7 +226,6 @@ sub _startSentence
 	$status->{'sentenceCounter'}++;
 	my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
 	printMSentBegin($mOut, $mSentId);
-	$status->{'isFirstTree'} = 0;
 	$status->{'unprocessedATokens'} = [];
 }
 
