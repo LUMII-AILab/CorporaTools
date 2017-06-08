@@ -158,7 +158,7 @@ sub buildATreeFromConllArray
 			last;
 		};
 	}
-	
+
 	# If no PMC node found, add one.
 	unless ($rootPmc)
 	{
@@ -284,7 +284,8 @@ sub _makePhraseFromDepLink
 	{
 		$phrasePattern = $phrasePatterns[0];
 		my $isParentIncluded = (exists $phrasePattern->{'parentRole'} and $phrasePattern->{'parentRole'});
-		my $newId = $isParentIncluded ?
+		my $isParentRoot = ($parent->{'nodeType'} eq 'root');
+		my $newId = ($isParentIncluded and not $isParentRoot) ?
 			&_makePhrase($parentId, $nodeMap, $phrasePattern, $xIdStub, $conllName) :
 			&_makePhrase($childId, $nodeMap, $phrasePattern, $xIdStub, $conllName);
 
