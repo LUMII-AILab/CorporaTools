@@ -117,6 +117,7 @@ sub is_allowed_for_parent
   {
     return 1 if ($p eq $root);
 	return 1 if ($p->parent->{'pmctype'} eq 'dirSpPmc');
+	return 1 if ($p->parent->{'pmctype'} eq 'quot');
 	return 0;
   }
   
@@ -157,14 +158,6 @@ sub is_allowed_for_parent
   if ($node->{'role'} eq 'crdPart')
   {
     return 1 if ($p->{'#name'} eq 'coordinfo');
-	return 0;
-  }
-  # generalizing word
-  if ($node->{'role'} eq 'gen' or
-      $node->{'role'} eq 'genList')
-  {
-    return 1 if ($p->{'#name'} eq 'coordinfo' and
-	             $p->{'coordtype'} eq 'crdGeneral');
 	return 0;
   }
   # modal werbs and aux.werbs must be below xPred
@@ -305,6 +298,21 @@ sub count_nondep_child
 	if ($ch->{'#name'} eq 'xinfo'
 	 or $ch->{'#name'} eq 'pmcinfo'
 	 or $ch->{'#name'} eq 'coordinfo')
+	{
+	  $count++;
+	}
+  }
+  return $count;
+}
+
+# Finds, if node has x-node or pmc-node or coord-node as children.
+sub count_pmc_child
+{
+  my $node = shift;
+  my $count = 0;
+  foreach $ch ($node->children)
+  {
+	if ($ch->{'#name'} eq 'pmcinfo')
 	{
 	  $count++;
 	}
