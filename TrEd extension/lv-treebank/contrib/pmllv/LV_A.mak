@@ -320,6 +320,18 @@ sub count_pmc_child
   return $count;
 }
 
+# Finds, if node has x-node or pmc-node or coord-node as children.
+sub is_wrong_empty_node
+{
+  my $node = shift;
+  return 0 if (($node->{'#name'} eq 'xinfo'
+	 or $node->{'#name'} eq 'pmcinfo'
+	 or $node->{'#name'} eq 'coordinfo') and $node->children);
+  return 0 if ($node->{'reduction'} or $node->{'m'});
+  return 0 if (&has_nondep_child($node));
+  return 1;
+}
+
 
 # Status line mesidge.
 sub get_status_line_hook

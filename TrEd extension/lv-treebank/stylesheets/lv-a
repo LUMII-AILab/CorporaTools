@@ -7,13 +7,17 @@ text:<? $${m/w/token}eq$${m/form} ?
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
   
 node: <? '#{black}${comment}' if $${comment}?>
-node:<? LV_A::count_nondep_child($this) > 1 ? '#{red}Invalid children!' : ''?>
-node:<? ($this eq $root and LV_A::count_pmc_child($this) != 1) ? '#{red}Invalid children!' : ''?>
+node:<? LV_A::count_nondep_child($this) > 1 ? '#{red}Only one phrase per dependency node allowed!' : ''?>
+node:<? ($this eq $root and LV_A::count_pmc_child($this) != 1) ? '#{red}Root must have one PMC!' : ''?>
 node:<? LV_A::is_unfinished($this) ? '#{red}Something is missing!' : ''?>
 node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}Role unsuitable for this parent!' ?>
+node:<? LV_A::is_wrong_empty_node($this) ? '#{red}Node must have reduction, morphology or phrase!' : '' ?>
 node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
 	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
-	? '#{red}Wrong tree structure!' : ''?>
+	? '#{red}Phrase are not allowed under node with morphology!' : ''?>
+node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
+	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('reduction')
+	? '#{red}Phrase are not allowed under node with reduction!' : ''?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${m/tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>
