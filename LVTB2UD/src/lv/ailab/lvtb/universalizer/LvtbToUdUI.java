@@ -2,8 +2,12 @@ package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.SentenceTransformator;
+import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 
 /**
@@ -70,8 +74,19 @@ public class LvtbToUdUI
 				"Everything is finished, %s trees was omited because of ellipsis.\n", omited);
 	}
 
-	public static int transformFile(String inputPath, BufferedWriter conllOut)
-	throws Exception
+	/**
+	 * Transform a single knitted LV TreeBank PML file to UD.
+	 * @param inputPath		path to PML file
+	 * @param conllOut		writer for output data
+	 * @return	count of ommited files
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
+	 * @throws XPathExpressionException
+	 * @throws IOException
+	 */
+	public static int transformFile(
+			String inputPath, BufferedWriter conllOut)
+	throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
 	{
 		int omited = 0;
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
@@ -79,6 +94,13 @@ public class LvtbToUdUI
 		String latestParId = null;
 		if (pmlTrees.getLength() > 0)
 		{
+			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
+			if ("AUTO".equals(firstComment))
+			{
+				System.err.println("File starts with \"AUTO\", everything is ommited.");
+				return pmlTrees.getLength();
+			}
+
 			// Print out information about the start of the new document
 			conllOut.write("# newDoc");
 			String firstSentId = Utils.getId(pmlTrees.item(0));

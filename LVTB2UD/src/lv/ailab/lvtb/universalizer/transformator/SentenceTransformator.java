@@ -85,18 +85,29 @@ public class SentenceTransformator
 	 * @param pmlTree	tree to transform
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
 	public static String treeToConll(Node pmlTree)
-	throws XPathExpressionException
 	{
-		SentenceTransformator t = new SentenceTransformator(pmlTree);
-		boolean res = t.transform();
-		if (res) return t.s.toConllU();
-		if (WARN_OMISSIONS)
-			System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+		String id ="<unknown>";
+		try {
+			SentenceTransformator t = new SentenceTransformator(pmlTree);
+			id = t.s.id;
+			boolean res = t.transform();
+			if (res) return t.s.toConllU();
+			if (WARN_OMISSIONS)
+				System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+		} catch (NullPointerException e)
+		{
+			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
+			e.printStackTrace();
+			//throw e;
+		}
+		catch (XPathExpressionException e)
+		{
+			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
+			e.printStackTrace();
+			//throw new RuntimeException(e);
+		}
 		return null;
 	}
 
