@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ public class SentenceTransformator
 	public boolean hasFailed;
 	protected PhraseTransformator pTransf;
 	protected DepRelLogic drLogic;
+	protected PrintWriter warnOut;
 	public static boolean DEBUG = false;
 	public static boolean WARN_ELLIPSIS = false;
 	public static boolean WARN_OMISSIONS = true;
@@ -48,12 +50,14 @@ public class SentenceTransformator
 	 */
 	public static boolean INDUCE_PHRASE_TAGS = true;
 
-	public SentenceTransformator(Node pmlTree) throws XPathExpressionException
+	public SentenceTransformator(Node pmlTree, PrintWriter warnOut)
+			throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
 		hasFailed = false;
-		pTransf = new PhraseTransformator(s);
+		pTransf = new PhraseTransformator(s, warnOut);
 		drLogic = new DepRelLogic();
+		this.warnOut = warnOut;
 	}
 
 	/**
@@ -70,11 +74,14 @@ public class SentenceTransformator
 		if (DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
 		transformTokens();
+		warnOut.flush();
 		extractSendenceText();
+		warnOut.flush();
 		boolean noMoreEllipsis = preprocessEllipsis();
 		if (WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		transformSyntax();
+		warnOut.flush();
 		return !hasFailed;
 	}
 
@@ -86,25 +93,29 @@ public class SentenceTransformator
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
 	 */
-	public static String treeToConll(Node pmlTree)
+	public static String treeToConll(Node pmlTree, PrintWriter warnOut)
 	{
 		String id ="<unknown>";
 		try {
-			SentenceTransformator t = new SentenceTransformator(pmlTree);
+			SentenceTransformator t = new SentenceTransformator(pmlTree, warnOut);
 			id = t.s.id;
 			boolean res = t.transform();
 			if (res) return t.s.toConllU();
 			if (WARN_OMISSIONS)
-				System.out.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
-		} catch (NullPointerException e)
+				warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+		} catch (NullPointerException|IllegalArgumentException e)
 		{
+			warnOut.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
+			e.printStackTrace(warnOut);
 			e.printStackTrace();
 			//throw e;
 		}
-		catch (XPathExpressionException e)
+		catch (XPathExpressionException|IllegalStateException e)
 		{
+			warnOut.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
 			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
+			e.printStackTrace(warnOut);
 			e.printStackTrace();
 			//throw new RuntimeException(e);
 		}
@@ -142,7 +153,7 @@ public class SentenceTransformator
 			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
 					s.pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
-				System.err.printf("\"%s\" has several nodes with ord \"%s\", only first used.\n",
+				warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",
 						s.id, currentOrd);
 
 			// Determine, if paragraph has border before this token.
@@ -150,8 +161,8 @@ public class SentenceTransformator
 			String mId = Utils.getMId(nodes.item(0));
 			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
 				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
-			else System.err.println(
-					"Node id \"" + mId + "\"does not match paragraph searching pattern.");
+			else warnOut.println(
+					"Node id \"" + mId + "\"does not match paragraph searching pattern!");
 			if (prevMId!= null && !prevMId.equals(mId))
 				paragraphChange = true;
 
@@ -219,7 +230,7 @@ public class SentenceTransformator
 			String[] forms = mForm.split(" ");
 			String[] lemmas = mLemma.split(" ");
 			if (forms.length != lemmas.length)
-				System.err.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces.\n",
+				warnOut.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces!\n",
 						s.id, mForm, mLemma);
 
 			// First one is different.
@@ -227,19 +238,19 @@ public class SentenceTransformator
 					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 			if (lvtbTag.matches("xf.*"))
 			{
-				System.out.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
 			}
 			else if (lvtbTag.matches("x[ux].*"))
 			{
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
 			}
 			else
 			{
 				firstTok.upostag = UDv2PosTag.PART;
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, warnOut);
 			}
 			if (paragraphChange) firstTok.misc = "NewPar=Yes";
 			s.conll.add(firstTok);
@@ -253,13 +264,13 @@ public class SentenceTransformator
 						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
 				}
 				else
 				{
 					nextTok.upostag = UDv2PosTag.PART;
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, warnOut);
 				}
 				nextTok.head = firstTok.idBegin;
 				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
@@ -275,8 +286,8 @@ public class SentenceTransformator
 			Token nextTok = new Token(
 					Utils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
-			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode);
-			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode);
+			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
+			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
 			if (noSpaceAfter && paragraphChange)
 				 nextTok.misc = "NewPar=Yes|SpaceAfter=No";
 			else if (noSpaceAfter)
@@ -421,8 +432,7 @@ public class SentenceTransformator
 		//// Process reduction nodes.
 		else if (Utils.isReductionNode(aNode))
 		{
-			//System.out.println ("reduction " + reduction);
-			Node redRoot = EllipsisLogic.newParent(aNode, drLogic);
+			Node redRoot = EllipsisLogic.newParent(aNode, drLogic, warnOut);
 			if (redRoot == null)
 			{
 				hasFailed = true;
@@ -464,7 +474,7 @@ public class SentenceTransformator
 			// This happens in case of ellipsis.
 			if (pmlDependents.item(i).isSameNode(newRoot)) continue;
 			Token conllTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
-			conllTok.deprel = drLogic.depToUD(pmlDependents.item(i));
+			conllTok.deprel = drLogic.depToUD(pmlDependents.item(i), warnOut);
 			conllTok.head = newRootTok.idBegin;
 		}
 	}

@@ -10,6 +10,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,16 +80,17 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
+	 * @param warnOut 		where all the warnings goes
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, NodeList children, String phraseType,
-			UDv2Relations childDeprel)
+			UDv2Relations childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel);
+		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel, warnOut);
 	}
 
 	/**
@@ -102,13 +104,14 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
+	 * @param warnOut 		where all the warnings goes
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, List<Node> children, String phraseType,
-			UDv2Relations childDeprel)
+			UDv2Relations childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		if (children == null || children.isEmpty()) return;
@@ -116,7 +119,7 @@ public class Sentence
 		// Process children.
 		for (Node child : children)
 		{
-			addAsDependent(newRoot, child, phraseType, childDeprel);
+			addAsDependent(newRoot, child, phraseType, childDeprel, warnOut);
 		}
 	}
 	/**
@@ -130,12 +133,14 @@ public class Sentence
 	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
+	 * @param warnOut 		where all the warnings goes
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void addAsDependent (
-			Node parent, Node child, String phraseType, UDv2Relations childDeprel)
+			Node parent, Node child, String phraseType, UDv2Relations childDeprel,
+			PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		if (child == null ) return;
@@ -149,7 +154,7 @@ public class Sentence
 		Token childToken = pmlaToConll.get(Utils.getId(child));
 		childToken.head = rootToken.idBegin;
 		if (childDeprel == null)
-			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType);
+			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
 		else childToken.deprel = childDeprel;
 	}
 
@@ -166,6 +171,7 @@ public class Sentence
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
+	 * @param warnOut 		where all the warnings goes
 	 * @return root of the corresponding dependency structure
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
@@ -173,7 +179,7 @@ public class Sentence
 	 */
 	public Node allUnderFirst(
 			Node phraseNode, String phraseType, String newRootType,
-			UDv2Relations childDeprel, boolean warnMoreThanOne)
+			UDv2Relations childDeprel, boolean warnMoreThanOne, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -181,19 +187,19 @@ public class Sentence
 		NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
-			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
+			warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRootType);
 		Node newRoot = Utils.getFirstByDescOrd(potentialRoots);
 		if (newRoot == null)
 		{
-			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
+			warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
 			newRoot = Utils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
 					"\"" + phraseType +"\" in sentence \"" + id + "\" seems to be empty.\n");
-		allAsDependents(newRoot, children, phraseType, childDeprel);
+		allAsDependents(newRoot, children, phraseType, childDeprel, warnOut);
 		return newRoot;
 	}
 
@@ -211,6 +217,7 @@ public class Sentence
 	 *                          should be used to obtain DEPREL for child nodes
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
+	 * @param warnOut 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
@@ -218,7 +225,7 @@ public class Sentence
 	 */
 	public Node allUnderLast(
 			Node phraseNode, String phraseType, String newRootType, String newRootBackUpType,
-			UDv2Relations childDeprel, boolean warnMoreThanOne)
+			UDv2Relations childDeprel, boolean warnMoreThanOne, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -231,18 +238,18 @@ public class Sentence
 					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
 		Node newRoot = Utils.getLastByDescOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
-			System.err.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
+			warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRoot);
 		if (newRoot == null)
 		{
-			System.err.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
+			warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
 			newRoot = Utils.getLastByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
 					"\"" + phraseType +"\" in sentence \"" + id + "\" seems to be empty.\n");
-		allAsDependents(newRoot, children, phraseType, childDeprel);
+		allAsDependents(newRoot, children, phraseType, childDeprel, warnOut);
 		return newRoot;
 	}
 }

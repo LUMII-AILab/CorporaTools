@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 
 /**
@@ -28,17 +29,18 @@ public class DepRelLogic
 
 	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
-	 * @param aNode	node for which UD DEPREL should be obtained
+	 * @param aNode		node for which UD DEPREL should be obtained
+	 * @param warnOut	where all warnings goes
 	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
 	 * 			representing a core argument).
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public UDv2Relations depToUD(Node aNode)
+	public UDv2Relations depToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		UDv2Relations prelaminaryRole = depToUDNoRed(aNode);
+		UDv2Relations prelaminaryRole = depToUDNoRed(aNode, warnOut);
 		Node pmlParent = Utils.getPMLParent(aNode);
 		Node pmlEffParent = Utils.getEffectiveAncestor(aNode);
 		if ((Utils.isReductionNode(pmlParent) || Utils.isReductionNode(pmlEffParent))
@@ -57,39 +59,40 @@ public class DepRelLogic
 	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL. Orphan
 	 * roles are not assigned.
-	 * @param aNode	node for which UD DEPREL should be obtained
+	 * @param aNode		node for which UD DEPREL should be obtained
+	 * @param warnOut	where all warnings goes
 	 * @return	UD DEPREL before reduction postprocessing
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public UDv2Relations depToUDNoRed(Node aNode)
+	public UDv2Relations depToUDNoRed(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String lvtbRole = Utils.getRole(aNode);
 
 		// Simple dependencies.
 		if (lvtbRole.equals(LvtbRoles.SUBJ))
-			return subjToUD(aNode);
+			return subjToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.OBJ))
 			return objToUD(aNode);
 		if (lvtbRole.equals(LvtbRoles.SPC))
-			return spcToUD(aNode);
+			return spcToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.ATTR))
-			return attrToUD(aNode);
+			return attrToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.ADV) ||
 				lvtbRole.equals(LvtbRoles.SIT))
-			return advSitToUD(aNode);
+			return advSitToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.DET))
 			return UDv2Relations.OBL;
 		if (lvtbRole.equals(LvtbRoles.NO))
-			return noToUD(aNode);
+			return noToUD(aNode, warnOut);
 
 		// Clausal dependencies.
 		if (lvtbRole.equals(LvtbRoles.PREDCL))
-			return predClToUD(aNode);
+			return predClToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.SUBJCL))
-			return subjClToUD(aNode);
+			return subjClToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.OBJCL))
 			return UDv2Relations.CCOMP;
 		if (lvtbRole.equals(LvtbRoles.ATTRCL))
@@ -110,15 +113,15 @@ public class DepRelLogic
 
 		// Semi-clausal dependencies.
 		if (lvtbRole.equals(LvtbRoles.INS))
-			return insToUD(aNode);
+			return insToUD(aNode, warnOut);
 		if (lvtbRole.equals(LvtbRoles.DIRSP))
 			return UDv2Relations.PARATAXIS;
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations subjToUD(Node aNode)
+	public UDv2Relations subjToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -205,7 +208,7 @@ public class DepRelLogic
 		if (tag.matches("v..n.*"))
 			return UDv2Relations.CCOMP;
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
@@ -227,7 +230,7 @@ public class DepRelLogic
 		return UDv2Relations.IOBJ;
 	}
 
-	public UDv2Relations spcToUD(Node aNode)
+	public UDv2Relations spcToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -277,9 +280,9 @@ public class DepRelLogic
 					"./children/xinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 					aNode, XPathConstants.NODESET);
 			if (preps.getLength() > 1)
-				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.PREP);
+				warnOut.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.PREP);
 			if (basElems.getLength() > 1)
-				System.err.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
+				warnOut.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
 					&& baseElemTag != null && baseElemTag.matches("[nampxy].*")
@@ -299,7 +302,7 @@ public class DepRelLogic
 					"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 					aNode, XPathConstants.NODESET);
 			if (basElems.getLength() > 1)
-				System.err.printf("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM);
+				warnOut.printf("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM);
 			String basElemTag = Utils.getTag(basElems.item(0));
 			String basElemXType = Utils.getPhraseType(basElems.item(0));
 
@@ -316,11 +319,11 @@ public class DepRelLogic
 			if (basElemTag.matches("a.*|v..d.*")) return UDv2Relations.ACL;
 		}
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations attrToUD(Node aNode)
+	public UDv2Relations attrToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -349,11 +352,11 @@ public class DepRelLogic
 				return URelations.NMOD;
 		}*/
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations advSitToUD(Node aNode)
+	public UDv2Relations advSitToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -368,11 +371,11 @@ public class DepRelLogic
 		if (tag.matches("r.*") || lemma.equals("%")) return UDv2Relations.ADVMOD;
 		if (tag.matches("q.*")) return UDv2Relations.DISCOURSE;
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations noToUD(Node aNode)
+	public UDv2Relations noToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String tag = Utils.getTag(aNode);
@@ -387,11 +390,11 @@ public class DepRelLogic
 			return UDv2Relations.CONJ;
 
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations predClToUD(Node aNode)
+	public UDv2Relations predClToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String parentType = Utils.getAnyLabel(Utils.getPMLParent(aNode));
@@ -402,11 +405,11 @@ public class DepRelLogic
 		String grandPatentType = Utils.getAnyLabel(Utils.getPMLGrandParent(aNode));
 		if (grandPatentType.equals(LvtbXTypes.XPRED)) return UDv2Relations.ACL;
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public UDv2Relations subjClToUD(Node aNode)
+	public UDv2Relations subjClToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		Node pmlParent = Utils.getPMLParent(aNode);
@@ -441,37 +444,39 @@ public class DepRelLogic
 		} else if (LvtbRoles.SUBJ.equals(Utils.getEffectiveLabel(pmlParent)))
 			return UDv2Relations.ACL;
 
-		warn(aNode);
+		warn(aNode, warnOut);
 		return UDv2Relations.DEP;
 	}
 
-	public static UDv2Relations insToUD(Node aNode)
+	public static UDv2Relations insToUD(Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
 				"./children/pminfo/children/node[role='" + LvtbRoles.PRED + "']",
 				aNode, XPathConstants.NODESET);
 		if (basElems!= null && basElems.getLength() > 1)
-			System.err.printf("\"%s\" has multiple \"%s\"", LvtbPmcTypes.INSPMC, LvtbRoles.PRED);
+			warnOut.printf("\"%s\" has multiple \"%s\"", LvtbPmcTypes.INSPMC, LvtbRoles.PRED);
 		if (basElems != null) return UDv2Relations.PARATAXIS;
 		return UDv2Relations.DISCOURSE; // Washington (CNN) is left unidentified.
 	}
 
 	/**
 	 * Print out the warning that role was not tranformed.
-	 * @param node	node about which to warn
+	 * @param node		node about which to warn
+	 * @param warnOut	stream where to warn
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	protected void warn(Node node) throws XPathExpressionException
+	protected void warn(Node node, PrintWriter warnOut)
+	throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(node);
 		String role = XPathEngine.get().evaluate("./role", node);
 		String warning = String.format("Role \"%s\" for node %s was not transformed.", role, nodeId);
 		if (warnRegister!= null && !warnRegister.contains(warning))
 		{
-			System.err.println(warning);
+			warnOut.println(warning);
 			warnRegister.add(warning);
 		}
 	}

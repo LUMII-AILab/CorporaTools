@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 
 /**
  * Relation between phrase part names used in LVTB and dependency labeling used
@@ -30,12 +31,14 @@ public class PhrasePartDepLogic
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
+	 * @param warnOut 		where all the warnings goes
 	 * @return contents for corresponding DEPREL field
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static UDv2Relations phrasePartRoleToUD(Node aNode, String phraseType)
+	public static UDv2Relations phrasePartRoleToUD(
+			Node aNode, String phraseType, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(aNode);
@@ -184,7 +187,7 @@ public class PhrasePartDepLogic
 					lvtbRole.equals(LvtbRoles.MOD)) return UDv2Relations.XCOMP;
 		}
 
-		System.err.printf("\"%s\" (%s) in \"%s\" has no UD label.\n",
+		warnOut.printf("\"%s\" (%s) in \"%s\" has no UD label.\n",
 				lvtbRole, nodeId, phraseType);
 		return UDv2Relations.DEP;
 	}

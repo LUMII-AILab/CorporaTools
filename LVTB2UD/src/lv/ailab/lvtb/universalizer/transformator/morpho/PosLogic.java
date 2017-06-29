@@ -9,6 +9,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
@@ -24,7 +25,8 @@ public class PosLogic
 	{
 	}*/
 
-	public static UDv2PosTag getUPosTag(String lemma, String xpostag, Node aNode)
+	public static UDv2PosTag getUPosTag(
+			String lemma, String xpostag, Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String lvtbRole = Utils.getRole(aNode);
@@ -90,7 +92,7 @@ public class PosLogic
 		else if (xpostag.matches("xo.*")) return UDv2PosTag.ADJ;
 		else if (xpostag.matches("xu.*")) return UDv2PosTag.SYM;
 		else if (xpostag.matches("xx.*")) return UDv2PosTag.SYM; // Or sometimes PROPN/NOUN
-		else System.err.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n",
+		else warnOut.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n",
 					lemma, xpostag);
 
 		return UDv2PosTag.X;

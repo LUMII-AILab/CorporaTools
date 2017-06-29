@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +31,8 @@ public class FeatsLogic
 		return morphoEngineSing;
 	}
 
-	public static ArrayList<UDv2Feat> getUFeats(String form, String lemma, String xpostag, Node aNode)
+	public static ArrayList<UDv2Feat> getUFeats(
+			String form, String lemma, String xpostag, Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
@@ -68,18 +70,20 @@ public class FeatsLogic
 				Word analysis = getMorpho().analyze(form);
 				Wordform correctOne = analysis.getMatchingWordform(
 						xpostag.contains("_") ? xpostag.substring(0, xpostag.indexOf('_')) : xpostag,
-						true);
+						false);
+				//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
 				String degree = correctOne.getValue(AttributeNames.i_Degree);
 				if (degree == null || degree.equals(AttributeNames.v_Positive)) res.add(UDv2Feat.DEGREE_POS);
 				else if (degree.equals(AttributeNames.v_Comparative)) res.add(UDv2Feat.DEGREE_CMP);
 				else if (degree.equals(AttributeNames.v_Superlative)) res.add(UDv2Feat.DEGREE_SUP);
-				else System.err.printf("\"%s\" with tag %s has unrecognized degree value %s",
+				else warnOut.printf("\"%s\" with tag %s has unrecognized degree value %s",
 							form, xpostag, degree);
 			}
 			catch (Exception e)
 			{
-				System.err.println("Could not initialize Morphology, Degree for participles is not added.");
-				e.printStackTrace(System.err);
+				// TODO: Pēc tagseta izmaiņām pārtaisīt uz taga analīzi.
+				warnOut.println("Could not initialize Morphology, Degree for participles is not added.");
+				e.printStackTrace(warnOut);
 			}
 
 		}

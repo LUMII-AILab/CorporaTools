@@ -9,6 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class EllipsisLogic
 {
-	public static Node newParent (Node aNode, DepRelLogic drLogic)
+	public static Node newParent (Node aNode, DepRelLogic drLogic, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		// This method should not be used for transforming phrase nodes or nodes
@@ -42,7 +43,7 @@ public class EllipsisLogic
 			if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*"))
 				for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils
@@ -60,7 +61,7 @@ public class EllipsisLogic
 					UDv2Relations.CCOMP, UDv2Relations.ADVCL};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
@@ -77,7 +78,7 @@ public class EllipsisLogic
 					UDv2Relations.NMOD, UDv2Relations.CASE};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
