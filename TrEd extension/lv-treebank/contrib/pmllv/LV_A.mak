@@ -278,9 +278,7 @@ sub has_nondep_child
   my $node = shift;
   foreach $ch ($node->children)
   {
-	if ($ch->{'#name'} eq 'xinfo'
-	 or $ch->{'#name'} eq 'pmcinfo'
-	 or $ch->{'#name'} eq 'coordinfo')
+	if (&is_phrase_node($ch))
 	{
 	  return $ch;
 	}
@@ -295,9 +293,7 @@ sub count_nondep_child
   my $count = 0;
   foreach $ch ($node->children)
   {
-	if ($ch->{'#name'} eq 'xinfo'
-	 or $ch->{'#name'} eq 'pmcinfo'
-	 or $ch->{'#name'} eq 'coordinfo')
+	if (&is_phrase_node($ch))
 	{
 	  $count++;
 	}
@@ -324,12 +320,20 @@ sub count_pmc_child
 sub is_wrong_empty_node
 {
   my $node = shift;
-  return 0 if (($node->{'#name'} eq 'xinfo'
-	 or $node->{'#name'} eq 'pmcinfo'
-	 or $node->{'#name'} eq 'coordinfo') and $node->children);
+  return 0 if (&is_phrase_node($node) and $node->children);
   return 0 if ($node->{'reduction'} or $node->{'m'});
   return 0 if (&has_nondep_child($node));
   return 1;
+}
+
+# Finds, if node has x-node or pmc-node or coord-node as children.
+sub is_phrase_node
+{
+  my $node = shift;
+  return 1 if (($node->{'#name'} eq 'xinfo'
+	 or $node->{'#name'} eq 'pmcinfo'
+	 or $node->{'#name'} eq 'coordinfo'));
+  return 0;
 }
 
 
