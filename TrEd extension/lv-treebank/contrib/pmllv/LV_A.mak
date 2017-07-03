@@ -126,8 +126,12 @@ sub is_allowed_for_parent
 	return 1 if ($node->{'pmctype'} eq 'sent' or
                  $node->{'pmctype'} eq 'utter' or
 				 $node->{'pmctype'} eq 'quot' or
-				 $node->{'pmctype'} eq 'dirSpPmc' or
-				 $node->{'#name'} eq 'node');
+				 $node->{'pmctype'} eq 'dirSpPmc');
+	return 0 if ($node->{'role'} eq 'punct' or
+                 $node->{'role'} eq 'conj' or
+                 $node->{'role'} eq 'pred' or
+				 $node->{'role'} eq 'basElem');
+	return 1 if ($node->{'#name'} eq 'node');
 	return 0;
   }
 
@@ -171,6 +175,7 @@ sub is_allowed_for_parent
   # punctuation must be below coordination or pmc or used for reduction.
   if ($node->{'role'} eq 'punct')
   {
+    return 0 if ($p eq $root);
     return 1 if ($p->{'#name'} eq 'coordinfo' or
 				 $p->{'#name'} eq 'pmcinfo' or
 				 $node->{'reduction'});
@@ -181,7 +186,9 @@ sub is_allowed_for_parent
   if ($node->{'role'} eq 'basElem')
   {
     return 0 if ($p->{'#name'} eq 'node' or
-				 $p->{'#name'} eq 'coordinfo');
+				 $p->{'#name'} eq 'coordinfo' or
+				 $p->{'pmctype'} eq 'mainCl' or
+				 $p->{'pmctype'} eq 'subrCl');
 	return 1;
   }
   
