@@ -239,7 +239,7 @@ public class Sentence
 		Node newRoot = Utils.getLastByDescOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
-					phraseType, id, newRoot);
+					phraseType, id, Utils.getAnyLabel(newRoot));
 		if (newRoot == null)
 		{
 			warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
