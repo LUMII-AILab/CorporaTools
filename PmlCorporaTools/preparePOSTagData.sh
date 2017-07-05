@@ -8,6 +8,11 @@ then sourceFolder="$1"
 else sourceFolder="../../Morphocorpus/Corpora" 
 fi
 
+#treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
+treebankFolder="../../Treebank/Corpora"
+morphologyFolder="../../morphology"
+taggerFolder="../../LVTagger"
+
 pmlFolder="$sourceFolder/Merged"
 rm -rf $pmlFolder
 mkdir $pmlFolder
@@ -19,12 +24,14 @@ mkdir $pmlFolder/train
 cp $sourceFolder/Balanseetais/Jaunaakais/*.[m,w] $pmlFolder
 cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.[m,w] $pmlFolder
 
-#treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
-treebankFolder="../../Treebank/Corpora"
 tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
-	cp "$treebankFolder/$file" $pmlFolder
-	cp "$treebankFolder/${file%.m}.w" $pmlFolder
+	if grep -q "<comment>AUTO</comment>" "$treebankFolder/${file%.m}.a"; then
+		echo "skipping $file - unfinished"
+	else
+		cp "$treebankFolder/$file" $pmlFolder
+		cp "$treebankFolder/${file%.m}.w" $pmlFolder
+	fi
 done
 
 # Knit the .m and .w files together
@@ -81,5 +88,18 @@ rm -rf "$pmlFolder/test"
 
 cat "$pmlFolder/train.txt" "$pmlFolder/dev.txt" "$pmlFolder/test.txt" > "$pmlFolder/all.txt"
 cat "$pmlFolder/train.txt" "$pmlFolder/dev.txt" > "$pmlFolder/train_dev.txt"
+
+cp "$pmlFolder/train.txt" "$morphologyFolder/src/main/resources/"
+cp "$pmlFolder/all.txt" "$morphologyFolder/src/test/resources/"
+cp "$pmlFolder/dev.txt" "$morphologyFolder/src/test/resources/"
+cp "$pmlFolder/test.txt" "$morphologyFolder/src/test/resources/"
+cp "$treebankFolder/../Docs/SemTi-Kamols_morphotags.xlsx" "$morphologyFolder/docs/"
+
+cp "$pmlFolder/train.txt" "$taggerFolder/MorphoCRF/"
+cp "$pmlFolder/train_dev.txt" "$taggerFolder/MorphoCRF/"
+cp "$pmlFolder/test.txt" "$taggerFolder/MorphoCRF/"
+cp "$pmlFolder/dev.txt" "$taggerFolder/MorphoCRF/"
+cp "$pmlFolder/all.txt" "$taggerFolder/MorphoCRF/"
+cp "$treebankFolder/../Docs/SemTi-Kamols_morphotags.xlsx" "$taggerFolder/docs/"
 
 echo "Done!"
