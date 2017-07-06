@@ -280,7 +280,9 @@ my $xPredHelper = [
 ['Case', {
 	'n' => 'Nominative',
 	'g' => 'Genitive',
-	'd' => 'Dative'}],
+	'd' => 'Dative',
+	'a' => 'Accusative',
+	'l' => 'Locative'}],
 ];
 
 my $xPrepHelper = [
@@ -297,6 +299,7 @@ our %phraseTags = (
 'phase' => ['Phasal predicate', $xPredHelper],
 'expr' => ['Expressional predicate', $xPredHelper],
 'adv' => ['Adverbial predicate', $xPredHelper],
+'inf' => ['Infinitive predicate', $xPredHelper],
 'num' => ['Numeral predicate', $xPredHelper],
 #xSimile table
 'spk' => ['Secondary predicative component', [
