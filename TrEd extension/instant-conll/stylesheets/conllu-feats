@@ -1,0 +1,17 @@
+context: CONLL_U
+rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
+
+text:<?'#{'.CustomColor('sentence').'}${form}'?>
+
+node:#{darkblue}${deprel}
+node:<? '#{black}${form} ' if $${form} ?>#{darkred}(${ord})
+node:<? '#{dimgray}[${lemma}]' if $${lemma} ?>
+node:<? '#{dimgray}${surfaceToken/form} #{darkred}(${ord}-${surfaceToken/endord})' if ($${surfaceToken}) ?>
+node:<? '#{darkgreen}${upostag} ~ ${xpostag}' if ($${ord} > 0 ) ?>
+node:<? '#{darkgreen}* '. join("\n* ", ListV($this->attr('feats'))) if ($${feats}) ?>
+node:<? '#{dimgray}'. join("\n", ListV($this->attr('misc'))) if ($${misc}) ?>
+
+hint:<? 'feats: '. join(', ', ListV($this->attr('feats'))) if ($${feats}) ?><?
+	"\n" if ($${feats} and $${misc}) ?><?
+ 'misc: '. join(', ', ListV($this->attr('misc'))) if ($${misc}) ?>
+
