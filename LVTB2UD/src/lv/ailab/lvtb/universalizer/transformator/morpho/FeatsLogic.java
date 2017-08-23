@@ -118,7 +118,7 @@ public class FeatsLogic
 		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UDv2Feat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.EVIDENT_FH);
-		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.EVIDENT_NFH);
+		if (xpostag.matches("v..r.*")) res.add(UDv2Feat.EVIDENT_NFH);
 
 		if (xpostag.matches("p.1.*|v..[^p]...1.*")) res.add(UDv2Feat.PERSON_1);
 		if (xpostag.matches("a.*") && lemma.matches("(man|mūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_1);
