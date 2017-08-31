@@ -408,24 +408,32 @@ sub new_m_node
   # saving it and switching back again.
   my $node = $this;
   my $m_id = &_write_new_m($bro);
-  $this = $node;
+  if ($m_id)
+  {
+	  $this = $node;
 
-  # Map a-node to m-node.
-  $this->{'m'}{'#knit_prefix'} = 'm';
-  $this->{'m'}{'id'} = $m_id;
+	  # Map a-node to m-node.
+	  $this->{'m'}{'#knit_prefix'} = 'm';
+	  $this->{'m'}{'id'} = $m_id;
+  }
+  else
+  {
+  }
     
   # When switching to m file and back again, current context is set to
   # TredMacro. That is why we need to re-set it.
   SwitchContext($context);
-  
-  # Hack-style save: saves only a file without saving m file (if m file is
-  # saved here, previously created m-node is lost).
-  #SaveAs({'filename' => FileName(), 'update_refs' => 'noooo'});
-  #Save();
-  my $tmp = CurrentFile()->appData('ref');
-  CurrentFile()->changeAppData ('ref',{});
-  CurrentFile()->save(FileName());
-  CurrentFile()->changeAppData ('ref',$tmp);
+  if ($m_id)
+  {
+    # Hack-style save: saves only a file without saving m file (if m file is
+    # saved here, previously created m-node is lost).
+    #SaveAs({'filename' => FileName(), 'update_refs' => 'noooo'});
+    #Save();
+    my $tmp = CurrentFile()->appData('ref');
+    CurrentFile()->changeAppData ('ref',{});
+    CurrentFile()->save(FileName());
+    CurrentFile()->changeAppData ('ref',$tmp);
+  }
   
   # Reload file to force TrEd  "knit in" the new data from m level.
   ReloadCurrentFile();
@@ -444,11 +452,33 @@ sub _write_new_m
   my $a_file = CurrentFile();
   my $ref_id = $a_file->referenceNameHash->{'mdata'};
   my $ref_file = $a_file->referenceURLHash->{$ref_id};
-  print "$ref_id, $ref_file.\n";
+  print "Opening $ref_id, $ref_file.\n";
   #my $m_file = Open($ref_file, ('-keep' => 1)); #Doesn't work for TrEd 2.x
   my $m_file = Open($ref_file);
-  NextTree() while ($root->attr('id') ne $m_sent_id);
-  
+  print "$m_sent_id\n";
+  my $foundSent = 0;
+  while (NextTree())
+  {
+    print $root->attr('id');
+	print "\n";
+	
+    if ($root->attr('id') eq $m_sent_id)
+	{
+	  $foundSent = 1;
+	  last;
+	}
+  }
+  unless ($foundSent)
+  {
+    print "Could not find sentence $m_sent_id.\n";
+	ErrorMessage("Could not find M sentence with ID $m_sent_id! M node was not created.");
+	CloseFile($m_file);
+    print "Switching back to a.\n";
+    ResumeFile($a_file);
+	return;
+  }
+  print "Found sentence $m_sent_id.\n";
+
   # Create new m-node.
   PlainNewSon($root);
   
@@ -461,6 +491,7 @@ sub _write_new_m
 	  if ($nodes[$i]->{'#content'}{'id'} eq $bro_id)
 	  {
 		PasteNodeAfter($this, $nodes[$i]);
+		print "Added correctly placed m-node.\n";
 	    last;
 	  }
     }
@@ -481,6 +512,7 @@ sub _write_new_m
   #SaveAs({update_refs => 'nooooooo', update_filelist => 'noooo'});
   CurrentFile()->save(FileName());
   CloseFile($m_file);
+  print "Switching back to a.\n";
   ResumeFile($a_file);
   # Return newly created node's ID.
   return $m_id;
