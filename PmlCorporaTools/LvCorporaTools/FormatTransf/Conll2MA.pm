@@ -167,12 +167,14 @@ END
 			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut, $wTok);
 		}
 	}
+	
+	print "Out of all para!\n";
 
 	# Process unused CoNLL lines in the end of the file and warn
-	$status{'paraId'}++;
 	my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
 	&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
 		if ($mustEndSentence);
+	$status{'paraId'}++;
 	while ($line)
 	{
 		&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
@@ -243,6 +245,9 @@ sub _endSentence
 		my $aSentId = &_getASentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
 		my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
 		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);
+		
+		print "Doing tree $aSentId from hash!\n";
+		
 		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $status->{'isFirstTree'});
 		$status->{'isFirstTree'} = 0;
 	}
