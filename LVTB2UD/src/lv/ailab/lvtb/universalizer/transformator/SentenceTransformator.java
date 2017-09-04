@@ -272,7 +272,7 @@ public class SentenceTransformator
 					nextTok.upostag = UDv2PosTag.PART;
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, warnOut);
 				}
-				nextTok.head = firstTok.idBegin;
+				nextTok.head = firstTok.getFirstColumn();
 				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
 					nextTok.misc = "SpaceAfter=No";
 				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
@@ -371,7 +371,7 @@ public class SentenceTransformator
 			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
 		Token conllRoot = s.pmlaToConll.get(Utils.getId(newRoot));
 		s.pmlaToConll.put(Utils.getId(s.pmlTree), conllRoot);
-		conllRoot.head = 0;
+		conllRoot.head = "0";
 		conllRoot.deprel = UDv2Relations.ROOT;
 		relinkDependents(s.pmlTree, newRoot);
 	}
@@ -475,7 +475,7 @@ public class SentenceTransformator
 			if (pmlDependents.item(i).isSameNode(newRoot)) continue;
 			Token conllTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
 			conllTok.deprel = drLogic.depToUD(pmlDependents.item(i), warnOut);
-			conllTok.head = newRootTok.idBegin;
+			conllTok.head = newRootTok.getFirstColumn();
 		}
 	}
 

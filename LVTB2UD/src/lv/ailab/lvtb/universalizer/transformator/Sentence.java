@@ -152,7 +152,7 @@ public class Sentence
 		if (child.equals(parent) || child.isSameNode(parent)) return;
 
 		Token childToken = pmlaToConll.get(Utils.getId(child));
-		childToken.head = rootToken.idBegin;
+		childToken.head = rootToken.getFirstColumn();
 		if (childDeprel == null)
 			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
 		else childToken.deprel = childDeprel;

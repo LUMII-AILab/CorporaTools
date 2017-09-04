@@ -15,14 +15,24 @@ public class Token
 	/**
 	 * 1st column.
 	 * ID: Word index, integer starting at 1 for each new sentence; may be a
-	 * range for tokens with multiple words.
+	 * range for tokens with multiple words;  may be a decimal number for empty
+	 * nodes.
 	 * First element of the range.
 	 */
 	public int idBegin = -1;
 	/**
 	 * 1st column.
 	 * ID: Word index, integer starting at 1 for each new sentence; may be a
-	 * range for tokens with multiple words.
+	 * range for tokens with multiple words; may be a decimal number for empty
+	 * nodes.
+	 * First element of the range.
+	 */
+	public int idSub = -1;
+	/**
+	 * 1st column.
+	 * ID: Word index, integer starting at 1 for each new sentence; may be a
+	 * range for tokens with multiple words; may be a decimal number for empty
+	 * nodes.
 	 * Last element of the range.
 	 */
 	public int idEnd = -1;
@@ -59,7 +69,7 @@ public class Token
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
 	 */
-	public Integer head = null;
+	public String head = null;
 	/**
 	 * 8th column.
 	 * DEPREL: Universal Stanford dependency relation to the HEAD
@@ -83,12 +93,38 @@ public class Token
 	public Token (int id, String form, String lemma, String xpostag)
 	{
 		idBegin = id;
+		idSub = 0;
 		idEnd = id;
 		this.form = form;
 		this.lemma = lemma;
 		this.xpostag = xpostag;
 	}
 
+	/**
+	 * Concatenates the three inner integers to appropriate string ID. Assumes
+	 * that ID can be either decimal or interval, but not both
+	 * @return ID string representation
+	 */
+	public String getFirstColumn()
+	{
+		StringBuilder res = new StringBuilder();
+		res.append(idBegin);
+		if (idBegin != idEnd && idSub > 0)
+			throw new IllegalArgumentException(
+					"A token has invalid ID: " + idBegin + "." + idSub + "-" + idEnd);
+		if (idSub > 0)
+		{
+			res.append(".");
+			res.append(idSub);
+		}
+		if (idBegin != idEnd)
+		{
+			res.append("-");
+			res.append(idEnd);
+		}
+
+		return res.toString();
+	}
 	/**
 	 * Transforms token to a CoNLL-U format line. Newline is added.
 	 */
@@ -97,13 +133,8 @@ public class Token
 
 		StringBuilder res = new StringBuilder();
 		// 1
-		// ID - single integer or range.
-		res.append(idBegin);
-		if (idBegin != idEnd)
-		{
-			res.append("-");
-			res.append(idEnd);
-		}
+		// ID - single integer or range, or decimal.
+		res.append(getFirstColumn());
 		// 2
 		res.append("\t");
 		res.append(form);
@@ -130,7 +161,7 @@ public class Token
 		}
 		// 7
 		res.append("\t");
-		if (head == null || head < 0) res.append("_");
+		if (head == null || head.isEmpty()) res.append("_");
 		else res.append(head);
 		// 8
 		res.append("\t");
