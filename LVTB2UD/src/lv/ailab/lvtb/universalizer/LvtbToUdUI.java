@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.transformator.SentenceTransformator;
+import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
 import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -140,7 +140,7 @@ public class LvtbToUdUI
 		}
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
-			String conllTree = SentenceTransformator.treeToConll(pmlTrees.item(i), warningsLog);
+			String conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
 			if (i > 0)
 			{
 				String thisSentId = Utils.getId(pmlTrees.item(i));

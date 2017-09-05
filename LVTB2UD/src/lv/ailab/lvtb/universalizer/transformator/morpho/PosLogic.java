@@ -19,7 +19,7 @@ import java.io.PrintWriter;
  */
 public class PosLogic
 {
-	/* TODO: izcelt no SentenceTransformator ārā arī sadalāmo tokenu POS loģiku.
+	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.
 	public static UDv2PosTag getUPostTagForPart(String lemma, String xpostag, Node aNode, boolean isLast)
 	throws XPathExpressionException
 	{

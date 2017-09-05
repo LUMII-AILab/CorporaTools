@@ -2,9 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
-import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
-import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
+import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.EllipsisLogic;
@@ -15,9 +13,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Logic for transforming LVTB sentence annotations to UD.
@@ -30,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author Lauma
  */
-public class SentenceTransformator
+public class SentenceTransformEngine
 {
 	public Sentence s;
 	/**
@@ -38,6 +33,7 @@ public class SentenceTransformator
 	 * garbage.
 	 */
 	public boolean hasFailed;
+	protected MorphoTransformator mTransf;
 	protected PhraseTransformator pTransf;
 	protected DepRelLogic drLogic;
 	protected PrintWriter warnOut;
@@ -50,11 +46,12 @@ public class SentenceTransformator
 	 */
 	public static boolean INDUCE_PHRASE_TAGS = true;
 
-	public SentenceTransformator(Node pmlTree, PrintWriter warnOut)
+	public SentenceTransformEngine(Node pmlTree, PrintWriter warnOut)
 			throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
 		hasFailed = false;
+		mTransf = new MorphoTransformator(s, warnOut);
 		pTransf = new PhraseTransformator(s, warnOut);
 		drLogic = new DepRelLogic();
 		this.warnOut = warnOut;
@@ -73,14 +70,14 @@ public class SentenceTransformator
 	{
 		if (DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
-		transformTokens();
+		mTransf.transformTokens();
 		warnOut.flush();
 		extractSendenceText();
 		warnOut.flush();
 		boolean noMoreEllipsis = preprocessEllipsis();
 		if (WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
-		transformSyntax();
+		transformBaseSyntax();
 		warnOut.flush();
 		return !hasFailed;
 	}
@@ -97,7 +94,7 @@ public class SentenceTransformator
 	{
 		String id ="<unknown>";
 		try {
-			SentenceTransformator t = new SentenceTransformator(pmlTree, warnOut);
+			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, warnOut);
 			id = t.s.id;
 			boolean res = t.transform();
 			if (res) return t.s.toConllU();
@@ -122,56 +119,7 @@ public class SentenceTransformator
 		return null;
 	}
 
-	/**
-	 * Create CoNLL-U token table, fill in ID, FORM, LEMMA, XPOSTAG, UPOSTAG and
-	 * FEATS fields.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	public void transformTokens() throws XPathExpressionException
-	{
-		// Selects ord numbers from the tree.
-		NodeList ordNodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf]/ord",
-				s.pmlTree, XPathConstants.NODESET);
-		List<Integer> ords = new ArrayList<>();
-		for (int i = 0; i < ordNodes.getLength(); i++)
-		{
-			String ordText = ordNodes.item(i).getTextContent();
-			if (ordText != null && ordText.trim().length() > 0)
-				ords.add(Integer.parseInt(ordText.trim()));
-		}
-		ords = ords.stream().sorted().collect(Collectors.toList());
-		// Finds all nodes and makes CoNLL-U tokens from them.
-		int offset = 0;
-		String prevMId = null;
-		for (int currentOrd : ords)
-		{
-			if (currentOrd < 1) continue;
 
-			// Find the m node to be processed.
-			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
-					s.pmlTree, XPathConstants.NODESET);
-			if (nodes.getLength() > 1)
-				warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",
-						s.id, currentOrd);
-
-			// Determine, if paragraph has border before this token.
-			boolean paragraphChange = false;
-			String mId = Utils.getMId(nodes.item(0));
-			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
-				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
-			else warnOut.println(
-					"Node id \"" + mId + "\"does not match paragraph searching pattern!");
-			if (prevMId!= null && !prevMId.equals(mId))
-				paragraphChange = true;
-
-			// Make new token.
-			offset = transformCurrentToken(nodes.item(0), offset, paragraphChange);
-
-			prevMId = mId;
-		}
-	}
 
 	/**
 	 * Currently extracted from pre-made CoNLL table.
@@ -191,128 +139,9 @@ public class SentenceTransformator
 
 
 
-	/**
-	 * Helper method: Create CoNLL-U table entry for one token, fill in ID,
-	 * FORM, LEMMA, XPOSTAG, UPOSTAG and FEATS fields.
-	 * @param aNode		PML A-level node for which CoNLL entry must be created.
-	 * @param offset	Difference between PML node's ord value and ID value for
-	 *                  CoNLL token to be created.
-	 * @param paragraphChange	paragraph border detected right before this
-	 *                          token.
-	 * @return Offset for next token.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	protected int transformCurrentToken(Node aNode, int offset, boolean paragraphChange)
-	throws XPathExpressionException
-	{
-		Node mNode = (Node)XPathEngine.get().evaluate("./m.rf[1]",
-				aNode, XPathConstants.NODE);
-		String mForm = XPathEngine.get().evaluate("./form", mNode);
-		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
-		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
-		boolean noSpaceAfter = false;
-		if ("1".equals(XPathEngine.get().evaluate(
-				"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", mNode)))
-			noSpaceAfter = true;
 
-		// Starting from UD v2 numbers and certain abbrieavations are allowed to
-		// be tokens with spaces.
-		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
-				!lvtbTag.matches("x[no].*") &&
-				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
-		{
-			int baseOrd = Utils.getOrd(aNode);
-			if (baseOrd < 1)
-				throw new IllegalArgumentException("Node " + Utils.getId(aNode) + "has no ord value");
 
-			String[] forms = mForm.split(" ");
-			String[] lemmas = mLemma.split(" ");
-			if (forms.length != lemmas.length)
-				warnOut.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces!\n",
-						s.id, mForm, mLemma);
 
-			// First one is different.
-			Token firstTok = new Token(baseOrd + offset, forms[0],
-					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-			if (lvtbTag.matches("xf.*"))
-			{
-				warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-			}
-			else if (lvtbTag.matches("x[ux].*"))
-			{
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-			}
-			else
-			{
-				firstTok.upostag = UDv2PosTag.PART;
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, warnOut);
-			}
-			if (paragraphChange) firstTok.misc = "NewPar=Yes";
-			s.conll.add(firstTok);
-			s.pmlaToConll.put(Utils.getId(aNode), firstTok);
-
-			// The rest
-			for (int i = 1; i < forms.length && i < lemmas.length; i++)
-			{
-				offset++;
-				Token nextTok = new Token(baseOrd + offset, forms[i],
-						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
-				{
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-				}
-				else
-				{
-					nextTok.upostag = UDv2PosTag.PART;
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, warnOut);
-				}
-				nextTok.head = firstTok.getFirstColumn();
-				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
-					nextTok.misc = "SpaceAfter=No";
-				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
-				else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
-				else nextTok.deprel = UDv2Relations.FIXED;
-				s.conll.add(nextTok);
-			}
-			// TODO Is reasonable fallback for unequal space count in lemma and form needed?
-		} else
-		{
-			Token nextTok = new Token(
-					Utils.getOrd(aNode) + offset, mForm, mLemma,
-					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
-			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-			if (noSpaceAfter && paragraphChange)
-				 nextTok.misc = "NewPar=Yes|SpaceAfter=No";
-			else if (noSpaceAfter)
-				nextTok.misc = "SpaceAfter=No";
-			else if (paragraphChange)
-				nextTok.misc = "NewPar=Yes";
-			s.conll.add(nextTok);
-			s.pmlaToConll.put(Utils.getId(aNode), nextTok);
-		}
-		return offset;
-	}
-
-	/**
-	 * Logic for obtaining XPOSTAG from tag given in LVTB.
-	 * @param lvtbTag	tag given in LVTB
-	 * @param ending	postfix to be added to the tag
-	 * @return XPOSTAG or _ if tag from LVTB is not meaningfull
-	 */
-	public static String getXpostag (String lvtbTag, String ending)
-	{
-		if (lvtbTag == null || lvtbTag.length() < 1 || lvtbTag.matches("N/[Aa]"))
-			return "_";
-		if (ending == null || ending.length() < 1) return lvtbTag;
-		else return lvtbTag + ending;
-	}
 
 	/**
 	 * Remove the ellipsis nodes that can be ignored in latter processing.
@@ -357,7 +186,7 @@ public class SentenceTransformator
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public void transformSyntax() throws XPathExpressionException
+	public void transformBaseSyntax() throws XPathExpressionException
 	{
 		Node pmlPmc = (Node)XPathEngine.get().evaluate(
 				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
