@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -64,7 +65,7 @@ public class Token
 	 * inventory or from a defined language-specific extension; underscore if
 	 * not available.
 	 */
-	public ArrayList<UDv2Feat> feats = null;
+	public ArrayList<UDv2Feat> feats = new ArrayList<>();
 	/**
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
@@ -80,7 +81,7 @@ public class Token
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).
 	 */
-	public String deps = null;
+	public ArrayList<EnhencedDep> deps = new ArrayList<>();
 	/**
 	 * 10th column.
 	 * MISC: Any other annotation.
@@ -125,6 +126,36 @@ public class Token
 
 		return res.toString();
 	}
+
+/*	public void setSimpleHead(Token token, UDv2Relations role)
+	{
+		head = token.getFirstColumn();
+		deprel = role;
+	}
+	public void setEnhencedHead(Token token, UDv2Relations role)
+	{
+		deps.add(new EnhencedDep(token, role));
+	}
+	public void setBothHeads(Token token, UDv2Relations role)
+	{
+		setSimpleHead(token, role);
+		setEnhencedHead(token, role);
+	}
+
+	public void setSimpleHeadRoot()
+	{
+		head = "0";
+		deprel = UDv2Relations.ROOT;
+	}
+	public void setEnhencedHeadRoot()
+	{
+		deps.add(EnhencedDep.root());
+	}
+	public void setBothHeadsRoot()
+	{
+		setSimpleHeadRoot();
+		setEnhencedHeadRoot();
+	}*/
 	/**
 	 * Transforms token to a CoNLL-U format line. Newline is added.
 	 */
@@ -169,8 +200,13 @@ public class Token
 		else res.append(deprel);
 		// 9
 		res.append("\t");
-		if (deps == null || deps.length() < 1) res.append("_");
-		else res.append(deps);
+		if (deps == null || deps.size() < 1) res.append("_");
+		else {
+
+			res.append(deps.stream().sorted(Comparator.comparingDouble(d -> d.sortValue))
+					.map(EnhencedDep::toConllU)	.reduce((s1, s2) -> s1 + "|" + s2)
+					.orElse("_"));
+		}
 		// 10
 		res.append("\t");
 		if (misc == null|| misc.length() < 1) res.append("_");
