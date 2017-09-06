@@ -1,6 +1,6 @@
 
 :: Prepare LVTB data for transforming (your data goes into folder "data")
-perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --ord mode=TOKEN --knit
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --ord mode=TOKEN --knit
 
 :: Copy all the data from data/knitted to the LVTB2UD data folder
 :: (with default IntelliJ configuration it is in CorporaTools/LVTB2UD/out/production)
