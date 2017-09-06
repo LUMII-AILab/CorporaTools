@@ -2,7 +2,7 @@ package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 

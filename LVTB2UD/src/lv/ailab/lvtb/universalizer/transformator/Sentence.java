@@ -5,6 +5,8 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
+import lv.ailab.lvtb.universalizer.util.Tuple;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -152,7 +154,7 @@ public class Sentence
 		if (child.equals(parent) || child.isSameNode(parent)) return;
 
 		Token childToken = pmlaToConll.get(Utils.getId(child));
-		childToken.head = rootToken.getFirstColumn();
+		childToken.head = Tuple.of(rootToken.getFirstColumn(), rootToken);
 		if (childDeprel == null)
 			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
 		else childToken.deprel = childDeprel;

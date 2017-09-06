@@ -2,7 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -169,7 +169,7 @@ public class DepRelLogic
 								"./reduction", pmlParent);
 						if (reduction.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
 							return UDv2Relations.NSUBJ;
-						if (reduction.matches("v..[^p].....p.*||v..pd...p.*"))
+						if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
 							return UDv2Relations.NSUBJ_PASS;
 						//if (reduction.matches("v..n.*"))
 						//	return  URelations.NMOD;
@@ -260,16 +260,7 @@ public class DepRelLogic
 			if (parentTag.matches("v..pd.*")) return UDv2Relations.XCOMP;
 			if (parentTag.matches("[nampxy].*")) return UDv2Relations.ACL;
 		}
-		// Simple nominal SPC
-		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
-			tag.matches("x.*|y.*") && parentTag.matches("v..p....ps.*"))
-			return UDv2Relations.OBL;
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y.*"))
-			return UDv2Relations.ACL;
-
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
-		// SPC with comparison
-		if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return UDv2Relations.ADVCL;
 		// prepositional SPC
 		if (xType != null && xType.equals(LvtbXTypes.XPREP))
 		{
@@ -279,10 +270,14 @@ public class DepRelLogic
 			NodeList basElems = (NodeList)XPathEngine.get().evaluate(
 					"./children/xinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 					aNode, XPathConstants.NODESET);
+
+			// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
 			if (preps.getLength() > 1)
-				warnOut.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.PREP);
+				warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\".\n",
+						xType, Utils.getId(aNode), LvtbRoles.PREP);
 			if (basElems.getLength() > 1)
-				warnOut.printf("\"%s\" has multiple \"%s\"", xType, LvtbRoles.BASELEM);
+				warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\".\n",
+						xType, Utils.getId(aNode), LvtbRoles.BASELEM);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
 					&& baseElemTag != null && baseElemTag.matches("[nampxy].*")
@@ -291,6 +286,17 @@ public class DepRelLogic
 			else if (parentTag.matches("[nampxy].*|v..pd.*"))
 				return UDv2Relations.NMOD;
 		}
+
+		// Simple nominal SPC
+		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*") ||
+			tag.matches("x.*|y.*") && parentTag.matches("v..p....ps.*"))
+			return UDv2Relations.OBL;
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y.*"))
+			return UDv2Relations.ACL;
+
+		// SPC with comparison
+		if (xType != null && xType.equals(LvtbXTypes.XSIMILE)) return UDv2Relations.ADVCL;
+
 		// Participal SPC
 		if (tag.matches("v..p[pu].*")) return UDv2Relations.ADVCL;
 

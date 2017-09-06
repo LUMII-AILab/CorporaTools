@@ -1,5 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
+import lv.ailab.lvtb.universalizer.util.Tuple;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -69,8 +71,9 @@ public class Token
 	/**
 	 * 7th column.
 	 * HEAD: Head of the current token, which is either a value of ID or zero (0).
+	 * String representation and actual head token or null for Root.
 	 */
-	public String head = null;
+	public Tuple<String, Token> head = null;
 	/**
 	 * 8th column.
 	 * DEPREL: Universal Stanford dependency relation to the HEAD
@@ -192,8 +195,8 @@ public class Token
 		}
 		// 7
 		res.append("\t");
-		if (head == null || head.isEmpty()) res.append("_");
-		else res.append(head);
+		if (head == null || head.first.isEmpty()) res.append("_");
+		else res.append(head.first);
 		// 8
 		res.append("\t");
 		if (deprel == null) res.append("_");

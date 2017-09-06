@@ -4,7 +4,8 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.Tuple;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -257,7 +258,7 @@ public class PhraseTransformator
 				s.allAsDependents(subroot, nextPart, pmcType, null, warnOut);
 				Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
 				subrootTok.deprel = UDv2Relations.PARATAXIS;
-				subrootTok.head = rootTok.getFirstColumn();
+				subrootTok.head = Tuple.of(rootTok.getFirstColumn(), rootTok);
 			}
 		}
 		else s.allAsDependents(newRoot, children, pmcType, null, warnOut);
@@ -320,7 +321,7 @@ public class PhraseTransformator
 					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, warnOut);
 			Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 			subrootToken.deprel = UDv2Relations.PARATAXIS;
-			subrootToken.head = newRootToken.getFirstColumn();
+			subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 			semicOrd = nextSemicOrd;
 		}
 		// last
@@ -328,7 +329,7 @@ public class PhraseTransformator
 				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, warnOut);
 		Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 		subrootToken.deprel = UDv2Relations.PARATAXIS;
-		subrootToken.head = newRootToken.getFirstColumn();
+		subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 
 		return newRoot;
 	}
@@ -454,13 +455,13 @@ public class PhraseTransformator
 							"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
 					Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 					Token vToken = s.pmlaToConll.get(Utils.getId(lastOfFirst));
-					vToken.head = newRootToken.getFirstColumn();
+					vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 					vToken.deprel = UDv2Relations.ADVMOD;
 					if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 					{
 						Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
 						//conjToken.deprel = UDv2Relations.FIXED;
-						conjToken.head = vToken.getFirstColumn();
+						conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);
 					}
 					return last;
 				}
@@ -475,13 +476,13 @@ public class PhraseTransformator
 						"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token vToken = s.pmlaToConll.get(Utils.getId(first));
-				vToken.head = newRootToken.getFirstColumn();
+				vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 				vToken.deprel = UDv2Relations.ADVMOD;
 				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 				{
 					Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
 					//conjToken.deprel = UDv2Relations.FIXED;
-					conjToken.head = vToken.getFirstColumn();
+					conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);
 				}
 				return last;
 			}
@@ -490,7 +491,7 @@ public class PhraseTransformator
 			{
 				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token tToken = s.pmlaToConll.get(Utils.getId(first));
-				tToken.head = newRootToken.getFirstColumn();
+				tToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 				tToken.deprel = UDv2Relations.DET;
 				return last;
 			}
@@ -544,7 +545,7 @@ public class PhraseTransformator
 				if (latestRoot != null) // Nothing to add to last xcomp
 				{
 					Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
-					oldR.head = newR.getFirstColumn();
+					oldR.head = Tuple.of(newR.getFirstColumn(), newR);
 					oldR.deprel = UDv2Relations.XCOMP;
 				}
 				latestRoot = newRoot;

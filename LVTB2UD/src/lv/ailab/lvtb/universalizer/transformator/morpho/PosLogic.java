@@ -3,7 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import org.w3c.dom.NodeList;

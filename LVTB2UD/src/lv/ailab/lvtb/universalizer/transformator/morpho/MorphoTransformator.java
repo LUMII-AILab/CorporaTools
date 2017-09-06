@@ -5,9 +5,8 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
-import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
-import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.Tuple;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -71,7 +70,7 @@ public class MorphoTransformator {
 			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
 				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
 			else warnOut.println(
-					"Node id \"" + mId + "\"does not match paragraph searching pattern!");
+					"Node id \"" + mId + "\" does not match paragraph searching pattern!");
 			if (prevMId!= null && !prevMId.equals(mId))
 				paragraphChange = true;
 
@@ -163,7 +162,7 @@ public class MorphoTransformator {
 					nextTok.upostag = UDv2PosTag.PART;
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, warnOut);
 				}
-				nextTok.head = firstTok.getFirstColumn();
+				nextTok.head = Tuple.of(firstTok.getFirstColumn(), firstTok);
 				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
 					nextTok.misc = "SpaceAfter=No";
 				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
@@ -203,5 +202,21 @@ public class MorphoTransformator {
 			return "_";
 		if (ending == null || ending.length() < 1) return lvtbTag;
 		else return lvtbTag + ending;
+	}
+
+	/**
+	 * Currently extracted from pre-made CoNLL table.
+	 * TODO: use PML tree instead?
+	 */
+	public void extractSendenceText()
+	{
+		s.text = "";
+		for (Token t : s.conll)
+		{
+			s.text = s.text + t.form;
+			if (t.misc == null || !t.misc.matches(".*?\\bSpaceAfter=No\\b.*"))
+				s.text = s.text + " ";
+		}
+		s.text = s.text.trim();
 	}
 }

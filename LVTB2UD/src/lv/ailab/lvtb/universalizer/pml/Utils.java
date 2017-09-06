@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.pml;
 
-import lv.ailab.lvtb.universalizer.transformator.XPathEngine;
+import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
