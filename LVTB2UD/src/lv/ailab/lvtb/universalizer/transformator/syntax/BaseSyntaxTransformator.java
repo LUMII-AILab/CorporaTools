@@ -41,7 +41,7 @@ public class BaseSyntaxTransformator
 	/**
 	 * Remove the ellipsis nodes that can be ignored in latter processing.
 	 * @return	 true if all ellipsis was removed
-	 * @throws XPathExpressionException    unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
