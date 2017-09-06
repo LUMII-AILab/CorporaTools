@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 
@@ -107,13 +108,22 @@ public class LvtbToUdUI
 		if (pmlTrees.getLength() > 0)
 		{
 			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
-			if ("AUTO".equals(firstComment))
+			if (firstComment != null && firstComment.startsWith("AUTO"))
 			{
-				warningsLog.println("File starts with \"AUTO\", everything is ommited!");
-				System.out.println("File starts with \"AUTO\", everything is ommited!");
+				warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
+				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
 				return pmlTrees.getLength();
 			}
-
+			for (int i = 0; i < pmlTrees.getLength(); i++)
+			{
+				String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
+				if (comment != null && comment.startsWith("FIXME"))
+				{
+					warningsLog.println("File contains with \"FIXME\" comment, everything is ommited!");
+					System.out.println("File contains with \"FIXME\" comment, everything is ommited!");
+					return pmlTrees.getLength();
+				}
+			}
 			// Print out information about the start of the new document
 			conllOut.write("# newDoc");
 			String firstSentId = Utils.getId(pmlTrees.item(0));
