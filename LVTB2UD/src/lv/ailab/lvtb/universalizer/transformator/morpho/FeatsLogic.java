@@ -4,8 +4,6 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import lv.semti.morphology.analyzer.Analyzer;
-import lv.semti.morphology.analyzer.Word;
 import lv.semti.morphology.analyzer.Wordform;
 import lv.semti.morphology.attributes.AttributeNames;
 import org.w3c.dom.Node;
@@ -23,20 +21,13 @@ import java.util.ArrayList;
  */
 public class FeatsLogic
 {
-	protected static Analyzer morphoEngineSing;
-
-	protected static Analyzer getMorpho() throws Exception
-	{
-		if (morphoEngineSing == null) morphoEngineSing = new Analyzer();
-		return morphoEngineSing;
-	}
-
 	public static ArrayList<UDv2Feat> getUFeats(
 			String form, String lemma, String xpostag, Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
-
+		String comprLemma = lemma;
+		if (comprLemma == null) comprLemma = ""; // To avoid null pointer exceptions.
 		// Inflectional features: nominal
 
 		if (xpostag.matches("[na].m.*|v..p.m.*|[pm]..m.*")) res.add(UDv2Feat.GENDER_MASC);
@@ -55,23 +46,20 @@ public class FeatsLogic
 		if (xpostag.matches("[na]...v.*|v..p...v.*")) res.add(UDv2Feat.CASE_VOC);
 
 		if (xpostag.matches("a.....n.*|v..p......n.*")) res.add(UDv2Feat.DEFINITE_IND);
-		if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_SPEC);
+		if (xpostag.matches("mo.*") && comprLemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_SPEC);
 		if (xpostag.matches("a.....y.*|v..p......y.*")) res.add(UDv2Feat.DEFINITE_DEF);
-		if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_DEF);
+		if (xpostag.matches("mo.*") && !comprLemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_DEF);
 
 		//if (xpostag.matches("a.....p.*|rp.*|v.ypd.*")) res.add(UDv2Feat.DEGREE_POS);
 		if (xpostag.matches("a.....p.*|rp.*|mo.*")) res.add(UDv2Feat.DEGREE_POS);
 		if (xpostag.matches("a.....c.*|rc.*")) res.add(UDv2Feat.DEGREE_CMP);
 		if (xpostag.matches("a.....s.*|rs.*")) res.add(UDv2Feat.DEGREE_SUP);
-		if (xpostag.matches("v..pd.*"))
+		if (xpostag.matches("v..pd.*") && form != null)
 		{
-			try
-			{
-				Word analysis = getMorpho().analyze(form);
-				Wordform correctOne = analysis.getMatchingWordform(
-						xpostag.contains("_") ? xpostag.substring(0, xpostag.indexOf('_')) : xpostag,
-						false);
-				//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			Wordform correctOne = AnalyzerWrapper.getAVPairs(form, xpostag, warnOut);
+			if (correctOne == null)
+				warnOut.println("Could not initialize Morphology, Degree for participles is not added.");
+			else{
 				String degree = correctOne.getValue(AttributeNames.i_Degree);
 				if (degree == null || degree.equals(AttributeNames.v_Positive)) res.add(UDv2Feat.DEGREE_POS);
 				else if (degree.equals(AttributeNames.v_Comparative)) res.add(UDv2Feat.DEGREE_CMP);
@@ -79,13 +67,7 @@ public class FeatsLogic
 				else warnOut.printf("\"%s\" with tag %s has unrecognized degree value %s",
 							form, xpostag, degree);
 			}
-			catch (Exception e)
-			{
-				// TODO: Pēc tagseta izmaiņām pārtaisīt uz taga analīzi.
-				warnOut.println("Could not initialize Morphology, Degree for participles is not added.");
-				e.printStackTrace(warnOut);
-			}
-
+			// TODO: Pēc tagseta izmaiņām pārtaisīt uz taga analīzi.
 		}
 		// Patalogical cases like "pirmākais un vispirmākais" are not represented.
 
@@ -95,10 +77,10 @@ public class FeatsLogic
 		if (xpostag.matches("v..[^pn].*")) res.add(UDv2Feat.VERBFORM_FIN); // According to UD rule of thumb.
 		if (xpostag.matches("v..n.*")) res.add(UDv2Feat.VERBFORM_INF);
 		if (xpostag.matches("v..pd.*")) res.add(UDv2Feat.VERBFORM_PART);
-		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
+		if (xpostag.matches("a.*") && comprLemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
 		if (xpostag.matches("v..p[pu].*")) res.add(UDv2Feat.VERBFORM_CONV);
-		if (xpostag.matches("n.....4.*") && lemma.endsWith("šana")) res.add(UDv2Feat.VERBFORM_VNOUN);
-		if (xpostag.matches("n.....r.*") && lemma.endsWith("šanās")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		if (xpostag.matches("n.....4.*") && comprLemma.endsWith("šana")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		if (xpostag.matches("n.....r.*") && comprLemma.endsWith("šanās")) res.add(UDv2Feat.VERBFORM_VNOUN);
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.MOOD_IND);
 		if (xpostag.matches("v..m.*")) res.add(UDv2Feat.MOOD_IMP);
@@ -114,55 +96,55 @@ public class FeatsLogic
 		if (xpostag.matches("v..pd....s.*")) res.add(UDv2Feat.ASPECT_PERF);
 
 		if (xpostag.matches("v..[^p].....a.*|v..p.....a.*")) res.add(UDv2Feat.VOICE_ACT);
-		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
+		if (xpostag.matches("a.*") && comprLemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
 		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UDv2Feat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.EVIDENT_FH);
 		if (xpostag.matches("v..r.*")) res.add(UDv2Feat.EVIDENT_NFH);
 
 		if (xpostag.matches("p.1.*|v..[^p]...1.*")) res.add(UDv2Feat.PERSON_1);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_1);
+		if (xpostag.matches("a.*") && comprLemma.matches("(man|mūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_1);
 		if (xpostag.matches("p.2.*|v..[^p]...2.*")) res.add(UDv2Feat.PERSON_2);
-		if (xpostag.matches("a.*") && lemma.matches("(tav|jūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_2);
+		if (xpostag.matches("a.*") && comprLemma.matches("(tav|jūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_2);
 		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UDv2Feat.PERSON_3);
-		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UDv2Feat.PERSON_3);
+		if (xpostag.matches("a.*") && comprLemma.matches("viņēj(ais|ā)")) res.add(UDv2Feat.PERSON_3);
 
 		// Minimal annotations, for nomens manual labor is needed.
 		if (xpostag.matches("v..[^p]......n.*")) res.add(UDv2Feat.POLARITY_POS);
-		if (xpostag.matches("is.*") && lemma.matches("jā")) res.add(UDv2Feat.POLARITY_POS);
+		if (xpostag.matches("is.*") && comprLemma.matches("jā")) res.add(UDv2Feat.POLARITY_POS);
 		if (xpostag.matches("v..[^p]......y.*")) res.add(UDv2Feat.POLARITY_NEG);
-		if (xpostag.matches("qs.*") && lemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
-		if (xpostag.matches("is.*") && lemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
+		if (xpostag.matches("qs.*") && comprLemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
+		if (xpostag.matches("is.*") && comprLemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
 
 		// Lexical features
 
 		if (xpostag.matches("p[ps].*")) res.add(UDv2Feat.PRONTYPE_PRS);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+		if (xpostag.matches("a.*") && comprLemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
 			res.add(UDv2Feat.PRONTYPE_PRS);
 		if (xpostag.matches("px.*")) res.add(UDv2Feat.PRONTYPE_RCP);
 		if (xpostag.matches("pq.*")) res.add(UDv2Feat.PRONTYPE_INT);
-		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
+		if (xpostag.matches("r0.*") && comprLemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
 			res.add(UDv2Feat.PRONTYPE_INT);
-		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
+		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
 				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_INT);
 		if (xpostag.matches("pr.*")) res.add(UDv2Feat.PRONTYPE_REL);
 		if (xpostag.matches("pd.*")) res.add(UDv2Feat.PRONTYPE_DEM);
-		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
+		if (xpostag.matches("r0.*") && comprLemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
 			res.add(UDv2Feat.PRONTYPE_DEM);
-		if (xpostag.matches("n.*") && lemma.equals("t(ur|ej)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.equals("t(ur|ej)iene") &&
 				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_DEM);
 		if (xpostag.matches("pg.*")) res.add(UDv2Feat.PRONTYPE_TOT);
-		if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
+		if (xpostag.matches("r0.*") && comprLemma.matches("vienmēr|visur|visad(iņ)?"))
 			res.add(UDv2Feat.PRONTYPE_TOT);
-		if (xpostag.matches("n.*") && lemma.equals("vis(ur|ad)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.equals("vis(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_TOT);
 		if (xpostag.matches("p.....y.*")) res.add(UDv2Feat.PRONTYPE_NEG);
-		if (xpostag.matches("r0.*") && lemma.matches("ne.*"))
+		if (xpostag.matches("r0.*") && comprLemma.matches("ne.*"))
 			res.add(UDv2Feat.PRONTYPE_NEG);
-		if (xpostag.matches("n.*") && lemma.equals("nek(ur|ad)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.equals("nek(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("pi.*")) res.add(UDv2Feat.PRONTYPE_IND);
@@ -176,7 +158,7 @@ public class FeatsLogic
 				res.remove(UDv2Feat.PRONTYPE_INT);
 			}
 		}
-		if (xpostag.matches("n.*") && lemma.equals("kuriene") &&
+		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
 				LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
 			NodeList result = (NodeList) XPathEngine.get()
@@ -189,12 +171,12 @@ public class FeatsLogic
 
 		if (xpostag.matches("mc.*|xn.*")) res.add(UDv2Feat.NUMTYPE_CARD); // Nouns like "simts", "desmits" are not marked.
 		if (xpostag.matches("mo.*|xo.*")) res.add(UDv2Feat.NUMTYPE_ORD);
-		if (xpostag.matches("r0.*") && lemma.matches("(vien|div|trīs|četr|piec|seš|septiņ|astoņ|deviņ|desmit|pusotr)reiz"))
+		if (xpostag.matches("r0.*") && comprLemma.matches("(vien|div|trīs|četr|piec|seš|septiņ|astoņ|deviņ|desmit|pusotr)reiz"))
 			res.add(UDv2Feat.NUMTYPE_MULT); // Incomplete list.
 		if (xpostag.matches("mf.*")) res.add(UDv2Feat.NUMTYPE_FRAC); // Nouns like "desmitdaļa" are not marked.
 
 		if (xpostag.matches("ps.*")) res.add(UDv2Feat.POSS_YES);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+		if (xpostag.matches("a.*") && comprLemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
 			res.add(UDv2Feat.POSS_YES);
 
 		if (xpostag.matches("xf.*")) res.add(UDv2Feat.FOREIGN_YES);

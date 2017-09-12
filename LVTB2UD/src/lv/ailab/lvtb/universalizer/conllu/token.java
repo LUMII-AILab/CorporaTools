@@ -171,13 +171,16 @@ public class Token
 		res.append(getFirstColumn());
 		// 2
 		res.append("\t");
-		res.append(form);
+		if (form == null || form.length() < 1) res.append("_");
+		else res.append(form);
 		// 3
 		res.append("\t");
-		res.append(lemma);
+		if (lemma == null || lemma.length() < 1) res.append("_");
+		else res.append(lemma);
 		// 4
 		res.append("\t");
-		res.append(upostag.toString());
+		if (upostag == null) res.append("_");
+		else res.append(upostag.toString());
 		// 5
 		res.append("\t");
 		if (xpostag == null || xpostag.length() < 1) res.append("_");

@@ -30,6 +30,8 @@ public class PosLogic
 	throws XPathExpressionException
 	{
 		String lvtbRole = Utils.getRole(aNode);
+		String comprLemma = lemma;
+		if (comprLemma == null) comprLemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;
@@ -37,8 +39,8 @@ public class PosLogic
 		else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
 		else if (xpostag.matches("a.*"))
 		{
-			if (lemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
-					lemma.matches("(manējā|tavējā|mūsējā|jūsējā|viņējā|savējā|daudzas|vairākas)"))
+			if (comprLemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
+					comprLemma.matches("(manējā|tavējā|mūsējā|jūsējā|viņējā|savējā|daudzas|vairākas)"))
 			{
 				if (lvtbRole.equals("attr")) return UDv2PosTag.DET;
 				else return UDv2PosTag.PRON;
@@ -49,7 +51,7 @@ public class PosLogic
 		else if (xpostag.matches("pd.*"))
 		{
 			if (lvtbRole.equals(LvtbRoles.ATTR)) return UDv2PosTag.DET;
-			else if (lvtbRole.equals(LvtbRoles.BASELEM) && lemma.matches("tād[sa]"))
+			else if (lvtbRole.equals(LvtbRoles.BASELEM) && comprLemma.matches("tād[sa]"))
 			{
 				Node parent = Utils.getPMLParent(aNode);
 				if (!LvtbXTypes.SUBRANAL.equals(Utils.getRole(parent)))
@@ -82,9 +84,9 @@ public class PosLogic
 		else if (xpostag.matches("z.*")) return UDv2PosTag.PUNCT;
 		else if (xpostag.matches("y.*"))
 		{
-			if (lemma.matches("\\p{Lu}+")) return UDv2PosTag.PROPN;
-			else if (lemma.matches("(utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.)")) return UDv2PosTag.SYM;
-			else if (lemma.matches("\\p{Ll}+-\\p{Ll}")) return UDv2PosTag.NOUN; // Or rarely PROPN
+			if (comprLemma.matches("\\p{Lu}+")) return UDv2PosTag.PROPN;
+			else if (comprLemma.matches("(utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.)")) return UDv2PosTag.SYM;
+			else if (comprLemma.matches("\\p{Ll}+-\\p{Ll}")) return UDv2PosTag.NOUN; // Or rarely PROPN
 			else return UDv2PosTag.SYM; // Or sometimes PROPN/NOUN
 		}
 		else if (xpostag.matches("xf.*")) return UDv2PosTag.X; // Or sometimes PROPN/NOUN

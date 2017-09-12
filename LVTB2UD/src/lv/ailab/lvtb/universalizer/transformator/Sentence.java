@@ -48,6 +48,7 @@ public class Sentence
 	 * child will be the parent of the dependency subtree.
 	 */
 	public HashMap<String, Token> pmlaToConll = new HashMap<>();
+	public HashMap<String, Token> pmlaToExtConll = new HashMap<>();
 
 	public Sentence(Node pmlTree) throws XPathExpressionException
 	{

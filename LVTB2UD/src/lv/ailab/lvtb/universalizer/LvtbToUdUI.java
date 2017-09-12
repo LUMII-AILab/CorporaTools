@@ -30,6 +30,10 @@ import java.io.*;
  *
  * Transformation is done according to UD v2 guidelines.
  *
+ * NB! Transformator ignores files, where first sentence contains comment
+ * starting with 'AUTO'. Transformator also ignores files where any sentence
+ * contains comment starting with 'FIXME'.
+ *
  * Created on 2016-04-17.
  *
  * @author Lauma

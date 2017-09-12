@@ -4,6 +4,10 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
+import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
+import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
+import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import lv.ailab.lvtb.universalizer.util.Tuple;
 import org.w3c.dom.Node;
@@ -199,6 +203,7 @@ public class BaseSyntaxTransformator
 		//// Process reduction nodes.
 		else if (Utils.isReductionNode(aNode))
 		{
+
 			Node redRoot = EllipsisLogic.newParent(aNode, drLogic, warnOut);
 			if (redRoot == null)
 			{
@@ -207,6 +212,36 @@ public class BaseSyntaxTransformator
 			}
 			newRoot = redRoot;
 			transformSubtree(newRoot);
+
+			// Make new token for ellipsis.
+			Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
+			int position = s.conll.indexOf(newRootToken) + 1;
+			while (newRootToken.idBegin == s.conll.get(position).idBegin)
+				position++;
+			Token decimalToken = new Token();
+			decimalToken.idBegin = newRootToken.idBegin;
+			decimalToken.idSub = s.conll.get(position-1).idSub+1;
+			decimalToken.idEnd = decimalToken.idBegin;
+			decimalToken.xpostag = MorphoTransformator.getXpostag(
+					Utils.getReductionTagPart(aNode), null);
+			decimalToken.form = Utils.getReductionFormPart(aNode);
+			if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
+				warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n",
+						Utils.getId(aNode), Utils.getReduction(aNode));
+			else
+			{
+				if (decimalToken.form != null && !decimalToken.form.isEmpty())
+					decimalToken.lemma = AnalyzerWrapper.getLemma(
+							decimalToken.form, decimalToken.xpostag, warnOut);
+				decimalToken.upostag = PosLogic.getUPosTag(
+						decimalToken.lemma, decimalToken.xpostag, aNode, warnOut);
+				decimalToken.feats = FeatsLogic.getUFeats(
+						decimalToken.form, decimalToken.lemma, decimalToken.xpostag, aNode, warnOut);
+			}
+			s.conll.add(position, decimalToken);
+			s.pmlaToExtConll.put(Utils.getId(newRoot), decimalToken);
+			// TODO Te vajag ielikt, lai uztaisa virsotni priekš izlaistās virsotnes
+			// TODO un pielikt atbilsmi s.pmlaToExtConll
 			if (hasFailed) return;
 		}
 
@@ -215,6 +250,7 @@ public class BaseSyntaxTransformator
 
 		//// Process dependants (except the newRoot).
 		relinkDependents(aNode, newRoot);
+		// TODO te vajag speciālgadījumu, ja ext root nesakrīt ar simple root.
 	}
 
 

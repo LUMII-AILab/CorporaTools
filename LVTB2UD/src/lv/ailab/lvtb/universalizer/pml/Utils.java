@@ -99,6 +99,42 @@ public class Utils
 		if (node == null) return null;
 		return XPathEngine.get().evaluate("./reduction", node);
 	}
+
+	/**
+	 * Find reduction field value for given node and cut off the ending part in braces.
+	 * @param node node to analyze
+	 * @return	reduction tag
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static String getReductionTagPart(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		String red = XPathEngine.get().evaluate("./reduction", node);
+		if (red != null && !red.isEmpty() && red.contains("("))
+			return red.substring(0, red.indexOf('('));
+		return red;
+	}
+	/**
+	 * Find reduction field value for given node and cut off the begining part
+	 * before braces and braces themselves.
+	 * @param node node to analyze
+	 * @return	reduction wordform
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static String getReductionFormPart(Node node) throws XPathExpressionException
+	{
+		if (node == null) return null;
+		String red = XPathEngine.get().evaluate("./reduction", node);
+		if (red == null || red.isEmpty() || !red.contains("("))
+			return null;
+		red = red.substring(red.indexOf('(')+1);
+		if (red.endsWith(")")) red = red.substring(0, red.length()-1);
+		return red;
+	}
 	/**
 	 * Check, if given node is a reduction node
 	 * @param node node to analyze
