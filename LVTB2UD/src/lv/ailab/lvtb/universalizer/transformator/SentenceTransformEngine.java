@@ -22,8 +22,8 @@ public class SentenceTransformEngine
 {
 	public Sentence s;
 	protected MorphoTransformator morphoTransf;
-	protected BaseSyntaxTransformator syntTransf;
-	protected EnhancedSyntaxTransformator enhSyntTransf;
+	protected TreesyntaxTransformator syntTransf;
+	protected GraphsyntaxTransformator enhSyntTransf;
 	protected PrintWriter warnOut;
 	public static boolean DEBUG = false;
 	public static boolean WARN_ELLIPSIS = false;
@@ -41,8 +41,8 @@ public class SentenceTransformEngine
 		s = new Sentence(pmlTree);
 		this.warnOut = warnOut;
 		morphoTransf = new MorphoTransformator(s, warnOut);
-		syntTransf = new BaseSyntaxTransformator(s, warnOut, INDUCE_PHRASE_TAGS, DEBUG);
-		enhSyntTransf = new EnhancedSyntaxTransformator(s, warnOut);
+		syntTransf = new TreesyntaxTransformator(s, warnOut, INDUCE_PHRASE_TAGS, DEBUG);
+		enhSyntTransf = new GraphsyntaxTransformator(s, warnOut);
 	}
 
 	/**

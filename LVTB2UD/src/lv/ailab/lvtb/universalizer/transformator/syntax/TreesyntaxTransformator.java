@@ -1,7 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
@@ -9,7 +8,6 @@ import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import lv.ailab.lvtb.universalizer.util.Tuple;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -17,7 +15,15 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
 
-public class BaseSyntaxTransformator
+/**
+ * This is the part of the transformation where base UD tree is made. This part
+ * is also responsible for creating ellipsis tokens for ehnahnced dependencies.
+ * This class creates creates ellipsis-related enhanced dependency links and
+ * copies those dependency links, which are the same for both base UD and
+ * enhanced. Thus, the part of enhanced dependency graph made by this class is
+ * a backbone tree connecting all nodes.
+ */
+public class TreesyntaxTransformator
 {
 	public Sentence s;
 	/**
@@ -32,7 +38,7 @@ public class BaseSyntaxTransformator
 	protected PrintWriter warnOut;
 
 
-	public BaseSyntaxTransformator(Sentence sent, PrintWriter warnOut,
+	public TreesyntaxTransformator(Sentence sent, PrintWriter warnOut,
 								   boolean inducePhraseTags, boolean debug)
 	{
 		s = sent;
