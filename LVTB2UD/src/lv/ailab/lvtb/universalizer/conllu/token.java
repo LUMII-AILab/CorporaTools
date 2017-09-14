@@ -104,6 +104,41 @@ public class Token
 		this.xpostag = xpostag;
 	}
 
+	@Override
+	public boolean equals (Object o)
+	{
+		if (o == null) return false;
+		if (this.getClass() != o.getClass()) return false;
+		if (this == o) return true;
+		Token other = (Token) o;
+		return (idBegin == other.idBegin && idSub == other.idSub && idEnd == other.idEnd &&
+				(form == other.form || form != null && form.equals(other.form)) &&
+				(lemma == other.lemma || lemma != null && lemma.equals(other.lemma)) &&
+				upostag == other.upostag &&
+				(xpostag == other.xpostag || xpostag != null && xpostag.equals(other.xpostag)) &&
+				(feats == other.feats || feats != null && feats.equals(other.feats)) &&
+				(head == other.head || head != null && head.equals(other.head)) &&
+				deprel == other.deprel &&
+				(deps == other.deps || deps != null && deps.equals(other.deps)) &&
+				(misc == other.misc || misc != null && misc.equals(other.misc)));
+	}
+	@Override
+	public int hashCode()
+	{
+		return 7477 * Integer.hashCode(idBegin) +
+				6011 * Integer.hashCode(idSub) +
+				5737 * Integer.hashCode(idEnd) +
+				4001 * (form == null ? 1 : form.hashCode()) +
+				3991 * (lemma == null ? 1 : lemma.hashCode()) +
+				3301 * (upostag == null ? 1 : upostag.hashCode()) +
+				2621 * (xpostag == null ? 1 : xpostag.hashCode()) +
+				2141 * (feats == null ? 1 : feats.hashCode()) +
+				1721 * (head == null ? 1 : head.hashCode()) +
+				1171 * (deprel == null ? 1 : deprel.hashCode()) +
+				677 * (deps == null ? 1 : deps.hashCode()) +
+				3 * (misc == null ? 1 : misc.hashCode());
+	}
+
 	/**
 	 * Concatenates the three inner integers to appropriate string ID. Assumes
 	 * that ID can be either decimal or interval, but not both

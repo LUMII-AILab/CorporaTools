@@ -5,7 +5,6 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import lv.ailab.lvtb.universalizer.util.Tuple;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -147,7 +146,8 @@ public class PhraseTransformator
 
 		// Find the structure root.
 		NodeList preds = (NodeList)XPathEngine.get().evaluate(
-				"./children/node[role='" + LvtbRoles.PRED +"']", pmcNode, XPathConstants.NODESET);
+				"./children/node[role='" + LvtbRoles.PRED +"']",
+				pmcNode, XPathConstants.NODESET);
 		Node newRoot = null;
 		if (preds != null && preds.getLength() > 1)
 			warnOut.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
@@ -156,7 +156,8 @@ public class PhraseTransformator
 		else
 		{
 			preds = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
+					"./children/node[role='" + LvtbRoles.BASELEM +"']",
+					pmcNode, XPathConstants.NODESET);
 			newRoot = Utils.getFirstByDescOrd(preds);
 		}
 		if (newRoot == null)
@@ -192,7 +193,8 @@ public class PhraseTransformator
 
 		// Find the structure root.
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
-				"./children/node[role='" + LvtbRoles.BASELEM +"']", pmcNode, XPathConstants.NODESET);
+				"./children/node[role='" + LvtbRoles.BASELEM +"']",
+				pmcNode, XPathConstants.NODESET);
 		Node newRoot = null;
 		if (basElems != null && basElems.getLength() > 0) newRoot = Utils.getFirstByDescOrd(basElems);
 		if (newRoot == null)
@@ -256,9 +258,11 @@ public class PhraseTransformator
 
 				// process found part
 				s.allAsDependents(subroot, nextPart, pmcType, null, warnOut);
-				Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
+				s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
+						UDv2Relations.PARATAXIS, true);
+				/*Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
 				subrootTok.deprel = UDv2Relations.PARATAXIS;
-				subrootTok.head = Tuple.of(rootTok.getFirstColumn(), rootTok);
+				subrootTok.head = Tuple.of(rootTok.getFirstColumn(), rootTok);*/
 			}
 		}
 		else s.allAsDependents(newRoot, children, pmcType, null, warnOut);
@@ -313,23 +317,27 @@ public class PhraseTransformator
 		int semicOrd = Utils.getOrd(sortedSemicolons.get(0));
 		Node newRoot = coordPartsChildListToUD(
 				Utils.ordSplice(sortedChildren, 0, semicOrd), coordType, warnOut);
-		Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
+		//Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
 		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
 			int nextSemicOrd = Utils.getOrd(sortedSemicolons.get(i));
 			Node newSubroot = coordPartsChildListToUD(
 					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, warnOut);
-			Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
+			s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+					UDv2Relations.PARATAXIS, true);
+			/*Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 			subrootToken.deprel = UDv2Relations.PARATAXIS;
-			subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
+			subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);*/
 			semicOrd = nextSemicOrd;
 		}
 		// last
 		Node newSubroot = coordPartsChildListToUD(
 				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, warnOut);
-		Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
+		s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+				UDv2Relations.PARATAXIS, true);
+		/*Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 		subrootToken.deprel = UDv2Relations.PARATAXIS;
-		subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
+		subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);*/
 
 		return newRoot;
 	}
@@ -443,7 +451,6 @@ public class PhraseTransformator
 			if (firstPhrase != null)
 			{
 				NodeList firstChildren = Utils.getAllPMLChildren(firstPhrase);
-				//Node firstOfFirst = Utils.getFirstByDescOrd(firstChildren);
 				Node lastOfFirst = Utils.getLastByDescOrd(firstChildren);
 				// "Ne vairāk kā x"
 				if (firstChildren != null && firstChildren.getLength() == 2  &&
@@ -453,15 +460,17 @@ public class PhraseTransformator
 				{
 					NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
 							"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
-					Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+					/*Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 					Token vToken = s.pmlaToConll.get(Utils.getId(lastOfFirst));
 					vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
-					vToken.deprel = UDv2Relations.ADVMOD;
+					vToken.deprel = UDv2Relations.ADVMOD;*/
+					s.setLink(last, lastOfFirst, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true);
 					if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 					{
-						Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+						s.changeHead(lastOfFirst, simileConjs.item(i));
+						/*Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
 						//conjToken.deprel = UDv2Relations.FIXED;
-						conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);
+						conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);*/
 					}
 					return last;
 				}
@@ -474,25 +483,28 @@ public class PhraseTransformator
 				// rearanged.
 				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
 						"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
-				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+				/*Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token vToken = s.pmlaToConll.get(Utils.getId(first));
 				vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
-				vToken.deprel = UDv2Relations.ADVMOD;
+				vToken.deprel = UDv2Relations.ADVMOD;*/
+				s.setLink(last, first, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true);
 				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 				{
-					Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
+					s.changeHead(first, simileConjs.item(i));
+					/*Token conjToken = s.pmlaToConll.get(Utils.getId(simileConjs.item(i)));
 					//conjToken.deprel = UDv2Relations.FIXED;
-					conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);
+					conjToken.head = Tuple.of(vToken.getFirstColumn(), vToken);*/
 				}
 				return last;
 			}
 			// "tāds kā x"
 			else if ("tāds".equals(Utils.getLemma(first)) || "tāda".equals(Utils.getLemma(first)))
 			{
-				Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
+				/*Token newRootToken = s.pmlaToConll.get(Utils.getId(last));
 				Token tToken = s.pmlaToConll.get(Utils.getId(first));
 				tToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
-				tToken.deprel = UDv2Relations.DET;
+				tToken.deprel = UDv2Relations.DET;*/
+				s.setLink(last, first, UDv2Relations.DET, UDv2Relations.DET, true);
 				return last;
 			}
 		}
@@ -541,12 +553,14 @@ public class PhraseTransformator
 				Node newRoot = buffer.peek();
 				if (buffer.size() > 1)
 					newRoot = noModXPredToUD(buffer, xType, xTag);
-				Token newR = s.pmlaToConll.get(Utils.getId(newRoot));
+				//Token newR = s.pmlaToConll.get(Utils.getId(newRoot));
 				if (latestRoot != null) // Nothing to add to last xcomp
 				{
-					Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
+					/*Token oldR = s.pmlaToConll.get(Utils.getId(latestRoot));
 					oldR.head = Tuple.of(newR.getFirstColumn(), newR);
-					oldR.deprel = UDv2Relations.XCOMP;
+					oldR.deprel = UDv2Relations.XCOMP;*/
+					s.setLink(newRoot, latestRoot, UDv2Relations.XCOMP,
+							UDv2Relations.XCOMP, true);
 				}
 				latestRoot = newRoot;
 				buffer = new LinkedList<>();
@@ -581,7 +595,7 @@ public class PhraseTransformator
 			else lastBasElem = n;
 		}
 		String auxLemma = Utils.getLemma(lastAux);
-		String auxTag = Utils.getTag(lastAux);
+		//String auxTag = Utils.getTag(lastAux);
 		String basElemTag = Utils.getTag(lastBasElem);
 
 		boolean nominal = false;
@@ -603,15 +617,18 @@ public class PhraseTransformator
 		if (nominal && lastAux != null && !auxLemma.matches("(ne)?būt"))
 			newRoot = lastAux;
 		s.allAsDependents(newRoot, sortedNodes, xType, null, warnOut);
+		// FIXME vai šeit nesakropļo galvu?
 		if (passive && lastAux != null)
 		{
-			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = UDv2Relations.AUX_PASS;
+			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
+			lastAuxTok.deprel = UDv2Relations.AUX_PASS;*/
+			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS, UDv2Relations.AUX_PASS, true);
 		}
 		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
 		{
-			Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = UDv2Relations.COP;
+			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
+			lastAuxTok.deprel = UDv2Relations.COP;*/
+			s.setLink(newRoot, lastAux, UDv2Relations.COP, UDv2Relations.COP, true);
 		}
 		return newRoot;
 	}

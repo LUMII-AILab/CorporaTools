@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.LvtbToUdUI;
+import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
@@ -41,14 +42,17 @@ public class Sentence
 	 * UD dependency tree as and conll-style array.
 	 */
 	public ArrayList<Token> conll = new ArrayList<>();
-	//public HashMap<Token, Node> conllToPmla = new HashMap<>();
 	/**
 	 * Mapping from A-level ids to CoNLL tokens.
 	 * Here goes phrase representing empty nodes, if it has been resolved, which
 	 * child will be the parent of the dependency subtree.
 	 */
 	public HashMap<String, Token> pmlaToConll = new HashMap<>();
-	public HashMap<String, Token> pmlaToExtConll = new HashMap<>();
+	/**
+	 * Additional mapping for enhanced dependencies. Only updated, when mapping
+	 * is different from pmlaToConll.
+	 */
+	public HashMap<String, Token> pmlaToEnhConll = new HashMap<>();
 
 	public Sentence(Node pmlTree) throws XPathExpressionException
 	{
@@ -126,9 +130,9 @@ public class Sentence
 		}
 	}
 	/**
-	 * Make a given node a child of the designated parent. Set UD for the child.
-	 * If designated parent is the same as child node, circular dependency is
-	 * not made, role is not set.
+	 * Make a given node a child of the designated parent. Set UD role for the
+	 * child. If designated parent is the same as child node, circular
+	 * dependency is not made, role is not set.
 	 * @param parent		designated parent
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
@@ -147,18 +151,21 @@ public class Sentence
 	throws XPathExpressionException
 	{
 		if (child == null ) return;
-
-		// Process root.
-		Token rootToken = pmlaToConll.get(Utils.getId(parent));
-
-		// Process child.
 		if (child.equals(parent) || child.isSameNode(parent)) return;
 
-		Token childToken = pmlaToConll.get(Utils.getId(child));
-		childToken.head = Tuple.of(rootToken.getFirstColumn(), rootToken);
+		if (childDeprel == null) childDeprel =
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
+		setLink(parent, child, childDeprel, childDeprel, true);
+		// Process root.
+		/*Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
+
+		// Process child.
+		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+		childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
 		if (childDeprel == null)
-			childToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
-		else childToken.deprel = childDeprel;
+			childBaseToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
+		else childBaseToken.deprel = childDeprel;*/
+
 	}
 
 	/**
@@ -254,5 +261,110 @@ public class Sentence
 					"\"" + phraseType +"\" in sentence \"" + id + "\" seems to be empty.\n");
 		allAsDependents(newRoot, children, phraseType, childDeprel, warnOut);
 		return newRoot;
+	}
+
+	/**
+	 * Set both base and enhanced dependency links for tokens coressponding to
+	 * the given PML nodes, but do not set circular dependencies. It is expected
+	 * that pmlaToEnhConll (if needed) and pmlaToConll contains links from given
+	 * PML nodes's IDs to corresponding tokens.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep		label to be used for base dependency
+	 * @param enhancedDep	label to be used for enhanced dependency
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void setLink (Node parent, Node child, UDv2Relations baseDep, UDv2Relations enhancedDep,
+						 boolean cleanOldDeps)
+			throws XPathExpressionException
+	{
+		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
+		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(parent));
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set base dependency, but avoid circular dependencies.
+		if (!rootBaseToken.equals(childBaseToken))
+		{
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+			childBaseToken.deprel = baseDep;
+		}
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken))
+		{
+			if (cleanOldDeps) childEnhToken.deps.clear();
+			childEnhToken.deps.add(new EnhencedDep(rootEnhToken, enhancedDep));
+		}
+	}
+
+	/**
+	 * Set both base and enhanced dependency links as root for token(s)
+	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
+	 * (if needed) and pmlaToConll contains links from given PML nodes's IDs to
+	 * corresponding tokens.
+	 * @param node 			PML node to be made root
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void setRoot (Node node, boolean cleanOldDeps)
+			throws XPathExpressionException
+	{
+		Token childBaseToken = pmlaToConll.get(Utils.getId(node));
+		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(node));
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set base dependency.
+		childBaseToken.head = Tuple.of("0", null);;
+		childBaseToken.deprel = UDv2Relations.ROOT;;
+
+		// Set enhanced dependencies.
+		if (cleanOldDeps) childEnhToken.deps.clear();
+		childEnhToken.deps.add(EnhencedDep.root());
+
+	}
+	/**
+	 * Changes the heads for all dependencies set (both base and enhanced) for
+	 * given childnode. It is expected that pmlaToEnhConll (if needed) and
+	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
+	 * tokens.
+	 * @param newParent	new parent
+	 * @param child		child node whose attachment should be changed
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void changeHead (Node newParent, Node child)
+			throws XPathExpressionException
+	{
+		Token rootBaseToken = pmlaToConll.get(Utils.getId(newParent));
+		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(newParent));
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set base dependency, but avoid circular dependencies.
+		// FIXME is "childBaseToken.head != null" ok?
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.head != null)
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken) && !childEnhToken.deps.isEmpty())
+		{
+			ArrayList<EnhencedDep> newDeps = new ArrayList<>();
+			for (EnhencedDep ed : childEnhToken.deps)
+				newDeps.add(new EnhencedDep(rootEnhToken, ed.role));
+			childEnhToken.deps = newDeps;
+		}
 	}
 }

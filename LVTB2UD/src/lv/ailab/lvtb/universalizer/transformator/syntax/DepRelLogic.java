@@ -30,6 +30,7 @@ public class DepRelLogic
 	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param aNode		node for which UD DEPREL should be obtained
+	 * @param enhanced  true, if role for enhanced dependency tree is needed
 	 * @param warnOut	where all warnings goes
 	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
 	 * 			representing a core argument).
@@ -37,10 +38,11 @@ public class DepRelLogic
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public UDv2Relations depToUD(Node aNode, PrintWriter warnOut)
+	public UDv2Relations depToUD(Node aNode, boolean enhanced, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		UDv2Relations prelaminaryRole = depToUDNoRed(aNode, warnOut);
+		if (enhanced) return prelaminaryRole;
 		Node pmlParent = Utils.getPMLParent(aNode);
 		Node pmlEffParent = Utils.getEffectiveAncestor(aNode);
 		if ((Utils.isReductionNode(pmlParent) || Utils.isReductionNode(pmlEffParent))

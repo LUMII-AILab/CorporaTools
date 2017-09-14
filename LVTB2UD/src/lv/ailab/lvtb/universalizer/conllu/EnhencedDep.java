@@ -12,7 +12,7 @@ public class EnhencedDep {
 	public String headID = null;
 	public UDv2Relations role = null;
 
-	EnhencedDep(){};
+	public EnhencedDep(){};
 	public EnhencedDep (Token head, UDv2Relations role)
 	{
 		headID = head.getFirstColumn();
@@ -32,5 +32,25 @@ public class EnhencedDep {
 	public String toConllU()
 	{
 		return headID + ":" + role.strRep;
+	}
+
+	@Override
+	public boolean equals (Object o)
+	{
+		if (o == null) return false;
+		if (this.getClass() != o.getClass()) return false;
+		if (this == o) return true;
+		EnhencedDep other = (EnhencedDep) o;
+		return (sortValue == other.sortValue &&
+				(headID == other.headID || headID != null && headID.equals(other.headID)) &&
+				role == other.role);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return 1777 * Double.hashCode(sortValue) +
+				977 *(headID == null ? 1 : headID.hashCode()) +
+				7* (role == null ? 1 : role.hashCode());
 	}
 }
