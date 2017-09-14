@@ -99,9 +99,41 @@ sub read
 				$node->set_attr('xpostag', $fields[4]) unless ($fields[4] eq '_');
 				my @feats = ();
 				@feats = split /\s*\|\s*/, $fields[5] unless ($fields[5] eq '_');
-				$node->set_attr ('feats', Treex::PML::Factory->createList(\@feats));
+				my @featStructs = ();
+				for my $featPart (@feats)
+				{
+					my $featStruct = Treex::PML::Factory->createTypedNode('feat.type', $fsfile->schema);
+					if ($featPart =~ /([^=]*)=(.*)/g)
+					{
+						$featStruct->set_attr('feat', $1);
+						$featStruct->set_attr('value', $2);
+					}
+					else
+					{
+						$featStruct->set_attr('feat', $featPart);
+					}
+					push @featStructs, $featStruct;
+				}
+				$node->set_attr ('feats', Treex::PML::Factory->createList(\@featStructs));
 				$node->set_attr('deprel', $fields[7]) unless ($fields[7] eq '_');
-				$node->set_attr('deps', $fields[8]) unless ($fields[8] eq '_');
+				my @deps = ();
+				@deps = split /\s*\|\s*/, $fields[8] unless ($fields[8] eq '_');
+				my @depStructs = ();
+				for my $depPart (@deps)
+				{
+					my $depStruct = Treex::PML::Factory->createTypedNode('dep.type', $fsfile->schema);
+					if ($depPart =~ /([^:]*):(.*)/g)
+					{
+						$depStruct->set_attr('head', $1);
+						$depStruct->set_attr('label', $2);
+					}
+					else
+					{
+						$depStruct->set_attr('label', $depPart);
+					}
+					push @depStructs, $depStruct;
+				}
+				$node->set_attr ('deps', Treex::PML::Factory->createList(\@depStructs));
 				my @misc = ();
 				@misc = split /\s*\|\s*/, $fields[9] unless ($fields[9] eq '_');
 				$node->set_attr ('misc', Treex::PML::Factory->createList(\@misc));
@@ -185,12 +217,16 @@ sub write
 			print $filehandle ($lemma or '_')."\t";
 			print $filehandle ($n->attr('upostag') or '_')."\t";
 			print $filehandle ($n->attr('xpostag') or '_')."\t";
-			my $feats = join '|', sort { "\L$a" cmp "\L$b" } $n->attr('feats')->values;
+			my $feats = join '|', sort { "\L$a" cmp "\L$b" } 
+					(map {$_->attr('feat')."=".$_->attr('value')} $n->attr('feats')->values);
 			$feats =~ tr/ /+/;
 			print $filehandle ($feats or '_')."\t";
 			print $filehandle ($n->parent->get_order or '0')."\t";
 			print $filehandle ($n->attr('deprel') or '_')."\t";
-			print $filehandle ($n->attr('deps') or '_')."\t";
+			my $deps = join '|', map {$_->attr('head').":".$_->attr('label')}
+					(sort { $a->attr('head') <=> $b->attr('head') } $n->attr('deps')->values);
+			$deps =~ tr/ /+/;
+			print $filehandle ($deps or '_')."\t"; 
 			my $misc = join '|', $n->attr('misc')->values;
 			$misc =~ tr/ /+/;
 			print $filehandle ($misc or '_')."\n";

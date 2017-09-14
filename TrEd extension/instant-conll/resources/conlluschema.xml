@@ -31,14 +31,28 @@
 	  <member name="lemma"><cdata format="string"/></member>
 	  <member name="upostag"><cdata format="any"/></member>
 	  <member name="xpostag"><cdata format="any"/></member>
-	  <member name="feats"><list odered='0'><cdata format="any"/></list></member>
+	  <!-- <member name="feats"><list odered='0'><cdata format="any"/></list></member> -->
+	  <member name="feats"><list type="feat.type" odered='0'/></member>
 	  <member name="deprel"><cdata format="any"/></member>
-	  <member name="deps"><cdata format="any"/></member>
+	  <member name="deps"><list type="dep.type" odered='0'/></member>
 	  <member name="misc"><list odered='0'><cdata format="any"/></list></member>
 	  <member name="surfaceToken" type="surfacetok.type"/>
       <member name="children" role="#CHILDNODES">
         <list type="node.type" ordered="1"/>
       </member>	  
+	</structure>
+  </type>
+  
+  <type name="feat.type">
+	<structure>
+		<member name="feat" required="1"><cdata format="string"/></member>
+		<member name="value" required="1"><cdata format="string"/></member>
+	</structure>
+  </type>
+  <type name="dep.type">
+	<structure>
+		<member name="head" required="1"><cdata format="string"/></member>
+		<member name="label" required="1"><cdata format="string"/></member>
 	</structure>
   </type>
   
