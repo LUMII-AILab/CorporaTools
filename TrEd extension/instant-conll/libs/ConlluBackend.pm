@@ -79,7 +79,9 @@ sub read
 	{
 		my %par2node = ();
 		my %id2node = ();
+		my %id2parId = ();
 		my @surfaceTokRows = ();
+		my $nodeCount = 0;
 		for my $token (@$sent)
 		{
 			my @fields = split /\t/, $token;
@@ -91,8 +93,11 @@ sub read
 			}
 			else
 			{
+				$nodeCount++;
 				my $node = Treex::PML::Factory->createTypedNode('node.type', $fsfile->schema);
-				$node->set_attr('ord', $fields[0]+0);
+				#$node->set_attr('ord', $fields[0]+0);
+				$node->set_attr('ord', $nodeCount);
+				$node->set_attr('id', $fields[0]);
 				$node->set_attr('form', $fields[1]);
 				$node->set_attr('lemma', $fields[2]) unless ($fields[2] eq '_');
 				$node->set_attr('upostag', $fields[3]) unless ($fields[3] eq '_');
@@ -142,6 +147,7 @@ sub read
 				push @$otherChildren, $node;
 				%par2node = (%par2node, $fields[6] => $otherChildren);
 				$id2node{$fields[0]} = $node;
+				$id2parId{$fields[0]} = $fields[6];
 			}
 		}
 		for my $surfaceToken (@surfaceTokRows)
@@ -156,7 +162,7 @@ sub read
 			$struct->set_attr ('misc', Treex::PML::Factory->createList(\@misc));
 			
 			my $node = $id2node{$borders[0]};
-			$node->set_attr('surfaceToken', $struct);
+			$node->attr('surfaceToken')->append($struct);
 		}
 
 		# Link the nodes in the tree.
@@ -166,6 +172,17 @@ sub read
 		
 		$id2node{0} = $root;
 		my @toDo = ('0');
+		for my $n (@{$par2node{'_'}})
+		{
+			$n->cut;
+			my $surogateParent = $root;
+			if ($n->attr('id') =~ /(\d+)\.(\d+)/g)
+			{
+				$surogateParent = $id2node{$id2parId{$1}};
+			}
+			$n->paste_on($surogateParent);#, $n->attr('ord'));
+			push @toDo, $n->attr('id');
+		}
 		while (@toDo)
 		{
 			my $current = shift @toDo;
@@ -173,9 +190,10 @@ sub read
 			{
 				$n->cut;
 				$n->paste_on($id2node{$current});#, $n->attr('ord'));
-				push @toDo, $n->attr('ord');
+				push @toDo, $n->attr('id');
 			}
 		}
+		
 		$fsfile->append_tree($root);
 		$treeId++;
 	}
@@ -183,7 +201,8 @@ sub read
 	return $fsfile;
 }
 
-# TODO later.
+# TODO interval tokens and comments.
+# TODO test
 sub write
 {
 	#my ($self, $filehandle, $fsfile) = @_;
@@ -221,7 +240,8 @@ sub write
 					(map {$_->attr('feat')."=".$_->attr('value')} $n->attr('feats')->values);
 			$feats =~ tr/ /+/;
 			print $filehandle ($feats or '_')."\t";
-			print $filehandle ($n->parent->get_order or '0')."\t";
+			
+			print $filehandle ($n->attr('id') =~ /\./ ? '_' : ($n->parent->attr('id') or '0'))."\t";
 			print $filehandle ($n->attr('deprel') or '_')."\t";
 			my $deps = join '|', map {$_->attr('head').":".$_->attr('label')}
 					(sort { $a->attr('head') <=> $b->attr('head') } $n->attr('deps')->values);

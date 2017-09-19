@@ -6,7 +6,7 @@
   <pkgname>instant-conll</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>CoNLL Data Format Backend</title>
-  <version>2.2</version>
+  <version>2.3</version>
   <copyright year="2014-2017">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides support for viewing and editting CoNLL-2007 and CoNLL-U
     files directly from TrEd.

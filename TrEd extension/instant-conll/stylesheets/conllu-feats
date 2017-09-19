@@ -1,17 +1,26 @@
 context: CONLL_U
 rootstyle: #{NodeLabel-skipempty:1} #{balance:0}
 
-text:<?'#{'.CustomColor('sentence').'}${form}'?>
+text:<? ($${id} =~ /\./ ? '#{darkviolet}[' : '#{black}').'${form}'.($${id} =~ /\./ ? ']' : '') ?>
 
 node:#{darkblue}${deprel}
-node:<? '#{black}${form} ' if $${form} ?>#{darkred}(${ord})
+node:<? if ($${form} and $${id} =~ /\./) {'#{darkviolet}${form} ';}
+	elsif ($${form}) {'#{black}${form} ';} ?><? '#{darkred}(${id})' if $${id} ?>
 node:<? '#{dimgray}[${lemma}]' if $${lemma} ?>
 node:<? '#{dimgray}${surfaceToken/form} #{darkred}(${ord}-${surfaceToken/endord})' if ($${surfaceToken}) ?>
 node:<? '#{darkgreen}${upostag} ~ ${xpostag}' if ($${ord} > 0 ) ?>
-node:<? '#{darkgreen}* '. join("\n* ", ListV($this->attr('feats'))) if ($${feats}) ?>
+node:<? '#{darkgreen}'. join("\n", map {$_->attr('feat')."=".$_->attr('value')} ListV($this->attr('feats'))) if ($${feats}) ?>
 node:<? '#{dimgray}'. join("\n", ListV($this->attr('misc'))) if ($${misc}) ?>
 
-hint:<? 'feats: '. join(', ', ListV($this->attr('feats'))) if ($${feats}) ?><?
+style:#{Oval-fill:Yellow}
+      #{CurrentOval-width:2}
+  <? '#{Line-coords:xn, yn, x[? $node eq $this->parent and $this->attr('id') !~ /\./ ?], y[? $node eq $this->parent and $this->attr('id') !~ /\./ ?]}' if ($this->parent) ?>
+	  #{Line-arrow:first}
+	  #{Line-width:2}
+  <? '#{Line-hint:'.$${deprel}.'}' ?>
+  <? '#{Oval-fill:Purple}' if ($${id} =~ /\./) ?>
+
+hint:<? 'feats: '. join("\n", map {$_->attr('feat')."=".$_->attr('value')} ListV($this->attr('feats'))) if ($${feats}) ?><?
 	"\n" if ($${feats} and $${misc}) ?><?
  'misc: '. join(', ', ListV($this->attr('misc'))) if ($${misc}) ?>
 

@@ -28,6 +28,7 @@
 	<structure role="#NODE" name="node">
 	  <member name="form" required="1"><cdata format="string"/></member>
 	  <member name="ord" role="#ORDER" required="1"><cdata format="positiveInteger"/></member>
+	  <member name="id" required="1"><cdata format="string"/></member>
 	  <member name="lemma"><cdata format="string"/></member>
 	  <member name="upostag"><cdata format="any"/></member>
 	  <member name="xpostag"><cdata format="any"/></member>
@@ -36,7 +37,7 @@
 	  <member name="deprel"><cdata format="any"/></member>
 	  <member name="deps"><list type="dep.type" odered='0'/></member>
 	  <member name="misc"><list odered='0'><cdata format="any"/></list></member>
-	  <member name="surfaceToken" type="surfacetok.type"/>
+	  <member name="surfaceToken"><list odered='0' type="surfacetok.type"/></member>
       <member name="children" role="#CHILDNODES">
         <list type="node.type" ordered="1"/>
       </member>	  
