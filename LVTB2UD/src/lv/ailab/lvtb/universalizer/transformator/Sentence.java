@@ -16,6 +16,7 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -78,8 +79,9 @@ public class Sentence
 
 	/**
 	 * Make a list of given nodes children of the designated parent. Set UD
-	 * deprel for each child. If designated parent is included in child list
-	 * node, circular dependency is not made, role is not set.
+	 * deprel, deps and deps backbone for each child. If designated parent is
+	 * included in child list node, circular dependency is not made, role is not
+	 * set.
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
@@ -102,8 +104,9 @@ public class Sentence
 
 	/**
 	 * Make a list of given nodes children of the designated parent. Set UD
-	 * deprel for each child. If designated parent is included in child list
-	 * node, circular dependency is not made, role is not set.
+	 * deprel, deps and deps backbone for each child. If designated parent is
+	 * included in child list node, circular dependency is not made, role is not
+	 * set.
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
@@ -131,8 +134,8 @@ public class Sentence
 	}
 	/**
 	 * Make a given node a child of the designated parent. Set UD role for the
-	 * child. If designated parent is the same as child node, circular
-	 * dependency is not made, role is not set.
+	 * child. Set enhanced dependency and deps backbone. If designated parent is
+	 * the same as child node, circular dependency is not made, role is not set.
 	 * @param parent		designated parent
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
@@ -155,7 +158,7 @@ public class Sentence
 
 		if (childDeprel == null) childDeprel =
 				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
-		setLink(parent, child, childDeprel, childDeprel, true);
+		setLink(parent, child, childDeprel, childDeprel, true,true);
 		// Process root.
 		/*Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
 
@@ -272,6 +275,8 @@ public class Sentence
 	 * @param child			PML node describing child
 	 * @param baseDep		label to be used for base dependency
 	 * @param enhancedDep	label to be used for enhanced dependency
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
 	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
@@ -279,7 +284,7 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public void setLink (Node parent, Node child, UDv2Relations baseDep, UDv2Relations enhancedDep,
-						 boolean cleanOldDeps)
+						 boolean setBackbone, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
 		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
@@ -300,15 +305,53 @@ public class Sentence
 		if (!childEnhToken.equals(rootEnhToken))
 		{
 			if (cleanOldDeps) childEnhToken.deps.clear();
-			childEnhToken.deps.add(new EnhencedDep(rootEnhToken, enhancedDep));
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep);
+			childEnhToken.deps.add(newDep);
+			if (setBackbone) childEnhToken.depsBackbone = newDep;
 		}
 	}
 
 	/**
+	 * Set enhanced dependency link for tokens coressponding to the given PML
+	 * nodes, but do not set circular dependencies. It is expected that
+	 * pmlaToEnhConll (if needed) and pmlaToConll contains links from given
+	 * PML nodes's IDs to corresponding tokens.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param enhancedDep	label to be used for enhanced dependency
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void setEnhLink (Node parent, Node child, UDv2Relations enhancedDep,
+						    boolean setBackbone, boolean cleanOldDeps)
+			throws XPathExpressionException
+	{
+		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
+		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(parent));
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken))
+		{
+			if (cleanOldDeps) childEnhToken.deps.clear();
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep);
+			childEnhToken.deps.add(newDep);
+			if (setBackbone) childEnhToken.depsBackbone = newDep;
+		}
+	}
+	/**
 	 * Set both base and enhanced dependency links as root for token(s)
 	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
 	 * (if needed) and pmlaToConll contains links from given PML nodes's IDs to
-	 * corresponding tokens.
+	 * corresponding tokens. This dependency is set as backbone by default.
 	 * @param node 			PML node to be made root
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
@@ -329,8 +372,9 @@ public class Sentence
 
 		// Set enhanced dependencies.
 		if (cleanOldDeps) childEnhToken.deps.clear();
-		childEnhToken.deps.add(EnhencedDep.root());
-
+		EnhencedDep newDep = EnhencedDep.root();
+		childEnhToken.deps.add(newDep);
+		childEnhToken.depsBackbone = newDep;
 	}
 	/**
 	 * Changes the heads for all dependencies set (both base and enhanced) for
@@ -361,10 +405,23 @@ public class Sentence
 		// Set enhanced dependencies, but avoid circular.
 		if (!childEnhToken.equals(rootEnhToken) && !childEnhToken.deps.isEmpty())
 		{
-			ArrayList<EnhencedDep> newDeps = new ArrayList<>();
+			HashSet<EnhencedDep> newDeps = new HashSet<>();
 			for (EnhencedDep ed : childEnhToken.deps)
 				newDeps.add(new EnhencedDep(rootEnhToken, ed.role));
 			childEnhToken.deps = newDeps;
+			if (childEnhToken.depsBackbone != null)childEnhToken.depsBackbone =
+					new EnhencedDep(rootEnhToken, childEnhToken.depsBackbone.role);
 		}
+	}
+
+	public Token getEnhancedOrBaseToken(Node aNode)
+			throws XPathExpressionException
+	{
+		if (aNode == null) return null;
+		String id = Utils.getId(aNode);
+		if (id == null) return null;
+		Token resToken = pmlaToEnhConll.get(id);
+		if (resToken == null) resToken = pmlaToConll.get(id);
+		return resToken;
 	}
 }

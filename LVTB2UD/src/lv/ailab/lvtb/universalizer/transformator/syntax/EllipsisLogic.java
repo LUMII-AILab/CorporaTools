@@ -20,6 +20,11 @@ import java.util.ArrayList;
  */
 public class EllipsisLogic
 {
+	public static Node newParent (Node aNode, PrintWriter warnOut)
+			throws XPathExpressionException
+	{
+		return newParent(aNode, DepRelLogic.getSingleton(), warnOut);
+	}
 	public static Node newParent (Node aNode, DepRelLogic drLogic, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
@@ -43,7 +48,7 @@ public class EllipsisLogic
 			if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*"))
 				for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils
@@ -61,7 +66,7 @@ public class EllipsisLogic
 					UDv2Relations.CCOMP, UDv2Relations.ADVCL};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
@@ -78,7 +83,7 @@ public class EllipsisLogic
 					UDv2Relations.NMOD, UDv2Relations.CASE};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));

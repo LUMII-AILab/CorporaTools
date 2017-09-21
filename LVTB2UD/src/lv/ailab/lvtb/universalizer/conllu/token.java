@@ -84,7 +84,9 @@ public class Token
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).
 	 */
-	public ArrayList<EnhencedDep> deps = new ArrayList<>();
+	public HashSet<EnhencedDep> deps = new HashSet<>();
+
+	public EnhencedDep depsBackbone = null;
 	/**
 	 * 10th column.
 	 * MISC: Any other annotation.
@@ -120,6 +122,7 @@ public class Token
 				(head == other.head || head != null && head.equals(other.head)) &&
 				deprel == other.deprel &&
 				(deps == other.deps || deps != null && deps.equals(other.deps)) &&
+				(depsBackbone == other.depsBackbone || depsBackbone != null && depsBackbone.equals(other.depsBackbone)) &&
 				(misc == other.misc || misc != null && misc.equals(other.misc)));
 	}
 	@Override
@@ -136,6 +139,7 @@ public class Token
 				1721 * (head == null ? 1 : head.hashCode()) +
 				1171 * (deprel == null ? 1 : deprel.hashCode()) +
 				677 * (deps == null ? 1 : deps.hashCode()) +
+				17 * (depsBackbone == null ? 1 : depsBackbone.hashCode()) +
 				3 * (misc == null ? 1 : misc.hashCode());
 	}
 

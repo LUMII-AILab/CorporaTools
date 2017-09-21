@@ -31,12 +31,20 @@ public class TreesyntaxTransformator
 	 * garbage.
 	 */
 	public boolean hasFailed;
+	/**
+	 * Should missing phrase tags be filled with some kind of heuristics.
+	 */
 	public boolean inducePhraseTags;
+	/**
+	 * Print debug info.
+	 */
 	public boolean debug;
-	protected PhraseTransformator pTransf;
-	protected DepRelLogic drLogic;
-	protected PrintWriter warnOut;
 
+	protected PhraseTransformator pTransf;
+	/**
+	 * Stream for warnings.
+	 */
+	protected PrintWriter warnOut;
 
 	public TreesyntaxTransformator(Sentence sent, PrintWriter warnOut,
 								   boolean inducePhraseTags, boolean debug)
@@ -47,7 +55,6 @@ public class TreesyntaxTransformator
 		this.debug = debug;
 		hasFailed = false;
 		pTransf = new PhraseTransformator(s, warnOut);
-		drLogic = new DepRelLogic();
 	}
 
 	/**
@@ -203,7 +210,7 @@ public class TreesyntaxTransformator
 		else if (Utils.isReductionNode(aNode))
 		{
 
-			Node redRoot = EllipsisLogic.newParent(aNode, drLogic, warnOut);
+			Node redRoot = EllipsisLogic.newParent(aNode, warnOut);
 			if (redRoot == null)
 			{
 				hasFailed = true;
@@ -280,9 +287,9 @@ public class TreesyntaxTransformator
 			for (int i = 0; i < pmlDependents.getLength(); i++)
 			{
 				s.setLink(parentANode, pmlDependents.item(i),
-						drLogic.depToUD(pmlDependents.item(i), false, warnOut),
-						drLogic.depToUD(pmlDependents.item(i), true, warnOut),
-						true);
+						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),
+						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), true, warnOut),
+						true,true);
 				// Find appropriate conll tokens.
 				/*Token conllBaseTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
 				Token conllEnhTok = s.pmlaToEnhConll.get(Utils.getId(pmlDependents.item(i)));

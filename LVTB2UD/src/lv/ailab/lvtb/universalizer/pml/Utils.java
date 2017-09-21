@@ -151,6 +151,23 @@ public class Utils
 		String reduction = getReduction(node);
 		return (Utils.getMNode(node) == null && reduction != null && reduction.length() > 0);
 	}
+
+	/**
+	 * Check, if given node is a phrase node
+	 * @param node node to analyze
+	 * @return	true, if node has xtype, pmctype or coordtype.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static boolean isPhraseNode(Node node)
+			throws XPathExpressionException
+	{
+		if (node == null) return false;
+		return (node.getNodeName().equals("xinfo")
+				|| node.getNodeName().equals("coordinfo")
+				|| node.getNodeName().equals("pmcinfo"));
+	}
 	/**
 	 * Find role for given node.
 	 * @param node node to analyze
@@ -261,12 +278,25 @@ public class Utils
 	throws XPathExpressionException
 	{
 		if (node == null) return null;
-		String name = node.getNodeName();
-		String parentName = Utils.getPMLParent(node).getNodeName();
-		if (name.equals("LM") && parentName.equals("trees") || name.equals("trees"))
-			return LvtbHelperRoles.ROOT;
+		if (isRoot(node)) return LvtbHelperRoles.ROOT;
 		return XPathEngine.get().evaluate(
 				"./role|./pmctype|./coordtype|./xtype", node);
+	}
+
+	public static boolean isRoot (Node node)
+			throws XPathExpressionException
+	{
+		String name = node.getNodeName();
+		if ("trees".equals(name)) return true;
+		else if ("LM".equals(name))
+		{
+			Node parent = (Node) XPathEngine.get().evaluate(
+					"../..", node, XPathConstants.NODE);
+			if (parent == null) return true;
+			String parentName = parent.getNodeName();
+			return "trees".equals(parentName);
+		}
+		return false;
 	}
 
 	/**
@@ -365,7 +395,7 @@ public class Utils
 	 */
 	public static Node getPMLParent(Node node) throws XPathExpressionException
 	{
-		if (node == null) return null;
+		if (node == null || isRoot(node)) return null;
 		return (Node) XPathEngine.get().evaluate(
 				"../..", node, XPathConstants.NODE);
 	}
@@ -381,7 +411,7 @@ public class Utils
 	 */
 	public static Node getEffectiveAncestor(Node node) throws XPathExpressionException
 	{
-		if (node == null) return null;
+		if (node == null || isRoot(node)) return null;
 		Node res = getPMLParent(node);
 		String resType = getAnyLabel(res);
 		while (resType.equals(LvtbRoles.CRDPART) ||

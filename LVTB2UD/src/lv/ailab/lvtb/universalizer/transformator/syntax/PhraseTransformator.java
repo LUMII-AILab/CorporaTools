@@ -259,7 +259,7 @@ public class PhraseTransformator
 				// process found part
 				s.allAsDependents(subroot, nextPart, pmcType, null, warnOut);
 				s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
-						UDv2Relations.PARATAXIS, true);
+						UDv2Relations.PARATAXIS, true, true);
 				/*Token subrootTok = s.pmlaToConll.get(Utils.getId(subroot));
 				subrootTok.deprel = UDv2Relations.PARATAXIS;
 				subrootTok.head = Tuple.of(rootTok.getFirstColumn(), rootTok);*/
@@ -324,7 +324,7 @@ public class PhraseTransformator
 			Node newSubroot = coordPartsChildListToUD(
 					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, warnOut);
 			s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-					UDv2Relations.PARATAXIS, true);
+					UDv2Relations.PARATAXIS, true, true);
 			/*Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 			subrootToken.deprel = UDv2Relations.PARATAXIS;
 			subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);*/
@@ -334,7 +334,7 @@ public class PhraseTransformator
 		Node newSubroot = coordPartsChildListToUD(
 				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, warnOut);
 		s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-				UDv2Relations.PARATAXIS, true);
+				UDv2Relations.PARATAXIS, true, true);
 		/*Token subrootToken = s.pmlaToConll.get(Utils.getId(newSubroot));
 		subrootToken.deprel = UDv2Relations.PARATAXIS;
 		subrootToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);*/
@@ -464,7 +464,7 @@ public class PhraseTransformator
 					Token vToken = s.pmlaToConll.get(Utils.getId(lastOfFirst));
 					vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 					vToken.deprel = UDv2Relations.ADVMOD;*/
-					s.setLink(last, lastOfFirst, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true);
+					s.setLink(last, lastOfFirst, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true, true);
 					if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 					{
 						s.changeHead(lastOfFirst, simileConjs.item(i));
@@ -487,7 +487,7 @@ public class PhraseTransformator
 				Token vToken = s.pmlaToConll.get(Utils.getId(first));
 				vToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 				vToken.deprel = UDv2Relations.ADVMOD;*/
-				s.setLink(last, first, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true);
+				s.setLink(last, first, UDv2Relations.ADVMOD, UDv2Relations.ADVMOD, true, true);
 				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
 				{
 					s.changeHead(first, simileConjs.item(i));
@@ -504,7 +504,7 @@ public class PhraseTransformator
 				Token tToken = s.pmlaToConll.get(Utils.getId(first));
 				tToken.head = Tuple.of(newRootToken.getFirstColumn(), newRootToken);
 				tToken.deprel = UDv2Relations.DET;*/
-				s.setLink(last, first, UDv2Relations.DET, UDv2Relations.DET, true);
+				s.setLink(last, first, UDv2Relations.DET, UDv2Relations.DET, true, true);
 				return last;
 			}
 		}
@@ -560,7 +560,7 @@ public class PhraseTransformator
 					oldR.head = Tuple.of(newR.getFirstColumn(), newR);
 					oldR.deprel = UDv2Relations.XCOMP;*/
 					s.setLink(newRoot, latestRoot, UDv2Relations.XCOMP,
-							UDv2Relations.XCOMP, true);
+							UDv2Relations.XCOMP, true, true);
 				}
 				latestRoot = newRoot;
 				buffer = new LinkedList<>();
@@ -622,13 +622,13 @@ public class PhraseTransformator
 		{
 			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = UDv2Relations.AUX_PASS;*/
-			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS, UDv2Relations.AUX_PASS, true);
+			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS, UDv2Relations.AUX_PASS, true, true);
 		}
 		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
 		{
 			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
 			lastAuxTok.deprel = UDv2Relations.COP;*/
-			s.setLink(newRoot, lastAux, UDv2Relations.COP, UDv2Relations.COP, true);
+			s.setLink(newRoot, lastAux, UDv2Relations.COP, UDv2Relations.COP, true, true);
 		}
 		return newRoot;
 	}
