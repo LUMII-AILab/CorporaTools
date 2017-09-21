@@ -88,6 +88,7 @@ sub node_style_hook {
       -arrowshape => '16,18,3',
       -width => 2,
       -dash => '',
+      -frac => 0.05,
       -fill => 'SaddleBrown',
 	);
 	my @edges = ();

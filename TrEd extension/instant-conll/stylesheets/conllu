@@ -12,7 +12,7 @@ node:<? '#{dimgray}${surfaceToken/form} #{darkred}(${ord}-${surfaceToken/endord}
 
 style:#{Oval-fill:Yellow}
       #{CurrentOval-width:2}
-  <? '#{Line-coords:xn, yn, x[? $node eq $this->parent and $this->attr('id') !~ /\./ ?], y[? $node eq $this->parent and $this->attr('id') !~ /\./ ?]}' if ($this->parent) ?>
+	  #{Line-coords:xn, yn, x[? $node eq $this->parent and $this->attr('id') !~ /\./ ?], y[? $node eq $this->parent and $this->attr('id') !~ /\./ ?]}
 	  #{Line-arrow:first}
 	  #{Line-width:2}
   <? '#{Line-hint:'.$${deprel}.'}' ?>
