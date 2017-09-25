@@ -101,13 +101,11 @@ public class TreesyntaxTransformator
 		Node newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
-		Token conllRoot = s.pmlaToConll.get(Utils.getId(newRoot));
-		s.pmlaToConll.put(Utils.getId(s.pmlTree), conllRoot);
-		/*conllRoot.head = Tuple.of("0", null);
-		conllRoot.deprel = UDv2Relations.ROOT;*/
+		s.pmlaToConll.put(Utils.getId(s.pmlTree), s.pmlaToConll.get(Utils.getId(newRoot)));
+		if (s.pmlaToEnhConll.containsKey(Utils.getId(newRoot)))
+			s.pmlaToEnhConll.put(Utils.getId(s.pmlTree), s.pmlaToEnhConll.get(Utils.getId(newRoot)));
 		s.setRoot(newRoot, true);
-		relinkDependents(s.pmlTree, newRoot);
-		// TODO te vajag speciālgadījumu, ja ext root nesakrīt ar simple root?
+		relinkDependents(s.pmlTree, newRoot, newRoot);
 	}
 
 	/**
@@ -172,7 +170,8 @@ public class TreesyntaxTransformator
 		transformDepSubtrees(aNode);
 		if (hasFailed) return;
 
-		Node newRoot = aNode;
+		Node newBasicRoot = aNode;
+		Node newEnhancedRoot = aNode;
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
 		Node phraseNode = Utils.getPhraseNode(aNode);
 
@@ -181,15 +180,16 @@ public class TreesyntaxTransformator
 		{
 			transformPhraseParts(phraseNode);
 			if (hasFailed) return;
-			newRoot = pTransf.anyPhraseToUD(phraseNode);
-			if (newRoot == null)
+			newBasicRoot = pTransf.anyPhraseToUD(phraseNode);
+			newEnhancedRoot = newBasicRoot;
+			if (newBasicRoot == null)
 				throw new IllegalStateException(
 						"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
 
 			if (inducePhraseTags)
 			{
 				String phraseTag = Utils.getTag(aNode);
-				String newRootTag = Utils.getTag(newRoot);
+				String newRootTag = Utils.getTag(newBasicRoot);
 				if ((phraseTag == null || phraseTag.length() < 1 || phraseTag.matches("N/[Aa]")) &&
 						newRootTag != null && newRootTag.length() > 0)
 				{
@@ -216,11 +216,10 @@ public class TreesyntaxTransformator
 				hasFailed = true;
 				return;
 			}
-			newRoot = redRoot;
-			transformSubtree(newRoot);
+			newBasicRoot = redRoot;
 
 			// Make new token for ellipsis.
-			Token newRootToken = s.pmlaToConll.get(Utils.getId(newRoot));
+			Token newRootToken = s.pmlaToConll.get(Utils.getId(newBasicRoot));
 			int position = s.conll.indexOf(newRootToken) + 1;
 			while (newRootToken.idBegin == s.conll.get(position).idBegin)
 				position++;
@@ -247,13 +246,17 @@ public class TreesyntaxTransformator
 			s.conll.add(position, decimalToken);
 			s.pmlaToEnhConll.put(Utils.getId(aNode), decimalToken);
 			if (hasFailed) return;
+
+			transformSubtree(newBasicRoot);
 		}
 
 		//// Add information about new subroot in the result structure.
-		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newRoot)));
+		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newBasicRoot)));
+		if (s.pmlaToEnhConll.containsKey(Utils.getId(newEnhancedRoot)))
+			s.pmlaToEnhConll.put(Utils.getId(aNode), s.pmlaToEnhConll.get(Utils.getId(newEnhancedRoot)));
 
 		//// Process dependants (except the newRoot).
-		relinkDependents(aNode, newRoot);
+		relinkDependents(aNode, newBasicRoot, newEnhancedRoot);
 	}
 
 
@@ -263,17 +266,25 @@ public class TreesyntaxTransformator
 	 * dependents, then it must be processed before invoking this method.
 	 * @param parentANode		node whose dependency children will be processed
 	 * @param newBaseDepRoot	node that will be the root of the coresponding
-	 *                  		UD structure
+	 *                  		base UD structure
+	 * @param newEnhDepRoot		node that will be the root of the coresponding
+	 *                  		enhanced UD structure
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	protected void relinkDependents(Node parentANode, Node newBaseDepRoot)
+	protected void relinkDependents(Node parentANode, Node newBaseDepRoot, Node newEnhDepRoot)
 			throws XPathExpressionException
 	{
 		if (hasFailed) return;
-		if (s.pmlaToConll.get(Utils.getId(newBaseDepRoot)) != s.pmlaToConll.get(Utils.getId(parentANode)))
+		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
+		if (s.pmlaToConll.get(Utils.getId(newBaseDepRoot)) != s.pmlaToConll.get(Utils.getId(parentANode)) ||
+				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
 		{
+			/*System.out.println("sentence " + s.id);
+			System.out.println("base " + s.pmlaToConll.get(Utils.getId(parentANode)).getFirstColumn() + " vs. " + s.pmlaToConll.get(Utils.getId(newBaseDepRoot)).getFirstColumn());
+			System.out.println("enhanced " + s.getEnhancedOrBaseToken(parentANode).getFirstColumn() + " vs. " + s.getEnhancedOrBaseToken(newEnhDepRoot).getFirstColumn());
+			System.out.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));//*/
 			warnOut.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));
 			hasFailed = true;
 			return;
@@ -281,39 +292,18 @@ public class TreesyntaxTransformator
 
 		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
 				"./children/node", parentANode, XPathConstants.NODESET);
-		//Token newBaseRootTok = s.pmlaToConll.get(Utils.getId(newBaseDepRoot));
-		//Token newEnhRootTok = s.pmlaToEnhConll.get(Utils.getId(parentANode));
 		if (pmlDependents != null && pmlDependents.getLength() > 0)
 			for (int i = 0; i < pmlDependents.getLength(); i++)
 			{
-				s.setLink(parentANode, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),
+				s.setBaseLink(newBaseDepRoot, pmlDependents.item(i),
+						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut));
+				s.setEnhLink(newEnhDepRoot, pmlDependents.item(i),
 						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), true, warnOut),
 						true,true);
-				// Find appropriate conll tokens.
-				/*Token conllBaseTok = s.pmlaToConll.get(Utils.getId(pmlDependents.item(i)));
-				Token conllEnhTok = s.pmlaToEnhConll.get(Utils.getId(pmlDependents.item(i)));
-
-				// This happens in case of ellipted node.
-				// Both nodes are ellipted.
-				if (newEnhRootTok != null && conllEnhTok != null) conllEnhTok.deps.add(
-						new EnhencedDep(newEnhRootTok, drLogic.depToUD(
-								pmlDependents.item(i), true, warnOut)));
-				// Only root is ellipted.
-				else if (newEnhRootTok != null) conllBaseTok.deps.add(
-							new EnhencedDep(newEnhRootTok, drLogic.depToUD(
-									pmlDependents.item(i), true, warnOut)));
-				// Only child is ellipted.
-				else if (conllEnhTok != null) conllEnhTok.deps.add(
-						new EnhencedDep(newBaseRootTok, drLogic.depToUD(
-								pmlDependents.item(i), true, warnOut)));
-
-				// To avoid circular dependencies (e.g., in case of ellipsis)
-				if (pmlDependents.item(i).isSameNode(newBaseDepRoot)) continue;
-				// Set base dependencies.
-				conllBaseTok.deprel = drLogic.depToUD(pmlDependents.item(i), false, warnOut);
-				conllBaseTok.head = Tuple.of(newBaseRootTok.getFirstColumn(), newBaseRootTok);*/
+				/*s.setLink(parentANode, pmlDependents.item(i),
+						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),
+						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), true, warnOut),
+						true,true);*/
 			}
 	}
-
 }

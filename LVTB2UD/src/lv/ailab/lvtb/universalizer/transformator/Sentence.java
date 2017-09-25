@@ -347,6 +347,33 @@ public class Sentence
 			if (setBackbone) childEnhToken.depsBackbone = newDep;
 		}
 	}
+
+	/**
+	 * Set basic dependency link for tokens coressponding to the given PML
+	 * nodes, but do not set circular dependencies. It is expected that
+	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
+	 * tokens.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep	label to be used for enhanced dependency
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public void setBaseLink (Node parent, Node child, UDv2Relations baseDep)
+			throws XPathExpressionException
+	{
+		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
+		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+
+		// Set base dependency, but avoid circular dependencies.
+		if (!rootBaseToken.equals(childBaseToken))
+		{
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+			childBaseToken.deprel = baseDep;
+		}
+	}
+
 	/**
 	 * Set both base and enhanced dependency links as root for token(s)
 	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
