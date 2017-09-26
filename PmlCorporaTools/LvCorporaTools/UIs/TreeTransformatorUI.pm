@@ -287,8 +287,9 @@ sub ord
 	
 	# Process contents of source folder.
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		$fileProc, "^.+\\.a\$", '-ord.a', 1, 0, $source);
-	
+		$fileProc, "^.+\\.a\$", '.a', 1, 0, $source);
+		#$fileProc, "^.+\\.a\$", '-ord.a', 1, 0, $source);
+
 	# Move files to correct places.
 	move("$source/res", $dest)
 		|| warn "Moving $source/res to $dest failed: $!";
