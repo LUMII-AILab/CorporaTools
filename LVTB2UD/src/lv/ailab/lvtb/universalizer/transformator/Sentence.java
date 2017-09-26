@@ -55,10 +55,17 @@ public class Sentence
 	 */
 	public HashMap<String, Token> pmlaToEnhConll = new HashMap<>();
 
+	/**
+	 * Indication that transformation has failed and the obtained conll data is
+	 * garbage.
+	 */
+	public boolean hasFailed;
+
 	public Sentence(Node pmlTree) throws XPathExpressionException
 	{
 		this.pmlTree = pmlTree;
 		id = XPathEngine.get().evaluate("./@id", this.pmlTree);
+		hasFailed = false;
 	}
 
 	public String toConllU()

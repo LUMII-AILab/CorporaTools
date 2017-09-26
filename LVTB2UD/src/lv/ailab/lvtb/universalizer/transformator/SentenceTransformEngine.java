@@ -72,7 +72,7 @@ public class SentenceTransformEngine
 			enhSyntTransf.transformEnhancedSyntax();
 			warnOut.flush();
 		}
-		return !syntTransf.hasFailed;
+		return !s.hasFailed;
 	}
 
 	/**

@@ -27,11 +27,6 @@ public class TreesyntaxTransformator
 {
 	public Sentence s;
 	/**
-	 * Indication that transformation has failed and the obtained conll data is
-	 * garbage.
-	 */
-	public boolean hasFailed;
-	/**
 	 * Should missing phrase tags be filled with some kind of heuristics.
 	 */
 	public boolean inducePhraseTags;
@@ -53,7 +48,6 @@ public class TreesyntaxTransformator
 		this.warnOut = warnOut;
 		this.inducePhraseTags = inducePhraseTags;
 		this.debug = debug;
-		hasFailed = false;
 		pTransf = new PhraseTransformator(s, warnOut);
 	}
 
@@ -94,9 +88,9 @@ public class TreesyntaxTransformator
 		Node pmlPmc = (Node)XPathEngine.get().evaluate(
 				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
 		transformDepSubtrees(s.pmlTree);
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 		transformPhraseParts(pmlPmc);
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 
 		Node newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
@@ -119,14 +113,14 @@ public class TreesyntaxTransformator
 	protected void transformDepSubtrees(Node parentANode)
 			throws XPathExpressionException
 	{
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
 				"./children/node", parentANode, XPathConstants.NODESET);
 		if (pmlDependents != null && pmlDependents.getLength() > 0)
 			for (int i = 0; i < pmlDependents.getLength(); i++)
 			{
 				transformSubtree(pmlDependents.item(i));
-				if (hasFailed) return;
+				if (s.hasFailed) return;
 			}
 	}
 
@@ -140,14 +134,14 @@ public class TreesyntaxTransformator
 	protected void transformPhraseParts(Node phraseInfoNode)
 			throws XPathExpressionException
 	{
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 		NodeList parts = (NodeList)XPathEngine.get().evaluate(
 				"./children/node", phraseInfoNode, XPathConstants.NODESET);
 		if (parts != null && parts.getLength() > 0)
 			for (int i = 0; i < parts.getLength(); i++)
 			{
 				transformSubtree(parts.item(i));
-				if (hasFailed) return;
+				if (s.hasFailed) return;
 			}
 	}
 
@@ -161,14 +155,14 @@ public class TreesyntaxTransformator
 	 */
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 		if (debug) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
 
 		NodeList children = Utils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
 
 		transformDepSubtrees(aNode);
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 
 		Node newBasicRoot = aNode;
 		Node newEnhancedRoot = aNode;
@@ -179,7 +173,7 @@ public class TreesyntaxTransformator
 		if (phraseNode != null)
 		{
 			transformPhraseParts(phraseNode);
-			if (hasFailed) return;
+			if (s.hasFailed) return;
 			newBasicRoot = pTransf.anyPhraseToUD(phraseNode);
 			newEnhancedRoot = newBasicRoot;
 			if (newBasicRoot == null)
@@ -213,7 +207,7 @@ public class TreesyntaxTransformator
 			Node redRoot = EllipsisLogic.newParent(aNode, warnOut);
 			if (redRoot == null)
 			{
-				hasFailed = true;
+				s.hasFailed = true;
 				return;
 			}
 			newBasicRoot = redRoot;
@@ -245,7 +239,7 @@ public class TreesyntaxTransformator
 			}
 			s.conll.add(position, decimalToken);
 			s.pmlaToEnhConll.put(Utils.getId(aNode), decimalToken);
-			if (hasFailed) return;
+			if (s.hasFailed) return;
 
 			transformSubtree(newBasicRoot);
 		}
@@ -276,7 +270,7 @@ public class TreesyntaxTransformator
 	protected void relinkDependents(Node parentANode, Node newBaseDepRoot, Node newEnhDepRoot)
 			throws XPathExpressionException
 	{
-		if (hasFailed) return;
+		if (s.hasFailed) return;
 		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
 		if (s.pmlaToConll.get(Utils.getId(newBaseDepRoot)) != s.pmlaToConll.get(Utils.getId(parentANode)) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
@@ -286,7 +280,7 @@ public class TreesyntaxTransformator
 			System.out.println("enhanced " + s.getEnhancedOrBaseToken(parentANode).getFirstColumn() + " vs. " + s.getEnhancedOrBaseToken(newEnhDepRoot).getFirstColumn());
 			System.out.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));//*/
 			warnOut.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));
-			hasFailed = true;
+			s.hasFailed = true;
 			return;
 		}
 
