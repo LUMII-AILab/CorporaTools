@@ -1,13 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
-import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import lv.ailab.lvtb.universalizer.transformator.FileTransformator;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
 
 /**
@@ -42,7 +36,15 @@ public class LvtbToUdUI
 	public static String inputDataPath = "./data/pml/";
 	public static String logPath = "./data/log/";
 	public static String outputDataPath = "./data/conll-u/";
+	/**
+	 * Rename newswire IDs' document part.
+	 */
 	public static boolean CHANGE_IDS = true;
+	/**
+	 * What to when a file contains an untransformable tree? For true - whole
+	 * file is omitted; for false - only specific tree.
+	 */
+	public static boolean OMIT_WHOLE_FILES = true;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -60,7 +62,7 @@ public class LvtbToUdUI
 		if (!logFolder.exists()) logFolder.mkdirs();
 		PrintWriter statusOut = new PrintWriter(new PrintWriter(logFolder + "/log.txt", "UTF-8"), true);
 		File[] listOfFiles = folder.listFiles();
-		int omited = 0;
+		int omitted = 0;
 		for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
@@ -70,11 +72,11 @@ public class LvtbToUdUI
 				System.out.printf("Processing file \"%s\", ", fileName);
 				statusOut.printf("Processing file \"%s\", ", fileName);
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
-				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(outPath), "UTF8"));
-				omited = omited + transformFile(f.getAbsolutePath(), out, statusOut);
-				out.flush();
-				out.close();
+				FileTransformator ft = new FileTransformator(CHANGE_IDS);
+				ft.readAndTransform(f.getAbsolutePath(), statusOut);
+				boolean madeFile = ft.writeResult(outPath, statusOut, OMIT_WHOLE_FILES);
+				if (madeFile) omitted = omitted + ft.omitted;
+				else omitted = ft.all;
 			}
 			else
 			{
@@ -85,102 +87,11 @@ public class LvtbToUdUI
 			}
 		}
 		System.out.printf(
-				"Everything is finished, %s trees was omited.\n", omited);
+				"Everything is finished, %s trees was omited.\n", omitted);
 		statusOut.printf(
-				"Everything is finished, %s trees was omited.\n", omited);
+				"Everything is finished, %s trees was omited.\n", omitted);
 		statusOut.flush();
 		statusOut.close();
 	}
 
-	/**
-	 * Transform a single knitted LV TreeBank PML file to UD.
-	 * @param inputPath		path to PML file
-	 * @param conllOut		writer for output data
-	 * @param warningsLog	log for warnings
-	 * @return	count of ommited trees
-	 */
-	public static int transformFile(
-			String inputPath, BufferedWriter conllOut, PrintWriter warningsLog)
-	throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
-	{
-		int omited = 0;
-		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
-		System.out.printf("%s trees found...\n", pmlTrees.getLength());
-		warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
-		String latestParId = null;
-		if (pmlTrees.getLength() > 0)
-		{
-			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
-			if (firstComment != null && firstComment.startsWith("AUTO"))
-			{
-				warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
-				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
-				return pmlTrees.getLength();
-			}
-			for (int i = 0; i < pmlTrees.getLength(); i++)
-			{
-				String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
-				if (comment != null && comment.startsWith("FIXME"))
-				{
-					warningsLog.println("File contains with \"FIXME\" comment, everything is ommited!");
-					System.out.println("File contains with \"FIXME\" comment, everything is ommited!");
-					return pmlTrees.getLength();
-				}
-			}
-			// Print out information about the start of the new document
-			conllOut.write("# newDoc");
-			String firstSentId = Utils.getId(pmlTrees.item(0));
-			if (firstSentId.matches("a-.*-p\\d+s\\d+"))
-			{
-				String dicIdForPrint = firstSentId.substring(firstSentId.indexOf("-") + 1,
-						firstSentId.lastIndexOf("-"));
-				if (CHANGE_IDS) dicIdForPrint = dicIdForPrint.replace("LETA", "newswire");
-				conllOut.write(" id=" + dicIdForPrint);
-
-			}
-			conllOut.newLine();
-			// Print out information about the start of the first paragraph
-			conllOut.write("# newpar\n");
-			String firstSentLastId = Utils.getId(Utils.getLastByOrd(
-					Utils.getAllPMLDescendants(pmlTrees.item(0))));
-			if (firstSentLastId.matches("a-.*?-p\\d+s\\d+w\\d+"))
-			{
-				latestParId = firstSentLastId.substring(firstSentLastId.indexOf("-") + 1,
-						firstSentLastId.lastIndexOf("s"));
-				//conllOut.write(" id=" + latestParId);
-			} else warningsLog.println(
-					"Node id \"" + firstSentLastId + "\" in first sentence does not match paragraph searching pattern!");
-		}
-		for (int i = 0; i < pmlTrees.getLength(); i++)
-		{
-			String conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
-			if (i > 0)
-			{
-				String thisSentId = Utils.getId(pmlTrees.item(i));
-				String newParId = null;
-				if (thisSentId.matches("a-.*?-p\\d+s\\d+"))
-					newParId = thisSentId.substring(thisSentId.indexOf("-") + 1,
-							thisSentId.lastIndexOf("s"));
-				else warningsLog.println(
-						"Sentence id \"" + thisSentId + "\"does not match paragraph searching pattern!");
-				if (newParId!= null && !newParId.equals(latestParId))
-				{
-					conllOut.write("# newpar\n");
-					latestParId = Utils.getId(Utils.getLastByOrd(
-							Utils.getAllPMLDescendants(pmlTrees.item(i))));
-					if (latestParId.matches("a-.*?-p\\d+s\\d+w\\d+"))
-						latestParId = latestParId.substring(latestParId.indexOf("-") + 1,
-								latestParId.lastIndexOf("s"));
-					else warningsLog.println(
-							"Node id \"" + latestParId + "\" does not match paragraph searching pattern!");
-				}
-			}
-			if (conllTree != null)
-				conllOut.write(conllTree);
-			else omited++;
-		}
-		System.out.println("Finished.");
-		warningsLog.println("Finished.");
-		return omited;
-	}
 }

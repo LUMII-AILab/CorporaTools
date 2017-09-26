@@ -308,10 +308,10 @@ public class DepRelLogic
 
 			// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
 			if (preps.getLength() > 1)
-				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".\n",
+				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, Utils.getId(actualNode), LvtbRoles.PREP), warnOut);
 			if (basElems.getLength() > 1)
-				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".\n",
+				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, Utils.getId(actualNode), LvtbRoles.BASELEM), warnOut);
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			if ("par".equals(Utils.getLemma(preps.item(0)))
@@ -343,7 +343,7 @@ public class DepRelLogic
 					"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
 					actualNode, XPathConstants.NODESET);
 			if (basElems.getLength() > 1)
-				warn(String.format("\"%s\" has multiple \"%s\"", pmcType, LvtbRoles.BASELEM), warnOut);
+				warn(String.format("\"%s\" has multiple \"%s\".", pmcType, LvtbRoles.BASELEM), warnOut);
 			String basElemTag = Utils.getTag(basElems.item(0));
 			String basElemXType = Utils.getPhraseType(basElems.item(0));
 
@@ -489,7 +489,7 @@ public class DepRelLogic
 				"./children/pminfo/children/node[role='" + LvtbRoles.PRED + "']",
 				etalonNode, XPathConstants.NODESET);
 		if (basElems!= null && basElems.getLength() > 1)
-			warn (String.format("\"%s\" has multiple \"%s\"", LvtbPmcTypes.INSPMC, LvtbRoles.PRED),
+			warn (String.format("\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED),
 					warnOut);
 		if (basElems != null) return UDv2Relations.PARATAXIS;
 		return UDv2Relations.DISCOURSE; // Washington (CNN) is left unidentified.
