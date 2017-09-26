@@ -23,7 +23,7 @@ public class FileTransformator
 	public boolean changeIds;
 	public StringBuilder processed;
 	public int omitted;
-	public int added;
+	private int added;
 	public int all;
 
 	public FileTransformator(boolean changeIds)

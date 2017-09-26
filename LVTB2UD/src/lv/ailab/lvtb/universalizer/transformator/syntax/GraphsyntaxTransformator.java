@@ -5,7 +5,6 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -64,10 +63,6 @@ public class GraphsyntaxTransformator
 			//Node specialPPart = crdPartList.item(i); // PML A node.
 			while (phrase != null && Utils.isPhraseNode(phrase))// && s.pmlaToConll.get(Utils.getId(specialPPart)).equals(s.pmlaToConll.get(Utils.getId(phraseParent))))
 			{
-				// TODO
-				// Pārbaudīt visas frāzes, kam šī koordinācija ir sastāvdaļa.
-				// Ja tai frāzes daļai, kam atbilst koordinācija, ir pakārtotas
-				// citas frāzes daļas, tad pakārtot tās arī koordinētajam elementam.
 				Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
 				NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
 				if (phraseParts != null) for (int j = 0; j < phraseParts.getLength(); j++)
@@ -76,12 +71,8 @@ public class GraphsyntaxTransformator
 
 					Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(j));
 					if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
-					{
-						s.setEnhLink(crdPartList.item(i), phraseParts.item(j), otherPartToken.depsBackbone.role,false,false);
-					}
-
-					// Ja daļa nav tiešais pēctecis, tad jāsalīzina, vai tās
-					// tokens ir pakārtots tiešā pēcteča tokenam?
+						s.setEnhLink(crdPartList.item(i), phraseParts.item(j),
+								otherPartToken.depsBackbone.role,false,false);
 				}
 
 				// Path to root goes like this: phrase->node->phrase->node...
