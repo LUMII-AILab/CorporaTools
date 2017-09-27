@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
@@ -30,6 +31,7 @@ public class GraphsyntaxTransformator
 	public void transformEnhancedSyntax() throws XPathExpressionException
 	{
 		propagateConjuncts();
+//		addControlledSubjects();
 	}
 
 	protected void propagateConjuncts() throws XPathExpressionException
@@ -68,6 +70,7 @@ public class GraphsyntaxTransformator
 				if (phraseParts != null) for (int j = 0; j < phraseParts.getLength(); j++)
 				{
 					if (phraseParts.item(j).isSameNode(specialPPart)) continue;
+					if (Utils.getAnyLabel(phraseParts.item(j)).equals(LvtbRoles.PUNCT)) continue;
 
 					Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(j));
 					if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
@@ -84,12 +87,23 @@ public class GraphsyntaxTransformator
 		}
 	}
 
-	protected void addControlledSubjects()
+	protected void addControlledSubjects() throws XPathExpressionException
 	{
-		// For each xPred:
-		// For each nonroot nonaux noncop part add subj.
+		// Find all nodes consisting of xPred with dependant subj.
+		NodeList xPredList = (NodeList) XPathEngine.get().evaluate(
+				".//node[children/xinfo/xtype/text()=\"xPred\" and children/node/role/text()=\"subj\"]",
+				s.pmlTree, XPathConstants.NODESET);
+		if (xPredList != null) for (int i = 0; i < xPredList.getLength(); i++)
+		{
+			// TODO
+			//System.out.println(Utils.getId(xPredList.item(i)));
+			// For each xPred:
+			// For each nonroot nonaux noncop part add subj.
 
-		// Ņemt katru xPred-a daļu un tad piemeklēt viņa subjektu. Ja ir koordinācija, paieties uz leju.
+			// Ņemt katru xPred-a daļu un tad piemeklēt viņa subjektu. Ja ir koordinācija, paieties uz leju.
+
+		}
+
 	}
 
 }
