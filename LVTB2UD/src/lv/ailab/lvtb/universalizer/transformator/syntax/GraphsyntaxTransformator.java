@@ -16,12 +16,20 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * This is the part where enhanced dependencies graph features are made. To use
+ * this on a given Sentence, TreesyntaxTransformator must be used on that
+ * sentence beforehand.
+ */
 public class GraphsyntaxTransformator
 {
 	/**
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
+	/**
+	 * Stream for warnings.
+	 */
 	protected PrintWriter warnOut;
 
 	public GraphsyntaxTransformator(Sentence sent, PrintWriter warnOut)
@@ -30,6 +38,20 @@ public class GraphsyntaxTransformator
 		this.warnOut = warnOut;
 	}
 
+	/**
+	 * Add enhanced dependencies graph features. Assumed that
+	 * TreesyntaxTransformator is already used on the sendence and that ellipsis
+	 * is already handled there.
+	 * Currently supported features:
+	 *  * conjuct propagation;
+	 *  * controled/rised subjects.
+	 * TODO
+	 *  * case information;
+	 *  * relative clauses.
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
 	public void transformEnhancedSyntax() throws XPathExpressionException
 	{
 		s.populateCoordPartsUnder();
@@ -37,6 +59,17 @@ public class GraphsyntaxTransformator
 		addControlledSubjects();
 	}
 
+	/**
+	 * Add enhanced dependencies subject links between various parts of xPred
+	 * and respective subjects. No links are added for xPred parts transformed
+	 * to aux, auxpass or cop. No links are added for subjects transformed as
+	 * something else than nsubj, nsubjpass, csubj, csubjpass.
+	 * To use this, Sentence.populateCoordPartsUnder() must be called
+	 * beforehand.
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
 	protected void addControlledSubjects() throws XPathExpressionException
 	{
 		// Find all nodes consisting of xPred with dependant subj.
@@ -109,6 +142,15 @@ public class GraphsyntaxTransformator
 		}
 	}
 
+	/**
+	 * Add enhanced dependencies links related to second and further coordinated
+	 * parts.
+	 * To use this, Sentence.populateCoordPartsUnder() must be called
+	 * beforehand.
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
 	protected void propagateConjuncts() throws XPathExpressionException
 	{
 		for (String coordId : s.coordPartsUnder.keySet())
@@ -132,11 +174,12 @@ public class GraphsyntaxTransformator
 					// Links between dependants of the coordination and coordinated parts.
 					NodeList dependents = Utils.getPMLNodeChildren(parentNode);
 					if (dependents != null)
-						for (int dependentI =0; dependentI < dependents.getLength(); dependentI++)
+						for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
 					{
 						UDv2Relations role = DepRelLogic.getSingleton().depToUD(
 								dependents.item(dependentI), true, warnOut);
-						s.setEnhLink(partNode, dependents.item(dependentI), role,false,false);
+						s.setEnhLink(partNode, dependents.item(dependentI),
+								role,false,false);
 					}
 
 					// Links between phrase parts
@@ -152,8 +195,8 @@ public class GraphsyntaxTransformator
 						if (phraseParts != null)
 							for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
 						{
-							if (phraseParts.item(phrasePartI).isSameNode(partNode)
-									||Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT))
+							if (Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
+									|| phraseParts.item(phrasePartI).isSameNode(partNode))
 								continue;
 
 							Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(phrasePartI));
@@ -166,59 +209,4 @@ public class GraphsyntaxTransformator
 			}
 		}
 	}
-
-/*	protected void propagateConjuncts() throws XPathExpressionException
-	{
-		NodeList crdPartList = (NodeList) XPathEngine.get().evaluate(
-				".//node[role/text()=\"crdPart\"]", s.pmlTree, XPathConstants.NODESET);
-		if (crdPartList != null) for (int i = 0; i < crdPartList.getLength(); i++)
-		{
-			// Let's find effective parent - not coordination.
-			Node effParent = Utils.getEffectiveAncestor(crdPartList.item(i));
-
-			// Link between parent of the coordination and coordinated part.
-			Token effParentTok = s.getEnhancedOrBaseToken(effParent);
-			Token childTok = s.getEnhancedOrBaseToken(crdPartList.item(i));
-			if (!effParentTok.depsBackbone.equals(EnhencedDep.root()))
-				childTok.deps.add(effParentTok.depsBackbone);
-
-			// Links between dependants of the coordination and coordinated parts.
-			// TODO grandparents.
-			NodeList dependants = Utils.getPMLNodeChildren(effParent);
-			if (dependants != null) for (int j =0; j < dependants.getLength(); j++)
-			{
-				UDv2Relations role = DepRelLogic.getSingleton().depToUD(
-						dependants.item(j), true, warnOut);
-				s.setEnhLink(crdPartList.item(i), dependants.item(j), role,false,false);
-			}
-
-			// Links between phrase parts
-			Node specialPPart = effParent; // PML A node.
-			Node phrase = Utils.getPMLParent(specialPPart); // PML phrase or A node/root in the end of the loop.
-			Node phraseParent = Utils.getPMLParent(phrase);
-			//Node specialPPart = crdPartList.item(i); // PML A node.
-			while (phrase != null && Utils.isPhraseNode(phrase))// && s.pmlaToConll.get(Utils.getId(specialPPart)).equals(s.pmlaToConll.get(Utils.getId(phraseParent))))
-			{
-				Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
-				NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
-				if (phraseParts != null) for (int j = 0; j < phraseParts.getLength(); j++)
-				{
-					if (phraseParts.item(j).isSameNode(specialPPart)) continue;
-					if (Utils.getAnyLabel(phraseParts.item(j)).equals(LvtbRoles.PUNCT)) continue;
-
-					Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(j));
-					if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
-						s.setEnhLink(crdPartList.item(i), phraseParts.item(j),
-								otherPartToken.depsBackbone.role,false,false);
-				}
-
-				// Path to root goes like this: phrase->node->phrase->node...
-				// Must stop, when ...->node->node happens.
-				specialPPart = phraseParent;
-				phrase = Utils.getEffectiveAncestor(phraseParent);
-				phraseParent = Utils.getPMLParent(phrase);
-			}
-		}
-	}//*/
-
 }

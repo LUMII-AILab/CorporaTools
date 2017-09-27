@@ -498,6 +498,15 @@ public class Sentence
 		}
 	}
 
+	/**
+	 * Get the enhanced token assigned for this node. If there is no enhanced
+	 * token assigned, return assigned base token.
+	 * @param aNode	node whose token must be found
+	 * @return	enhanced token or base token, or null (in that order)
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
 	public Token getEnhancedOrBaseToken(Node aNode)
 			throws XPathExpressionException
 	{
@@ -525,6 +534,14 @@ public class Sentence
 		return res.item(0);
 	}
 
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNodeId	Id of node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
 	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
 	{
 		if (aNodeId == null) return null;
@@ -535,6 +552,14 @@ public class Sentence
 		return res;
 	}
 
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNode	node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
 	public HashSet<String> getCoordPartsUnderOrNode (Node aNode)
 	throws XPathExpressionException
 	{

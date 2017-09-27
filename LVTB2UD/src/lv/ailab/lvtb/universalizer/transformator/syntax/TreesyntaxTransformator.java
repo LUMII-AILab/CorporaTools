@@ -25,6 +25,9 @@ import java.io.PrintWriter;
  */
 public class TreesyntaxTransformator
 {
+	/**
+	 * In this sentence all the transformations are carried out.
+	 */
 	public Sentence s;
 	/**
 	 * Should missing phrase tags be filled with some kind of heuristics.
