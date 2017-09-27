@@ -30,11 +30,67 @@ public class GraphsyntaxTransformator
 
 	public void transformEnhancedSyntax() throws XPathExpressionException
 	{
+		s.populateCoordPartsUnder();
 		propagateConjuncts();
 //		addControlledSubjects();
 	}
 
 	protected void propagateConjuncts() throws XPathExpressionException
+	{
+		for (String coordId : s.coordPartsUnder.keySet())
+		{
+			Node parentNode = s.findPmlNode(coordId);
+			Token parentNodeTok = s.getEnhancedOrBaseToken(parentNode);
+
+			Node grandParentNode = Utils.getPMLParent(parentNode);
+			Node grandGrandParentNode = Utils.getPMLParent(grandParentNode);
+
+			for (String coordPartId : s.coordPartsUnder.get(coordId))
+			{
+				Node partNode = s.findPmlNode(coordPartId);
+				Token partNodeTok = s.getEnhancedOrBaseToken(partNode);
+				if (!partNodeTok.equals(parentNodeTok))
+				{
+					// Link between parent of the coordination and coordinated part.
+					if (!parentNodeTok.depsBackbone.equals(EnhencedDep.root()))
+						partNodeTok.deps.add(parentNodeTok.depsBackbone);
+
+					// Links between dependants of the coordination and coordinated parts.
+					NodeList dependants = Utils.getPMLNodeChildren(parentNode);
+					if (dependants != null) for (int j =0; j < dependants.getLength(); j++)
+					{
+						UDv2Relations role = DepRelLogic.getSingleton().depToUD(
+								dependants.item(j), true, warnOut);
+						s.setEnhLink(partNode, dependants.item(j), role,false,false);
+					}
+
+					// Links between phrase parts
+					//if (Utils.isPhraseNode(grandParentNode))
+					if (grandParentNode.getNodeName().equals("xinfo")
+							|| grandParentNode.getNodeName().equals("pmcinfo"))
+					{
+						Node phrase = grandParentNode;
+						Node phraseParent = grandGrandParentNode;
+						Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
+						NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+						if (phraseParts != null) for (int j = 0; j < phraseParts.getLength(); j++)
+						{
+							if (phraseParts.item(j).isSameNode(partNode)
+									||Utils.getAnyLabel(phraseParts.item(j)).equals(LvtbRoles.PUNCT))
+								continue;
+
+							Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(j));
+							if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
+								s.setEnhLink(partNode, phraseParts.item(j),
+										otherPartToken.depsBackbone.role, false, false);
+						}
+					}
+				}
+			}
+		}
+	}
+
+/*	protected void propagateConjuncts() throws XPathExpressionException
 	{
 		NodeList crdPartList = (NodeList) XPathEngine.get().evaluate(
 				".//node[role/text()=\"crdPart\"]", s.pmlTree, XPathConstants.NODESET);
@@ -50,6 +106,7 @@ public class GraphsyntaxTransformator
 				childTok.deps.add(effParentTok.depsBackbone);
 
 			// Links between dependants of the coordination and coordinated parts.
+			// TODO grandparents.
 			NodeList dependants = Utils.getPMLNodeChildren(effParent);
 			if (dependants != null) for (int j =0; j < dependants.getLength(); j++)
 			{
@@ -85,7 +142,7 @@ public class GraphsyntaxTransformator
 				phraseParent = Utils.getPMLParent(phrase);
 			}
 		}
-	}
+	}//*/
 
 	protected void addControlledSubjects() throws XPathExpressionException
 	{

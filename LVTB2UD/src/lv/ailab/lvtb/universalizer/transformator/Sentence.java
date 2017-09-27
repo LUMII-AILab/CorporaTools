@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.LvtbToUdUI;
 import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.util.Tuple;
@@ -56,6 +57,12 @@ public class Sentence
 	public HashMap<String, Token> pmlaToEnhConll = new HashMap<>();
 
 	/**
+	 * Mapping from node ID to IDs of coordinated parts that are direct or
+	 * indirect part of this node.
+	 */
+	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
+
+	/**
 	 * Indication that transformation has failed and the obtained conll data is
 	 * garbage.
 	 */
@@ -84,6 +91,49 @@ public class Sentence
 		return res.toString();
 	}
 
+	public void populateCoordPartsUnder()
+	throws XPathExpressionException
+	{
+		coordPartsUnder = new HashMap<>();
+		populateCoordPartsUnder(pmlTree);
+	}
+
+	protected void populateCoordPartsUnder(Node aNode)
+	throws XPathExpressionException
+	{
+		if (aNode == null) return;
+		NodeList dependants = Utils.getPMLNodeChildren(aNode);
+		if (dependants != null) for (int i = 0; i < dependants.getLength(); i++)
+			populateCoordPartsUnder(dependants.item(i));
+		Node phrase = Utils.getPhraseNode(aNode);
+		if (phrase == null) return;
+		NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+		if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
+			populateCoordPartsUnder(phraseParts.item(i));
+
+		String id = Utils.getId(aNode);
+		if (phrase.getNodeName().equals("coordinfo"))
+		{
+			HashSet<String> eqs = coordPartsUnder.get(id);
+			if (eqs == null) eqs = new HashSet<>();
+			if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
+			{
+				String partId = Utils.getId(phraseParts.item(i));
+				String role = Utils.getRole(phraseParts.item(i));
+				if (LvtbRoles.CRDPART.equals(role))
+				{
+					if (coordPartsUnder.containsKey(partId))
+						eqs.addAll(coordPartsUnder.get(partId));
+					else eqs.add(partId);
+				}
+			}
+			coordPartsUnder.put(id, eqs);
+		}
+		/*else if (phrase.getNodeName().equals("xinfo")
+			|| phrase.getNodeName().equals("pmcinfo"))
+		{}//*/
+	}
+
 	/**
 	 * Make a list of given nodes children of the designated parent. Set UD
 	 * deprel, deps and deps backbone for each child. If designated parent is
@@ -97,7 +147,7 @@ public class Sentence
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -122,7 +172,7 @@ public class Sentence
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -151,7 +201,7 @@ public class Sentence
 	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
 	 *                      be used to obtain DEPREL for child nodes.
 	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -193,7 +243,7 @@ public class Sentence
 	 *                          is found
 	 * @param warnOut 		where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -239,7 +289,7 @@ public class Sentence
 	 *                          is found
 	 * @param warnOut 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -286,7 +336,7 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -330,7 +380,7 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -363,7 +413,7 @@ public class Sentence
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param baseDep	label to be used for enhanced dependency
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -389,7 +439,7 @@ public class Sentence
 	 * @param node 			PML node to be made root
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -417,7 +467,7 @@ public class Sentence
 	 * tokens.
 	 * @param newParent	new parent
 	 * @param child		child node whose attachment should be changed
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -457,5 +507,21 @@ public class Sentence
 		Token resToken = pmlaToEnhConll.get(id);
 		if (resToken == null) resToken = pmlaToConll.get(id);
 		return resToken;
+	}
+
+	/**
+	 * Find PML node by given ID.
+	 * @param id	an ID to search
+	 * @return	first node found
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public Node findPmlNode(String id) throws XPathExpressionException
+	{
+		NodeList res = (NodeList) XPathEngine.get().evaluate(
+				".//node[@id='"+ id + "']", pmlTree, XPathConstants.NODESET);
+		if (res == null || res.getLength() < 1) return null;
+		return res.item(0);
 	}
 }
