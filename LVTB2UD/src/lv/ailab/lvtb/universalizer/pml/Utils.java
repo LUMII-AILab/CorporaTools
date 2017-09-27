@@ -581,6 +581,7 @@ public class Utils
 	 */
 	public static ArrayList<Node> asList (NodeList nodes)
 	{
+		if (nodes == null) return null;
 		ArrayList<Node> res = new ArrayList<>();
 		for (int i = 0; i < nodes.getLength(); i++)
 			res.add(nodes.item(i));

@@ -524,4 +524,20 @@ public class Sentence
 		if (res == null || res.getLength() < 1) return null;
 		return res.item(0);
 	}
+
+	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
+	{
+		if (aNodeId == null) return null;
+		HashSet<String> res = new HashSet<>();
+		if (coordPartsUnder.containsKey(aNodeId))
+			res.addAll(coordPartsUnder.get(aNodeId));
+		else res.add(aNodeId);
+		return res;
+	}
+
+	public HashSet<String> getCoordPartsUnderOrNode (Node aNode)
+	throws XPathExpressionException
+	{
+		return getCoordPartsUnderOrNode(Utils.getId(aNode));
+	}
 }

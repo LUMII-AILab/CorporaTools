@@ -13,6 +13,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class GraphsyntaxTransformator
 {
@@ -32,7 +34,79 @@ public class GraphsyntaxTransformator
 	{
 		s.populateCoordPartsUnder();
 		propagateConjuncts();
-//		addControlledSubjects();
+		addControlledSubjects();
+	}
+
+	protected void addControlledSubjects() throws XPathExpressionException
+	{
+		// Find all nodes consisting of xPred with dependant subj.
+		NodeList xPredList = (NodeList) XPathEngine.get().evaluate(
+				".//node[children/xinfo/xtype/text()='xPred']",
+				s.pmlTree, XPathConstants.NODESET);
+		if (xPredList != null)
+			for (int xPredI = 0; xPredI < xPredList.getLength(); xPredI++)
+		{
+			// Get base token.
+			Token parentTok = s.getEnhancedOrBaseToken(xPredList.item(xPredI));
+
+			// Collect all subject nodes.
+			ArrayList<Node> subjs = new ArrayList<>();
+			NodeList tmp = (NodeList) XPathEngine.get().evaluate(
+					"./children/node[role/text()='subj']", xPredList.item(xPredI), XPathConstants.NODESET);
+			if (tmp != null) subjs.addAll(Utils.asList(tmp));
+			Node ancestor = Utils.getPMLParent(xPredList.item(xPredI));
+			while (ancestor.getNodeName().equals("coordinfo"))
+			{
+				ancestor = Utils.getPMLParent(ancestor); // PML node
+				tmp = (NodeList) XPathEngine.get().evaluate(
+						"./children/node[role/text()='subj']", ancestor , XPathConstants.NODESET);
+				if (tmp != null) subjs.addAll(Utils.asList(tmp));
+				ancestor = Utils.getPMLParent(ancestor); // PML node or phrase
+			}
+			// If no subjects found, nothing to do.
+			if (subjs.isEmpty()) continue;
+
+			// Work on each xPred part
+			NodeList xPredParts = Utils.getPMLNodeChildren(Utils.getPhraseNode(xPredList.item(xPredI)));
+			if (xPredParts != null)
+				for (int xPredPartI = 0; xPredPartI < xPredParts.getLength(); xPredPartI++)
+			{
+				// Do nothing with auxiliaries
+				Token xPredPartTok = s.getEnhancedOrBaseToken(xPredParts.item(xPredPartI));
+				if (xPredPartTok.depsBackbone.role == UDv2Relations.AUX
+						|| xPredPartTok.depsBackbone.role == UDv2Relations.AUX_PASS
+						|| xPredPartTok.depsBackbone.role == UDv2Relations.COP)
+					continue;
+
+				// For each other part a lingk between each subject and this
+				// part must be made.
+
+				for (Node subj : subjs)
+				{
+					Token subjTok = s.getEnhancedOrBaseToken(subj);
+					UDv2Relations role = subjTok.depsBackbone.role;
+					// Only UD subjects will have aditional link.
+					if (role != UDv2Relations.NSUBJ && role != UDv2Relations.NSUBJ_PASS &&
+							role != UDv2Relations.CSUBJ && role != UDv2Relations.CSUBJ_PASS)
+						continue;
+
+					// Find each coordinated subject part.
+					HashSet<String> subjIds = s.getCoordPartsUnderOrNode(subj);
+					// Find each coordinated x-part part.
+					HashSet<String> xPartIds = s.getCoordPartsUnderOrNode(xPredParts.item(xPredPartI));
+					// Make a link.
+					for (String subjId : subjIds)
+					{
+						Node subjNode = s.findPmlNode(subjId);
+						for (String xPartId : xPartIds)
+						{
+							Node xPartNode = s.findPmlNode(xPartId);
+							s.setEnhLink(xPartNode, subjNode, role, false, false);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	protected void propagateConjuncts() throws XPathExpressionException
@@ -56,12 +130,13 @@ public class GraphsyntaxTransformator
 						partNodeTok.deps.add(parentNodeTok.depsBackbone);
 
 					// Links between dependants of the coordination and coordinated parts.
-					NodeList dependants = Utils.getPMLNodeChildren(parentNode);
-					if (dependants != null) for (int j =0; j < dependants.getLength(); j++)
+					NodeList dependents = Utils.getPMLNodeChildren(parentNode);
+					if (dependents != null)
+						for (int dependentI =0; dependentI < dependents.getLength(); dependentI++)
 					{
 						UDv2Relations role = DepRelLogic.getSingleton().depToUD(
-								dependants.item(j), true, warnOut);
-						s.setEnhLink(partNode, dependants.item(j), role,false,false);
+								dependents.item(dependentI), true, warnOut);
+						s.setEnhLink(partNode, dependents.item(dependentI), role,false,false);
 					}
 
 					// Links between phrase parts
@@ -69,19 +144,21 @@ public class GraphsyntaxTransformator
 					if (grandParentNode.getNodeName().equals("xinfo")
 							|| grandParentNode.getNodeName().equals("pmcinfo"))
 					{
+						// Renaming for convenience
 						Node phrase = grandParentNode;
 						Node phraseParent = grandGrandParentNode;
 						Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
 						NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
-						if (phraseParts != null) for (int j = 0; j < phraseParts.getLength(); j++)
+						if (phraseParts != null)
+							for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
 						{
-							if (phraseParts.item(j).isSameNode(partNode)
-									||Utils.getAnyLabel(phraseParts.item(j)).equals(LvtbRoles.PUNCT))
+							if (phraseParts.item(phrasePartI).isSameNode(partNode)
+									||Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT))
 								continue;
 
-							Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(j));
+							Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(phrasePartI));
 							if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
-								s.setEnhLink(partNode, phraseParts.item(j),
+								s.setEnhLink(partNode, phraseParts.item(phrasePartI),
 										otherPartToken.depsBackbone.role, false, false);
 						}
 					}
@@ -143,24 +220,5 @@ public class GraphsyntaxTransformator
 			}
 		}
 	}//*/
-
-	protected void addControlledSubjects() throws XPathExpressionException
-	{
-		// Find all nodes consisting of xPred with dependant subj.
-		NodeList xPredList = (NodeList) XPathEngine.get().evaluate(
-				".//node[children/xinfo/xtype/text()=\"xPred\" and children/node/role/text()=\"subj\"]",
-				s.pmlTree, XPathConstants.NODESET);
-		if (xPredList != null) for (int i = 0; i < xPredList.getLength(); i++)
-		{
-			// TODO
-			//System.out.println(Utils.getId(xPredList.item(i)));
-			// For each xPred:
-			// For each nonroot nonaux noncop part add subj.
-
-			// Ņemt katru xPred-a daļu un tad piemeklēt viņa subjektu. Ja ir koordinācija, paieties uz leju.
-
-		}
-
-	}
 
 }
