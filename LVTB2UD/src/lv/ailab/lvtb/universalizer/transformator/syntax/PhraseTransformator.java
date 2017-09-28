@@ -609,8 +609,8 @@ public class PhraseTransformator
 		else if (basElemTag != null)
 		{
 			nominal = basElemTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
-					basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
-			passive = basElemTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
+					basElemTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
+			passive = basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
 		}
 
 		Node newRoot = lastBasElem;
@@ -619,17 +619,9 @@ public class PhraseTransformator
 		s.allAsDependents(newRoot, sortedNodes, xType, null, warnOut);
 		// FIXME vai šeit nesakropļo galvu?
 		if (passive && lastAux != null)
-		{
-			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = UDv2Relations.AUX_PASS;*/
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS, UDv2Relations.AUX_PASS, true, true);
-		}
 		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
-		{
-			/*Token lastAuxTok = s.pmlaToConll.get(Utils.getId(lastAux));
-			lastAuxTok.deprel = UDv2Relations.COP;*/
 			s.setLink(newRoot, lastAux, UDv2Relations.COP, UDv2Relations.COP, true, true);
-		}
 		return newRoot;
 	}
 
