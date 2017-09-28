@@ -110,10 +110,13 @@ public class GraphsyntaxTransformator
 						|| xPredPartTok.depsBackbone.role == UDv2Relations.AUX_PASS
 						|| xPredPartTok.depsBackbone.role == UDv2Relations.COP)
 					continue;
+				// Do nothing with nomens
+				if (xPredPartTok.xpostag != null && xPredPartTok.xpostag.matches("[napxm].*|v..pd...[ap]p.*]"))
+					continue;
+				// TODO what to do with past participles? 
 
-				// For each other part a lingk between each subject and this
-				// part must be made.
-
+				// For each other part a ling between each subject and this part
+				// must be made.
 				for (Node subj : subjs)
 				{
 					Token subjTok = s.getEnhancedOrBaseToken(subj);
