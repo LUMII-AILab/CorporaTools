@@ -151,21 +151,22 @@ END
 	die "Invalid file processing type $mode, use A/a/M/m instead.\n"
 		unless ($mode =~ /^[aAmM]$/);
 
-	print "Starting...\n";
+	print 'Starting... ';
 
 	# Load PML data.
 	my $wData = &_loadW($dirPrefix, $inputName);
-	print "W file parsed.\n";
+	print 'W file parsed. ';
 	my $mData = &_loadM($dirPrefix, $inputName);
-	print "M file parsed.\n";
+	print 'M file parsed. ';
 	my $aData;
 	if ($mode =~ /^[aA]$/)
 	{
 		$aData = &_loadA($dirPrefix, $inputName);
-		print "A file parsed.\n";
+		print 'A file parsed.';
 	}
+	print "\n";
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
-		or die "Could not create file $resName: $!";
+		or die "Error while processing $inputName - can't create $resName: $!";
 
 	# Test conformity of w and m file.
 	my $problems = &_testMW({%$wData, %$mData}, $out);

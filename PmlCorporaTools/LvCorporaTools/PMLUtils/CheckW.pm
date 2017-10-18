@@ -93,18 +93,16 @@ END
 		$txt = $pml =~ /^(.+)\.w$/ ? "$1.txt" : "$pml.txt";
 	}
 
-	print "CheckW has started procesing \"$pml\".\n";
-
 	# Statistics.
 	my $addedSpaces = 0;
 	my $deletedSpaces = 0;
 	my $movedPara = 0;
 
 	mkpath("$dirPrefix/res/");
-	my $logFile = IO::File->new("$dirPrefix/res/$pml-log.txt", ">") or die "$pml-log.txt: $!";
+	my $logFile = IO::File->new("$dirPrefix/res/$pml-log.txt", ">") or die "Can't create $pml-log.txt: $!";
 	
-	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "TXT file $txt: $!";
-	my $wIn = IO::File->new("$dirPrefix/$pml", "< :encoding(UTF-8)") or die "W file $pml: $!";
+	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "Can't read text file $txt: $!";
+	my $wIn = IO::File->new("$dirPrefix/$pml", "< :encoding(UTF-8)") or die "Can't read W file $pml: $!";
 	my $xmlString = join '', <$wIn>;
 	$xmlString =~ /^\s*(\Q<?\E.*?\Q?>\E)/;
 	my $xmlHeader = $1;
@@ -146,7 +144,7 @@ END
 				my $token = $wElem->{'token'}->{'content'};
 				
 				print $logFile "No such token $wElem->{'id'}:\"$token\" in \"$line\" āčēģīķļņōŗšūž" and
-				die "No such token \"$token\" in \"$line\""
+				die "Error while processing $pml: no such token \"$token\" in \"$line\""
 					if ($line !~ /^\Q$token\E(.*)$/);
 				$line =~ s/^\Q$token\E(.*)$/$1/;
 				
