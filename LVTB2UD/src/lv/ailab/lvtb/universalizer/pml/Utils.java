@@ -426,6 +426,32 @@ public class Utils
 	}
 
 	/**
+	 * Return this node, parent or the closest ancestor, that is not
+	 * coordination phrase or crdPart node.
+	 * @param node	node to analyze
+	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static Node getThisOrEffectiveAncestor(Node node)
+			throws XPathExpressionException
+	{
+		if (node == null || isRoot(node)) return null;
+		Node res = node;
+		String resType = getAnyLabel(res);
+		while (resType.equals(LvtbRoles.CRDPART) ||
+				resType.equals(LvtbCoordTypes.CRDCLAUSES) ||
+				resType.equals(LvtbCoordTypes.CRDPARTS))
+		{
+			res = getPMLParent(res);
+			resType = getAnyLabel(res);
+		}
+
+		return res;
+	}
+
+	/**
 	 * Find grandparent node (or phrase structure) in PML sense.
 	 * @param node	node to analyze
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo

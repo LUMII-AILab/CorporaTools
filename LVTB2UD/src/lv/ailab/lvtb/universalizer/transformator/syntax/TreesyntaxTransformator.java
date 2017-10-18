@@ -293,9 +293,9 @@ public class TreesyntaxTransformator
 			for (int i = 0; i < pmlDependents.getLength(); i++)
 			{
 				s.setBaseLink(newBaseDepRoot, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut));
+						DepRelLogic.getSingleton().depToUDBase(pmlDependents.item(i), warnOut));
 				s.setEnhLink(newEnhDepRoot, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), true, warnOut),
+						DepRelLogic.getSingleton().depToUDEnhanced(pmlDependents.item(i), warnOut),
 						true,true);
 				/*s.setLink(parentANode, pmlDependents.item(i),
 						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),

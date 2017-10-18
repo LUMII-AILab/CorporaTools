@@ -1,10 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -48,7 +46,8 @@ public class EllipsisLogic
 			if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*"))
 				for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
+						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils
@@ -66,7 +65,8 @@ public class EllipsisLogic
 					UDv2Relations.CCOMP, UDv2Relations.ADVCL};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
+						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
@@ -83,7 +83,8 @@ public class EllipsisLogic
 					UDv2Relations.NMOD, UDv2Relations.CASE};
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = drLogic.depToUDNoRed(n, n, warnOut);
+				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
+						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
