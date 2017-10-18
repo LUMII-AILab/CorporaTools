@@ -48,22 +48,39 @@ Input files should be provided as UTF-8.
 
 Params:
    data directory
+Returns:
+   count of failed files
 
-Latvian Treebank project, LUMII, 2011, provided under GPL
+Latvian Treebank project, LUMII, 2017, provided under GPL
 END
 		exit 1;
 	}
 
 	my $dir_name = shift @_;
 	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $problems = 0;
 
 	while (defined(my $in_file = $dir->read))
 	{
 		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
 		{
-			normalizeIds ($dir_name, $1, $1);
+			eval { normalizeIds ($dir_name, $1, $1) };
+			if ($@)
+			{
+				$problems++;
+				print $@;
+			}
 		}
 	}
+	if ($problems)
+	{
+		print "$problems files failed.\n";
+	}
+	else
+	{
+		print "All finished.\n";
+	}
+	return $problems;
 }
 
 # Recalculate IDs in single dataset. This can be used as entry point, if this

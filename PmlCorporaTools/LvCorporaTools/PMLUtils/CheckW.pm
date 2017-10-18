@@ -46,7 +46,7 @@ Params:
 Returns:
    count of failed files
 
-Latvian Treebank project, LUMII, 2011, provided under GPL
+Latvian Treebank project, LUMII, 2017, provided under GPL
 END
 		exit 1;
 	}

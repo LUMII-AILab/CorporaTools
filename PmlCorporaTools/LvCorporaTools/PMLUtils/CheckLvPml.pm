@@ -69,8 +69,10 @@ Params:
    data directory
    file type [M (.m + .w files will be checked) / A (.a + .m + .w files will
    be checked)]
+Returns:
+   count of failed files
 
-Latvian Treebank project, LUMII, 2013, provided under GPL
+Latvian Treebank project, LUMII, 2017, provided under GPL
 END
 		exit 1;
 	}

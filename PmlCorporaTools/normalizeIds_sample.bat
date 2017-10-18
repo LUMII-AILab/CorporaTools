@@ -18,6 +18,9 @@ REM MANUAL: check error messages and correct them.
 
 REM Run ID normalization.
 ::perl -e "use LvCorporaTools::PMLUtils::NormalizeIds qw(processDir); processDir(@ARGV)" data\checkedAll
+:: Move results to a suitable place
+::@rmdir .\data\normalizedIds /Q /S >nul
+::@mkdir .\data\normalizedIds >nul
 ::@move .\data\checkedAll\res .\data\normalizedIds >nul
 
 REM MANUAL: Fix m-files element order: open m files in Sublime Text, find (?s)(<s[ >].*</s>)(\s*)(<meta>.*</meta>) and replace with \3\2\1
