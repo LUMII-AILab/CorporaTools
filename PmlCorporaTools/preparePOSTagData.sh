@@ -28,6 +28,8 @@ tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
 	if grep -q "<comment>AUTO</comment>" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - unfinished"
+	elif grep -q "<comment>FIXME" "$treebankFolder/${file%.m}.a"; then
+		echo "skipping $file - fixme"
 	else
 		cp "$treebankFolder/$file" $pmlFolder
 		cp "$treebankFolder/${file%.m}.w" $pmlFolder
