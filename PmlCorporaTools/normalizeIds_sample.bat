@@ -1,25 +1,24 @@
 REM Check if w file matches original text.
 ::perl -e "use LvCorporaTools::PMLUtils::CheckW qw(processDir); processDir(@ARGV)" data\original
-::rmdir .\data\checkedW /Q /S
-::move .\data\original\res .\data\checkedW
-::copy .\data\original\*.a .\data\checkedW
-::copy .\data\original\*.m .\data\checkedW
-REM MANUAL: check error messages.
+::@rmdir .\data\checkedW /Q /S >nul
+::@move .\data\original\res .\data\checkedW >nul
+::@copy .\data\original\*.a .\data\checkedW >nul
+::@copy .\data\original\*.m .\data\checkedW >nul
+REM MANUAL: check if nothing failed.
 
 :: Prepare for next step.
-::rmdir .\data\checkedAll /Q /S
-::mkdir .\data\checkedAll
-::copy .\data\checkedW\*.a .\data\checkedAll\
-::copy .\data\checkedW\*.m .\data\checkedAll\
-::copy .\data\checkedW\*.w .\data\checkedAll\
+::@rmdir .\data\checkedAll /Q /S >nul
+::@mkdir .\data\checkedAll >nul
+::@copy .\data\checkedW\*.a .\data\checkedAll\ >nul
+::@copy .\data\checkedW\*.m .\data\checkedAll\ >nul
+::@copy .\data\checkedW\*.w .\data\checkedAll\ >nul
 REM Check fileset IDs
-::perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
-
+perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
 REM MANUAL: check error messages and correct them.
 
 REM Run ID normalization.
 ::perl -e "use LvCorporaTools::PMLUtils::NormalizeIds qw(processDir); processDir(@ARGV)" data\checkedAll
-::move .\data\checkedAll\res .\data\normalizedIds
+::@move .\data\checkedAll\res .\data\normalizedIds >nul
 
 REM MANUAL: Fix m-files element order: open m files in Sublime Text, find (?s)(<s[ >].*</s>)(\s*)(<meta>.*</meta>) and replace with \3\2\1
 

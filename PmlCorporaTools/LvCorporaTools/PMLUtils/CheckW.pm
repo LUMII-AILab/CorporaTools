@@ -43,13 +43,24 @@ and paragraph borders, if necessary. Input files should be provided as UTF-8.
 
 Params:
    data directory
+Returns:
+   count of failed files
 
 Latvian Treebank project, LUMII, 2011, provided under GPL
 END
 		exit 1;
 	}
-	LvCorporaTools::GenericUtils::UIWrapper::processDir(
+	my $problems = LvCorporaTools::GenericUtils::UIWrapper::processDir(
 		\&checkW, "^.+\\.w\$", '', 0, 0, @_);
+	if ($problems)
+	{
+		print "$problems files failed.\n";
+	}
+	else
+	{
+		print "All finished.\n";
+	}
+	return $problems;
 }
 
 # Perform error-chacking in single file. This can be used as entry point, if
@@ -81,14 +92,16 @@ END
 	{
 		$txt = $pml =~ /^(.+)\.w$/ ? "$1.txt" : "$pml.txt";
 	}
-	
+
+	print "CheckW has started procesing \"$pml\".\n";
+
 	# Statistics.
 	my $addedSpaces = 0;
 	my $deletedSpaces = 0;
 	my $movedPara = 0;
 
 	mkpath("$dirPrefix/res/");
-	my $errFile = IO::File->new("$dirPrefix/res/$pml-errors.txt", ">") or die "$pml-errors.txt: $!";
+	my $logFile = IO::File->new("$dirPrefix/res/$pml-log.txt", ">") or die "$pml-log.txt: $!";
 	
 	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "TXT file $txt: $!";
 	my $wIn = IO::File->new("$dirPrefix/$pml", "< :encoding(UTF-8)") or die "W file $pml: $!";
@@ -125,16 +138,14 @@ END
 					my @newPara = @$curParW[$tokenId..@$curParW-1];
 					splice @{$curParW}, $tokenId, @$curParW - $tokenId;
 					# Insert new paragraph in xml tree.
-					#splice (@{$lvwdata->{'doc'}->{'para'}}, $currentPara + 1, 0, {'w' => @newPara});
 					unshift @{$lvwdata->{'doc'}->{'para'}[$currentPara + 1]->{'w'}}, @newPara;
-					#$currentPara++;
 					$movedPara++;
 					 #Finish porcesing current xml paragraph, as there is nothing left to process.
 					last;
 				}
 				my $token = $wElem->{'token'}->{'content'};
 				
-				print $errFile "No such token $wElem->{'id'}:\"$token\" in \"$line\" āčēģīķļņōŗšūž" and
+				print $logFile "No such token $wElem->{'id'}:\"$token\" in \"$line\" āčēģīķļņōŗšūž" and
 				die "No such token \"$token\" in \"$line\""
 					if ($line !~ /^\Q$token\E(.*)$/);
 				$line =~ s/^\Q$token\E(.*)$/$1/;
@@ -195,12 +206,13 @@ END
 	$wOut->close();
 
 	# Print statistics on the screen.
-	print "Added $addedSpaces spaces.\n";
-	print "Deleted $deletedSpaces spaces.\n";
-	print "Moved $movedPara paragraphs.\n";
+	print $logFile "Added $addedSpaces spaces.\n";
+	print $logFile "Deleted $deletedSpaces spaces.\n";
+	print $logFile "Moved $movedPara paragraphs.\n";
 	print "CheckW has finished procesing \"$pml\".\n";
 
-	$errFile->close();
+	$logFile->close();
+	return 0;
 }
 
 1;
