@@ -2,19 +2,15 @@
 <pml_schema
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
-  <revision>1.0</revision>
+  <revision>2.0</revision>
   <description>Schema for Latvian Treebank word/token layer.</description>
   <root name="lvwdata" type="w-wdata.type"/>
   
   <type name="w-wdata.type">
     <structure>
-      <member name="meta" type="w-meta.type"/> <!-- Šitais meta ir, lai ierakstītu kaut kādu info par faila izveidotāju, datumu, utt.-->
+      <member name="meta"><cdata format="any"/></member> <!-- Šitais meta ir, lai ierakstītu kaut kādu info par faila izveidotāju, datumu, utt.-->
       <member name="doc" type="w-doc.type"/>
     </structure>
-  </type>
-  
-  <type name="w-meta.type">
-    <cdata format="any"/>
   </type>
   
   <type name="w-doc.type">
@@ -22,17 +18,35 @@
       <attribute name="id" required="1" role="#ID"><cdata format="ID"/></attribute>
       <attribute name="source_id"><cdata format="any"/></attribute>
       <sequence content_pattern="docmeta, para+">
-        <element name="docmeta" type="w-meta.type"/> <!-- Šitais meta ir, lai ierakstītu info par dokumentu no kura ir tālāk sekojošie teikumi.-->
+        <element name="docmeta" type="w-docmeta.type"/> <!-- Šitais meta ir, lai ierakstītu info par dokumentu no kura ir tālāk sekojošie teikumi.-->
         <element name="para" type="w-para.type"/>
       </sequence>
     </container>
   </type>
   
+  <type name="w-docmeta.type">
+    <structure> <!-- Metadati no korpusa. -->
+	  <member name="title" required="1"><cdata format="any"/></member>
+	  <member name="source"><cdata format="any"/></member>
+	  <member name="author"><cdata format="any"/></member>
+	  <member name="authorgender"><cdata format="any"/></member>
+	  <member name="published"><cdata format="any"/></member>
+	  <member name="genre"><cdata format="any"/></member>
+	  <member name="keywords">
+		<list ordered="0"><cdata format="any"/></list>
+	  </member>
+	  <member name="msc"><cdata format="any"/></member>
+	</structure>
+  </type>
+  
   <type name="w-para.type">
-    <sequence>
-      <element name="othermarkup" type="w-meta.type"/> <!-- Atkal meta...-->
-      <element name="w" type="w-node.type"/>
-    </sequence>
+    <container>
+	  <attribute name="id" required="1" role="#ID"><cdata format="ID"/></attribute>
+      <sequence>
+        <element name="othermarkup"><cdata format="any"/></element> <!-- Atkal meta...-->
+        <element name="w" type="w-node.type"/>
+      </sequence>
+	</container>
   </type>
   
   <type name="w-node.type">
