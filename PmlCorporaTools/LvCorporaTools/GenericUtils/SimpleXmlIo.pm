@@ -18,7 +18,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(loadXml printXml);
 
-#use Data::Dumper;
+use Data::Dumper;
 use XML::Simple;  # XML handling library
 use IO::File;
 
@@ -49,8 +49,7 @@ sub loadXml
 #		'GroupTags' => {},
 		);
 	$in->close();
-	
-	return {'xml' => $data, 'header' => $header, 'handler' => $sxml};	
+	return {'xml' => $data, 'header' => $header, 'handler' => $sxml};
 }
 
 # printXml (file name with extension and everything, XML::Simple object to
@@ -66,17 +65,19 @@ sub printXml
 	
 	my $out = IO::File->new($filename, "> :encoding(UTF-8)")
 		or die "Could not create file $filename: $!";
-	$xmlHandler->XMLout($data,
+	my $xmlString = $xmlHandler->XMLout($data,
 		'KeyAttr' => [],
 		'AttrIndent' => 1,
 		'RootName' => $root,
-		'OutputFile' => $out,
+#		'OutputFile' => $out,
 		'SuppressEmpty' => 1,
 		'NoSort' => 1,
 		'XMLDecl' => $header,
 #		'NoEscape' => 1,
 #		'GroupTags' => {},
 		);
+	$xmlString =~ s#(?s)(<s[ >].*</s>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
+	print $out $xmlString;
 	$out->close();
 }
 1;

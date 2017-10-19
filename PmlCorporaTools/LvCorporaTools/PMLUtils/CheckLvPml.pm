@@ -69,8 +69,10 @@ Params:
    data directory
    file type [M (.m + .w files will be checked) / A (.a + .m + .w files will
    be checked)]
+Returns:
+   count of failed files
 
-Latvian Treebank project, LUMII, 2013, provided under GPL
+Latvian Treebank project, LUMII, 2017, provided under GPL
 END
 		exit 1;
 	}
@@ -79,13 +81,33 @@ END
 	my $mode = shift @_;
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
+	my $problems = 0;
+
 	while (defined(my $inFile = $dir->read))
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
-			checkLvPml ($dirName, $1, $mode, "$1-errors.txt");
+			my $res = eval { checkLvPml ($dirName, $1, $mode, "$1-errors.txt") };
+			if ($@)
+			{
+				$problems++;
+				print $@;
+			} elsif ($res)
+			{
+				$problems++;
+			}
 		}
 	}
+
+	if ($problems)
+	{
+		print "$problems files failed.\n";
+	}
+	else
+	{
+		print "All finished.\n";
+	}
+	return $problems;
 }
 
 # Perform error-chacking in single dataset. This can be used as entry point, if
@@ -131,33 +153,40 @@ END
 	die "Invalid file processing type $mode, use A/a/M/m instead.\n"
 		unless ($mode =~ /^[aAmM]$/);
 
-	print "Starting...\n";
-
 	# Load PML data.
 	my $wData = &_loadW($dirPrefix, $inputName);
-	print "W file parsed.\n";
+	print 'Parsed W';
 	my $mData = &_loadM($dirPrefix, $inputName);
-	print "M file parsed.\n";
+	print ', M';
 	my $aData;
 	if ($mode =~ /^[aA]$/)
 	{
 		$aData = &_loadA($dirPrefix, $inputName);
-		print "A file parsed.\n";
+		print ', A';
 	}
+	print ".\n";
 	my $out = IO::File->new("$dirPrefix\\$resName", "> :encoding(UTF-8)")
-		or die "Could not create file $resName: $!";
+		or die "Error while processing $inputName - can't create $resName: $!";
 
 	# Test conformity of w and m file.
-	&_testMW({%$wData, %$mData}, $out);
+	my $problems = &_testMW({%$wData, %$mData}, $out);
 	
 	if ($mode =~ /^[aA]$/)
 	{
 		# Test conformity of m and a file. 
-		&_testAM({%$mData, %$aData}, $out);
+		$problems = $problems + &_testAM({%$mData, %$aData}, $out);
 	}
 	
 	$out->close;
-	print "CheckIds has finished procesing \"$inputName\".\n";
+	if ($problems)
+	{
+		print "CheckIds has finished procesing \"$inputName\" with $problems errors.\n";
+	}
+	else
+	{
+		print "CheckIds has finished procesing \"$inputName\" successfully.\n";
+	}
+	return $problems;
 }
 
 # _testMW (data hashmap with keys 'w2token', 'm2w', 'w2m'; something where to
@@ -168,20 +197,34 @@ sub _testMW
 	my $data = shift @_;
 	my $out = shift @_;
 
+	my $problems = 0;
 	my $badIds = &_findUnusedIds($data->{'w2token'}, $data->{'w2m'});
-	print 'Found '.scalar @$badIds." w ID(s) never referenced in m file.\n";
-	print $out "W IDs never referenced in m file:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." w ID(s) never referenced in m file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "W IDs never referenced in m file:\n";
+		print $out join("\n", @$badIds);
+	}
 	
 	$badIds = &_findUnusedIds($data->{'w2m'}, $data->{'w2token'});
-	print 'Found '.scalar @$badIds." non-existing w reference(s) in m file.\n";
-	print $out "\n\nNon-existing w references in m file:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." non-existing w reference(s) in m file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nNon-existing w references in m file:\n";
+		print $out join("\n", @$badIds);
+	}
 	
 	$badIds = &_checkFormChange($data->{'m2w'}, $data->{'w2m'}, $data->{'w2token'});
-	print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
-	print $out "\n\nM nodes with incomplete \'form_change\':\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." m node(s) whose \'form_change\' must be checked.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nM nodes with incomplete \'form_change\':\n";
+		print $out join("\n", @$badIds);
+	}
+	return $problems;
 }
 
 # _testAM (data hashmap with keys 'tree2node', 'node2tree', 'tree2sent',
@@ -195,45 +238,78 @@ sub _testAM
 	
 	my $badIds = &_findUnusedIds($data->{'m2w'}, $data->{'m2node'});
 	my @notDel = grep {not $data->{'m2w'}->{$_}->{'deleted'}} @$badIds;
-	print 'Found '.scalar @$badIds.' m ID(s) never referenced in a file, '.
-		(+@$badIds - @notDel)." of them are marked for deletion.\n";
-	print $out "\n\nM IDs never referenced in a file:\n";
-	print $out join("\n", @notDel);
-	print $out "\nmarked for deletion:\n";
-	my @del = grep {$data->{'m2w'}->{$_}->{'deleted'}} @$badIds;
-	print $out join("\n", @del);
-	
+	#print 'Found '.scalar @$badIds.' m ID(s) never referenced in a file, '.
+	#	(+@$badIds - @notDel)." of them are marked for deletion.\n";
+	my $problems = scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nM IDs never referenced in a file:\n";
+		print $out join("\n", @notDel);
+		my @del = grep {$data->{'m2w'}->{$_}->{'deleted'}} @$badIds;
+		if (scalar @del)
+		{
+			print $out "\nmarked for deletion:\n";
+			print $out join("\n", @del);
+		}
+	}
+
 	$badIds = &_findUnusedIds($data->{'m2node'}, $data->{'m2w'});
-	print 'Found '.scalar @$badIds." non-existing m reference(s) in a file.\n";
-	print $out "\n\nNon-existing m references in a file:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." non-existing m reference(s) in a file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nNon-existing m references in a file:\n";
+		print $out join("\n", @$badIds);
+	}
 
 	@$badIds = grep {$data->{'m2w'}->{$_}->{'deleted'}} (values %{$data->{'node2m'}});
-	print 'Found '.scalar @$badIds." m element(s) marked for deletion, but used in a file.\n";
-	print $out "\n\nM elements marked for deletion, but used in a file:\n";
-	print $out join("\n", @$badIds);
-	
+	#print 'Found '.scalar @$badIds." m element(s) marked for deletion, but used in a file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nM elements marked for deletion, but used in a file:\n";
+		print $out join("\n", @$badIds);
+	}
+
 	$badIds = &_findUnusedIds($data->{'sent2m'}, $data->{'sent2tree'});
-	print 'Found '.scalar @$badIds." s ID(s) never referenced in a file.\n";
-	print $out "\n\nS IDs never referenced in a file:\n";
-	print $out join("\n", @$badIds);
-	
+	#print 'Found '.scalar @$badIds." s ID(s) never referenced in a file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nS IDs never referenced in a file:\n";
+		print $out join("\n", @$badIds);
+	}
+
 	$badIds = &_findUnusedIds($data->{'sent2tree'}, $data->{'sent2m'});
-	print 'Found '.scalar @$badIds." non-existing s reference(s) in a file.\n";
-	print $out "\n\nNon-existing s references in a file:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." non-existing s reference(s) in a file.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nNon-existing s references in a file:\n";
+		print $out join("\n", @$badIds);
+	}
 
 	$badIds = &_validateSentBound(
 		$data->{'sent2tree'}, $data->{'m2node'}, $data->{'sent2m'}, $data->{'node2tree'});
-	print 'Found '.scalar @$badIds." m node(s) not reffered to in coressponding tree.\n";
-	print $out "\n\nM nodes not reffered from coressponding tree:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." m node(s) not reffered to in coressponding tree.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nM nodes not reffered from coressponding tree:\n";
+		print $out join("\n", @$badIds);
+	}
 
 	$badIds = &_validateSentBound(
 		$data->{'tree2sent'}, $data->{'node2m'}, $data->{'tree2node'}, $data->{'m2sent'});
-	print 'Found '.scalar @$badIds." a node(s) not reffered to in coressponding sentence.\n";
-	print $out "\n\nA nodes not reffered from coressponding sentence:\n";
-	print $out join("\n", @$badIds);
+	#print 'Found '.scalar @$badIds." a node(s) not reffered to in coressponding sentence.\n";
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nA nodes not reffered from coressponding sentence:\n";
+		print $out join("\n", @$badIds);
+	}
+
+	return $problems;
 }
 
 # _loadW (source directory, file name without extension)

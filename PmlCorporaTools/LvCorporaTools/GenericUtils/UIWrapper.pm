@@ -22,6 +22,7 @@ use XML::LibXML;  # XML handling library
 # Function for file processing will be used according to signature (data
 # directory prefix, input file (without dir name), output file (if 4th
 # parameter true), other parameters)
+# Returns number of files ending with die.
 sub processDir
 {
 	my $processFileFunct = shift @_;
@@ -33,6 +34,8 @@ sub processDir
 	my @otherPrams = @_;
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
 
+	my $baddies = 0;
+
 	while (defined(my $inFile = $dir->read))
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /$filter/))
@@ -42,14 +45,21 @@ sub processDir
 			if ($output)
 			{
 				my $outFile = "$coreName$ext";
-				&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
+				eval {&$processFileFunct($dirName, $inFile, $outFile, @otherPrams)};
 			}
 			else
 			{
-				&$processFileFunct($dirName, $inFile, @otherPrams);
+				eval {&$processFileFunct($dirName, $inFile, @otherPrams)};
 			}
+			if ($@)
+			{
+				$baddies++;
+				print $@;
+			}
+
 		}
 	}
+	return $baddies;
 }
 
 # transformAFile(pointer to function for transforming each tree, create file

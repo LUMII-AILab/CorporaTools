@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.LvtbToUdUI;
 import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.Utils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.util.Tuple;
@@ -56,6 +57,12 @@ public class Sentence
 	public HashMap<String, Token> pmlaToEnhConll = new HashMap<>();
 
 	/**
+	 * Mapping from node ID to IDs of coordinated parts that are direct or
+	 * indirect part of this node.
+	 */
+	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
+
+	/**
 	 * Indication that transformation has failed and the obtained conll data is
 	 * garbage.
 	 */
@@ -84,6 +91,49 @@ public class Sentence
 		return res.toString();
 	}
 
+	public void populateCoordPartsUnder()
+	throws XPathExpressionException
+	{
+		coordPartsUnder = new HashMap<>();
+		populateCoordPartsUnder(pmlTree);
+	}
+
+	protected void populateCoordPartsUnder(Node aNode)
+	throws XPathExpressionException
+	{
+		if (aNode == null) return;
+		NodeList dependants = Utils.getPMLNodeChildren(aNode);
+		if (dependants != null) for (int i = 0; i < dependants.getLength(); i++)
+			populateCoordPartsUnder(dependants.item(i));
+		Node phrase = Utils.getPhraseNode(aNode);
+		if (phrase == null) return;
+		NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+		if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
+			populateCoordPartsUnder(phraseParts.item(i));
+
+		String id = Utils.getId(aNode);
+		if (phrase.getNodeName().equals("coordinfo"))
+		{
+			HashSet<String> eqs = coordPartsUnder.get(id);
+			if (eqs == null) eqs = new HashSet<>();
+			if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
+			{
+				String partId = Utils.getId(phraseParts.item(i));
+				String role = Utils.getRole(phraseParts.item(i));
+				if (LvtbRoles.CRDPART.equals(role))
+				{
+					if (coordPartsUnder.containsKey(partId))
+						eqs.addAll(coordPartsUnder.get(partId));
+					else eqs.add(partId);
+				}
+			}
+			coordPartsUnder.put(id, eqs);
+		}
+		/*else if (phrase.getNodeName().equals("xinfo")
+			|| phrase.getNodeName().equals("pmcinfo"))
+		{}//*/
+	}
+
 	/**
 	 * Make a list of given nodes children of the designated parent. Set UD
 	 * deprel, deps and deps backbone for each child. If designated parent is
@@ -93,17 +143,19 @@ public class Sentence
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
-	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
-	 *                      be used to obtain DEPREL for child nodes.
+	 * @param childDeprel	dependency role + enhanced dependencies postfix to
+	 *                      be used for DEPREL field and enhanced backbone for
+	 *                      child nodes, or null, if
+	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
+	 *                      get this info.
 	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, NodeList children, String phraseType,
-			UDv2Relations childDeprel, PrintWriter warnOut)
+			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel, warnOut);
@@ -118,17 +170,18 @@ public class Sentence
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
-	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
-	 *                      be used to obtain DEPREL for child nodes.
-	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @param childDeprel	dependency role + enhanced dependencies postfix to
+	 *                      be used for DEPREL field and enhanced backbone for
+	 *                      child nodes, or null, if
+	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
+	 *                      get this info.
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
 			Node newRoot, List<Node> children, String phraseType,
-			UDv2Relations childDeprel, PrintWriter warnOut)
+			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		if (children == null || children.isEmpty()) return;
@@ -147,16 +200,18 @@ public class Sentence
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children.
-	 * @param childDeprel	value to sent for DEPREL field for child nodes, or
-	 *                      null, if DepRelLogic.phrasePartRoleToUD() should
-	 *                      be used to obtain DEPREL for child nodes.
+	 * @param childDeprel	dependency role + enhanced dependencies postfix to
+	 *                      be used for DEPREL field and enhanced backbone for
+	 *                      child nodes, or null, if
+	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
+	 *                      get this info.
 	 * @param warnOut 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public void addAsDependent (
-			Node parent, Node child, String phraseType, UDv2Relations childDeprel,
+			Node parent, Node child, String phraseType, Tuple<UDv2Relations, String> childDeprel,
 			PrintWriter warnOut)
 	throws XPathExpressionException
 	{
@@ -165,41 +220,35 @@ public class Sentence
 
 		if (childDeprel == null) childDeprel =
 				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
-		setLink(parent, child, childDeprel, childDeprel, true,true);
-		// Process root.
-		/*Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
-
-		// Process child.
-		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
-		childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
-		if (childDeprel == null)
-			childBaseToken.deprel = PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
-		else childBaseToken.deprel = childDeprel;*/
-
+		setLink(parent, child, childDeprel.first, childDeprel, true,true);
 	}
 
 	/**
 	 * For the given node find first children of the given type and make all
-	 * other children depend on it. Set UD deprel for each child.
+	 * other children depend on it. Set UD deprel and enhanced backbone for each
+	 * child.
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
 	 *                      	correct UD role for children
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
-	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
-	 *                          should be used to obtain DEPREL for child nodes
+	 * @param childDeprel		dependency role + enhanced dependencies postfix
+	 *                          to be used for DEPREL field and enhanced
+	 *                          backbone for child nodes, or null, if
+	 *                      	DepRelLogic.phrasePartRoleToUD() should be used
+	 *                      	to get this info.
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @param warnOut 		where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public Node allUnderFirst(
 			Node phraseNode, String phraseType, String newRootType,
-			UDv2Relations childDeprel, boolean warnMoreThanOne, PrintWriter warnOut)
+			Tuple<UDv2Relations, String> childDeprel, boolean warnMoreThanOne,
+			PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -225,27 +274,31 @@ public class Sentence
 
 	/**
 	 * For the given node find first children of the given type and make all
-	 * other children depend on it. Set UD deprel for each child.
+	 * other children depend on it. Set UD deprel and enhanced backbone for each
+	 * child.
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
 	 *                      	correct UD role for children
 	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param newRootBackUpType backUpRole, if no nodes of newRootType is found
-	 * @param childDeprel		value to sent for DEPREL field for child nodes,
-	 *                          or null, if DepRelLogic.phrasePartRoleToUD()
-	 *                          should be used to obtain DEPREL for child nodes
+	 * @param childDeprel		dependency role + enhanced dependencies postfix
+	 *                          to be used for DEPREL field and enhanced
+	 *                          backbone for child nodes, or null, if
+	 *                      	DepRelLogic.phrasePartRoleToUD() should be used
+	 *                      	to get this info.
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
 	 * @param warnOut 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
 	public Node allUnderLast(
-			Node phraseNode, String phraseType, String newRootType, String newRootBackUpType,
-			UDv2Relations childDeprel, boolean warnMoreThanOne, PrintWriter warnOut)
+			Node phraseNode, String phraseType, String newRootType,
+			String newRootBackUpType, Tuple<UDv2Relations, String> childDeprel,
+			boolean warnMoreThanOne, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		NodeList children = (NodeList)XPathEngine.get().evaluate(
@@ -286,11 +339,11 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public void setLink (Node parent, Node child, UDv2Relations baseDep, UDv2Relations enhancedDep,
+	public void setLink (Node parent, Node child, UDv2Relations baseDep, Tuple<UDv2Relations, String> enhancedDep,
 						 boolean setBackbone, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
@@ -312,7 +365,7 @@ public class Sentence
 		if (!childEnhToken.equals(rootEnhToken))
 		{
 			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep);
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
 			childEnhToken.deps.add(newDep);
 			if (setBackbone) childEnhToken.depsBackbone = newDep;
 		}
@@ -330,11 +383,11 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public void setEnhLink (Node parent, Node child, UDv2Relations enhancedDep,
+	public void setEnhLink (Node parent, Node child, Tuple<UDv2Relations, String> enhancedDep,
 						    boolean setBackbone, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
@@ -349,7 +402,7 @@ public class Sentence
 		if (!childEnhToken.equals(rootEnhToken))
 		{
 			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep);
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
 			childEnhToken.deps.add(newDep);
 			if (setBackbone) childEnhToken.depsBackbone = newDep;
 		}
@@ -363,7 +416,7 @@ public class Sentence
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param baseDep	label to be used for enhanced dependency
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -389,7 +442,7 @@ public class Sentence
 	 * @param node 			PML node to be made root
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -417,7 +470,7 @@ public class Sentence
 	 * tokens.
 	 * @param newParent	new parent
 	 * @param child		child node whose attachment should be changed
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -448,6 +501,15 @@ public class Sentence
 		}
 	}
 
+	/**
+	 * Get the enhanced token assigned for this node. If there is no enhanced
+	 * token assigned, return assigned base token.
+	 * @param aNode	node whose token must be found
+	 * @return	enhanced token or base token, or null (in that order)
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
 	public Token getEnhancedOrBaseToken(Node aNode)
 			throws XPathExpressionException
 	{
@@ -457,5 +519,53 @@ public class Sentence
 		Token resToken = pmlaToEnhConll.get(id);
 		if (resToken == null) resToken = pmlaToConll.get(id);
 		return resToken;
+	}
+
+	/**
+	 * Find PML node by given ID.
+	 * @param id	an ID to search
+	 * @return	first node found
+	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public Node findPmlNode(String id) throws XPathExpressionException
+	{
+		NodeList res = (NodeList) XPathEngine.get().evaluate(
+				".//node[@id='"+ id + "']", pmlTree, XPathConstants.NODESET);
+		if (res == null || res.getLength() < 1) return null;
+		return res.item(0);
+	}
+
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNodeId	Id of node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
+	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
+	{
+		if (aNodeId == null) return null;
+		HashSet<String> res = new HashSet<>();
+		if (coordPartsUnder.containsKey(aNodeId))
+			res.addAll(coordPartsUnder.get(aNodeId));
+		else res.add(aNodeId);
+		return res;
+	}
+
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNode	node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
+	public HashSet<String> getCoordPartsUnderOrNode (Node aNode)
+	throws XPathExpressionException
+	{
+		return getCoordPartsUnderOrNode(Utils.getId(aNode));
 	}
 }

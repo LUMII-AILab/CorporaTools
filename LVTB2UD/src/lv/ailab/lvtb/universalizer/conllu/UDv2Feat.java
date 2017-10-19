@@ -1,5 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
+import lv.ailab.lvtb.universalizer.util.Tuple;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,8 +76,8 @@ public enum UDv2Feat
     VOICE_PASS("Voice", "Pass"),
 	;
 
-	final String key;
-	final String value;
+	public final String key;
+	public final String value;
 
 	UDv2Feat(String key, String value)
 	{
@@ -99,5 +101,19 @@ public enum UDv2Feat
 			res.put(f.key, val);
 		}
 		return res;
+	}
+
+	public static String caseLetterToLCString(String ch)
+	{
+		switch (ch)
+		{
+			case "n": return UDv2Feat.CASE_NOM.value.toLowerCase();
+			case "g": return UDv2Feat.CASE_GEN.value.toLowerCase();
+			case "d": return UDv2Feat.CASE_DAT.value.toLowerCase();
+			case "a": return UDv2Feat.CASE_ACC.value.toLowerCase();
+			case "l": return UDv2Feat.CASE_LOC.value.toLowerCase();
+			case "v": return UDv2Feat.CASE_VOC.value.toLowerCase();
+			default: return null;
+		}
 	}
 }

@@ -2,6 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.util.Tuple;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -9,6 +10,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Relation between phrase part names used in LVTB and dependency labeling used
@@ -20,8 +22,10 @@ import java.io.PrintWriter;
  */
 public class PhrasePartDepLogic
 {
+
 	/**
-	 * Generic relation between phrase part roles and UD DEPREL.
+	 * Generic relation between phrase part roles and UD DEPREL and/or enhanced
+	 * dependencies.
 	 * Only for nodes that are not roots or subroots.
 	 * NB! Case when a part of crdClauses maps to parataxis is handled in
 	 * PhraseTransform class.
@@ -32,12 +36,13 @@ public class PhrasePartDepLogic
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
 	 * @param warnOut 		where all the warnings goes
-	 * @return contents for corresponding DEPREL field
+	 * @return	UD dependency role and enhanced depency role postfix, if such is
+	 * 			needed.
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static UDv2Relations phrasePartRoleToUD(
+	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
 			Node aNode, String phraseType, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
@@ -53,12 +58,15 @@ public class PhrasePartDepLogic
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
 				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
-				if (LvtbPmcTypes.ADDRESS.equals(subPmcType)) return UDv2Relations.VOCATIVE;
+				if (LvtbPmcTypes.ADDRESS.equals(subPmcType))
+					return Tuple.of(UDv2Relations.VOCATIVE, null);
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
-					return UDv2Relations.DISCOURSE;
+					return Tuple.of(UDv2Relations.DISCOURSE, null);
 				String tag = Utils.getTag(aNode);
-				if (tag != null && tag.matches("[qi].*")) return UDv2Relations.DISCOURSE;
-				if (tag != null && tag.matches("n...v.*")) return UDv2Relations.VOCATIVE;
+				if (tag != null && tag.matches("[qi].*"))
+					return Tuple.of(UDv2Relations.DISCOURSE, null);
+				if (tag != null && tag.matches("n...v.*"))
+					return Tuple.of(UDv2Relations.VOCATIVE, null);
 			}
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) || phraseType.equals(LvtbPmcTypes.UTTER)
@@ -67,7 +75,8 @@ public class PhrasePartDepLogic
 				|| phraseType.equals(LvtbPmcTypes.DIRSPPMC) || phraseType.equals(LvtbPmcTypes.QUOT)
 				|| phraseType.equals(LvtbPmcTypes.ADDRESS) || phraseType.equals(LvtbPmcTypes.INTERJ)
 				|| phraseType.equals(LvtbPmcTypes.PARTICLE))
-			if (lvtbRole.equals(LvtbRoles.PUNCT)) return UDv2Relations.PUNCT;
+			if (lvtbRole.equals(LvtbRoles.PUNCT))
+				return Tuple.of(UDv2Relations.PUNCT, null);
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
 				phraseType.equals(LvtbPmcTypes.UTTER) ||
@@ -78,53 +87,62 @@ public class PhrasePartDepLogic
 			{
 				String tag = Utils.getTag(aNode);
 				if (tag.matches("cc.*"))
-					return UDv2Relations.CC;
+					return Tuple.of(UDv2Relations.CC, null);
 				if (tag.matches("cs.*"))
-					return UDv2Relations.MARK;
+					return Tuple.of(UDv2Relations.MARK, null);
 			}
 
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL))
-			if (lvtbRole.equals(LvtbRoles.CONJ)) return UDv2Relations.MARK;
+			if (lvtbRole.equals(LvtbRoles.CONJ))
+				return Tuple.of(UDv2Relations.MARK, null);
 
 
 		if (phraseType.equals(LvtbCoordTypes.CRDPARTS) || phraseType.equals(LvtbCoordTypes.CRDCLAUSES))
 		{
-			if (lvtbRole.equals(LvtbRoles.CRDPART)) return UDv2Relations.CONJ; // Parataxis role is given in PhraseTransform class.
-			if (lvtbRole.equals(LvtbRoles.CONJ)) return UDv2Relations.CC;
-			if (lvtbRole.equals(LvtbRoles.PUNCT)) return UDv2Relations.PUNCT;
+			if (lvtbRole.equals(LvtbRoles.CRDPART))
+				return Tuple.of(UDv2Relations.CONJ, null); // Parataxis role is given in PhraseTransform class.
+			if (lvtbRole.equals(LvtbRoles.CONJ))
+				return Tuple.of(UDv2Relations.CC, null);
+			if (lvtbRole.equals(LvtbRoles.PUNCT))
+				return Tuple.of(UDv2Relations.PUNCT, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XAPP) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.NMOD;
+				lvtbRole.equals(LvtbRoles.BASELEM))
+			return Tuple.of(UDv2Relations.NMOD, null);
 		if ((phraseType.equals(LvtbXTypes.XNUM) ||
 				phraseType.equals(LvtbXTypes.COORDANAL)) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.COMPOUND;
+				lvtbRole.equals(LvtbRoles.BASELEM))
+			return Tuple.of(UDv2Relations.COMPOUND, null);
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.UNSTRUCT) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE)) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.FLAT;
+				lvtbRole.equals(LvtbRoles.BASELEM))
+			return Tuple.of(UDv2Relations.FLAT, null);
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
-				lvtbRole.equals(LvtbRoles.BASELEM)) return UDv2Relations.FLAT_NAME;
+				lvtbRole.equals(LvtbRoles.BASELEM))
+			return Tuple.of(UDv2Relations.FLAT_NAME, null);
 
 		if (phraseType.equals(LvtbXTypes.SUBRANAL) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
 			// NB: "vairāk kā/nekā X" and "tāds kā X" roles for "vairāk" and
 			//     "tāds" are asigned in phrase transformator.
-			return UDv2Relations.COMPOUND;
+			return Tuple.of(UDv2Relations.COMPOUND, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPREP) &&
-				lvtbRole.equals(LvtbRoles.PREP)) return UDv2Relations.CASE;
+				lvtbRole.equals(LvtbRoles.PREP))
+			return Tuple.of(UDv2Relations.CASE, null);
 		if (phraseType.equals(LvtbXTypes.XPARTICLE) &&
 				lvtbRole.equals(LvtbRoles.NO))
-			return UDv2Relations.DISCOURSE;
+			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
 				lvtbRole.equals(LvtbRoles.CONJ))
 		{
-			// For now lets assume, that conjunction can't be coordinated.
+			// For now let us assume, that conjunction can't be coordinated.
 			// Then parent in this situation is the xSimile itself.
 			Node firstAncestor = Utils.getEffectiveAncestor(Utils.getPMLParent(aNode)); // node/xinfo/pmcinfo/phraseinfo
 			Node secondAncestor = Utils.getEffectiveAncestor(firstAncestor); // node/xinfo/pmcinfo/phraseinfo
@@ -153,20 +171,20 @@ public class PhrasePartDepLogic
 			{
 				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
 						LvtbPmcTypes.INSPMC.equals(secondAncType))
-					return UDv2Relations.MARK;
+					return Tuple.of(UDv2Relations.MARK, null);
 				if (LvtbXTypes.XPRED.equals(secondAncType) || LvtbPmcTypes.UTTER.equals(secondAncType) ||
 						LvtbXTypes.SUBRANAL.equals(secondAncType) && tSiblings != null &&
 						tSiblings.getLength() > 0)
-					return UDv2Relations.DISCOURSE;
+					return Tuple.of(UDv2Relations.DISCOURSE, null);
 				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && (vSiblings != null &&
 						vSiblings.getLength() > 0 || vSiblings2 != null && vSiblings2.getLength() > 0))
-					return UDv2Relations.FIXED;
+					return Tuple.of(UDv2Relations.FIXED, null);
 			}
 			// In generic SPC case use mark, in generic ADV we use discourse.
 			if (LvtbRoles.SPC.equals(firstAncType))
-				return UDv2Relations.MARK;
+				return Tuple.of(UDv2Relations.MARK, null);
 			if (LvtbRoles.ADV.equals(firstAncType))
-				return UDv2Relations.DISCOURSE;
+				return Tuple.of(UDv2Relations.DISCOURSE, null);
 			
 			Node effAncestor = secondAncestor;
 			if (LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(effAncestor)))
@@ -175,20 +193,22 @@ public class PhrasePartDepLogic
 
 			if (LvtbRoles.SPC.equals(effAncLabel) || LvtbPmcTypes.SPCPMC.equals(effAncLabel)
 					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
-				return UDv2Relations.MARK;
+				return Tuple.of(UDv2Relations.MARK, null);
 			if (LvtbRoles.ADV.equals(effAncLabel))
-				return UDv2Relations.DISCOURSE;
+				return Tuple.of(UDv2Relations.DISCOURSE, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
 		{
-			if (lvtbRole.equals(LvtbRoles.AUXVERB)) return UDv2Relations.AUX;
+			if (lvtbRole.equals(LvtbRoles.AUXVERB))
+				return Tuple.of(UDv2Relations.AUX, null);
 			if (lvtbRole.equals(LvtbRoles.BASELEM) ||
-					lvtbRole.equals(LvtbRoles.MOD)) return UDv2Relations.XCOMP;
+					lvtbRole.equals(LvtbRoles.MOD))
+				return Tuple.of(UDv2Relations.XCOMP, null);
 		}
 
 		warnOut.printf("\"%s\" (%s) in \"%s\" has no UD label.\n",
 				lvtbRole, nodeId, phraseType);
-		return UDv2Relations.DEP;
+		return Tuple.of(UDv2Relations.DEP, null);
 	}
 }

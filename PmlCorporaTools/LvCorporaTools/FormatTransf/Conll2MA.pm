@@ -37,7 +37,7 @@ our @EXPORT_OK = qw(processDir processFileSet);
 ###############################################################################
 
 
-our $vers = 0.2;
+our $vers = 0.3;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
