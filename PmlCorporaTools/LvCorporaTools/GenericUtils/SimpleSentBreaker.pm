@@ -1,6 +1,7 @@
 #!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::GenericUtils::SimpleSentBreaker;
 
+use warnings;
 use utf8;
 use strict;
 
@@ -26,7 +27,7 @@ sub simpleSentBreaker
 	{
 		print <<END;
 Script for performing simple sentence breaking. This is not a valid Latvian
-tokenizer/sentence braker! Input ans output directory must be different,
+tokenizer/sentence braker! Input and output directory must be different,
 otherwise input file can be overwriten.
 
 Params:
@@ -34,7 +35,7 @@ Params:
    output directory (UTF-8 always)
    input data encoding [opt, UTF-8 used by default]
 
-Latvian Treebank project, LUMII, 2011-2012, provided under GPL
+Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END
 		exit 1;
 	}
@@ -71,8 +72,6 @@ END
 		}
 	}
 	closedir(DIR);
-
-	#007870
 }
 
 1;
