@@ -5,7 +5,7 @@
   </head>
   <meta>Eksperimentālais fails, Lauma, 2010-07-07</meta>
   <doc id="zeens" source_id="zeens.txt">
-    <docmeta>Eksperimentāis fails, marķēts ar roku, Lauma</docmeta>
+    <docmeta><title>Eksperimentāls fails, marķēts ar roku, Lauma</title></docmeta>
     <para>
       <w id="w-zeens-p1w1">
         <token>Zens</token>

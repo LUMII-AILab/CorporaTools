@@ -22,7 +22,7 @@ use XML::LibXML;  # XML handling library
 # Function for file processing will be used according to signature (data
 # directory prefix, input file (without dir name), output file (if 4th
 # parameter true), other parameters)
-# Returns number of files ending with die.
+# Returns number of files ending with die or warn.
 sub processDir
 {
 	my $processFileFunct = shift @_;
@@ -45,11 +45,19 @@ sub processDir
 			if ($output)
 			{
 				my $outFile = "$coreName$ext";
-				eval {&$processFileFunct($dirName, $inFile, $outFile, @otherPrams)};
+				eval
+				{
+					local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
+				};
 			}
 			else
 			{
-				eval {&$processFileFunct($dirName, $inFile, @otherPrams)};
+				eval
+				{
+					local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					&$processFileFunct($dirName, $inFile, @otherPrams);
+				};
 			}
 			if ($@)
 			{

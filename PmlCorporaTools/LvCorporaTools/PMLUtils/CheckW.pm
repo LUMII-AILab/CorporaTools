@@ -14,6 +14,7 @@ use IO::Dir;
 use IO::File;
 use File::Path;
 use XML::Simple;  # XML handling library
+use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 use LvCorporaTools::GenericUtils::UIWrapper;
 
 ###############################################################################
@@ -39,7 +40,8 @@ sub processDir
 	{
 		print <<END;
 Script verifies .w files against original plain-text and adds mising spaces
-and paragraph borders, if necessary. Input files should be provided as UTF-8.
+and paragraph borders, if necessary. Adds paragraph IDs, if there is none.
+Input files should be provided as UTF-8.
 
 Params:
    data directory
@@ -72,7 +74,8 @@ sub checkW
 	{
 		print <<END;
 Script verifies .w file against original plain-text and adds mising spaces and
-paragraph borders, if necessary. Input files should be provided as UTF-8.
+paragraph borders, if necessary. Adds paragraph IDs, if there is none. Input
+files should be provided as UTF-8.
 
 Params:
    directory prefix
@@ -97,23 +100,15 @@ END
 	my $addedSpaces = 0;
 	my $deletedSpaces = 0;
 	my $movedPara = 0;
+	my $addedParaID = 0;
 
 	mkpath("$dirPrefix/res/");
 	my $logFile = IO::File->new("$dirPrefix/res/$pml-log.txt", ">") or die "Can't create $pml-log.txt: $!";
 	
 	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "Can't read text file $txt: $!";
-	my $wIn = IO::File->new("$dirPrefix/$pml", "< :encoding(UTF-8)") or die "Can't read W file $pml: $!";
-	my $xmlString = join '', <$wIn>;
-	$xmlString =~ /^\s*(\Q<?\E.*?\Q?>\E)/;
-	my $xmlHeader = $1;
-	#$xmlString = encode_utf8($xmlString);
-	#print $xmlString;
-	my $xmlW = XML::Simple->new();
-	my $lvwdata = $xmlW->XMLin(
-		$xmlString,
-		'KeyAttr' => [],
-		'ForceArray' => ['para', 'w', 'schema'],
-		'ForceContent' => 1);
+	my $wXml = loadXml ("$dirPrefix/$pml", ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc']);
+	my $lvwdata = $wXml->{'xml'};
+	my $docId = $lvwdata->{'doc'}->{'id'};
 
 	my $currentPara = 0;
 	# For each paragraph in the incoming text...
@@ -127,6 +122,11 @@ END
 			# Process current xml paragraph.
 			while($tokenId < +@{$lvwdata->{'doc'}->{'para'}[$currentPara]->{'w'}})
 			{
+				unless ($lvwdata->{'doc'}->{'para'}[$currentPara]->{'id'})
+				{
+					$lvwdata->{'doc'}->{'para'}[$currentPara]->{'id'} = "w-$docId-p".($currentPara+1);
+					$addedParaID++;
+				}
 				my $wElem = @{$lvwdata->{'doc'}->{'para'}[$currentPara]->{'w'}}[$tokenId];
 				# Text paragraph ends, xml paragraph continues.
 				if ($line =~ /^\s*$/)
@@ -186,27 +186,18 @@ END
 		}
 	}
 
-	# Close files.
+	# Close text file.
 	$txtIn->close();
-	$wIn->close();
 
 	# Print result in new PML file.
-	my $wOut = IO::File->new("$dirPrefix/res/$pml", "> :encoding(UTF-8)") or die "w file $pml: $!";
-	my $xmlResult = $xmlW->XMLout($lvwdata,
-		'AttrIndent' => 1,
-		'RootName' => 'lvwdata',
-		'OutputFile' => $wOut,
-		'SuppressEmpty' => 1,
-		'NoSort' => 1,
-		'XMLDecl' => $xmlHeader,
-#		'NoEscape' => 1
-		);
-	$wOut->close();
+	printXml ("$dirPrefix/res/$pml", $wXml->{'handler'},
+		$wXml->{'xml'}, 'lvwdata', $wXml->{'header'});
 
 	# Print statistics on the screen.
 	print $logFile "Added $addedSpaces spaces.\n";
 	print $logFile "Deleted $deletedSpaces spaces.\n";
 	print $logFile "Moved $movedPara paragraphs.\n";
+	print $logFile "Added $addedParaID paragraph IDs.\n";
 	print "CheckW has finished procesing \"$pml\".\n";
 
 	$logFile->close();
