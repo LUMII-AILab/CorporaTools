@@ -32,41 +32,35 @@ sub processDir
 	{
 		print <<END;
 Script for batch transfoming .txt files to Latvian Treebank PML W format.
-Additionally vertical file with tokenization can be provided.
+Assumes paragraph numbering from 1.
 
 Params:
    data directory
    text file extension [opt, txt used by default]
-   tokenization file extension or 0/'' to use brute tokenization (formats: 
-     CoNLL with spaces inside token replaced with '_' format or one token per
-      line)[opt, brute tokenization used otherwise] THIS IS YET TODO.
+   metadata file extension [opt, dummy-data used by default]
    input data encoding [opt, UTF-8 used by default]
-   metadata file (metadata must be UTF--8 encoded one-liner) or string [opt]
 
-Latvian Treebank project, LUMII, 2012-now, provided under GPL
+Latvian Treebank project, LUMII, 2012-2017, provided under GPL
 END
 		exit 1;
 	}
 
 	my $dirName = shift @_;
 	my $textExt = shift @_;
-	my $tokExt = (shift @_ or 0);
-	my @otherPrams = @_;
+	my $metaExt = shift @_;
+	my $encoding = shift @_;
 	
 	my $wrapper = sub {
 		my $dirName = shift @_;
 		my $fileNameStub = shift @_;
-		my $outFile = shift @_;
-		my @otherPrams = @_;
-		
-		my $tokFile = $tokExt ? "$fileNameStub.$tokExt" : 0;
+
 		return &transformFile (
-			$dirName, "$fileNameStub.$textExt", $outFile, $tokFile,
-			@otherPrams);
+			$dirName, "$fileNameStub.$textExt", $fileNameStub, "$fileNameStub.$metaExt",
+			1, "$fileNameStub.w", $encoding);
 	};
 	
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
-		$wrapper, "^.+\\.txt\$", ".w", 1, 1, $dirName, @otherPrams);
+		$wrapper, "^.+\\.txt\$", '', 0, 1, $dirName);
 
 }
 
@@ -77,20 +71,33 @@ sub transformFile
 	if (not @_ or @_ < 2)
 	{
 		print <<END;
-Script for creating PML W file from the plain text file. Additionally vertical
-file with tokenization can be provided.
+Script for creating PML W file from the plain text file.
 
 Params:
    directory prefix
    text file name
-   new file name [opt, current file name used otherwise]
-   tokenization file name or 0/'' to use brute tokenization (formats: CoNLL 
-      with spaces inside token replaced with '_' format or one token per line)
-      [opt, brute tokenization used otherwise] THIS IS YET TODO.
+   new doc id [opt, current file name without .txt used otherwise]
+   metadata file or string [opt], preferably from LVK; metadata must be
+      headless XML in following form:
+      <docmeta>
+        <title>Mandatory document name.</title>
+        <source>Optional document source.</source>
+        <author>Author is also optional.</author>
+        <authorgender>Author gender is optional.</authorgender>
+        <published>Publication date is optional.</published>
+        <genre>Genre is optional, but nice to have.</genre>
+        <keywords>
+          <LM>first keyword</LM>
+          <LM>second keyword</LM>
+          <LM>all keywords and element itself is optional</LM>
+        </keywords>
+        <misc>Any additional information that does not fit above.</misc>
+      </docmeta>
+   first paragraph id [opt, 1 used otherwise]
+   new file name [opt, <doc id>_p<paragraph id> used otherwise]
    input data encoding [opt, UTF-8 used by default]
-   metadata file (metadata must be UTF--8 encoded one-liner) or string [opt]
 
-Latvian Treebank project, LUMII, 2011-now, provided under GPL
+Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END
 		exit 1;
 	}
@@ -98,12 +105,14 @@ END
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	my $newName = (shift @_ or $oldName);
-	my $tokFile = (shift @_ or 0);
-	my $encoding = (shift @_ or 'UTF-8');
+	my $docId = (shift @_ or $oldName);
+	$docId =~ s/\.txt$//;
 	my $metaSource = shift @_;
+	my $firstPara = (shift @_ or 1);
+	my $newName = (shift @_ or "${docId}_p$firstPara.w");
+	my $encoding = (shift @_ or 'UTF-8');
 
-	my $metainfo = 'Nezināms avots.';
+	my $metainfo = '<docmeta><title>Nezināms avots.</title></docmeta>';
 
 	# Get metainfo.
 	if (-e "$dirPrefix/$metaSource")
@@ -111,6 +120,7 @@ END
 		my $metaFlow = IO::File->new(
 			"$dirPrefix/$metaSource", "< :encoding(UTF-8)")
 			or die "Could not open file $dirPrefix/$metaSource: $!";
+		local $/ = undef;
 		$metainfo = <$metaFlow>;
 		$metaFlow->close;
 	} elsif ($metaSource)
@@ -126,37 +136,30 @@ END
 	my $out = IO::File->new("$dirPrefix/res/$newName", "> :encoding(UTF-8)")
 		or die "Could not create file $newName: $!";
 
-	$oldName =~ /^(.*)\..*?$/;
-	my $sourceId = $1;
-	$newName =~ /^(.*)\..*?$/;
-	my $docId = $1;
-	
-	&_printHeader ($out, $docId, $sourceId, $metainfo);
+	&_printHeader ($out, $docId, $docId, $metainfo);
 	
 	# Process each paragraph.
-	my $parId = 0;
+	# TODO use XML library.
+	my $parId = $firstPara;
 	while (<$in>)
 	{
-		$parId++;
 		if (! /^(\s)*$/)
 		{
 			my $tokId = 0;
-			print $out "\t\t<para>\n";
+			print $out "\t\t<para id=\"w-$docId-p${parId}\">\n";
 			
 			# Process each token.
 			while (m#(\d+|\p{L}+|\.+|!+|\?+|\S)#g)
-			#while (m#(\w+|\.+|!+|\S)#g)
 			{
 				$tokId++;
 				print $out "\t\t\t<w id=\"w-$docId-p${parId}w$tokId\">\n\t\t\t\t<token>$1</token>\n";
-				if ($' !~ /^\s/)
-				{
-					print $out "\t\t\t\t<no_space_after>1</no_space_after>\n";
-				}
+				print $out "\t\t\t\t<no_space_after>1</no_space_after>\n" if ($' !~ /^\s/);
 				print $out "\t\t\t</w>\n";
 			}
 			print $out "\t\t</para>\n";
+			$parId++;
 		}
+
 	}
 			
 	&_printFooter($out);
@@ -177,7 +180,7 @@ sub _printHeader
 	</head>
 	<meta>-</meta>
 	<doc id="$docid" source_id="$sourceid">
-		<docmeta>$metainfo</docmeta>
+		$metainfo
 END
 }
 
