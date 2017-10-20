@@ -12,6 +12,9 @@ our @EXPORT_OK = qw(transformFile processDir);
 use IO::File;
 use LvCorporaTools::GenericUtils::UIWrapper;
 
+our $vers = 0.2;
+our $progname = "LVTB teksta/PML-W konvertors, $vers";
+
 
 ###############################################################################
 # This program creates PML W file from the original text file. 
@@ -56,7 +59,7 @@ END
 
 		return &transformFile (
 			$dirName, "$fileNameStub.$textExt", $fileNameStub, "$fileNameStub.$metaExt",
-			1, "$fileNameStub.w", $encoding);
+			1, $fileNameStub, $encoding);
 	};
 	
 	LvCorporaTools::GenericUtils::UIWrapper::processDir(
@@ -76,7 +79,7 @@ Script for creating PML W file from the plain text file.
 Params:
    directory prefix
    text file name
-   new doc id [opt, current file name without .txt used otherwise]
+   source document ID [opt, current file name without .txt used otherwise]
    metadata file or string [opt], preferably from LVK; metadata must be
       headless XML in following form:
       <docmeta>
@@ -93,8 +96,8 @@ Params:
         </keywords>
         <misc>Any additional information that does not fit above.</misc>
       </docmeta>
-   first paragraph id [opt, 1 used otherwise]
-   new file name [opt, <doc id>_p<paragraph id> used otherwise]
+   first paragraph ID [opt, shuld be numerical, 1 used by default]
+   new PML fileset ID [opt, <source_doc id>_p<paragraph id> used otherwise]
    input data encoding [opt, UTF-8 used by default]
 
 Latvian Treebank project, LUMII, 2011-2017, provided under GPL
@@ -104,12 +107,12 @@ END
 
 	# Input paramaters.
 	my $dirPrefix = shift @_;
-	my $oldName = shift @_;
-	my $docId = (shift @_ or $oldName);
-	$docId =~ s/\.txt$//;
+	my $textFileName = shift @_;
+	$textFileName =~ /(.*?)(.\txt)?/;
+	my $sourceId = (shift @_ or $1);
 	my $metaSource = shift @_;
 	my $firstPara = (shift @_ or 1);
-	my $newName = (shift @_ or "${docId}_p$firstPara.w");
+	my $docId = (shift @_ or "${sourceId}_p$firstPara");
 	my $encoding = (shift @_ or 'UTF-8');
 
 	my $metainfo = '<docmeta><title>Nezināms avots.</title></docmeta>';
@@ -129,14 +132,14 @@ END
 	}
 
 	# Open input file.
-	my $in = IO::File->new("$dirPrefix/$oldName", "< :encoding($encoding)")
-		or die "Could not open file $oldName: $!";
+	my $in = IO::File->new("$dirPrefix/$textFileName", "< :encoding($encoding)")
+		or die "Could not open file $textFileName: $!";
 	# Open output file.
 	File::Path::mkpath("$dirPrefix/res/");
-	my $out = IO::File->new("$dirPrefix/res/$newName", "> :encoding(UTF-8)")
-		or die "Could not create file $newName: $!";
+	my $out = IO::File->new("$dirPrefix/res/$docId.w", "> :encoding(UTF-8)")
+		or die "Could not create file $docId.w: $!";
 
-	&_printHeader ($out, $docId, $docId, $metainfo);
+	&_printHeader ($out, $docId, $sourceId, $metainfo);
 	
 	# Process each paragraph.
 	# TODO use XML library.
@@ -146,13 +149,13 @@ END
 		if (! /^(\s)*$/)
 		{
 			my $tokId = 0;
-			print $out "\t\t<para id=\"w-$docId-p${parId}\">\n";
+			print $out "\t\t<para id=\"w-$sourceId-p${parId}\">\n";
 			
 			# Process each token.
 			while (m#(\d+|\p{L}+|\.+|!+|\?+|\S)#g)
 			{
 				$tokId++;
-				print $out "\t\t\t<w id=\"w-$docId-p${parId}w$tokId\">\n\t\t\t\t<token>$1</token>\n";
+				print $out "\t\t\t<w id=\"w-$sourceId-p${parId}w$tokId\">\n\t\t\t\t<token>$1</token>\n";
 				print $out "\t\t\t\t<no_space_after>1</no_space_after>\n" if ($' !~ /^\s/);
 				print $out "\t\t\t</w>\n";
 			}
@@ -178,7 +181,7 @@ sub _printHeader
 	<head>
 		<schema href="lvwschema.xml"/>
 	</head>
-	<meta>-</meta>
+	<meta>$progname</meta>
 	<doc id="$docid" source_id="$sourceid">
 		$metainfo
 END

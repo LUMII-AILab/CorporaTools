@@ -1,0 +1,1 @@
+Korpusa rindkopas piemēra tests. Pārbauda, vai var normāli ieiemportēt LVK faila t16 21. rinkopu, pareizi aizpildot visus laukus.
