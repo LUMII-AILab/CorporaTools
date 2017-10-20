@@ -51,7 +51,7 @@ sub processDir
 	{
 		print <<END;
 Script for checking references in the given PML datasets (all .w + .m + .a in
-the given folder) for following eroors:
+the given folder) for following erorrs:
 * IDs from w file that are not refferenced in m file;
 * IDs from m file that are not refferenced in a file (morphemes with "deleted"
   element are listed separately from others);
@@ -62,6 +62,7 @@ the given folder) for following eroors:
 * m with no reference to w having no "form_change" "insert";
 * m with form different from what described in w must have at least one more
   "form_change";
+* IDs should not be duplicated (TODO: represent it properly in the logfile);
 * multiple m refering to single w must have "form_change" "spacing".
 
 
@@ -87,7 +88,11 @@ END
 	{
 		if ((! -d "$dirName/$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
-			my $res = eval { checkLvPml ($dirName, $1, $mode, "$1-errors.txt") };
+			my $res = eval
+			{
+				local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+				checkLvPml ($dirName, $1, $mode, "$1-errors.txt");
+			};
 			if ($@)
 			{
 				$problems++;
@@ -120,7 +125,7 @@ sub checkLvPml
 	{
 		print <<END;
 Script for checking references in the given PML dataset (.w + .m + .a) for
-following eroors:
+following erorrs:
 * IDs from w file that are not refferenced in m file;
 * IDs from m file that are not refferenced in a file (morphemes with "deleted"
   element are listed separately from others);
@@ -131,6 +136,7 @@ following eroors:
 * m with no reference to w having no "form_change" "insert";
 * m with form different from what described in w must have at least one more
   "form_change";
+* duplicate IDs (onscreen warning only);
 * (TODO) multiple m refering to single w must have "form_change" "spacing".
 
 Params:
@@ -323,11 +329,11 @@ sub _loadW
 	my $inputName = shift @_;
 
 	# Load w-file.
-	my $w = loadXml ("$dirPrefix\\$inputName.w", ['para', 'w', 'schema'], ['id']);
+	my $w = loadXml ("$dirPrefix\\$inputName.w", ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc'], ['id']);
 	
 	# Map token IDs to tokens.
 	my %wIds = ();
-	for my $para (@{$w->{'xml'}->{'doc'}->{'para'}})
+	for my $para (values %{$w->{'xml'}->{'doc'}->{'para'}})
 	{
 		%wIds = (%wIds, map {
 			my $tmpw = $para->{'w'}->{$_};

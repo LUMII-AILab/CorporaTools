@@ -5,8 +5,8 @@
   </head>
   <meta>Eksperimentālais fails, Lauma, 2012-11-26</meta>
   <doc id="zeens" source_id="zeens.txt">
-    <docmeta>Eksperimentāis fails, marķēts ar roku, Lauma</docmeta>
-    <para>
+    <docmeta><title>Eksperimentāis fails, marķēts ar roku, Lauma</title></docmeta>
+    <para id="w-zeens-p1">
       <w id="w-zeens-p1w1">
         <token>Zēns</token>
       </w>
@@ -27,7 +27,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p2">
       <w id="w-zeens-p2w1">
         <token>Meitene</token>
       </w>
@@ -42,7 +42,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p3">
       <w id="w-zeens-p3w1">
         <token>Vasarā</token>
       </w>
@@ -57,7 +57,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p4">
       <w id="w-zeens-p4w1">
         <token>Skaists</token>
       </w>
@@ -72,7 +72,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p5">
       <w id="w-zeens-p5w1">
         <token>Zēns</token>
       </w>
@@ -87,7 +87,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p6">
       <w id="w-zeens-p6w1">
         <token>Zēns</token>
       </w>
@@ -114,7 +114,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p7">
       <w id="w-zeens-p7w1">
         <token>Zēns</token>
       </w>
@@ -151,7 +151,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p8">
       <w id="w-zeens-p8w1">
         <token>Mani</token>
       </w>
@@ -198,7 +198,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p9">
       <w id="w-zeens-p9w1">
         <token>Zēns</token>
       </w>
@@ -252,7 +252,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p10">
       <w id="w-zeens-p10w1">
         <token>Vakaros</token>
       </w>
@@ -308,7 +308,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p11">
       <w id="w-zeens-p14w1">
         <token>"</token>
         <no_space_after>1</no_space_after>
@@ -443,7 +443,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p12">
       <w id="w-zeens-p15w1">
         <token>17</token>
         <no_space_after>1</no_space_after>
