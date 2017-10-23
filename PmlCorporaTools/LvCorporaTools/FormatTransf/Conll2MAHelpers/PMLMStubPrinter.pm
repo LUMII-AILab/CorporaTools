@@ -63,7 +63,7 @@ END
 # One PML-M data node.
 sub printMDataNode
 {
-	my ($output, $docId, $mId, $wIds, $token, $lemma, $tag) = @_;
+	my ($output, $mId, $wIds, $token, $lemma, $tag) = @_;
 	$lemma = 'N/A' unless ($lemma and $lemma !~ /^\s*$/);
 	$tag = 'N/A' unless ($tag and $tag !~ /^\s*$/);
 	my $wIdString = '';
@@ -77,7 +77,7 @@ sub printMDataNode
 	}
 	print $output <<END;
 		<m id="$mId">
-			<src.rf>$docId</src.rf>
+			<src.rf>semi-automatic</src.rf>
 END
 	if ($wIdString)
 	{

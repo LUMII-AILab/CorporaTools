@@ -5,8 +5,8 @@
 	</head>
 	<meta>-</meta>
 	<doc id="Saules_par" source_id="Saules_par">
-		<docmeta>Vikipēdija, Saules sistēma, https://lv.wikipedia.org/wiki/Saules_sist%C4%93ma, iegūts: 09.12.2016. (Versija 2016. gada 2. decembris, plkst. 12.52‎)</docmeta>
-		<para>
+		<docmeta><title>Vikipēdija, Saules sistēma, https://lv.wikipedia.org/wiki/Saules_sist%C4%93ma, iegūts: 09.12.2016. (Versija 2016. gada 2. decembris, plkst. 12.52‎)</title></docmeta>
+		<para id="w-Saules_par-p2">
 			<w id="w-Saules_par-p2w1">
 				<token>Saules</token>
 			</w>

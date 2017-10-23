@@ -41,6 +41,8 @@ our $vers = 0.3;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
+#TODO processDir should somehow show, how many files failed/gave warnings.
+
 sub processDir
 {
 	if (not @_ or @_ < 3)
@@ -52,7 +54,7 @@ must be UTF-8. Corresponding files must have corresponding filenames and texts.
 
 Params:
    w files directory (.w files)
-   morphology directory (.conll files)
+   morphosyntax directory (.conll files)
    	  expected columns in conll file:
          1 - ID (word index, integer starting at 1 for each new sentence)
          2 - FORM
@@ -66,7 +68,8 @@ Params:
          8 - DEPREL (Universal dependency relation to the HEAD)
          9 - DEPS (currently not used)
         10 - MISC (currently not used)
-        (any further columns are ignored)   output directory
+        (any further columns are ignored)
+   output directory
 
 Latvian Treebank project, LUMII, 2017, provided under GPL
 END
@@ -84,7 +87,7 @@ END
 		if (! -d "$wDirName/$inWFile")
 		{
 			my $coreName = $inWFile =~ /^(.*)\.w*$/ ? $1 : $inWFile;
-			&processFileSet($coreName, $outDirName, "$wDirName/$inWFile", "$morphoDirName/$coreName.conll")
+			&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
 		}
 	}
 
@@ -100,10 +103,9 @@ are provided. Currently morphology is mandatory, syntax is optional. All input
 files must be UTF-8. Fileset must have the same text in both W and CoNLL file.
 
 Params:
-   file name stub for output
+   w file name
    output folder
-   .w file name [opt, stub + .w used otherwise]
-   .conll file name [opt, stub + .conll used otherwise]
+   .conll file name [opt, w-file path + name-stub + .conll used otherwise]
    	  expected columns in conll file:
          1 - ID (word index, integer starting at 1 for each new sentence)
          2 - FORM
@@ -124,12 +126,12 @@ END
 		exit 1;
 	}
 
-	my $nameStub = shift;
+	my $wName = shift;
+	my $nameStub = $wName =~ /^(.*[\\\/](.*?))(\.w)?$/ ? $2 : $wName;
 	my $outDirName = shift;
-	my $wName = (shift or "$nameStub.w");
-	my $conllName = (shift or "$nameStub.conll");
+	my $conllName = (shift or "$1.conll");
 
-	my $w = LvCorporaTools::GenericUtils::SimpleXmlIo::loadXml($wName, ['para', 'w', 'schema'], []);
+	my $w = LvCorporaTools::GenericUtils::SimpleXmlIo::loadXml($wName, ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc'], []);
 	my $conllIn = IO::File->new($conllName, '< :encoding(UTF-8)')
 		or die "Could not open file $conllName: $!";
 
@@ -140,7 +142,7 @@ END
 	printAFileBegin($aOut, $nameStub, "$progname,  $timeNow");
 
 	my %status = (
-		'paraId' => 1,
+		#'paraId' => 1,
 		'sentenceCounter' => 0,
 		'wordCounter' => 0,
 		'isInsideOfSentence' => 0,
@@ -154,30 +156,32 @@ END
 	# A and M files are made by going through W  and CoNLL files at the same time.
 	for my $wPara (@{$w->{'xml'}->{'doc'}->{'para'}})
 	{
+		my $paraIdString = $wPara->{'id'};
+		$paraIdString =~ /^w-(.*-p(\d+))$/;
+		#$status{'paraId'} = $2;
+		$status{'paraIdStub'} = $1;
+
 		for my $wTok (@{$wPara->{w}})
 		{
 			# Get the next conll line to use - either the unused one from
 			# previous loop or read a new one.
 			my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
-			&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+			&_endSentence(\%status, $mOut, $aOut, $conllName)
 				if ($mustEndSentence);
-			#print Dumper($wTok);
-			$wTok->{'id'} =~ /-p(\d+)w\d+$/;
-			$status{'paraId'} = $1;
 			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut, $wTok);
 		}
 	}
 	
 	# Process unused CoNLL lines in the end of the file and warn
 	my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
-	&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($mustEndSentence);
-	$status{'paraId'}++;
+	#$status{'paraId'}++;
 	while ($line)
 	{
 		&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
 		($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
-		&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+		&_endSentence(\%status, $mOut, $aOut, $conllName)
 			if ($mustEndSentence);
 	}
 
@@ -185,7 +189,7 @@ END
 	warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
 		if ($status{'unusedTokens'});
 
-	&_endSentence(\%status, $nameStub, $mOut, $aOut, $conllName)
+	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($status{'isInsideOfSentence'});
 
 	printMFileEnd($mOut);
@@ -215,33 +219,32 @@ sub _getNextConllContentLine
 	return ($line, $mustEndSentence);
 }
 
-# _startSentence(hash with file processing status variables, PML dateset name,
-#                PML-M output flow)
+# _startSentence(hash with file processing status variables, PML-M output flow)
 # Writes sentence begining in the PML-M flow and resets status variables
 # appropriately.
 sub _startSentence
 {
-	my ($status, $nameStub, $mOut) = @_;
+	my ($status, $mOut) = @_;
 	$status->{'isInsideOfSentence'} = 1;
 	$status->{'sentenceCounter'}++;
-	my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
+	$status->{'sentIdStub'} = $status->{'paraIdStub'};
+	my $mSentId = &_getMSentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
 	printMSentBegin($mOut, $mSentId);
 	$status->{'unprocessedATokens'} = [];
 }
 
-# _endSentence(hash with file processing status variables, PML dateset name,
-#              PML-M output flow, PML-A output flow, CoNLL file name for error
-#              reporting)
+# _endSentence(hash with file processing status variables, PML-M output flow,
+#              PML-A output flow, CoNLL file name for error reporting)
 # Transforms previously collected CoNLL data to PML-A tree, writes it into PML-A
 # flow. Then writes sentence ending in both PML-M and PML-A flow and resets
 # status variables appropriately.
 sub _endSentence
 {
-	my ($status, $nameStub, $mOut, $aOut, $conllName) = @_;
+	my ($status, $mOut, $aOut, $conllName) = @_;
 	if (@{$status->{'unprocessedATokens'}})
 	{
-		my $aSentId = &_getASentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
-		my $mSentId = &_getMSentId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'});
+		my $aSentId = &_getASentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
+		my $mSentId = &_getMSentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
 		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);		
 		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $status->{'isFirstTree'});
 		$status->{'isFirstTree'} = 0;
@@ -250,6 +253,7 @@ sub _endSentence
 	printMSentEnd($mOut);
 	$status->{'isInsideOfSentence'} = 0;
 	$status->{'wordCounter'} = 0;
+	delete $status->{'sentIdStub'};
 }
 
 # _doOneTokenOrLine(hash with file processing status variables, optional CoNLL
@@ -288,7 +292,7 @@ sub _doOneTokenOrLine
 		if ($conllToken and not $wNode);
 
 	# Start sentence if needed.
-	&_startSentence ($status, $nameStub, $mOut)
+	&_startSentence ($status, $mOut)
 		unless ($status->{'isInsideOfSentence'});
 
 	$status->{'unusedTokens'} =~ /^\s*(.*?)\s*$/;
@@ -296,10 +300,9 @@ sub _doOneTokenOrLine
 	{
 		# If conll token and unused w token matches, print next PML node.
 		$status->{'wordCounter'}++;
-		my $mId = &_getMNodeId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
-		my $aId = &_getANodeId($nameStub, $status->{'paraId'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
-		printMDataNode($mOut, $nameStub, $mId, $status->{'unusedWIds'},
-			$conllToken, $lemma, $tag);
+		my $mId = &_getMNodeIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
+		my $aId = &_getANodeIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'}, $status->{'wordCounter'});
+		printMDataNode($mOut, $mId, $status->{'unusedWIds'}, $conllToken, $lemma, $tag);
 		$status->{'unprocessedATokens'}->[$conllId] = {
 			'aId' => $aId,
 			'mId' => $mId,
@@ -320,33 +323,33 @@ sub _doOneTokenOrLine
 	}
 }
 
-# Form an ID for a-node by using given numerical parameters.
-sub _getANodeId
+# Form an ID for a-node by using given ID stub, sentence number and token number.
+sub _getANodeIdFromStub
 {
-	my ($docId, $parId, $sentId, $tokId) = @_;
-	return "a-${docId}-p${parId}s${sentId}w$tokId";
+	my ($stub, $sentId, $tokId) = @_;
+	return "a-${stub}s${sentId}w$tokId";
 }
 
-# Form an ID for m-node by using given numerical parameters.
-sub _getMNodeId
+# Form an ID for m-node by using given ID stub, sentence number and token number.
+sub _getMNodeIdFromStub
 {
-	my ($docId, $parId, $sentId, $tokId) = @_;
-	return "m-${docId}-p${parId}s${sentId}w$tokId";
+	my ($stub, $sentId, $tokId) = @_;
+	return "m-${stub}s${sentId}w$tokId";
 }
 
-# Form an ID for a-root by using given numerical parameters.
+# Form an ID for a-root by using given ID stub, sentence number and token number.
 # To get stub for x node, just add 'x' to the end.
-sub _getASentId
+sub _getASentIdFromStub
 {
-	my ($docId, $parId, $sentId) = @_;
-	return "a-${docId}-p${parId}s${sentId}";
+	my ($stub, $sentId) = @_;
+	return "a-${stub}s${sentId}";
 }
 
-# Form an ID for m-root by using given numerical parameters.
-sub _getMSentId
+# Form an ID for m-root by using given ID stub, sentence number and token number.
+sub _getMSentIdFromStub
 {
-	my ($docId, $parId, $sentId) = @_;
-	return "m-${docId}-p${parId}s${sentId}";
+	my ($stub, $sentId) = @_;
+	return "m-${stub}s${sentId}";
 }
 
 # &_printATreeFromHash(output stream, maping from PML IDs to nodes, ID of the

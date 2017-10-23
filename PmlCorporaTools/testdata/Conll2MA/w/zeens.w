@@ -5,8 +5,8 @@
   </head>
   <meta>-</meta>
   <doc id="zeens" source_id="zeens.txt">
-    <docmeta>Paraugfails, bezavotu teksti un fragmenti no korpusa dažādu konstrukciju marķēšanas piemēriem.</docmeta>
-    <para>
+    <docmeta><title>Paraugfails, bezavotu teksti un fragmenti no korpusa dažādu konstrukciju marķēšanas piemēriem.</title></docmeta>
+    <para id="w-zeens-p1">
       <w id="w-zeens-p1w1">
         <token>Zēns</token>
       </w>
@@ -23,23 +23,23 @@
       <w id="w-zeens-p1w5">
         <token>.</token>
       </w>
-    </para>
-    <para>
-      <w id="w-zeens-p2w1">
+      <w id="w-zeens-p1w6">
         <token>Meitene</token>
       </w>
-      <w id="w-zeens-p2w2">
+      <w id="w-zeens-p1w7">
         <token>ņēma</token>
       </w>
-      <w id="w-zeens-p2w3">
+    </para>
+    <para id="w-zeens-p2">
+      <w id="w-zeens-p2w1">
         <token>ābolu</token>
         <no_space_after>1</no_space_after>
       </w>
-      <w id="w-zeens-p2w4">
+      <w id="w-zeens-p2w2">
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p3">
       <w id="w-zeens-p3w1">
         <token>Vasarā</token>
       </w>
@@ -54,7 +54,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p4">
       <w id="w-zeens-p4w1">
         <token>Skaists</token>
       </w>
@@ -69,7 +69,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p5">
       <w id="w-zeens-p5w1">
         <token>Zēns</token>
       </w>
@@ -84,7 +84,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p6">
       <w id="w-zeens-p6w1">
         <token>Zēns</token>
       </w>
@@ -111,7 +111,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p7">
       <w id="w-zeens-p7w1">
         <token>Zēns</token>
       </w>
@@ -148,7 +148,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p8">
       <w id="w-zeens-p8w1">
         <token>Mani</token>
       </w>
@@ -195,7 +195,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p9">
       <w id="w-zeens-p9w1">
         <token>Zēns</token>
       </w>
@@ -249,7 +249,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p10">
       <w id="w-zeens-p10w1">
         <token>Vakaros</token>
       </w>
@@ -305,7 +305,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p11">
       <w id="w-zeens-p11w1">
         <token>Ziemās</token>
       </w>
@@ -346,7 +346,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p12">
       <w id="w-zeens-p12w1">
         <token>Ak</token>
         <no_space_after>1</no_space_after>
@@ -389,7 +389,7 @@
         <token>...</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p13">
       <w id="w-zeens-p13w1">
         <token>Viņa</token>
       </w>
@@ -457,7 +457,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p14">
       <w id="w-zeens-p14w1">
         <token>"</token>
         <no_space_after>1</no_space_after>
@@ -592,7 +592,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p15">
       <w id="w-zeens-p15w1">
         <token>17</token>
         <no_space_after>1</no_space_after>
@@ -659,7 +659,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p16">
       <w id="w-zeens-p16w1">
         <token>Viņš</token>
         <no_space_after>1</no_space_after>
@@ -713,7 +713,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p17">
       <w id="w-zeens-p17w1">
         <token>Ja</token>
       </w>
@@ -759,7 +759,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p18">
       <w id="w-zeens-p18w1">
         <token>"</token>
         <no_space_after>1</no_space_after>
@@ -852,7 +852,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p19">
       <w id="w-zeens-p19w1">
         <token>Debesis</token>
       </w>
@@ -894,7 +894,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p20">
       <w id="w-zeens-p20w1">
         <token>Mēs</token>
       </w>
@@ -913,7 +913,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p21">
       <w id="w-zeens-p21w1">
         <token>Līst</token>
         <no_space_after>1</no_space_after>
@@ -922,7 +922,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p22">
       <w id="w-zeens-p22w1">
         <token>Paldies</token>
       </w>
@@ -937,7 +937,7 @@
         <token>!</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p23">
       <w id="w-zeens-p23w1">
         <token>Tādas</token>
       </w>
@@ -974,7 +974,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p24">
       <w id="w-zeens-p24w1">
         <token>Bērnam</token>
       </w>
@@ -1004,7 +1004,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p25">
       <w id="w-zeens-p25w1">
         <token>Spēle</token>
       </w>
@@ -1031,7 +1031,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p26">
       <w id="w-zeens-p26w1">
         <token>Latvijā</token>
       </w>
@@ -1064,7 +1064,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p27">
       <w id="w-zeens-p27w1">
         <token>Es</token>
       </w>
@@ -1098,7 +1098,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p28">
       <w id="w-zeens-p28w1">
         <token>Dzīvnieks</token>
       </w>
@@ -1119,7 +1119,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p29">
       <w id="w-zeens-p29w1">
         <token>Man</token>
       </w>
@@ -1162,7 +1162,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p30">
       <w id="w-zeens-p30w1">
         <token>Saulei</token>
       </w>
@@ -1196,7 +1196,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p31">
       <w id="w-zeens-p31w1">
         <token>Pa</token>
       </w>
@@ -1281,7 +1281,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p32">
       <w id="w-zeens-p32w1">
         <token>Man</token>
       </w>
@@ -1296,7 +1296,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p33">
       <w id="w-zeens-p33w1">
         <token>Laukā</token>
       </w>
@@ -1317,7 +1317,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p34">
       <w id="w-zeens-p34w1">
         <token>Par</token>
       </w>
@@ -1358,7 +1358,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p35">
       <w id="w-zeens-p35w1">
         <token>Man</token>
       </w>
@@ -1389,7 +1389,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p36">
       <w id="w-zeens-p36w1">
         <token>Pasniedzējs</token>
       </w>
@@ -1407,7 +1407,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p37">
       <w id="w-zeens-p37w1">
         <token>No</token>
       </w>
@@ -1431,7 +1431,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p38">
       <w id="w-zeens-p38w1">
         <token>Ar</token>
       </w>
@@ -1452,7 +1452,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p39">
       <w id="w-zeens-p39w1">
         <token>Vēlāk</token>
       </w>
@@ -1482,7 +1482,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p40">
       <w id="w-zeens-p40w1">
         <token>Meiteni</token>
       </w>
@@ -1500,7 +1500,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p41">
       <w id="w-zeens-p41w1">
         <token>Es</token>
       </w>
@@ -1524,7 +1524,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p42">
       <w id="w-zeens-p42w1">
         <token>Neviens</token>
       </w>
@@ -1551,7 +1551,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p43">
       <w id="w-zeens-p43w1">
         <token>Lai</token>
       </w>
@@ -1581,7 +1581,7 @@
         <token>!</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p44">
       <w id="w-zeens-p44w1">
         <token>Atrast</token>
       </w>
@@ -1608,7 +1608,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p45">
       <w id="w-zeens-p45w1">
         <token>Funkc</token>
         <no_space_after>1</no_space_after>
@@ -1651,7 +1651,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p46">
       <w id="w-zeens-p46w1">
         <token>Latvijas</token>
       </w>
@@ -1680,7 +1680,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p47">
       <w id="w-zeens-p47w1">
         <token>Strādājot</token>
       </w>
@@ -1711,7 +1711,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-zeens-p48">
       <w id="w-zeens-p48w1">
         <token>Viņš</token>
       </w>

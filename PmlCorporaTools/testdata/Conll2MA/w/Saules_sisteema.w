@@ -5,8 +5,8 @@
 	</head>
 	<meta>-</meta>
 	<doc id="Saules_sisteema" source_id="Saules_sisteema">
-		<docmeta>Vikipēdija, Saules sistēma, https://lv.wikipedia.org/wiki/Saules_sist%C4%93ma, iegūts: 09.12.2016. (Versija 2016. gada 2. decembris, plkst. 12.52‎)</docmeta>
-		<para>
+		<docmeta><title>Vikipēdija, Saules sistēma, https://lv.wikipedia.org/wiki/Saules_sist%C4%93ma, iegūts: 09.12.2016. (Versija 2016. gada 2. decembris, plkst. 12.52‎)</title></docmeta>
+		<para id="w-Saules_par-p1">
 			<w id="w-Saules_sisteema-p1w1">
 				<token>Saules</token>
 			</w>
@@ -14,7 +14,7 @@
 				<token>sistēma</token>
 			</w>
 		</para>
-		<para>
+		<para id="w-Saules_par-p2">
 			<w id="w-Saules_sisteema-p2w1">
 				<token>Saules</token>
 			</w>
@@ -191,7 +191,7 @@
 				<token>.</token>
 			</w>
 		</para>
-		<para>
+		<para id="w-Saules_par-p3">
 			<w id="w-Saules_sisteema-p3w1">
 				<token>Saules</token>
 			</w>
@@ -725,7 +725,7 @@
 				<token>.</token>
 			</w>
 		</para>
-		<para>
+		<para id="w-Saules_par-p4">
 			<w id="w-Saules_sisteema-p4w1">
 				<token>Saules</token>
 			</w>
@@ -1260,7 +1260,7 @@
 				<token>.</token>
 			</w>
 		</para>
-		<para>
+		<para id="w-Saules_par-p5">
 			<w id="w-Saules_sisteema-p5w1">
 				<token>Saule</token>
 			</w>
@@ -1459,7 +1459,7 @@
 				<token>.</token>
 			</w>
 		</para>
-		<para>
+		<para id="w-Saules_par-p7">
 			<w id="w-Saules_sisteema-p7w1">
 				<token>1</token>
 			</w>
