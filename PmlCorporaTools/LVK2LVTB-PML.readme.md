@@ -26,6 +26,7 @@ Parametri:
     </keywords>
     <misc>No LVK nekādai citai informačijai arī nevajadzētu nākt.</misc>
   </docmeta>`
+Mazākie dummy dati varētu būt šādi: `<docmeta><title>t16</title></docmeta>`.
 5) rinkopas numurs
 6) jaunveidojamās PML failu kopas vārds. Sembank ietvaros parasti tas ir <avota ID>_p<rindkopas nr>
 
@@ -43,6 +44,6 @@ vai
 Parametri:
 1) w fails
 2) mape, kur likt rezultātu
-3) CoNLL fails - ja šo nepadod, tad skripts ņem (1) parametru, nocērt tam no beigām ".w", pieliek ".conll" un mēģina lietot to kā CoNLL faila nosaukumu
+3) CoNLL fails - ja šo nepadod, tad skripts ņem 1. parametru, nocērt tam no beigām ".w", pieliek ".conll" un mēģina lietot to kā CoNLL faila nosaukumu
 
 
