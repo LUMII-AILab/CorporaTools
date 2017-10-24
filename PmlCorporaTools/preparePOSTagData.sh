@@ -8,11 +8,12 @@ then sourceFolder="$1"
 else sourceFolder="../../Morphocorpus/Corpora" 
 fi
 
-#treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
+#Treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
 treebankFolder="../../Treebank/Corpora"
 morphologyFolder="../../morphology"
 taggerFolder="../../LVTagger"
 
+# We'll use the Morphocorpus Corpora/Merged folder as the temporary location for merging all the data
 pmlFolder="$sourceFolder/Merged"
 rm -rf $pmlFolder
 mkdir $pmlFolder
@@ -20,10 +21,11 @@ mkdir $pmlFolder/dev
 mkdir $pmlFolder/test
 mkdir $pmlFolder/train
 
-# This subset of corpora is double-checked and usable for tagger training
+# This subset of Morphocorpus is double-checked and usable for tagger training
 cp $sourceFolder/Balanseetais/Jaunaakais/*.[m,w] $pmlFolder
 cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.[m,w] $pmlFolder
 
+# For treebank, we're filtering out files that are marked as not yet finished (AUTO) or needing corrections (FIXME)
 tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
 	if grep -q "<comment>AUTO</comment>" "$treebankFolder/${file%.m}.a"; then
@@ -36,21 +38,37 @@ do
 	fi
 done
 
-# Knit the .m and .w files together
-perl -e "use LvCorporaTools::PMLUtils::Knit qw(processDir); processDir(@ARGV)" $pmlFolder m "../TrEd extension/lv-treebank/resources"
+# Knitting merges the .m and .w files together
+echo "Knitting - start"
+time perl -e "use LvCorporaTools::PMLUtils::Knit qw(processDir); processDir(@ARGV)" $pmlFolder m "../TrEd extension/lv-treebank/resources" >/dev/null
+echo "Knitting - done"
 rm $pmlFolder/*.[m,w]
 
 # We use a predefined file split between train/dev/test
-for file in $(<LvCorporaTools/corpus_devset.txt); do 
-	# echo "copying $file to devset"
-	mv "$pmlFolder/res/$file.pml" "$pmlFolder/dev";
-done
-for file in $(<LvCorporaTools/corpus_testset.txt); do 
-	# echo "copying $file to testset"
-	mv "$pmlFolder/res/$file.pml" "$pmlFolder/test";
-done
+while IFS=$'\t' read -r -a entry
+do
+	type=${entry[0]} 
+	file=${entry[1]}
+	if [ $type = "dev" ]; then
+		# echo "copying $file to devset"
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/dev";
+	elif [ $type = "test" ]; then
+		# echo "copying $file to testset"
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/test";
+	elif [ $type = "train" ]; then
+		# echo "copying $file to trainset"
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/train";
+	elif [ $type = "skip" ]; then
+		echo "skipping $file"
+		rm "$pmlFolder/res/$file.pml"
+	else 
+		echo "$file has bad type"
+	fi
+done < "../Docs/testdevtrain.tsv"
+
+shopt -s nullglob
 for file in $pmlFolder/res/*.pml; do 
-	mv "$file" "$pmlFolder/train/";
+	echo "$file has no defined type";
 done
 rm -rf "$pmlFolder/res"
 
@@ -64,32 +82,45 @@ rm -rf "$pmlFolder/res"
 # mv "$pmlFolder/devtest/test" "$pmlFolder/"
 # rm -rf "$pmlFolder/devtest"
 
+# Convert all the data from PML to tab-delimited vert format
 echo "Converting $pmlFolder"
-
 for n in $(find "$pmlFolder/train" -type f -name "*.pml")
 do
-   ./runPmlMToPlain.sh "$n"
+   ./runPmlMToPlain.sh "$n" >/dev/null
 done
 find "$pmlFolder/train" -type f -name "*.txt" -exec cat {} > "$pmlFolder/train.txt" \;
 
 for n in $(find "$pmlFolder/dev" -type f -name "*.pml")
 do
-   ./runPmlMToPlain.sh "$n"
+   ./runPmlMToPlain.sh "$n" >/dev/null
 done
 find "$pmlFolder/dev" -type f -name "*.txt" -exec cat {} > "$pmlFolder/dev.txt" \;
 
 for n in $(find "$pmlFolder/test" -type f -name "*.pml")
 do
-   ./runPmlMToPlain.sh "$n"
+   ./runPmlMToPlain.sh "$n" >/dev/null
 done
 find "$pmlFolder/test" -type f -name "*.txt" -exec cat {} > "$pmlFolder/test.txt" \;
-
+echo "Converting done"
 rm -rf "$pmlFolder/train"
 rm -rf "$pmlFolder/dev"
 rm -rf "$pmlFolder/test"
 
 cat "$pmlFolder/train.txt" "$pmlFolder/dev.txt" "$pmlFolder/test.txt" > "$pmlFolder/all.txt"
 cat "$pmlFolder/train.txt" "$pmlFolder/dev.txt" > "$pmlFolder/train_dev.txt"
+
+train_sent=`awk '/^<s>/{a++}END{print a}' "$pmlFolder/train.txt"`
+test_sent=`awk '/^<s>/{a++}END{print a}' "$pmlFolder/test.txt"`
+dev_sent=`awk '/^<s>/{a++}END{print a}' "$pmlFolder/dev.txt"`
+all_sent=`awk '/^<s>/{a++}END{print a}' "$pmlFolder/all.txt"`
+train_tok=`awk '/^[^<]/{a++}END{print a}' "$pmlFolder/train.txt"`
+test_tok=`awk '/^[^<]/{a++}END{print a}' "$pmlFolder/test.txt"`
+dev_tok=`awk '/^[^<]/{a++}END{print a}' "$pmlFolder/dev.txt"`
+all_tok=`awk '/^[^<]/{a++}END{print a}' "$pmlFolder/all.txt"`
+printf 'Training set:    %5s sentences, %6s tokens\n' $train_sent $train_tok
+printf 'Development set: %5s sentences, %6s tokens\n' $dev_sent $dev_tok
+printf 'Test set:        %5s sentences, %6s tokens\n' $test_sent $test_tok
+printf 'TOTAL:           %5s sentences, %6s tokens\n' $all_sent $all_tok
 
 cp "$pmlFolder/train.txt" "$morphologyFolder/src/main/resources/"
 cp "$pmlFolder/all.txt" "$morphologyFolder/src/test/resources/"
