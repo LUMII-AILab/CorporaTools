@@ -9,12 +9,13 @@ Piemērs:
 
 Parametri:
 1) datu mape
-
 2) fails ar tekstu, no kura jāuzbūvē W fails
-
 3) datu avota ID no LVK, piemēram, p2134 vai c60
-
-4) fails ar metainformāciju no LVK šādā formā:
+4) fails ar metainformāciju no LVK
+5) rinkopas numurs
+6) jaunveidojamās PML failu kopas vārds. Sembank ietvaros parasti tas ir <avota ID>_p<rindkopas nr>
+  
+Metadati no LVK ir padodami failā šādā formā formā (bez XML header):
 ```
 <docmeta>
   <title>Dokumenta nosaukums (obligāts).</title>
@@ -31,11 +32,7 @@ Parametri:
   <misc>No LVK nekādai citai informačijai arī nevajadzētu nākt.</misc>
 </docmeta>
 ```
-Mazākie _dummy_ dati varētu būt šādi: `<docmeta><title>t16</title></docmeta>`.
-
-5) rinkopas numurs
-
-6) jaunveidojamās PML failu kopas vārds. Sembank ietvaros parasti tas ir <avota ID>_p<rindkopas nr>
+Mazākie _dummy_ dati varētu būt apmēram šādi: `<docmeta><title>t16</title></docmeta>`.
 
 2. Dabūt PML-M un PML-A
 -----------------------
