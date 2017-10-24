@@ -29,7 +29,7 @@ Metadati no LVK ir padodami failā šādā formā formā (bez XML header):
     <LM>atslēgasvārds</LM>
     <LM>neviens atslēgas vārds un viss šis elements nav obligāts</LM>
   </keywords>
-  <misc>No LVK nekādai citai informačijai arī nevajadzētu nākt.</misc>
+  <misc>No LVK nekādai citai informācijai arī nevajadzētu nākt.</misc>
 </docmeta>
 ```
 Mazākie _dummy_ dati varētu būt apmēram šādi: `<docmeta><title>t16</title></docmeta>`.
