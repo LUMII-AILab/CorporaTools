@@ -3,12 +3,12 @@
   <head>
     <schema href="lvmschema.xml" />
     <references>
-      <reffile id="w" name="wdata" href="../../../../../../Documents%20and%20Settings/Administrator/My%20Documents/Instituutam/Koki/stumstum-saakums-ilze120126/3_dalja.w" />
+      <reffile id="w" name="wdata" href="3_dalja.w" />
     </references>
   </head>
   <meta>
     <lang>lv</lang>
-    <annotation_info>SemTi-Kamols Annotator, version: 0.9.806, date: 2011-08-03 14:01:42</annotation_info>
+    <annotation_info id="annotator">SemTi-Kamols Annotator, version: 0.9.806, date: 2011-08-03 14:01:42</annotation_info>
   </meta>
   <s id="m-3_dalja-p1s70">
     <m id="m-3_dalja-p1s70w1">

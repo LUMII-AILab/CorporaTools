@@ -327,8 +327,8 @@ sub _normalizeM
 	my $sentId = $firstSent;
 	my $mId = $firstM;
 	my $docBegin = 1;
-	my $paraId = -1;
-	my $prevPara = -1;
+	my $prevIdStub;
+	my $idStub;
 	# Normalize IDs in the main data.
 	for my $s (@{$lvmdata->{'s'}})
 	{
@@ -337,71 +337,81 @@ sub _normalizeM
 			{not $_->{'deleted'} or $_->{'deleted'} eq 0}
 			@{$s->{'m'}};
 		$s->{'m'} = \@onlyUndeleted;
-		
-		my $newSId;
-		
+
+		# Now process each morpho in the sentence.
+		# First, update w references and get paragraph ID.
 		for my $m (@{$s->{'m'}})
 		{	# Goes through all m-s in all s-s.
-			my $idStub;
 			# Update references to w layer.
 			if ($m->{'w.rf'} and %{$m->{'w.rf'}}) # Nonempty hash.
 			{
-				my $oldWId;
-				#if (ref $m->{'w.rf'})
 				if ($m->{'w.rf'}->{'content'})
 				{	# Morphological unit cosists of single token.
-					$oldWId = $m->{'w.rf'}->{'content'};
+					my $oldWId = $m->{'w.rf'}->{'content'};
 					$oldWId =~ s/w#(.*)$/$1/;
 					warn "w ID $oldWId was not found!"
 						if (not exists $wMap->{$oldWId});
 					$m->{'w.rf'}->{'content'} = 'w#'.$wMap->{$oldWId};
-					# Get stub from already updated paragraph ID.
-					$idStub = $wTok2Para->{$wMap->{$oldWId}} unless ($idStub);
-
+					# Get stub from already updated paragraph ID if it is yet
+					# unknown (i.e. if sentence spans across multiple
+					# paragraphs, use ID stub from first).
+					unless ($idStub)
+					{
+						$idStub = $wTok2Para->{$wMap->{$oldWId}};
+						$idStub =~ s/^w-(.*)$/$1/;
+					}
 				} else
 				{	# Morphological unit cosists of multiple tokens.
 					for (my $lmNo = 0; $lmNo < @{$m->{'w.rf'}->{'LM'}}; $lmNo++)
 					{
-						$oldWId = $m->{'w.rf'}->{'LM'}[$lmNo]->{'content'};
+						my $oldWId = $m->{'w.rf'}->{'LM'}[$lmNo]->{'content'};
 						$oldWId =~ s/w#(.*)$/$1/;
 						warn "w ID $oldWId was not found!"
 							if (not exists $wMap->{$oldWId});
 						$m->{'w.rf'}->{'LM'}[$lmNo]->{'content'} = 'w#'.$wMap->{$oldWId};
-						# Get stub from already updated paragraph ID.
-						$idStub = $wTok2Para->{$wMap->{$oldWId}} unless ($idStub);
+						# Get stub from already updated paragraph ID if it is
+						# yet unknown (i.e. if sentence spans across multiple
+						# paragraphs, use ID stub from first).
+						unless ($idStub)
+						{
+							$idStub = $wTok2Para->{$wMap->{$oldWId}};
+							$idStub =~ s/^w-(.*)$/$1/;
+						}
 					}
 				}
-				$idStub =~ m/w-(.*?-p(\d+))$/;
-				$paraId = $2;
-				$idStub = $1;
+			}
+		}
 
-				# If this is a new paragraph, restart sentence numbering.
-				# However, allow the number of the first sentence in the whole
-				# document to be whatever was passed to function.
-				$sentId = 1 if (($paraId gt $prevPara) and not $docBegin);
-				$prevPara = $paraId;
-			}
-			
-			# Change sentence ID.
-			if (not defined $newSId)
-			{
-				$newSId = "m-${idStub}s$sentId";
-				$oldId2newId{$s->{'id'}} = $newSId;
-				$s->{'id'} = $newSId;
-			}
+		# If this is a different paragraph compared to previous, restart
+		# sentence numbering. However, allow the number of the first sentence in
+		# the whole document to be whatever was passed to function.
+		$sentId = 1 if (not $docBegin and ($idStub ne $prevIdStub));
+
+		# Then change sentence ID.
+		my $newSId = "m-${idStub}s$sentId";
+		$oldId2newId{$s->{'id'}} = $newSId;
+		$s->{'id'} = $newSId;
+
+		# Finaly change m IDs (can't be done together with w.ref change because
+		# first m in sentence may lack w.ref and thus be unable to give
+		# paragraph number.
+		for my $m (@{$s->{'m'}})
+		{
 			# Change morpological unit's ID.
 			my $newMId = "${newSId}w$mId";
 			$oldId2newId{$m->{'id'}} = $newMId;
 			$m->{'id'} = $newMId;
-			$docBegin = 0;	# This means that 1st word of this document has passed.
 		} continue
 		{
 			$mId++;
 		};
 	} continue
 	{
+		$prevIdStub = $idStub;
+		$idStub = undef;
 		$mId = 1;
 		$sentId++;
+		$docBegin = 0;	# This means that 1st sentence of this document has passed.
 	}
 	
 	# Return the ID mapping and modified XML hash.

@@ -5,8 +5,8 @@
   </head>
   <meta>2011-10-14</meta>
   <doc id="2_dalja_1_iekavas" source_id="2_dalja_1_iekavas">
-    <docmeta>Eksperimentāls anotācijas paraugs.</docmeta>
-    <para>
+    <docmeta><title>Eksperimentāls anotācijas paraugs.</title></docmeta>
+    <para id="w-2_dalja_1_iekavas-p1">
       <w id="w-2_dalja_1_iekavas-p1w1">
         <token>Un</token>
       </w>

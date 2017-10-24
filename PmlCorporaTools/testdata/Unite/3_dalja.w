@@ -5,8 +5,8 @@
   </head>
   <meta>2011-08-03</meta>
   <doc id="3_dalja" source_id="3_dalja">
-    <docmeta>Eksperimentāls anotācijas paraugs.</docmeta>
-    <para>
+    <docmeta><title>Eksperimentāls anotācijas paraugs.</title></docmeta>
+    <para id="w-3_dalja-p1">
       <w id="w-3_dalja-p1w1">
         <token>Ko</token>
         <no_space_after>1</no_space_after>
@@ -64,7 +64,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p2">
       <w id="w-3_dalja-p2w1">
         <token>Un</token>
       </w>
@@ -95,7 +95,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p3">
       <w id="w-3_dalja-p3w1">
         <token>Domāju</token>
       </w>
@@ -139,7 +139,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p4">
       <w id="w-3_dalja-p4w1">
         <token>Ziemā</token>
       </w>
@@ -312,7 +312,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p5">
       <w id="w-3_dalja-p5w1">
         <token>Dzīves</token>
       </w>
@@ -324,7 +324,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p6">
       <w id="w-3_dalja-p6w1">
         <token>Nokaitināja</token>
       </w>
@@ -364,7 +364,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p7">
       <w id="w-3_dalja-p7w1">
         <token>Es</token>
       </w>
@@ -448,7 +448,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p8">
       <w id="w-3_dalja-p8w1">
         <token>Tā</token>
       </w>
@@ -469,7 +469,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p9">
       <w id="w-3_dalja-p9w1">
         <token>-</token>
       </w>
@@ -510,7 +510,7 @@
         <token>?</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p10">
       <w id="w-3_dalja-p10w1">
         <token>-</token>
       </w>
@@ -577,7 +577,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p11">
       <w id="w-3_dalja-p11w1">
         <token>Nu</token>
       </w>
@@ -934,7 +934,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p12">
       <w id="w-3_dalja-p12w1">
         <token>Es</token>
       </w>
@@ -952,7 +952,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p13">
       <w id="w-3_dalja-p13w1">
         <token>Kas</token>
       </w>
@@ -986,7 +986,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-3_dalja-p14">
       <w id="w-3_dalja-p14w1">
         <token>Kaimiņiene</token>
       </w>

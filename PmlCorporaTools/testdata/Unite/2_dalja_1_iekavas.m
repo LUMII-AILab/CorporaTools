@@ -8,7 +8,7 @@
   </head>
   <meta>
     <lang>lv</lang>
-    <annotation_info>SemTi-Kamols Annotator, version: 0.9.806, date: 2011-10-14 08:54:25</annotation_info>
+    <annotation_info id="annotator">SemTi-Kamols Annotator, version: 0.9.806, date: 2011-10-14 08:54:25</annotation_info>
   </meta>
   <s id="m-2_dalja_1_iekavas-p1s1">
     <m id="m-2_dalja_1_iekavas-p1s1w1">

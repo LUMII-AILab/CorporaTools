@@ -13,7 +13,6 @@ use LvCorporaTools::PMLUtils::NormalizeIds qw(load process doOutput);
 use IO::File;
 use IO::Dir;
 use Data::Dumper;
-#print Dumper(qw (a b c));
 
 ###############################################################################
 # This program unite multiple PML format files. Header from first file is used.
@@ -23,7 +22,7 @@ use Data::Dumper;
 # resave file with TrEd.
 #
 # Developed on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2012
+# Latvian Treebank project, 2012-2017
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 sub unite
@@ -32,28 +31,30 @@ sub unite
 	{
 		print <<END;
 Script for uniting multiple PML dataset. To do this, IDs are recalculated if
-necessary. Input files should be provided as UTF-8.
+necessary. Files are united in their alphanumerical order. Input files should be
+provided as UTF-8.
 
 Params:
-   directory prefix
-   new file name
+   directory where all data to be concatenated is stored
+   new file name stub
+   new source id [opt, file name used otherwise]
    ID of the first paragraph [opt, int, 1 used otherwise]
    ID of the first sentence [opt, int, 1 used otherwise]
    ID of the first token [opt, int, 1 used otherwise]
 
-Latvian Treebank project, LUMII, 2012, provided under GPL
+Latvian Treebank project, LUMII, 2012-2017, provided under GPL
 END
 		exit 1;
 	}
 	
 	my $dirName = shift @_;
 	my $fileName = shift @_;
-	
+	my $source_id = (shift @_ or $fileName);
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
 
-	my $dir = IO::Dir->new($dirName) or die "dir $!";
+	my $dir = IO::Dir->new($dirName) or die "Could not use folder $dirName $!";
 	
 	my $xmlData;
 	my $isFirstFile = 1;
@@ -62,10 +63,10 @@ END
 	{
 		if ((! -d "$dirName\$inFile") and ($inFile =~ /^(.+)\.w$/))
 		{
-			my $id = $1;
-			my $xmls = load ($dirName, $id, $fileName);
+			my $doc_id = $1;
+			my $xmls = load ($dirName, $doc_id);
 			my $res = process (
-				$fileName, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
+				$fileName, $source_id, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
 				$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);
 				
 			if ($isFirstFile)
@@ -75,7 +76,6 @@ END
 			} else
 			{
 				# Unite w.
-				#print Dumper(@{$res->{'w'}->{'doc'}->{'para'}});
 				push @{$xmlData->{'w'}->{'xml'}->{'doc'}->{'para'}},
 					@{$res->{'w'}->{'doc'}->{'para'}};
 				# Unite m.
@@ -88,7 +88,7 @@ END
 			$firstPara = $res->{'nextPara'};
 			$firstSent = $res->{'nextSent'};
 			$firstWord = 1;
-			print "$id loaded!\n";
+			print "$doc_id loaded!\n";
 		}
 	}
 	

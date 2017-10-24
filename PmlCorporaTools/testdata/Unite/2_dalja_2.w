@@ -5,8 +5,8 @@
   </head>
   <meta>2011-10-14</meta>
   <doc id="2_dalja_2" source_id="2_dalja_2">
-    <docmeta>Eksperimentāls anotācijas paraugs.</docmeta>
-    <para>
+    <docmeta><title>Eksperimentāls anotācijas paraugs.</title></docmeta>
+    <para id="w-2_dalja_2-p1">
       <w id="w-2_dalja_2-p1w1">
         <token>-</token>
       </w>
@@ -130,7 +130,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-2_dalja_2-p2">
       <w id="w-2_dalja_2-p2w1">
         <token>Kur</token>
         <no_space_after>1</no_space_after>
@@ -143,7 +143,7 @@
         <token>!</token>
       </w>
     </para>
-    <para>
+    <para id="w-2_dalja_2-p3">
       <w id="w-2_dalja_2-p3w1">
         <token>Nepateica</token>
         <no_space_after>1</no_space_after>
@@ -159,7 +159,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-2_dalja_2-p4">
       <w id="w-2_dalja_2-p4w1">
         <token>Kā</token>
       </w>
@@ -203,7 +203,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-2_dalja_2-p5">
       <w id="w-2_dalja_2-p5w1">
         <token>Vot</token>
         <no_space_after>1</no_space_after>
