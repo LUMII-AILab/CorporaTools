@@ -1,6 +1,7 @@
 #!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::DataSelector::OneFromEachMorpho;
 
+use warnings;
 use utf8;
 use strict;
 
