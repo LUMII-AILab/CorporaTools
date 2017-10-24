@@ -8,7 +8,7 @@
   </head>
   <meta>
     <lang>lv</lang>
-    <annotation_info>Eksperimentāls anotācijas paraugs.</annotation_info>
+    <annotation_info id="experimental">Eksperimentāls anotācijas paraugs.</annotation_info>
   </meta>
   <s id="m-bildes-p1s1">
     <m id="m-bildes-p1s1w1">

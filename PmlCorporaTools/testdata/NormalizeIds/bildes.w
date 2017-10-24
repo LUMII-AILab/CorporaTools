@@ -5,8 +5,8 @@
   </head>
   <meta>Attēli marķēšanas metodikas dokumentam</meta>
   <doc id="bildes" source_id="bildes.txt">
-    <docmeta>Ilustratīvs fails, izdomāti un nepilnīgi teikumi.</docmeta>
-    <para>
+    <docmeta><title>bildes</title><misc>Ilustratīvs fails, izdomāti un nepilnīgi teikumi.</misc></docmeta>
+    <para id="w-bildes-p1blarg">
       <w id="w-bildes-p1w1">
         <token>meitene</token>
       </w>
@@ -14,7 +14,7 @@
         <token>ņēma</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p2">
       <w id="w-bildes-p2w2">
         <token>uz</token>
       </w>
@@ -22,7 +22,7 @@
         <token>skolu</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p3">
       <w id="w-bildes-p3w1">
         <token>gāja</token>
       </w>
@@ -36,7 +36,7 @@
         <token>skolu</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p4">
       <w id="w-bildes-p4w1">
         <token>gāja</token>
       </w>
@@ -53,7 +53,7 @@
         <token>lietu</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p5">
       <w id="w-bildes-p5w1">
         <token>Apvienoto</token>
       </w>
@@ -80,7 +80,7 @@
         <token>organizācija</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p6">
       <w id="w-bildes-p6w1">
         <token>zēns</token>
       </w>
@@ -97,7 +97,7 @@
         <token>gāja</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p7">
       <w id="w-bildes-p7w1">
         <token>vakaros</token>
       </w>
@@ -149,7 +149,7 @@
         <token>satiekas</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p8">
       <w id="w-bildes-p8w1">
         <token>tādas</token>
       </w>
@@ -176,7 +176,7 @@
         <token>bērzlapes</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p9">
       <w id="w-bildes-p9w1">
         <token>Meitene</token>
       </w>
@@ -191,7 +191,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p10">
       <w id="w-bildes-p10w1">
         <token>Paldies</token>
       </w>
@@ -206,7 +206,7 @@
         <token>!</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p11">
       <w id="w-bildes-p11w1">
         <token>Vai</token>
         <no_space_after>1</no_space_after>
@@ -225,7 +225,7 @@
         <token>...</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p12">
       <w id="w-bildes-p12w1">
         <token>Zēns</token>
       </w>
@@ -259,7 +259,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p13">
       <w id="w-bildes-p13w1">
         <token>Ja</token>
       </w>
@@ -305,7 +305,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p14">
       <w id="w-bildes-p14w1">
         <token>Ziemās</token>
       </w>
@@ -346,7 +346,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p15">
       <w id="w-bildes-p15w1">
         <token>guļ</token>
         <no_space_after>1</no_space_after>
@@ -361,7 +361,7 @@
         <token>krākdami</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p16">
       <w id="w-bildes-p16w1">
         <token>Manuprāt</token>
         <no_space_after>1</no_space_after>
@@ -381,7 +381,7 @@
         <no_space_after>1</no_space_after>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p17">
       <w id="w-bildes-p17w1">
         <token>Debesis</token>
       </w>
@@ -423,7 +423,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p18">
       <w id="w-bildes-p18w1">
         <token>Latvijas</token>
       </w>
@@ -452,7 +452,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p19">
       <w id="w-bildes-p19w1">
         <token>Mīļā</token>
       </w>
@@ -475,7 +475,7 @@
         <no_space_after>1</no_space_after>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p20">
       <w id="w-bildes-p20w1">
         <token>Viņa</token>
       </w>
@@ -502,7 +502,7 @@
         <token>"</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p21">
       <w id="w-bildes-p21w1">
         <token>"</token>
         <no_space_after>1</no_space_after>
@@ -580,7 +580,7 @@
         <token>"</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p22">
       <w id="w-bildes-p22w1">
         <token>Kantoris</token>
         <no_space_after>1</no_space_after>
@@ -618,7 +618,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p23">
       <w id="w-bildes-p23w1">
         <token>"</token>
         <no_space_after>1</no_space_after>
@@ -673,7 +673,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p24">
       <w id="w-bildes-p24w1">
         <token>Mēs</token>
       </w>
@@ -692,7 +692,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p28">
       <w id="w-zeens-p28w1">
         <token>Dzīvnieks</token>
       </w>
@@ -713,7 +713,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p25">
       <w id="w-bildes-p25w1">
         <token>Latvijā</token>
       </w>
@@ -746,7 +746,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p26">
       <w id="w-bildes-p26w1">
         <token>Spēle</token>
       </w>
@@ -773,7 +773,7 @@
         <token>.</token>
       </w>
     </para>
-    <para>
+    <para id="w-bildes-p27">
       <w id="w-bildes-p27w1">
         <token>Bērnam</token>
       </w>
