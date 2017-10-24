@@ -14,7 +14,7 @@ use IO::Dir;
 use IO::File;
 use File::Path;
 use XML::Simple;  # XML handling library
-use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
+use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml @FORCE_ARRAY_W);
 use LvCorporaTools::GenericUtils::UIWrapper;
 
 ###############################################################################
@@ -106,7 +106,7 @@ END
 	my $logFile = IO::File->new("$dirPrefix/res/$pml-log.txt", ">") or die "Can't create $pml-log.txt: $!";
 	
 	my $txtIn = IO::File->new("$dirPrefix/$txt", "< :encoding(UTF-8)") or die "Can't read text file $txt: $!";
-	my $wXml = loadXml ("$dirPrefix/$pml", ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc']);
+	my $wXml = loadXml ("$dirPrefix/$pml", \@FORCE_ARRAY_W);
 	my $lvwdata = $wXml->{'xml'};
 	my $docId = $lvwdata->{'doc'}->{'id'};
 

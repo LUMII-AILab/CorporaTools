@@ -16,7 +16,8 @@ use File::Path;
 use Tie::IxHash; # This class provides analogue to java's LinkedHashMap
 use XML::Simple;  # XML handling library
 
-use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
+use LvCorporaTools::GenericUtils::SimpleXmlIo
+	qw(loadXml printXml @FORCE_ARRAY_W @FORCE_ARRAY_M @FORCE_ARRAY_A);
 
 ###############################################################################
 # This program recalculate IDs in the given PML dataset. Number of first
@@ -28,7 +29,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml printXml);
 # resave file with TrEd.
 #
 # Developed on ActivePerl 5.10.1.1007, tested on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2011-2013
+# Latvian Treebank project, 2011-2017
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
@@ -51,7 +52,7 @@ Params:
 Returns:
    count of failed files
 
-Latvian Treebank project, LUMII, 2017, provided under GPL
+Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END
 		exit 1;
 	}
@@ -64,7 +65,11 @@ END
 	{
 		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
 		{
-			eval { normalizeIds ($dir_name, $1, $1) };
+			eval
+			{
+				local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+				normalizeIds ($dir_name, $1, $1, $1);
+			};
 			if ($@)
 			{
 				$problems++;
@@ -98,12 +103,15 @@ Input files should be provided as UTF-8.
 Params:
    directory prefix
    file name without extension
-   new file name [opt, current file name used otherwise]
+   new file name - used for naming files and w doc ID
+       [opt, current file name used otherwise]
+   new source id - used for w source_id and in paragraph/token/sentence IDs
+       [opt, current file name used otherwise]
    ID of the first paragraph [opt, int, 1 used otherwise]
    ID of the first sentence [opt, int, 1 used otherwise]
    ID of the first token [opt, int, 1 used otherwise]
 
-Latvian Treebank project, LUMII, 2011, provided under GPL
+Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END
 		exit 1;
 	}
@@ -111,14 +119,15 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
+	my $newSourceId = shift @_;
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
 
-	my $xmls = &load($dirPrefix, $oldName, $newName);
+	my $xmls = &load($dirPrefix, $oldName);
 	
 	&process(
-		$newName, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
+		$newName, $newSourceId, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
 		$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);	
 
 	&doOutput($dirPrefix, $newName, $xmls);
@@ -137,40 +146,41 @@ sub load
 	# Input paramaters.
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
-	#my $newName = (shift @_ or $oldName);
 
 	# Load w-level.
-	my $w = loadXml ("$dirPrefix\\$oldName.w", ['para', 'w', 'schema']);
+	my $wXml = loadXml ("$dirPrefix\\$oldName.w", \@FORCE_ARRAY_W);
 	print 'Loaded W';
 
 	# Load m-level.
-	my $m = loadXml ("$dirPrefix\\$oldName.m", ['s', 'm','reffile','schema', 'LM']);
+	my $mXml = loadXml ("$dirPrefix\\$oldName.m", \@FORCE_ARRAY_M);
 	print ', M';
 		
 	
 	if (-f "$dirPrefix\\$oldName.a")
 	{
 		# Load the a-level.
-		my $a = loadXml ("$dirPrefix\\$oldName.a", ['node', 'LM','reffile','schema']);
+		my $aXml = loadXml ("$dirPrefix\\$oldName.a", \@FORCE_ARRAY_A);
 		print ', A. ';
-		return {'w' => $w, 'm' => $m, 'a' => $a};
+		return {'w' => $wXml, 'm' => $mXml, 'a' => $aXml};
 	}
 	else
 	{
 		print '. ';
-		return {'w' => $w, 'm' => $m};
+		return {'w' => $wXml, 'm' => $mXml};
 	}
 }
-# process (new file name, w data, m data, a data, [ID of the first paragraph],
-#		[ID of the first sentence], [ID of the first token])
+# process (new file name, new source_id (used also for paragraph/token ID gen),
+#          w data, m data, a data, [ID of the first paragraph], [ID of the first
+#          sentence], [ID of the first token])
 # returns hash refernece:
 #		'w' => result for w, 'm' => result for m, 'a' => result for a,
 #		'nextPara' => next free paragraph ID, 'nextSent' => next free sentence
-#		ID, 'nextTree' => next free tree ID
+#		ID,
 sub process
 {
 	# Input paramaters.
 	my $newName = shift @_;
+	my $newSourceId = shift @_;
 	my $w = shift @_;
 	my $m = shift @_;
 	my $a = shift @_;
@@ -179,30 +189,29 @@ sub process
 	my $firstWord = (shift @_ or 1);
 
 	# Process w-level.
-	my $wRes = &_normalizeW($w, $newName, $firstPara, $firstWord);
+	my $wRes = &_normalizeW($w, $newName, $newSourceId, $firstPara, $firstWord);
 	print 'Processed W';
 
 	# Process m-level.
-	my $mRes = &_normalizeM(
-		$m, $newName, $wRes->{'idMap'}, $firstPara, $firstSent);
+	my $mRes = &_normalizeM($m, $newName, $wRes->{'idMap'}, $wRes->{'tokId2paraId'}, $firstSent);
 	print ', M';
 	
 	if ($a)
 	{
 		# Process the a-level XML.
-		my $aRes = &_normalizeA(
-			$a, $newName, $mRes->{'idMap'}, $firstPara, $firstSent);
+		my $aRes = &_normalizeA($a, $newName, $mRes->{'idMap'});
 		print ', A. ';
 
 		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'}, 'a' => $aRes->{'xml'},
-				'nextPara' => $wRes->{'nextPara'}, 'nextSent' => $mRes->{'nextSent'},
-				'nextTree' => $aRes->{'nextTree'},};
+				'nextPara' => $wRes->{'nextPara'},
+			    'nextSent' => $mRes->{'nextSent'}};
 	}
 	else
 	{
 		print '. ';
 		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'},
-					'nextPara' => $wRes->{'nextPara'}, 'nextSent' => $mRes->{'nextSent'}};
+			    'nextPara' => $wRes->{'nextPara'},
+			    'nextSent' => $mRes->{'nextSent'}};
 	}	
 }
 
@@ -234,41 +243,48 @@ sub doOutput
 # Helper functions
 ###############################################################################
 
-# normalizeW (xml data structure, new filename, 
-#			  ID of first paragraph [opt], ID of first word [opt])
+# normalizeW (xml data structure, new filename (used for doc id), new source_id
+#             (used also paragraph/token ID gen), ID of first paragraph [opt],
+#             ID of first word [opt])
 # returns hash refernece:
-#		'idMap' => old IDs mapping to new IDs, 'xml' => updated XML tree,
+#		'idMap' => old IDs mapping to new IDs,
+#		'tokId2paraId' => new token IDs mapping to corresponding paragraphs' IDs,
+#       'xml' => updated XML tree,
 #		'nextPara' => next free paragraph ID
 sub _normalizeW
 {
 	my $lvwdata = shift;
 	my $newName = shift;
+	my $newSouceId = shift;
 	my $firstPara = (shift or 1);
 	my $firstW = (shift or 1);
 	
 	my %oldId2newId = ();
 	tie %oldId2newId, 'Tie::IxHash';
+
+	my %newTokId2newParId = ();
 	
 	# Modify the fields in the header.
 	$lvwdata->{'doc'}->{'id'} = $newName;
-	#my $source_ext = $lvwdata->{'doc'}->{'source_id'};
-	#$source_ext =~ s/^.+(\..+)$/$1/;
-	$lvwdata->{'doc'}->{'id'} = $newName;#.$source_ext;
+	$lvwdata->{'doc'}->{'source_id'} = $newSouceId;
 	
 	# Normalize IDs in the main data.
 	my $paraShift = $firstPara;
 	my $wShift = $firstW;
 	for my $para (@{$lvwdata->{'doc'}->{'para'}})
 	{
-		#print "$para->{'w'}\n";
-		#print "@{[ %{$para->{'w'}} ]}\n";
+		my $newParaId = "w-$newSouceId-p${paraShift}";
+		warn "Duplicate key: $para->{'id'}" if (exists $oldId2newId{$para->{'id'}});
+		$oldId2newId{$para->{'id'}} = $newParaId;
+		$para->{'id'} = $newParaId;
 		for my $w (@{$para->{'w'}})
 		{
 			# Goes through all w-s in all para-s.
-			my $newId = "w-$newName-p${paraShift}w$wShift";
+			my $newId = "w-$newSouceId-p${paraShift}w$wShift";
 			warn "Duplicate key: $w->{'id'}" if (exists $oldId2newId{$w->{'id'}});
 			$oldId2newId{$w->{'id'}} = $newId;
 			$w->{'id'} = $newId;
+			$newTokId2newParId{$newId} = $newParaId;
 		}
 		continue
 		{
@@ -281,12 +297,14 @@ sub _normalizeW
 	}
 
 	# Return the ID mapping and modified XML hash.
-	return {'idMap' => \%oldId2newId, 'xml' => \%$lvwdata, 'nextPara' => $paraShift};
+	return {'idMap' => \%oldId2newId, 'tokId2paraId' => \%newTokId2newParId,
+		'xml' => \%$lvwdata, 'nextPara' => $paraShift};
 }
 
-# normalizeM (xml data structure, new filename, mapping for w IDs,
-#             ID of first paragraph [opt], ID of first sentence [opt],
-#             ID of first word [opt])
+# normalizeM (xml data structure, new filename (used for file refs), mapping for
+#             W IDs, mapping from new W token IDs to paragraph IDs they belong
+#             to (paragraph IDs used to create sentence and token IDs for M
+#             layer), ID of first sentence [opt], ID of first word [opt])
 # returns hash refernece:
 #		'idMap' => old IDs mapping to new IDs, 'xml' => updated XML tree,
 #		'nextSent' => next free sentence ID
@@ -295,7 +313,7 @@ sub _normalizeM
 	my $lvmdata = shift;
 	my $newName = shift;
 	my $wMap = shift;
-	my $firstPara = (shift or 1);
+	my $wTok2Para = shift;
 	my $firstSent = (shift or 1);
 	my $firstM = (shift or 1);
 
@@ -308,9 +326,8 @@ sub _normalizeM
 	
 	my $sentId = $firstSent;
 	my $mId = $firstM;
-	my $paraId = $firstPara;
-	#We don't want ID of 1st paragraph be different depending on index of 1st word.
 	my $docBegin = 1;
+	my $paraId = -1;
 	my $prevPara = -1;
 	# Normalize IDs in the main data.
 	for my $s (@{$lvmdata->{'s'}})
@@ -325,7 +342,7 @@ sub _normalizeM
 		
 		for my $m (@{$s->{'m'}})
 		{	# Goes through all m-s in all s-s.
-			
+			my $idStub;
 			# Update references to w layer.
 			if ($m->{'w.rf'} and %{$m->{'w.rf'}}) # Nonempty hash.
 			{
@@ -338,6 +355,9 @@ sub _normalizeM
 					warn "w ID $oldWId was not found!"
 						if (not exists $wMap->{$oldWId});
 					$m->{'w.rf'}->{'content'} = 'w#'.$wMap->{$oldWId};
+					# Get stub from already updated paragraph ID.
+					$idStub = $wTok2Para->{$wMap->{$oldWId}} unless ($idStub);
+
 				} else
 				{	# Morphological unit cosists of multiple tokens.
 					for (my $lmNo = 0; $lmNo < @{$m->{'w.rf'}->{'LM'}}; $lmNo++)
@@ -347,24 +367,25 @@ sub _normalizeM
 						warn "w ID $oldWId was not found!"
 							if (not exists $wMap->{$oldWId});
 						$m->{'w.rf'}->{'LM'}[$lmNo]->{'content'} = 'w#'.$wMap->{$oldWId};
+						# Get stub from already updated paragraph ID.
+						$idStub = $wTok2Para->{$wMap->{$oldWId}} unless ($idStub);
 					}
 				}
-				$wMap->{$oldWId} =~ m/p(.+)w.+$/;
-				my $thisPara = $1;
-				
-				if (($wMap->{$oldWId} =~ /\Qw1\E$/ or $thisPara gt $prevPara)
-					and not $docBegin)
-				{
-					$sentId = 1;
-					$paraId++;
-				}
-				$prevPara = $thisPara;
+				$idStub =~ m/w-(.*?-p(\d+))$/;
+				$paraId = $2;
+				$idStub = $1;
+
+				# If this is a new paragraph, restart sentence numbering.
+				# However, allow the number of the first sentence in the whole
+				# document to be whatever was passed to function.
+				$sentId = 1 if (($paraId gt $prevPara) and not $docBegin);
+				$prevPara = $paraId;
 			}
 			
 			# Change sentence ID.
 			if (not defined $newSId)
 			{
-				$newSId = "m-$newName-p${paraId}s$sentId";
+				$newSId = "m-${idStub}s$sentId";
 				$oldId2newId{$s->{'id'}} = $newSId;
 				$s->{'id'} = $newSId;
 			}
@@ -387,29 +408,22 @@ sub _normalizeM
 	return {'idMap' => \%oldId2newId, 'xml' => \%$lvmdata, 'nextSent' => $sentId};
 }
 
-# normalizeA (xml data structure, new filename, mapping for m IDs,
-#             ID of first paragraph [opt], ID of first sentence [opt])
+# normalizeA (xml data structure, new filename (used for file refs), mapping for
+#             m IDs (used also to create IDs for A layer),)
 # returns hash refernece:
 #		'idMap' => old IDs mapping to new IDs, 'xml' => updated XML tree,
-#		'nextTree' => next free tree ID
 sub _normalizeA
 {
 	my $lvadata = shift;
 	my $newName = shift;
 	my $mMap = shift;
-	my $firstPara = (shift or 1);
-	my $firstSent = (shift or 1);
-	#my $firstWord = (shift or 1);
-	
+
 	my %oldId2newId = ();
 	tie(%oldId2newId, 'Tie::IxHash');
 	
 	# Update references.
 	&_updateReffiles ($lvadata->{'head'}->{'references'}, $newName);
 
-	my $sentId = $firstSent;
-	#my $mId = $firstw;
-	my $paraId = $firstPara;
 	#We don't want ID of 1st paragraph be different depending on index of 1s sentence.
 	my $docBegin = 1;
 	for my $tree (@{$lvadata->{'trees'}->{'LM'}})
@@ -419,18 +433,15 @@ sub _normalizeA
 		# Reference to the sentence in the m file.
 		my $oldSref = $tree->{'s.rf'}->{'content'};
 		$oldSref =~ s/^m#(.*)$/$1/;
-		
-		# Update paragraph ID.
 		print "ID $oldSref! from A file was not found in M file. Please, check!\n"
 			if (not $mMap->{$oldSref});
-		if (not $docBegin and $mMap->{$oldSref} =~ /^.*s1$/)
-		{
-			$sentId = 1;
-			$paraId++;
-		}
+		# Get stub for new IDs.
+		my $idStub =  $mMap->{$oldSref};
+		$idStub =~ s/^m-(.*)$/$1/;
+
 		$docBegin = 0; # This means that begining of 1st sentence of this document has passed.
 		# Change sentence ID.
-		my $newSId = "a-$newName-p${paraId}s$sentId";
+		my $newSId = "a-$idStub";
 		$oldId2newId{$tree->{'id'}} = $newSId;
 		$tree->{'id'} = $newSId;
 		# Update reference to m sentence.
@@ -455,12 +466,12 @@ sub _normalizeA
 			
 			if ($current->{'m.rf'})
 			{	# Regular nodes.
-				my $oldSref = $current->{'m.rf'}->{'content'};
-				$oldSref =~ s/^m#(.*)$/$1/;
-				warn "m ID $oldSref was not found!"
-					if (not exists $mMap->{$oldSref});
-				$current->{'m.rf'}->{'content'} = 'm#'.$mMap->{$oldSref};
-				$mMap->{$oldSref} =~ /^.*w(.*?)$/;
+				my $oldMref = $current->{'m.rf'}->{'content'};
+				$oldMref =~ s/^m#(.*)$/$1/;
+				warn "m ID $oldMref was not found!"
+					if (not exists $mMap->{$oldMref});
+				$current->{'m.rf'}->{'content'} = 'm#'.$mMap->{$oldMref};
+				$mMap->{$oldMref} =~ /^.*w(\d+)$/;
 				my $newId = "${newSId}w$1";
 				$oldId2newId{$current->{'id'}} = $newId;
 				$current->{'id'} = $newId;
@@ -474,11 +485,8 @@ sub _normalizeA
 				$xId++;
 			}
 		}
-	} continue
-	{
-		$sentId++;
 	}
-	return {'idMap' => \%oldId2newId, 'xml' => \%$lvadata, 'nextTree' => $sentId};	
+	return {'idMap' => \%oldId2newId, 'xml' => \%$lvadata};
 }
 
 # findAChildren (pointer to hashmap corresponding to key 'children')

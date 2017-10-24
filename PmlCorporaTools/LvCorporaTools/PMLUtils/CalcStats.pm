@@ -12,7 +12,7 @@ our @EXPORT_OK = qw(calcStats processDir);
 use Data::Dumper;
 use IO::File;
 use IO::Dir;
-use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
+use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml @FORCE_ARRAY_M);
 
 ###############################################################################
 # Calculates sentence length statistics from LV-PML .m file.
@@ -102,7 +102,7 @@ sub _processM
 	my $mapping = shift @_;
 	my %res = $mapping ? %$mapping : ();
 
-	my $m = loadXml("$dirPrefix\\$inputName", ['s', 'm','reffile','schema', 'LM']);
+	my $m = loadXml("$dirPrefix\\$inputName", \@FORCE_ARRAY_M);
 	my @sizes = map {scalar @{$_->{'m'}}} @{$m->{'xml'}->{'s'}};
 	for (@sizes)
 	{

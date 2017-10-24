@@ -1,5 +1,6 @@
 package LvCorporaTools::CorporaComparator;
 
+use warnings;
 use utf8;
 use strict;
 

@@ -14,7 +14,8 @@ use XML::Simple;  # XML handling library
 use IO::File;
 use IO::Dir;
 use File::Path;
-use LvCorporaTools::GenericUtils::SimpleXmlIo qw(loadXml);
+use LvCorporaTools::GenericUtils::SimpleXmlIo
+	qw(loadXml @FORCE_ARRAY_W @FORCE_ARRAY_M @FORCE_ARRAY_A @LOAD_AS_ID);
 
 ###############################################################################
 # This program checks the given PML dataset for following things:
@@ -329,7 +330,7 @@ sub _loadW
 	my $inputName = shift @_;
 
 	# Load w-file.
-	my $w = loadXml ("$dirPrefix\\$inputName.w", ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc'], ['id']);
+	my $w = loadXml ("$dirPrefix\\$inputName.w", \@FORCE_ARRAY_W, \@LOAD_AS_ID);
 	
 	# Map token IDs to tokens.
 	my %wIds = ();
@@ -361,7 +362,7 @@ sub _loadM
 	my $inputName = shift @_;
 
 	# Load m-file.
-	my $m = loadXml ("$dirPrefix\\$inputName.m", ['s', 'm','reffile','schema', 'LM'], ['id']);
+	my $m = loadXml ("$dirPrefix\\$inputName.m", \@FORCE_ARRAY_M, \@LOAD_AS_ID);
 	
 	# Map sentence IDs to lists of morpheme IDs.
 	my %mSent2morpho = map
@@ -442,7 +443,7 @@ sub _loadA
 	my $inputName = shift @_;
 
 	# Load the a-file.
-	my $a = loadXml ("$dirPrefix\\$inputName.a", ['node', 'LM','reffile','schema'], ['id']);
+	my $a = loadXml ("$dirPrefix\\$inputName.a", \@FORCE_ARRAY_A, \@LOAD_AS_ID);
 	my %tree2node = ();
 	my %tree2mSent = ();
 	my %node2morpho = ();

@@ -7,7 +7,7 @@ use strict;
 
 use IO::File;
 use IO::Dir;
-use LvCorporaTools::GenericUtils::SimpleXmlIo;
+use LvCorporaTools::GenericUtils::SimpleXmlIo qw (loadXml @FORCE_ARRAY_W);
 use LvCorporaTools::FormatTransf::Conll2MAHelpers::PMLMStubPrinter
 	qw(printMFileBegin printMFileEnd
 		printMSentBegin printMSentEnd printMDataNode);
@@ -131,7 +131,7 @@ END
 	my $outDirName = shift;
 	my $conllName = (shift or "$1.conll");
 
-	my $w = LvCorporaTools::GenericUtils::SimpleXmlIo::loadXml($wName, ['para', 'w', 'schema', 'title', 'source', 'author', 'authorgender', 'published', 'genre', 'keywords', 'msc'], []);
+	my $w = loadXml($wName, \@FORCE_ARRAY_W);
 	my $conllIn = IO::File->new($conllName, '< :encoding(UTF-8)')
 		or die "Could not open file $conllName: $!";
 

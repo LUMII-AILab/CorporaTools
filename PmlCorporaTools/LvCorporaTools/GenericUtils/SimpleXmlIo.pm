@@ -16,16 +16,17 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(loadXml printXml @DEFAULT_FORCEARRAY_W @DEFAULT_FORCEARRAY_M @DEFAULT_FORCEARRAY_A @DEFAULT_ID);
+our @EXPORT_OK = qw(loadXml printXml @FORCE_ARRAY_W @FORCE_ARRAY_M @FORCE_ARRAY_A @LOAD_AS_ID);
 
 use Data::Dumper;
 use XML::Simple;  # XML handling library
 use IO::File;
 
-our @DEFAULT_FORCEARRAY_W = qw(para w schema title source author authorgender published genre keywords msc);
-our @DEFAULT_FORCEARRAY_M = qw(s m reffile schema LM);
-our @DEFAULT_FORCEARRAY_A = qw(node LM reffile schema);
-our @DEFAULT_IDS = qw(id);
+# Some convinient default values.
+our @FORCE_ARRAY_W = qw(para w schema title source author authorgender published genre keywords msc);
+our @FORCE_ARRAY_M = qw(s m reffile schema LM);
+our @FORCE_ARRAY_A = qw(node LM reffile schema);
+our @LOAD_AS_ID = qw(id);
 
 # loadXml (file name with extension and everything, reference to array
 #          containing 'ForceArray' options for XML::Simple, [reference to
