@@ -16,11 +16,16 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(loadXml printXml);
+our @EXPORT_OK = qw(loadXml printXml @DEFAULT_FORCEARRAY_W @DEFAULT_FORCEARRAY_M @DEFAULT_FORCEARRAY_A @DEFAULT_ID);
 
 use Data::Dumper;
 use XML::Simple;  # XML handling library
 use IO::File;
+
+our @DEFAULT_FORCEARRAY_W = qw(para w schema title source author authorgender published genre keywords msc);
+our @DEFAULT_FORCEARRAY_M = qw(s m reffile schema LM);
+our @DEFAULT_FORCEARRAY_A = qw(node LM reffile schema);
+our @DEFAULT_IDS = qw(id);
 
 # loadXml (file name with extension and everything, reference to array
 #          containing 'ForceArray' options for XML::Simple, [reference to
@@ -76,7 +81,13 @@ sub printXml
 #		'NoEscape' => 1,
 #		'GroupTags' => {},
 		);
-	$xmlString =~ s#(?s)(<s[ >].*</s>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
+	# Normalization for TrEd:
+	# for A files
+	$xmlString =~ s#(<trees[ >].*</trees>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
+	# for M files
+	$xmlString =~ s#(<s[ >].*</s>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
+	# for W files
+	$xmlString =~ s#(<doc[ >].*</doc>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
 	print $out $xmlString;
 	$out->close();
 }
