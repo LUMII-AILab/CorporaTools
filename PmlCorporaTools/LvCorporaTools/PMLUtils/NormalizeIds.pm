@@ -28,7 +28,7 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo
 # Output file can have diferent XML element order. To obtain standard order
 # resave file with TrEd.
 #
-# Developed on ActivePerl 5.10.1.1007, tested on Strawberry Perl 5.12.3.0
+# Developed on ActivePerl 5.10.1.1007, tested on Strawberry Perl 5.12-5.16
 # Latvian Treebank project, 2011-2017
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
@@ -110,6 +110,7 @@ Params:
    ID of the first paragraph [opt, int, 1 used otherwise]
    ID of the first sentence [opt, int, 1 used otherwise]
    ID of the first token [opt, int, 1 used otherwise]
+   should log-file contain changed empty node IDs [opt, boolean, true by default]
 
 Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END
@@ -123,14 +124,15 @@ END
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
+	my $printChangedXIds = (shift @_ or 1);
 
 	my $xmls = &load($dirPrefix, $oldName);
-	
-	&process(
-		$newName, $newSourceId, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
-		$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);	
 
-	&doOutput($dirPrefix, $newName, $xmls);
+	my $xmlsAfter = &process(
+		$newName, $newSourceId, $xmls->{'w'}->{'xml'}, $xmls->{'m'}->{'xml'},
+		$xmls->{'a'}->{'xml'}, $firstPara, $firstSent, $firstWord);
+
+	&doOutput($dirPrefix, $newName, $xmls, $xmlsAfter->{'idMap'}, $printChangedXIds);
 	
 	print "\nNormalizeIds has finished procesing \"$oldName\".\n";
 }
@@ -175,43 +177,45 @@ sub load
 # returns hash refernece:
 #		'w' => result for w, 'm' => result for m, 'a' => result for a,
 #		'nextPara' => next free paragraph ID, 'nextSent' => next free sentence
-#		ID,
+#		ID, 'idMap' => mapping from old IDs to new ones.
 sub process
 {
 	# Input paramaters.
 	my $newName = shift @_;
 	my $newSourceId = shift @_;
-	my $w = shift @_;
-	my $m = shift @_;
-	my $a = shift @_;
+	my $wXml = shift @_;
+	my $mXml = shift @_;
+	my $aXml = shift @_;
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
 
 	# Process w-level.
-	my $wRes = &_normalizeW($w, $newName, $newSourceId, $firstPara, $firstWord);
+	my $wRes = &_normalizeW($wXml, $newName, $newSourceId, $firstPara, $firstWord);
 	print 'Processed W';
 
 	# Process m-level.
-	my $mRes = &_normalizeM($m, $newName, $wRes->{'idMap'}, $wRes->{'tokId2paraId'}, $firstSent);
+	my $mRes = &_normalizeM($mXml, $newName, $wRes->{'idMap'}, $wRes->{'tokId2paraId'}, $firstSent);
 	print ', M';
 	
-	if ($a)
+	if ($aXml)
 	{
 		# Process the a-level XML.
-		my $aRes = &_normalizeA($a, $newName, $mRes->{'idMap'});
+		my $aRes = &_normalizeA($aXml, $newName, $mRes->{'idMap'});
 		print ', A. ';
 
 		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'}, 'a' => $aRes->{'xml'},
 				'nextPara' => $wRes->{'nextPara'},
-			    'nextSent' => $mRes->{'nextSent'}};
+			    'nextSent' => $mRes->{'nextSent'},
+			    'idMap' => {%{$wRes->{'idMap'}}, %{$mRes->{'idMap'}}, %{$aRes->{'idMap'}}}};
 	}
 	else
 	{
 		print '. ';
 		return {'w' => $wRes->{'xml'}, 'm' => $mRes->{'xml'},
 			    'nextPara' => $wRes->{'nextPara'},
-			    'nextSent' => $mRes->{'nextSent'}};
+			    'nextSent' => $mRes->{'nextSent'},
+				'idMap' => {%{$wRes->{'idMap'}}, %{$mRes->{'idMap'}}}};
 	}	
 }
 
@@ -220,6 +224,8 @@ sub doOutput
 	my $dirPrefix = shift @_;
 	my $newName = shift @_;	
 	my $xmls = shift @_;
+	my $idMap = shift @_;
+	my $printChangedXIds = (shift @_ or 1);
 	#my $res = (shift @_ or $xmls->{'xml'});
 
 	mkpath("$dirPrefix/res/");
@@ -237,6 +243,17 @@ sub doOutput
 		print ', A';
 	}
 	print '. ';
+
+	my @changedKeys = sort {$idMap->{$a} cmp $idMap->{$b}} (grep {$_ ne $idMap->{$_}} keys %$idMap);
+	@changedKeys = grep {$_ !~ /x\d+$/} @changedKeys unless ($printChangedXIds);
+	if (@changedKeys)
+	{
+		my $log = IO::File->new("$dirPrefix/res/$newName.log", '> :encoding(UTF-8)');
+		for my $key (@changedKeys)
+		{
+			print $log "$key\t=>\t$idMap->{$key}\n";
+		}
+	}
 }
 
 ###############################################################################
