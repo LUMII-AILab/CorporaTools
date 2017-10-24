@@ -12,21 +12,23 @@ Parametri:
 2) fails ar tekstu, no kura jāuzbūvē W fails
 3) datu avota ID no LVK, piemēram, p2134 vai c60
 4) fails ar metainformāciju no LVK šādā formā:
-```<docmeta>
+```
+<docmeta>
   <title>Dokumenta nosaukums (obligāts).</title>
-    <source>Nav obligāts.</source>
-    <author>Nav obligāts.</author>
-    <authorgender>Nav obligāts.</authorgender>
-    <published>Nav obligāts.</published>
-    <genre>Nav obligāts.</genre>
-    <keywords>
-      <LM>atslēgvārds</LM>
-      <LM>atslēgasvārds</LM>
-      <LM>neviens atslēgas vārds un viss šis elements nav obligāts</LM>
-    </keywords>
-    <misc>No LVK nekādai citai informačijai arī nevajadzētu nākt.</misc>
-  </docmeta>```
-Mazākie dummy dati varētu būt šādi: `<docmeta><title>t16</title></docmeta>`.
+  <source>Nav obligāts.</source>
+  <author>Nav obligāts.</author>
+  <authorgender>Nav obligāts.</authorgender>
+  <published>Nav obligāts.</published>
+  <genre>Nav obligāts.</genre>
+  <keywords>
+    <LM>atslēgvārds</LM>
+    <LM>atslēgasvārds</LM>
+    <LM>neviens atslēgas vārds un viss šis elements nav obligāts</LM>
+  </keywords>
+  <misc>No LVK nekādai citai informačijai arī nevajadzētu nākt.</misc>
+</docmeta>
+```
+Mazākie _dummy_ dati varētu būt šādi: `<docmeta><title>t16</title></docmeta>`.
 5) rinkopas numurs
 6) jaunveidojamās PML failu kopas vārds. Sembank ietvaros parasti tas ir <avota ID>_p<rindkopas nr>
 
