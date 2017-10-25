@@ -110,6 +110,24 @@ END
 	my $lvwdata = $wXml->{'xml'};
 	my $docId = $lvwdata->{'doc'}->{'id'};
 
+	# For moving to new format only
+	# TODO remove this after a year or so.
+	if ($lvwdata->{'doc'}->{'docmeta'}->{'content'})
+	{
+		if ($lvwdata->{'doc'}->{'docmeta'}->{'title'})
+		{
+			$lvwdata->{'doc'}->{'docmeta'}->{'misc'}->{'content'} ?
+				$lvwdata->{'doc'}->{'docmeta'}->{'misc'}->{'content'} =
+					$lvwdata->{'doc'}->{'docmeta'}->{'misc'}->{'content'}." ".$lvwdata->{'doc'}->{'docmeta'}->{'content'}:
+				$lvwdata->{'doc'}->{'docmeta'}->{'misc'}->{'content'} = $lvwdata->{'doc'}->{'docmeta'}->{'content'};
+		}
+		else
+		{
+			$lvwdata->{'doc'}->{'docmeta'}->{'title'}->{'content'} = $lvwdata->{'doc'}->{'docmeta'}->{'content'};
+		}
+		delete $lvwdata->{'doc'}->{'docmeta'}->{'content'};
+	}
+
 	my $currentPara = 0;
 	# For each paragraph in the incoming text...
 	while (my $line = <$txtIn>)
