@@ -1,4 +1,3 @@
-#!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::GenericUtils::SimpleXmlIo;
 ###############################################################################
 # This module contains most basic helper functions for reading and writing
@@ -13,6 +12,7 @@ package LvCorporaTools::GenericUtils::SimpleXmlIo;
 use strict;
 use warnings;
 #use utf8;
+no warnings 'recursion';
 
 use Exporter();
 our @ISA = qw(Exporter);

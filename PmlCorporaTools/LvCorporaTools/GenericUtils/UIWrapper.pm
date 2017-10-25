@@ -47,7 +47,8 @@ sub processDir
 				my $outFile = "$coreName$ext";
 				eval
 				{
-					local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					local $SIG{__WARN__} = sub { $baddies++; warn $_[0] }; # This magic makes eval count warnings.
 					&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
 				};
 			}
@@ -55,7 +56,8 @@ sub processDir
 			{
 				eval
 				{
-					local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+					local $SIG{__WARN__} = sub { $baddies++; warn $_[0] }; # This magic makes eval count warnings.
 					&$processFileFunct($dirName, $inFile, @otherPrams);
 				};
 			}

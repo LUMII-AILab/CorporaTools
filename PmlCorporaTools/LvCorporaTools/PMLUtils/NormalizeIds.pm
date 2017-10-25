@@ -1,9 +1,9 @@
-#!C:\strawberry\perl\bin\perl -w
 package LvCorporaTools::PMLUtils::NormalizeIds;
 
 use strict;
 use warnings;
 #use utf8;
+no warnings 'recursion';
 
 use Exporter();
 our @ISA = qw(Exporter);
@@ -67,7 +67,7 @@ END
 		{
 			eval
 			{
-				local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+				local $SIG{__WARN__} = sub { $problems++; warn $_[0] }; # This magic makes eval count warnings.
 				normalizeIds ($dir_name, $1, $1, $1);
 			};
 			if ($@)
