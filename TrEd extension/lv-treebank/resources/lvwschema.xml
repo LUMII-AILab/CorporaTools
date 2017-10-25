@@ -15,8 +15,8 @@
   
   <type name="w-doc.type">
     <container>
-      <attribute name="id" required="1" role="#ID"><cdata format="ID"/></attribute>
-      <attribute name="source_id"><cdata format="any"/></attribute>
+      <attribute name="id" required="1" role="#ID"><cdata format="ID"/></attribute> <!-- Rindkopu failiem šeit liek source_id un rindkopas numuru -->
+      <attribute name="source_id"><cdata format="any"/></attribute> <!-- Identifikators no Latviešu valodas korpusa (LVK), ja vien tāds ir. -->
       <sequence content_pattern="docmeta, para+">
         <element name="docmeta" type="w-docmeta.type"/> <!-- Šitais meta ir, lai ierakstītu info par dokumentu no kura ir tālāk sekojošie teikumi.-->
         <element name="para" type="w-para.type"/>
