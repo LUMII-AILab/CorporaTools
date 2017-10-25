@@ -13,7 +13,7 @@ REM MANUAL: check if nothing failed!
 ::@copy .\data\checkedW\*.m .\data\checkedAll\ >nul
 ::@copy .\data\checkedW\*.w .\data\checkedAll\ >nul
 REM Check fileset IDs
-perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
+::perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
 REM MANUAL: check error messages and correct them!
 
 REM Run ID normalization.
