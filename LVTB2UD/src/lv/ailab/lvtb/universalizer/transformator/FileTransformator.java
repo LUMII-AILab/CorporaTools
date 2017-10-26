@@ -9,6 +9,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Transformation wrapper for a single file.
@@ -47,7 +49,8 @@ public class FileTransformator
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
 		System.out.printf("%s trees found...\n", pmlTrees.getLength());
 		warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
-		String latestParId = null;
+		//String latestParId = null;
+		String paragraphId = "";
 		if (pmlTrees.getLength() > 0)
 		{
 			all = pmlTrees.getLength();
@@ -59,33 +62,31 @@ public class FileTransformator
 				omitted = pmlTrees.getLength();
 				return;
 			}
-			/*for (int i = 0; i < pmlTrees.getLength(); i++)
-			{
-				String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
-				if (comment != null && comment.startsWith("FIXME"))
-				{
-					warningsLog.println("File contains with \"FIXME\" comment, everything is ommited!");
-					System.out.println("File contains with \"FIXME\" comment, everything is ommited!");
-					return pmlTrees.getLength();
-				}
-			}*/
 			// Print out information about the start of the new document
 			processed.append("# newDoc");
 			String firstSentId = Utils.getId(pmlTrees.item(0));
-			if (firstSentId.matches("a-.*-p\\d+s\\d+"))
+			Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(firstSentId);
+			if (idMatcher.matches())
 			{
 				String dicIdForPrint = firstSentId.substring(firstSentId.indexOf("-") + 1,
 						firstSentId.lastIndexOf("-"));
 				if (changeIds)
 					dicIdForPrint = dicIdForPrint.replace("LETA", "newswire");
-				processed.append(" id=");
+				processed.append(" id = ");
 				processed.append(dicIdForPrint);
+				paragraphId = idMatcher.group(1);
 
 			}
 			processed.append("\n");
 			// Print out information about the start of the first paragraph
-			processed.append("# newpar\n");
-			String firstSentLastId = Utils.getId(Utils.getLastByOrd(
+			processed.append("# newpar");
+			if (!paragraphId.isEmpty())
+			{
+				processed.append(" id = ");
+				processed.append(paragraphId);
+			}
+			processed.append("\n");
+		/*	String firstSentLastId = Utils.getId(Utils.getLastByOrd(
 					Utils.getAllPMLDescendants(pmlTrees.item(0))));
 			if (firstSentLastId.matches("a-.*?-p\\d+s\\d+w\\d+"))
 			{
@@ -93,7 +94,7 @@ public class FileTransformator
 						firstSentLastId.lastIndexOf("s"));
 				//conllOut.write(" id=" + latestParId);
 			} else warningsLog.println(
-					"Node id \"" + firstSentLastId + "\" in first sentence does not match paragraph searching pattern!");
+					"Node id \"" + firstSentLastId + "\" in first sentence does not match paragraph searching pattern!");*/
 		}
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
@@ -108,7 +109,20 @@ public class FileTransformator
 			String conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
 			if (i > 0)
 			{
-				String thisSentId = Utils.getId(pmlTrees.item(i));
+				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(Utils.getId(pmlTrees.item(i)));
+				if (idMatcher.matches())
+				{
+					String nextParaID = idMatcher.group(1);
+					if (!nextParaID.isEmpty() && !paragraphId.equals(nextParaID))
+					{
+						processed.append("# newpar id = ");
+						processed.append(nextParaID);
+						processed.append("\n");
+						paragraphId = nextParaID;
+					}
+				}
+
+				/*String thisSentId = Utils.getId(pmlTrees.item(i));
 				String newParId = null;
 				if (thisSentId.matches("a-.*?-p\\d+s\\d+"))
 					newParId = thisSentId.substring(thisSentId.indexOf("-") + 1,
@@ -125,7 +139,7 @@ public class FileTransformator
 								latestParId.lastIndexOf("s"));
 					else warningsLog.println(
 							"Node id \"" + latestParId + "\" does not match paragraph searching pattern!");
-				}
+				}*/
 			}
 			if (conllTree != null)
 			{
