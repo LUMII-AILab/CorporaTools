@@ -120,7 +120,7 @@ END
 	my $dirPrefix = shift @_;
 	my $oldName = shift @_;
 	my $newName = (shift @_ or $oldName);
-	my $newSourceId = shift @_;
+	my $newSourceId = (shift @_ or $newName);
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
