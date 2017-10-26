@@ -4,69 +4,70 @@ skip	LETA_CitaatuIzlase	Other
 skip	LETA_IzlaseFreimiem	Other
 skip	SaliktsTeikums_121	Other
 skip	Teikumi_001-297	Other
-test	LETA_anotaacija_01_20130211	News
-test	LETA_anotaacija_46_20130213	News
-test	LETA_anotaacija_51_20130207	News
-test	LETA_intervija_02_20130211	News
-test	LETA_izgriezums_09_20130211	News
-test	LETA_reliize_60_20130211	News
-test	LETA_zinjas_40_20130211	News
-test	AndraNeiburga-StumStum2004_0001-0024	Other
-test	AndraNeiburga-StumStum2004_0025-0244_StumStum	Other
+test	p3743	News	LETA_anotaacija_01_20130211
+test	p3750	News	LETA_anotaacija_46_20130213
+test	p3751	News	LETA_anotaacija_51_20130207
+test	p3753	News	LETA_intervija_02_20130211
+test	p3756	News	LETA_izgriezums_09_20130211
+test	p3758	News	LETA_reliize_60_20130211
+test	p3759	News	LETA_zinjas_40_20130211
+test	d195	Other	AndraNeiburga-StumStum2004_0001-0024
+test	d60	Other	AndraNeiburga-StumStum2004_0025-0244_StumStum
 test	d21	Other
-test	LETA_20120606	News
-test	LETA_NozareLv_20130125	News
+test	p3733	News	LETA_20120606
+test	p3738	News	LETA_NozareLv_20130125
 test	Latv_Veestn_p133	Morphocorpus
 test	Latv_Veestn_p135	Morphocorpus
 test	p967	Morphocorpus
 test	p1094	Morphocorpus
-dev	LETA_anotaacija_02_20130211	News
-dev	LETA_anotaacija_03_20130211	News
-dev	LETA_anotaacija_69_20130206	News
-dev	LETA_intervija_06_20130208	News
-dev	LETA_izgriezums_94_20130211	News
-dev	LETA_reliize_20121108	News
-dev	LETA_20120605	News
-dev	AndraNeiburga-StumStum2004_0245-0262	Other
-dev	AndraNeiburga-StumStum2004_0263-0431_PieBlakusGaldinja	Other
-dev	d62-JaanisEinfelds-Melis	Other
-dev	LETA_20130121	News
-dev	LETA_NozareLv_20130206	News
+dev	p3744	News	LETA_anotaacija_02_20130211
+dev	p3745	News	LETA_anotaacija_03_20130211
+dev	p3752	News	LETA_anotaacija_69_20130206
+dev	p3754	News	LETA_intervija_06_20130208
+dev	p3757	News	LETA_izgriezums_94_20130211
+dev	p3767	News	LETA_reliize_20121108
+dev	p3732	News	LETA_20120605
+dev	d196	Other	AndraNeiburga-StumStum2004_0245-0262
+dev	d197	Other	AndraNeiburga-StumStum2004_0263-0431_PieBlakusGaldinja
+dev	d62	Other	d62-JaanisEinfelds-Melis
+dev	p3734	News	LETA_20130121
+dev	p3739	News	LETA_NozareLv_20130206
 dev	Latv_Veestn_p134	Morphocorpus
 dev	Latv_Veestn_p136	Morphocorpus
 dev	p980	Morphocorpus
 dev	p1299	Morphocorpus
-train	AluuksnesZinjas_afisha_20120706	News
-train	ApolloLv_reliize_20121001	News
-train	DIENA_intervija_20130128	News
-train	Ieva_20120627	News
-train	KasjaunsLv_20120925	News
-train	VakaraZinjas_20121012	News
-train	LETA_20120604	News
-train	LETA_20130128	News
-train	LETA_20130228_Ziedonis	News
-train	LETA_NozareLv_20121206	News
-train	LETA_NraLv_20130124	News
-train	LETA_reliize_20130128	News
-train	LETA_reliize_20130206	News
-train	LETA_anotaacija_04_20130211	News
-train	LETA_anotaacija_06_20130211	News
-train	LETA_anotaacija_07_20130211	News
-train	LETA_anotaacija_08_20130211	News
-train	LETA_intervija_20_20130129	News
-train	LETA_Latvijas_Aviize_20121122	News
-train	LETA_20130305	News
-train	LETA_20130311	News
-train	LETA_20130321	News
-train	LETA_20050913	News
-train	LETA_20121016	News
-train	LETA_20121219	News
-train	LETA_20130215	News
-train	Saules_sisteema	Other
-train	jrc32002L0074-lv	Other
+train	p3760	News	AluuksnesZinjas_afisha_20120706
+train	p3761	News	ApolloLv_reliize_20121001
+train	p3762	News	DIENA_intervija_20130128
+train	p3763	News	Ieva_20120627
+train	p3764	News	KasjaunsLv_20120925
+train	p3765	News	VakaraZinjas_20121012
+train	p3731	News	LETA_20120604
+train	p3735	News	LETA_20130128
+train	p3736	News	LETA_20130228_Ziedonis
+train	p3737	News	LETA_NozareLv_20121206
+train	p3740	News	LETA_NraLv_20130124
+train	p3741	News	LETA_reliize_20130128
+train	p3742	News	LETA_reliize_20130206
+train	p3746	News	LETA_anotaacija_04_20130211
+train	p3747	News	LETA_anotaacija_06_20130211
+train	p3748	News	LETA_anotaacija_07_20130211
+train	p3749	News	LETA_anotaacija_08_20130211
+train	p3755	News	LETA_intervija_20_20130129
+train	p3766	News	LETA_Latvijas_Aviize_20121122
+train	p3768	News	LETA_20130305
+train	p3769	News	LETA_20130311
+train	p3770	News	LETA_20130321
+train	p3771	News	LETA_20050913
+train	p3772	News	LETA_20121016
+train	p3773	News	LETA_20121219
+train	p3774	News	LETA_20130215
+train	t4	Other	Saules_sisteema
+train	t3	Other	jrc32002L0074-lv
 train	d27	Other
-train	SofijasPasaule1996_11-18_EedenesDaarzs	Other
-train	SofijasPasaule1996_19-29_Cilindrs	Other
+train	t1	Other	SofijasPasaule1996_11-18_EedenesDaarzs
+train	t2	Other	SofijasPasaule1996_19-29_Cilindrs
+train	d198	Other	AndraNeiburga-StumStum2004_2460-2724_TaadiVakari
 train	z46	Other
 train	c60	Other
 train	Latv_Veestn_p137	Morphocorpus
