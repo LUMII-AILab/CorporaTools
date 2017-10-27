@@ -8919,5 +8919,687 @@
         </pmcinfo>
       </children>
     </LM>
+    <LM id="a-zeens-p49s1">
+      <s.rf>m#m-zeens-p49s1</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-zeens-p49s1x1">
+              <role>pred</role>
+              <children>
+                <coordinfo>
+                  <coordtype>crdParts</coordtype>
+                  <children>
+                    <node id="a-zeens-p49s1x2">
+                      <role>crdPart</role>
+                      <children>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vm0ip003pan[substsmn]</tag>
+                          <children>
+                            <node id="a-zeens-p49s1w4">
+                              <m.rf id="m-zeens-p49s1w4">
+                                <src.rf>c13_r42</src.rf>
+                                <w.rf id="w-zeens-p49w4">
+                                  <token>diplomāti</token>
+                                  <no_space_after>1</no_space_after>
+                                </w.rf>
+                                <form>diplomāti</form>
+                                <lemma>diplomāts</lemma>
+                                <tag>ncmpn1</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>4</ord>
+                              <children>
+                                <node id="a-zeens-p49s1w3">
+                                  <m.rf id="m-zeens-p49s1w3">
+                                    <src.rf>c13_r42</src.rf>
+                                    <w.rf id="w-zeens-p49w3">
+                                      <token>lieli</token>
+                                    </w.rf>
+                                    <form>lieli</form>
+                                    <lemma>liels</lemma>
+                                    <tag>afmpnnp</tag>
+                                  </m.rf>
+                                  <role>attr</role>
+                                  <ord>3</ord>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p49s1w2">
+                              <m.rf id="m-zeens-p49s1w2">
+                                <src.rf>c13_r42</src.rf>
+                                <w.rf id="w-zeens-p49w2">
+                                  <token>ir</token>
+                                </w.rf>
+                                <form>ir</form>
+                                <lemma>būt</lemma>
+                                <tag>vcnipii30an</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>2</ord>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p49s1w5">
+                      <m.rf id="m-zeens-p49s1w5">
+                        <src.rf>c13_r42</src.rf>
+                        <w.rf id="w-zeens-p49w5">
+                          <token>,</token>
+                        </w.rf>
+                        <form>,</form>
+                        <lemma>,</lemma>
+                        <tag>zc</tag>
+                      </m.rf>
+                      <role>punct</role>
+                      <ord>5</ord>
+                    </node>
+                    <node id="a-zeens-p49s1x3">
+                      <role>crdPart</role>
+                      <children>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vm0ip003pan[modalsmn]</tag>
+                          <children>
+                            <node id="a-zeens-p49s1w6">
+                              <m.rf id="m-zeens-p49s1w6">
+                                <src.rf>c13_r42</src.rf>
+                                <w.rf id="w-zeens-p49w6">
+                                  <token>prot</token>
+                                </w.rf>
+                                <form>prot</form>
+                                <lemma>prast</lemma>
+                                <tag>vonipt130an</tag>
+                              </m.rf>
+                              <role>mod</role>
+                              <ord>6</ord>
+                            </node>
+                            <node id="a-zeens-p49s1w8">
+                              <m.rf id="m-zeens-p49s1w8">
+                                <src.rf>c13_r42</src.rf>
+                                <w.rf id="w-zeens-p49w8">
+                                  <token>plastiski</token>
+                                  <no_space_after>1</no_space_after>
+                                </w.rf>
+                                <form>plastiski</form>
+                                <lemma>plastisks</lemma>
+                                <tag>afmpnnp</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>8</ord>
+                            </node>
+                            <node id="a-zeens-p49s1w7">
+                              <m.rf id="m-zeens-p49s1w7">
+                                <src.rf>c13_r42</src.rf>
+                                <w.rf id="w-zeens-p49w7">
+                                  <token>būt</token>
+                                </w.rf>
+                                <form>būt</form>
+                                <lemma>būt</lemma>
+                                <tag>vcnn0ii000n</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>7</ord>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                  </children>
+                </coordinfo>
+                <node id="a-zeens-p49s1w1">
+                  <m.rf id="m-zeens-p49s1w1">
+                    <src.rf>c13_r42</src.rf>
+                    <w.rf id="w-zeens-p49w1">
+                      <token>Viņi</token>
+                    </w.rf>
+                    <form>Viņi</form>
+                    <lemma>viņš</lemma>
+                    <tag>pp3mpnn</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>1</ord>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p49s1w9">
+              <m.rf id="m-zeens-p49s1w9">
+                <src.rf>c13_r42</src.rf>
+                <w.rf id="w-zeens-p49w9">
+                  <token>.</token>
+                </w.rf>
+                <form>.</form>
+                <lemma>.</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>9</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-zeens-p50s1">
+      <s.rf>m#m-zeens-p50s1</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-zeens-p50s1x2">
+              <role>pred</role>
+              <children>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vmnip0030an[modals00]</tag>
+                  <children>
+                    <node id="a-zeens-p50s1w15">
+                      <m.rf id="m-zeens-p50s1w15">
+                        <src.rf>c1_r15</src.rf>
+                        <w.rf id="w-zeens-p50w15">
+                          <token>ir</token>
+                        </w.rf>
+                        <form>ir</form>
+                        <lemma>būt</lemma>
+                        <tag>vcnipii30an</tag>
+                      </m.rf>
+                      <role>auxVerb</role>
+                      <ord>15</ord>
+                    </node>
+                    <node id="a-zeens-p50s1w16">
+                      <m.rf id="m-zeens-p50s1w16">
+                        <src.rf>c1_r15</src.rf>
+                        <w.rf id="w-zeens-p50w16">
+                          <token>jāatzīmē</token>
+                          <no_space_after>1</no_space_after>
+                        </w.rf>
+                        <form>jāatzīmē</form>
+                        <lemma>atzīmēt</lemma>
+                        <tag>vmnd0t200an</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>16</ord>
+                    </node>
+                  </children>
+                </xinfo>
+                <node id="a-zeens-p50s1x3">
+                  <role>objCl</role>
+                  <children>
+                    <pmcinfo>
+                      <pmctype>subrCl</pmctype>
+                      <children>
+                        <node id="a-zeens-p50s1w18">
+                          <m.rf id="m-zeens-p50s1w18">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w18">
+                              <token>ka</token>
+                            </w.rf>
+                            <form>ka</form>
+                            <lemma>ka</lemma>
+                            <tag>cs</tag>
+                          </m.rf>
+                          <role>conj</role>
+                          <ord>18</ord>
+                        </node>
+                        <node id="a-zeens-p50s1w24">
+                          <m.rf id="m-zeens-p50s1w24">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w24">
+                              <token>pavadīja</token>
+                            </w.rf>
+                            <form>pavadīja</form>
+                            <lemma>pavadīt</lemma>
+                            <tag>vmnist330an</tag>
+                          </m.rf>
+                          <role>pred</role>
+                          <ord>24</ord>
+                          <children>
+                            <node id="a-zeens-p50s1w22">
+                              <m.rf id="m-zeens-p50s1w22">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w22">
+                                  <token>daļu</token>
+                                </w.rf>
+                                <form>daļu</form>
+                                <lemma>daļa</lemma>
+                                <tag>ncfsa4</tag>
+                              </m.rf>
+                              <role>obj</role>
+                              <ord>22</ord>
+                              <children>
+                                <node id="a-zeens-p50s1w19">
+                                  <m.rf id="m-zeens-p50s1w19">
+                                    <src.rf>c1_r15</src.rf>
+                                    <w.rf id="w-zeens-p50w19">
+                                      <token>lielāku</token>
+                                    </w.rf>
+                                    <form>lielāku</form>
+                                    <lemma>liels</lemma>
+                                    <tag>afmsanc</tag>
+                                  </m.rf>
+                                  <role>attr</role>
+                                  <ord>19</ord>
+                                </node>
+                                <node id="a-zeens-p50s1w21">
+                                  <m.rf id="m-zeens-p50s1w21">
+                                    <src.rf>c1_r15</src.rf>
+                                    <w.rf id="w-zeens-p50w21">
+                                      <token>dzīves</token>
+                                    </w.rf>
+                                    <form>dzīves</form>
+                                    <lemma>dzīve</lemma>
+                                    <tag>ncfsg5</tag>
+                                  </m.rf>
+                                  <role>attr</role>
+                                  <ord>21</ord>
+                                  <children>
+                                    <node id="a-zeens-p50s1w20">
+                                      <m.rf id="m-zeens-p50s1w20">
+                                        <src.rf>c1_r15</src.rf>
+                                        <w.rf id="w-zeens-p50w20">
+                                          <token>savas</token>
+                                        </w.rf>
+                                        <form>savas</form>
+                                        <lemma>sava</lemma>
+                                        <tag>ps0fsgn</tag>
+                                      </m.rf>
+                                      <role>attr</role>
+                                      <ord>20</ord>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </node>
+                            <node id="a-zeens-p50s1w23">
+                              <m.rf id="m-zeens-p50s1w23">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w23">
+                                  <token>viņš</token>
+                                </w.rf>
+                                <form>viņš</form>
+                                <lemma>viņš</lemma>
+                                <tag>pp3msnn</tag>
+                              </m.rf>
+                              <role>subj</role>
+                              <ord>23</ord>
+                            </node>
+                            <node id="a-zeens-p50s1x7">
+                              <role>spc</role>
+                              <children>
+                                <xinfo>
+                                  <xtype>xSimile</xtype>
+                                  <tag>ncmsn0[spcsd]</tag>
+                                  <children>
+                                    <node id="a-zeens-p50s1w25">
+                                      <m.rf id="m-zeens-p50s1w25">
+                                        <src.rf>c1_r15</src.rf>
+                                        <w.rf id="w-zeens-p50w25">
+                                          <token>kā</token>
+                                        </w.rf>
+                                        <form>kā</form>
+                                        <lemma>kā</lemma>
+                                        <tag>cs</tag>
+                                      </m.rf>
+                                      <role>conj</role>
+                                      <ord>25</ord>
+                                    </node>
+                                    <node id="a-zeens-p50s1x8">
+                                      <role>basElem</role>
+                                      <children>
+                                        <coordinfo>
+                                          <coordtype>crdParts</coordtype>
+                                          <children>
+                                            <node id="a-zeens-p50s1w27">
+                                              <m.rf id="m-zeens-p50s1w27">
+                                                <src.rf>c1_r15</src.rf>
+                                                <w.rf id="w-zeens-p50w27">
+                                                  <token>skolotājs</token>
+                                                </w.rf>
+                                                <form>skolotājs</form>
+                                                <lemma>skolotājs</lemma>
+                                                <tag>ncmsn1</tag>
+                                              </m.rf>
+                                              <role>crdPart</role>
+                                              <ord>27</ord>
+                                              <children>
+                                                <node id="a-zeens-p50s1w26">
+                                                  <m.rf id="m-zeens-p50s1w26">
+                                                    <src.rf>c1_r15</src.rf>
+                                                    <w.rf id="w-zeens-p50w26">
+                                                      <token>mākslas</token>
+                                                    </w.rf>
+                                                    <form>mākslas</form>
+                                                    <lemma>māksla</lemma>
+                                                    <tag>ncfsg4</tag>
+                                                  </m.rf>
+                                                  <role>attr</role>
+                                                  <ord>26</ord>
+                                                </node>
+                                              </children>
+                                            </node>
+                                            <node id="a-zeens-p50s1w28">
+                                              <m.rf id="m-zeens-p50s1w28">
+                                                <src.rf>c1_r15</src.rf>
+                                                <w.rf id="w-zeens-p50w28">
+                                                  <token>un</token>
+                                                </w.rf>
+                                                <form>un</form>
+                                                <lemma>un</lemma>
+                                                <tag>cc</tag>
+                                              </m.rf>
+                                              <role>conj</role>
+                                              <ord>28</ord>
+                                            </node>
+                                            <node id="a-zeens-p50s1w30">
+                                              <m.rf id="m-zeens-p50s1w30">
+                                                <src.rf>c1_r15</src.rf>
+                                                <w.rf id="w-zeens-p50w30">
+                                                  <token>tirgotājs</token>
+                                                  <no_space_after>1</no_space_after>
+                                                </w.rf>
+                                                <form>tirgotājs</form>
+                                                <lemma>tirgotājs</lemma>
+                                                <tag>ncmsn1</tag>
+                                              </m.rf>
+                                              <role>crdPart</role>
+                                              <ord>30</ord>
+                                              <children>
+                                                <node id="a-zeens-p50s1w29">
+                                                  <m.rf id="m-zeens-p50s1w29">
+                                                    <src.rf>c1_r15</src.rf>
+                                                    <w.rf id="w-zeens-p50w29">
+                                                      <token>gleznu</token>
+                                                    </w.rf>
+                                                    <form>gleznu</form>
+                                                    <lemma>glezna</lemma>
+                                                    <tag>ncfpg4</tag>
+                                                  </m.rf>
+                                                  <role>attr</role>
+                                                  <ord>29</ord>
+                                                </node>
+                                              </children>
+                                            </node>
+                                          </children>
+                                        </coordinfo>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </xinfo>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p50s1w17">
+                          <m.rf id="m-zeens-p50s1w17">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w17">
+                              <token>,</token>
+                            </w.rf>
+                            <form>,</form>
+                            <lemma>,</lemma>
+                            <tag>zc</tag>
+                          </m.rf>
+                          <role>punct</role>
+                          <ord>17</ord>
+                        </node>
+                      </children>
+                    </pmcinfo>
+                  </children>
+                </node>
+              </children>
+            </node>
+            <node id="a-zeens-p50s1w31">
+              <m.rf id="m-zeens-p50s1w31">
+                <src.rf>c1_r15</src.rf>
+                <w.rf id="w-zeens-p50w31">
+                  <token>.</token>
+                </w.rf>
+                <form>.</form>
+                <lemma>.</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>31</ord>
+            </node>
+          </children>
+        </pmcinfo>
+        <node id="a-zeens-p50s1x1">
+          <role>cncesCl</role>
+          <children>
+            <coordinfo>
+              <coordtype>crdClauses</coordtype>
+              <children>
+                <node id="a-zeens-p50s1x4">
+                  <role>crdPart</role>
+                  <children>
+                    <pmcinfo>
+                      <pmctype>subrCl</pmctype>
+                      <children>
+                        <node id="a-zeens-p50s1w5">
+                          <m.rf id="m-zeens-p50s1w5">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w5">
+                              <token>piedzīvoja</token>
+                            </w.rf>
+                            <form>piedzīvoja</form>
+                            <lemma>piedzīvot</lemma>
+                            <tag>vmnist230an</tag>
+                          </m.rf>
+                          <role>pred</role>
+                          <ord>5</ord>
+                          <children>
+                            <node id="a-zeens-p50s1w3">
+                              <m.rf id="m-zeens-p50s1w3">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w3">
+                                  <token>viņš</token>
+                                </w.rf>
+                                <form>viņš</form>
+                                <lemma>viņš</lemma>
+                                <tag>pp3msnn</tag>
+                              </m.rf>
+                              <role>subj</role>
+                              <ord>3</ord>
+                            </node>
+                            <node id="a-zeens-p50s1w4">
+                              <m.rf id="m-zeens-p50s1w4">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w4">
+                                  <token>tiešām</token>
+                                </w.rf>
+                                <form>tiešām</form>
+                                <lemma>tiešām</lemma>
+                                <tag>q</tag>
+                              </m.rf>
+                              <role>no</role>
+                              <ord>4</ord>
+                            </node>
+                            <node id="a-zeens-p50s1w7">
+                              <m.rf id="m-zeens-p50s1w7">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w7">
+                                  <token>galu</token>
+                                </w.rf>
+                                <form>galu</form>
+                                <lemma>gals</lemma>
+                                <tag>ncmsa1</tag>
+                              </m.rf>
+                              <role>obj</role>
+                              <ord>7</ord>
+                              <children>
+                                <node id="a-zeens-p50s1w6">
+                                  <m.rf id="m-zeens-p50s1w6">
+                                    <src.rf>c1_r15</src.rf>
+                                    <w.rf id="w-zeens-p50w6">
+                                      <token>traģisku</token>
+                                    </w.rf>
+                                    <form>traģisku</form>
+                                    <lemma>traģisks</lemma>
+                                    <tag>afmsanp</tag>
+                                  </m.rf>
+                                  <role>attr</role>
+                                  <ord>6</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p50s1w1">
+                          <m.rf id="m-zeens-p50s1w1">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w1">
+                              <token>Lai</token>
+                            </w.rf>
+                            <form>Lai</form>
+                            <lemma>lai</lemma>
+                            <tag>cs</tag>
+                          </m.rf>
+                          <role>conj</role>
+                          <ord>1</ord>
+                          <children>
+                            <node id="a-zeens-p50s1w2">
+                              <m.rf id="m-zeens-p50s1w2">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w2">
+                                  <token>arī</token>
+                                </w.rf>
+                                <form>arī</form>
+                                <lemma>arī</lemma>
+                                <tag>q</tag>
+                              </m.rf>
+                              <role>no</role>
+                              <ord>2</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </pmcinfo>
+                  </children>
+                </node>
+                <node id="a-zeens-p50s1w8">
+                  <m.rf id="m-zeens-p50s1w8">
+                    <src.rf>c1_r15</src.rf>
+                    <w.rf id="w-zeens-p50w8">
+                      <token>un</token>
+                    </w.rf>
+                    <form>un</form>
+                    <lemma>un</lemma>
+                    <tag>cc</tag>
+                  </m.rf>
+                  <role>conj</role>
+                  <ord>8</ord>
+                </node>
+                <node id="a-zeens-p50s1x5">
+                  <role>crdPart</role>
+                  <children>
+                    <pmcinfo>
+                      <pmctype>subrCl</pmctype>
+                      <children>
+                        <node id="a-zeens-p50s1x6">
+                          <role>pred</role>
+                          <children>
+                            <xinfo>
+                              <xtype>xPred</xtype>
+                              <tag>vmnis0030an[modals00]</tag>
+                              <children>
+                                <node id="a-zeens-p50s1w12">
+                                  <m.rf id="m-zeens-p50s1w12">
+                                    <src.rf>c1_r15</src.rf>
+                                    <w.rf id="w-zeens-p50w12">
+                                      <token>nevarēja</token>
+                                    </w.rf>
+                                    <form>nevarēja</form>
+                                    <lemma>nevarēt</lemma>
+                                    <tag>vonist330an</tag>
+                                  </m.rf>
+                                  <role>mod</role>
+                                  <ord>12</ord>
+                                </node>
+                                <node id="a-zeens-p50s1w13">
+                                  <m.rf id="m-zeens-p50s1w13">
+                                    <src.rf>c1_r15</src.rf>
+                                    <w.rf id="w-zeens-p50w13">
+                                      <token>pārdot</token>
+                                      <no_space_after>1</no_space_after>
+                                    </w.rf>
+                                    <form>pārdot</form>
+                                    <lemma>pārdot</lemma>
+                                    <tag>vmnn0ti000n</tag>
+                                  </m.rf>
+                                  <role>basElem</role>
+                                  <ord>13</ord>
+                                  <children>
+                                    <node id="a-zeens-p50s1w11">
+                                      <m.rf id="m-zeens-p50s1w11">
+                                        <src.rf>c1_r15</src.rf>
+                                        <w.rf id="w-zeens-p50w11">
+                                          <token>gleznas</token>
+                                        </w.rf>
+                                        <form>gleznas</form>
+                                        <lemma>glezna</lemma>
+                                        <tag>ncfpa4</tag>
+                                      </m.rf>
+                                      <role>obj</role>
+                                      <ord>11</ord>
+                                      <children>
+                                        <node id="a-zeens-p50s1w10">
+                                          <m.rf id="m-zeens-p50s1w10">
+                                            <src.rf>c1_r15</src.rf>
+                                            <w.rf id="w-zeens-p50w10">
+                                              <token>savas</token>
+                                            </w.rf>
+                                            <form>savas</form>
+                                            <lemma>sava</lemma>
+                                            <tag>ps0fsgn</tag>
+                                          </m.rf>
+                                          <role>attr</role>
+                                          <ord>10</ord>
+                                        </node>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </node>
+                              </children>
+                            </xinfo>
+                            <node id="a-zeens-p50s1w9">
+                              <m.rf id="m-zeens-p50s1w9">
+                                <src.rf>c1_r15</src.rf>
+                                <w.rf id="w-zeens-p50w9">
+                                  <token>viņš</token>
+                                </w.rf>
+                                <form>viņš</form>
+                                <lemma>viņš</lemma>
+                                <tag>pp3msnn</tag>
+                              </m.rf>
+                              <role>subj</role>
+                              <ord>9</ord>
+                            </node>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p50s1w14">
+                          <m.rf id="m-zeens-p50s1w14">
+                            <src.rf>c1_r15</src.rf>
+                            <w.rf id="w-zeens-p50w14">
+                              <token>,</token>
+                            </w.rf>
+                            <form>,</form>
+                            <lemma>,</lemma>
+                            <tag>zc</tag>
+                          </m.rf>
+                          <role>punct</role>
+                          <ord>14</ord>
+                        </node>
+                      </children>
+                    </pmcinfo>
+                  </children>
+                </node>
+              </children>
+            </coordinfo>
+          </children>
+        </node>
+      </children>
+    </LM>
   </trees>
 </lvadata>

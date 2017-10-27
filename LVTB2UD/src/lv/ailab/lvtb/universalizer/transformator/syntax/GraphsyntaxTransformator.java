@@ -81,13 +81,14 @@ public class GraphsyntaxTransformator
 			for (int xPredI = 0; xPredI < xPredList.getLength(); xPredI++)
 		{
 			// Get base token.
-			Token parentTok = s.getEnhancedOrBaseToken(xPredList.item(xPredI));
+			//Token parentTok = s.getEnhancedOrBaseToken(xPredList.item(xPredI));
 
 			// Collect all subject nodes.
 			ArrayList<Node> subjs = new ArrayList<>();
 			NodeList tmp = (NodeList) XPathEngine.get().evaluate(
 					"./children/node[role/text()='subj']", xPredList.item(xPredI), XPathConstants.NODESET);
 			if (tmp != null) subjs.addAll(Utils.asList(tmp));
+			boolean predIsCoordinated = false;
 			Node ancestor = Utils.getPMLParent(xPredList.item(xPredI));
 			while (ancestor.getNodeName().equals("coordinfo"))
 			{
@@ -96,6 +97,7 @@ public class GraphsyntaxTransformator
 						"./children/node[role/text()='subj']", ancestor , XPathConstants.NODESET);
 				if (tmp != null) subjs.addAll(Utils.asList(tmp));
 				ancestor = Utils.getPMLParent(ancestor); // PML node or phrase
+				predIsCoordinated = true;
 			}
 			// If no subjects found, nothing to do.
 			if (subjs.isEmpty()) continue;
@@ -129,16 +131,20 @@ public class GraphsyntaxTransformator
 					for (String subjId : subjIds)
 					{
 						Node subjNode = s.findPmlNode(subjId);
+						Token subjTok = s.getEnhancedOrBaseToken(subjNode);
+						//Tuple<UDv2Relations, String> role = subjTok.depsBackbone.getRoleTuple();
 						for (String xPartId : xPartIds)
 						{
 							Node xPartNode = s.findPmlNode(xPartId);
+							// TODO tweak this, when nested xPreds will be made.
 							Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-									subjNode, xPartNode, subjLvtbRole, warnOut);
+									subjNode, xPredList.item(xPredI), subjLvtbRole, warnOut);
+									//subjNode, xPartNode, subjLvtbRole, warnOut);
 							// Only UD subjects will have aditional link.
-							if (role.first == UDv2Relations.NSUBJ ||
-									role.first == UDv2Relations.NSUBJ_PASS ||
-									role.first == UDv2Relations.CSUBJ ||
-									role.first == UDv2Relations.CSUBJ_PASS)
+							//if (role.first == UDv2Relations.NSUBJ ||
+							//		role.first == UDv2Relations.NSUBJ_PASS ||
+							//		role.first == UDv2Relations.CSUBJ ||
+							//		role.first == UDv2Relations.CSUBJ_PASS)
 								s.setEnhLink(xPartNode, subjNode, role, false, false);
 						}
 					}
@@ -159,25 +165,29 @@ public class GraphsyntaxTransformator
 	protected void propagateConjuncts() throws XPathExpressionException
 	{
 		for (String coordId : s.coordPartsUnder.keySet())
+		{
+			Node coordANode = s.findPmlNode(coordId);
 			for (String coordPartId : s.coordPartsUnder.get(coordId))
-				processSingleConjunct(coordPartId, coordId);
+			{
+				Node partNode = s.findPmlNode(coordPartId);
+				processSingleConjunct(partNode, coordANode);
+			}
+		}
 	}
 
-	protected void processSingleConjunct(String coordPartId, String coordNodeId)
+	protected void processSingleConjunct(Node coordPartNode, Node wholeCoordANode)
 	throws XPathExpressionException
 	{
 		// This is the "empty" PML node that represents a coordination as a
 		// whole - it has ID, role and dependants for this coordination.
-		Node wholeCoordNode = s.findPmlNode(coordNodeId);
-		Token wholeCoordNodeTok = s.getEnhancedOrBaseToken(wholeCoordNode);
+		Token wholeCoordNodeTok = s.getEnhancedOrBaseToken(wholeCoordANode);
 
 		// This is coordinated part node.
-		Node partNode = s.findPmlNode(coordPartId);
-		Token partNodeTok = s.getEnhancedOrBaseToken(partNode);
+		Token partNodeTok = s.getEnhancedOrBaseToken(coordPartNode);
 		if (partNodeTok.equals(wholeCoordNodeTok)) return;
 
 		// This is coordination's dependency head or phrase containing it.
-		Node coordParentNode = Utils.getPMLParent(wholeCoordNode);
+		Node coordParentNode = Utils.getPMLParent(wholeCoordANode);
 		Node coordGrandParentNode = Utils.getPMLParent(coordParentNode);
 
 		if (Utils.isPhraseNode(coordParentNode))
@@ -188,7 +198,8 @@ public class GraphsyntaxTransformator
 
 			// TODO saite ar vecāku gudrākā veidā?
 			// Link between parent of the coordination and coordinated part.
-			partNodeTok.deps.add(wholeCoordNodeTok.depsBackbone);
+			if (!wholeCoordNodeTok.depsBackbone.isRootDep())
+				partNodeTok.deps.add(wholeCoordNodeTok.depsBackbone);
 
 			// Links between phrase parts
 			if (coordParentNode.getNodeName().equals("xinfo")
@@ -200,12 +211,12 @@ public class GraphsyntaxTransformator
 					for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
 					{
 						if (Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
-								|| phraseParts.item(phrasePartI).isSameNode(partNode))
+								|| phraseParts.item(phrasePartI).isSameNode(coordPartNode))
 							continue;
 
 						Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(phrasePartI));
 						if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
-							s.setEnhLink(partNode, phraseParts.item(phrasePartI),
+							s.setEnhLink(coordPartNode, phraseParts.item(phrasePartI),
 									otherPartToken.depsBackbone.getRoleTuple(), false, false);
 						// Todo: use/make analogue to DepRelLogic.getSingleton().depToUD(node, node, ...) ?
 					}
@@ -216,24 +227,24 @@ public class GraphsyntaxTransformator
 			if (!Utils.isRoot(coordParentNode) && !wholeCoordNodeTok.depsBackbone.isRootDep())
 			{
 				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-						partNode, coordParentNode,
-						Utils.getRole(wholeCoordNode), warnOut);
+						coordPartNode, coordParentNode,
+						Utils.getRole(wholeCoordANode), warnOut);
 				//partNodeTok.deps.add(parentNodeTok.depsBackbone);
-				s.setEnhLink(coordParentNode, partNode, role,
+				s.setEnhLink(coordParentNode, coordPartNode, role,
 						false, false);
 			}
 		}
 
 		// Links between dependants of the coordination and coordinated parts.
-		NodeList dependents = Utils.getPMLNodeChildren(wholeCoordNode);
+		NodeList dependents = Utils.getPMLNodeChildren(wholeCoordANode);
 		if (dependents != null)
 			for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
 			{
 				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-						dependents.item(dependentI), partNode,
+						dependents.item(dependentI), coordPartNode,
 						Utils.getRole(dependents.item(dependentI)),
 						warnOut);
-				s.setEnhLink(partNode, dependents.item(dependentI),
+				s.setEnhLink(coordPartNode, dependents.item(dependentI),
 						role,false,false);
 			}
 	}
