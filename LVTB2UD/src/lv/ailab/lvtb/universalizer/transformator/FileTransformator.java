@@ -47,10 +47,10 @@ public class FileTransformator
 			throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
 	{
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
-		System.out.printf("%s trees found...\n", pmlTrees.getLength());
+		//System.out.printf("%s trees found...\n", pmlTrees.getLength());
 		warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
-		//String latestParId = null;
 		String paragraphId = "";
+		// Print info in the file beginning.
 		if (pmlTrees.getLength() > 0)
 		{
 			all = pmlTrees.getLength();
@@ -86,16 +86,8 @@ public class FileTransformator
 				processed.append(paragraphId);
 			}
 			processed.append("\n");
-		/*	String firstSentLastId = Utils.getId(Utils.getLastByOrd(
-					Utils.getAllPMLDescendants(pmlTrees.item(0))));
-			if (firstSentLastId.matches("a-.*?-p\\d+s\\d+w\\d+"))
-			{
-				latestParId = firstSentLastId.substring(firstSentLastId.indexOf("-") + 1,
-						firstSentLastId.lastIndexOf("s"));
-				//conllOut.write(" id=" + latestParId);
-			} else warningsLog.println(
-					"Node id \"" + firstSentLastId + "\" in first sentence does not match paragraph searching pattern!");*/
 		}
+		// Process trees
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
 			String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
@@ -121,26 +113,8 @@ public class FileTransformator
 						paragraphId = nextParaID;
 					}
 				}
-
-				/*String thisSentId = Utils.getId(pmlTrees.item(i));
-				String newParId = null;
-				if (thisSentId.matches("a-.*?-p\\d+s\\d+"))
-					newParId = thisSentId.substring(thisSentId.indexOf("-") + 1,
-							thisSentId.lastIndexOf("s"));
-				else warningsLog.println(
-						"Sentence id \"" + thisSentId + "\"does not match paragraph searching pattern!");
-				if (newParId != null && !newParId.equals(latestParId))
-				{
-					processed.append("# newpar\n");
-					latestParId = Utils.getId(Utils.getLastByOrd(
-							Utils.getAllPMLDescendants(pmlTrees.item(i))));
-					if (latestParId.matches("a-.*?-p\\d+s\\d+w\\d+"))
-						latestParId = latestParId.substring(latestParId.indexOf("-") + 1,
-								latestParId.lastIndexOf("s"));
-					else warningsLog.println(
-							"Node id \"" + latestParId + "\" does not match paragraph searching pattern!");
-				}*/
 			}
+
 			if (conllTree != null)
 			{
 				processed.append(conllTree);

@@ -45,9 +45,9 @@ public class GraphsyntaxTransformator
 	 * is already handled there.
 	 * Currently supported features:
 	 *  * conjuct propagation;
-	 *  * controled/rised subjects.
+	 *  * controled/rised subjects;
+	 *  * case information.
 	 * TODO
-	 *  * case information;
 	 *  * relative clauses.
 	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
@@ -159,78 +159,82 @@ public class GraphsyntaxTransformator
 	protected void propagateConjuncts() throws XPathExpressionException
 	{
 		for (String coordId : s.coordPartsUnder.keySet())
-		{
-			// This is the "empty" PML node that represents a coordination as a
-			// whole - it has ID, role and dependants for this coordination.
-			Node parentNode = s.findPmlNode(coordId);
-			Token parentNodeTok = s.getEnhancedOrBaseToken(parentNode);
-
-			Node grandParentNode = Utils.getPMLParent(parentNode);
-			Node greatGrandParentNode = Utils.getPMLParent(grandParentNode);
-
-			// Here we want coordination's dependency head.
-			Node coordDepParent = grandParentNode;
-			if (Utils.isPhraseNode(coordDepParent)) coordDepParent = greatGrandParentNode;
-
-			// Those are the conjunts of the above-found coordination.
 			for (String coordPartId : s.coordPartsUnder.get(coordId))
+				processSingleConjunct(coordPartId, coordId);
+	}
+
+	protected void processSingleConjunct(String coordPartId, String coordNodeId)
+	throws XPathExpressionException
+	{
+		// This is the "empty" PML node that represents a coordination as a
+		// whole - it has ID, role and dependants for this coordination.
+		Node wholeCoordNode = s.findPmlNode(coordNodeId);
+		Token wholeCoordNodeTok = s.getEnhancedOrBaseToken(wholeCoordNode);
+
+		// This is coordinated part node.
+		Node partNode = s.findPmlNode(coordPartId);
+		Token partNodeTok = s.getEnhancedOrBaseToken(partNode);
+		if (partNodeTok.equals(wholeCoordNodeTok)) return;
+
+		// This is coordination's dependency head or phrase containing it.
+		Node coordParentNode = Utils.getPMLParent(wholeCoordNode);
+		Node coordGrandParentNode = Utils.getPMLParent(coordParentNode);
+
+		if (Utils.isPhraseNode(coordParentNode))
+		{
+			// Renaming for convenience
+			Node phrase = coordParentNode;
+			Node phraseParent = coordGrandParentNode;
+
+			// TODO saite ar vecāku gudrākā veidā?
+			// Link between parent of the coordination and coordinated part.
+			partNodeTok.deps.add(wholeCoordNodeTok.depsBackbone);
+
+			// Links between phrase parts
+			if (coordParentNode.getNodeName().equals("xinfo")
+					|| coordParentNode.getNodeName().equals("pmcinfo"))
 			{
-				Node partNode = s.findPmlNode(coordPartId);
-				Token partNodeTok = s.getEnhancedOrBaseToken(partNode);
-				if (!partNodeTok.equals(parentNodeTok))
-				{
-					// Link between parent of the coordination and coordinated part.
-					//if (!parentNodeTok.depsBackbone.isRootDep())
-					if (!Utils.isRoot(coordDepParent) && !parentNodeTok.depsBackbone.isRootDep())
+				Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
+				NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+				if (phraseParts != null)
+					for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
 					{
-						Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-								partNode, coordDepParent,
-								Utils.getRole(parentNode), warnOut);
-						//partNodeTok.deps.add(parentNodeTok.depsBackbone);
-						s.setEnhLink(coordDepParent, partNode, role,
-								false, false);
-					}
+						if (Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
+								|| phraseParts.item(phrasePartI).isSameNode(partNode))
+							continue;
 
-					// Links between dependants of the coordination and coordinated parts.
-					NodeList dependents = Utils.getPMLNodeChildren(parentNode);
-					if (dependents != null)
-						for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
-					{
-						//UDv2Relations role = DepRelLogic.getSingleton().depToUD(
-						//		dependents.item(dependentI), true, warnOut);
-						Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-								dependents.item(dependentI), partNode,
-								Utils.getRole(dependents.item(dependentI)),
-								warnOut);
-						s.setEnhLink(partNode, dependents.item(dependentI),
-								role,false,false);
+						Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(phrasePartI));
+						if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
+							s.setEnhLink(partNode, phraseParts.item(phrasePartI),
+									otherPartToken.depsBackbone.getRoleTuple(), false, false);
+						// Todo: use/make analogue to DepRelLogic.getSingleton().depToUD(node, node, ...) ?
 					}
-
-					// Links between phrase parts
-					if (grandParentNode.getNodeName().equals("xinfo")
-							|| grandParentNode.getNodeName().equals("pmcinfo"))
-					{
-						// Renaming for convenience
-						Node phrase = grandParentNode;
-						Node phraseParent = greatGrandParentNode;
-						Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
-						NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
-						if (phraseParts != null)
-							for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
-						{
-							if (Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
-									|| phraseParts.item(phrasePartI).isSameNode(partNode))
-								continue;
-
-							Token otherPartToken = s.getEnhancedOrBaseToken(phraseParts.item(phrasePartI));
-							if (otherPartToken.depsBackbone.headID.equals(phraseRootToken.getFirstColumn()))
-								s.setEnhLink(partNode, phraseParts.item(phrasePartI),
-										otherPartToken.depsBackbone.getRoleTuple(), false, false);
-							// Todo: use/make analogue to DepRelLogic.getSingleton().depToUD(node, node, ...) ?
-						}
-					}
-				}
+			}
+		} else
+		{
+			// Link between parent of the coordination and coordinated part.
+			if (!Utils.isRoot(coordParentNode) && !wholeCoordNodeTok.depsBackbone.isRootDep())
+			{
+				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
+						partNode, coordParentNode,
+						Utils.getRole(wholeCoordNode), warnOut);
+				//partNodeTok.deps.add(parentNodeTok.depsBackbone);
+				s.setEnhLink(coordParentNode, partNode, role,
+						false, false);
 			}
 		}
+
+		// Links between dependants of the coordination and coordinated parts.
+		NodeList dependents = Utils.getPMLNodeChildren(wholeCoordNode);
+		if (dependents != null)
+			for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
+			{
+				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
+						dependents.item(dependentI), partNode,
+						Utils.getRole(dependents.item(dependentI)),
+						warnOut);
+				s.setEnhLink(partNode, dependents.item(dependentI),
+						role,false,false);
+			}
 	}
 }

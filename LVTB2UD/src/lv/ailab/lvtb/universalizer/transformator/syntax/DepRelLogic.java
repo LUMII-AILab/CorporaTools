@@ -654,8 +654,6 @@ public class DepRelLogic
 							  boolean enhanced, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		String nodeId = Utils.getId(node);
-		String parentId = Utils.getId(parent);
 		String prefix = enhanced ? "Enhanced role" : "Role";
 		String warning = String.format(
 				"%s \"%s\" for node \"%s\" with respect to parent \"%s\" was not transformed.",
