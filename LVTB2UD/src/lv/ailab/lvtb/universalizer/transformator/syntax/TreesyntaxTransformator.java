@@ -216,9 +216,10 @@ public class TreesyntaxTransformator
 			newBasicRoot = redRoot;
 
 			// Make new token for ellipsis.
+			// Decimal token (reduction node) must be inserted after newRootToken.
 			Token newRootToken = s.pmlaToConll.get(Utils.getId(newBasicRoot));
 			int position = s.conll.indexOf(newRootToken) + 1;
-			while (newRootToken.idBegin == s.conll.get(position).idBegin)
+			while (position < s.conll.size() && newRootToken.idBegin == s.conll.get(position).idBegin)
 				position++;
 			Token decimalToken = new Token();
 			decimalToken.idBegin = newRootToken.idBegin;

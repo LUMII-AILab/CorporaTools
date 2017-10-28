@@ -98,7 +98,17 @@ public class FileTransformator
 				omitted++;
 				continue;
 			}
-			String conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
+			String conllTree = null;
+			try
+			{
+				conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
+			} catch (Exception e)
+			{
+				String treeId = Utils.getId(pmlTrees.item(i));
+				warningsLog.printf("A sentence %s failed with an exception: ", treeId);
+				e.printStackTrace(warningsLog);
+				System.out.printf("A sentence %s failed with an exception %s. ", treeId, e.toString());
+			}
 			if (i > 0)
 			{
 				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(Utils.getId(pmlTrees.item(i)));

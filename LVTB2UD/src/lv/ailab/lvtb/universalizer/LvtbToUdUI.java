@@ -62,21 +62,33 @@ public class LvtbToUdUI
 		if (!logFolder.exists()) logFolder.mkdirs();
 		PrintWriter statusOut = new PrintWriter(new PrintWriter(logFolder + "/log.txt", "UTF-8"), true);
 		File[] listOfFiles = folder.listFiles();
-		int omitted = 0;
+		int omittedTrees = 0;
+		int omittedFiles = 0;
 		for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
 			if (f.isDirectory() || f.getName().startsWith("~")) continue;
-			if (fileName.endsWith(".pml"))
+			FileTransformator ft = new FileTransformator(CHANGE_IDS);
+			if (fileName.endsWith(".pml")) try
 			{
 				System.out.printf("Processing file \"%s\", ", fileName);
 				statusOut.printf("Processing file \"%s\", ", fileName);
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
-				FileTransformator ft = new FileTransformator(CHANGE_IDS);
 				ft.readAndTransform(f.getAbsolutePath(), statusOut);
 				boolean madeFile = ft.writeResult(outPath, statusOut, OMIT_WHOLE_FILES);
-				if (madeFile) omitted = omitted + ft.omitted;
-				else omitted = ft.all;
+				if (madeFile) omittedTrees = omittedTrees + ft.omitted;
+				else
+				{
+					omittedTrees = omittedTrees + ft.all;
+					omittedFiles++;
+				}
+			} catch (Exception e)
+			{
+				System.out.printf("File failed with exception %s.\n", e.toString());
+				statusOut.print("File failed with exception: ");
+				e.printStackTrace(statusOut);
+				omittedTrees = omittedTrees + ft.all;
+				omittedFiles++;
 			}
 			else
 			{
@@ -86,10 +98,25 @@ public class LvtbToUdUI
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
 			}
 		}
-		System.out.printf(
-				"Everything is finished, %s trees was omited.\n", omitted);
-		statusOut.printf(
-				"Everything is finished, %s trees was omited.\n", omitted);
+		if (omittedFiles == 0 && omittedTrees == 0)
+		{
+			System.out.println("Everything is finished, nothing was omited.");
+			statusOut.println("Everything is finished, nothing was omited.");
+		} else if (omittedFiles == 0)
+		{
+			System.out.printf(
+					"Everything is finished, %s trees was omited.\n", omittedTrees);
+			statusOut.printf(
+					"Everything is finished, %s trees was omited.\n", omittedTrees);
+		} else
+		{
+			System.out.printf(
+					"Everything is finished, %s files and at least %s trees was omited.\n",
+					omittedFiles, omittedTrees);
+			statusOut.printf(
+					"Everything is finished, %s files and at least %s trees was omited.\n",
+					omittedFiles, omittedTrees);
+		}
 		statusOut.flush();
 		statusOut.close();
 	}
