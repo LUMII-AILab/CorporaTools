@@ -9,51 +9,58 @@ Corresponding PML Schemas are available at
 Contents
 --------
 
-* LvCorporaTools - perl scripts and xslt-s for varios coprora data processing;
+* PmlCorporaTools - perl scripts and xslt-s for varios coprora data processing;
 * LVTB2UD - transformator from native annotation format to Universal
 Dependencies;
-* testdata - data samples for stuff in LvCorporaTools;
 * TrEd extension - development snapshot for lv-treebank module for TrEd tool
 (this enables TrEd to operate with lv-PML files);
-* *.bat files - invocation examples for LvCorporaTools;
 * MorphoVerificator - java written tool implementing various heuristics for
-searching human errors in morphological corpora.
+searching human errors in morphological corpora (obselote).
+
+For each script in PmlCorporaTools there is a .bat file showing invocation
+sample on dummy data located in PmlCorporaTools/testdata. Also, it is possible
+to launch these scripts without parameters to get information about expected
+parameter values and meaning.
+
+Some scripts have not been used several years and might be obselote, sorry.
 
 Prerequisites
-------------
-Perl
-XSLT module (on Ubuntu, run 'sudo apt-get install libxml-libxslt-perl')
+-------------
+For PmlCorporaTools:
+* Perl
+* XSLT module (on Ubuntu, run 'sudo apt-get install libxml-libxslt-perl')
+
+For LVTB2UD
+* Java
+* https://github.com/PeterisP/morphology
+
 
 Main work-flows
 ---------------
 
-* Converting treebank to CONLL format: TreeTransformatorUI with steps --dep
---red --knit --conll (application example [current folder is CorporaTools]:
-perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect
---unnest --dep xpred=BASELEM_NO_RED coord=ROW pmc=BASELEM --red --knit
---conll label=1 cpostag=FIRST postag=FULL --fold p=1, for more information see
-TreeTransformatorUI.pm or launch it without parameters).
-* Converting treebank to Universal Dependencies: TreeTransformatorUI with
-steps --collect --ord mode=TOKEN --knit, compile LVTB2UD, run
-runUniversalizer.bat from compiled LVTB2UD distribution (data must be in
-"data" folder in the compiled distribution), TreeTransformatorUI with --fold
-step (optional - if single file needed)
-* Converting treebank to TigerXML: Unite (if needed), TreeTransformatorUI with
-step --ord TOKEN, apply lvpml2tiger.xsl
-* Preprocessing treebank files before putting in repository: Unite (if needed),
-CheckW, NormalizeIds, CheckLvPml with param A
+* For converting teebank to UD, consult comments in
+  PmlCorporaTools/convertLvtbToUd_sample.bat
+* For converting treebank to old dependency formats used before UD, consult
+  comments in PmlCorporaTools/aTreeTransformator_sample.bat
+* For ID verification before including treebank files into SemBank, consult
+  PmlCorporaTools/checkNormalizeSembankIds_sample.bat` (Unite might be needed
+  beforehand)
+* For parameter specifics to create a PML fileset accordingly to current
+  naming conventions see PmlCorporaTools/LVK2LVTB-PML.readme.md
+* Converting treebank to TigerXML is done as follows: Unite (if needed),
+  TreeTransformatorUI with step --ord TOKEN, apply lvpml2tiger.xsl
 * Preprocessing morphocorpus files before putting in repository: CheckLvPml
-with param M
+  with param M
 * Preparing morphologically tagged data for training the LVTagger system:
-**	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
-**	download treebank from https://github.com/LUMII-AILab/Treebank
-**	run ./preparePOSTagData.sh
-**	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
+1.	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
+2.	download treebank from https://github.com/LUMII-AILab/Treebank
+3.	run ./preparePOSTagData.sh
+4.	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
 
 License
 -------
 
-(c) Institute of Mathematics and Computer Science, University of Latvia, 2010-2016
+(c) Institute of Mathematics and Computer Science, University of Latvia, 2010-2017
 
 This software is licensed under GNU General Public License.
 Commercial licensing is available if necessary, contact us at lauma@ailab.lv.

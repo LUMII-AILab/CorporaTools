@@ -15,3 +15,8 @@
 /PmlCorporaTools/testdata/*/warnings
 /PmlCorporaTools/.idea
 /PmlCorporaTools/testdata/Conll2MA/m-a
+/PmlCorporaTools/testdata/SplitTrainDevTest/skip
+/PmlCorporaTools/testdata/SplitTrainDevTest/test
+/PmlCorporaTools/testdata/SplitTrainDevTest/train
+/PmlCorporaTools/testdata/SplitTrainDevTest/dev
+/PmlCorporaTools/testdata/SplitTrainDevTest/not-mentioned
