@@ -9,7 +9,7 @@ use Exporter();
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(normalizeIds processDir load process doOutput);
 
-use Data::Dumper;
+#use Data::Dumper;
 use IO::Dir;
 use IO::File;
 use File::Path;
