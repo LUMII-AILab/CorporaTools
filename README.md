@@ -4,7 +4,7 @@ Latvian Corpora Tools
 Support tools for Latvian Treebank and Latvian morphologically annotated
 corpora. Native data format of the Latvian corpora are adjusted PML.
 Corresponding PML Schemas are available at
-"TrEd extension/lv-treebank/resources".
+TrEd extension/lv-treebank/resources.
 
 Contents
 --------
@@ -43,7 +43,7 @@ Main work-flows
 * For converting treebank to old dependency formats used before UD, consult
   comments in PmlCorporaTools/aTreeTransformator_sample.bat
 * For ID verification before including treebank files into SemBank, consult
-  PmlCorporaTools/checkNormalizeSembankIds_sample.bat` (Unite might be needed
+  PmlCorporaTools/checkNormalizeSembankIds_sample.bat (Unite might be needed
   beforehand)
 * For parameter specifics to create a PML fileset accordingly to current
   naming conventions see PmlCorporaTools/LVK2LVTB-PML.readme.md
@@ -52,10 +52,10 @@ Main work-flows
 * Preprocessing morphocorpus files before putting in repository: CheckLvPml
   with param M
 * Preparing morphologically tagged data for training the LVTagger system:
-1.	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
-2.	download treebank from https://github.com/LUMII-AILab/Treebank
-3.	run ./preparePOSTagData.sh
-4.	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
+  1.	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
+  2.	download treebank from https://github.com/LUMII-AILab/Treebank
+  3.	run ./preparePOSTagData.sh
+  4.	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
 
 License
 -------
