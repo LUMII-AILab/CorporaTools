@@ -47,7 +47,7 @@ public class FileTransformator
 			throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
 	{
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
-		//System.out.printf("%s trees found...\n", pmlTrees.getLength());
+		System.out.printf("%s trees. ", pmlTrees.getLength());
 		warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
 		String paragraphId = "";
 		// Print info in the file beginning.
@@ -107,7 +107,7 @@ public class FileTransformator
 				String treeId = Utils.getId(pmlTrees.item(i));
 				warningsLog.printf("A sentence %s failed with an exception: ", treeId);
 				e.printStackTrace(warningsLog);
-				System.out.printf("A sentence %s failed with an exception %s. ", treeId, e.toString());
+				System.out.printf("A sentence %s failed with an exception %s.\n", treeId, e.toString());
 			}
 			if (i > 0)
 			{

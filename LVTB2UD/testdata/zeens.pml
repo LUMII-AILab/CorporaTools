@@ -9601,5 +9601,160 @@
         </node>
       </children>
     </LM>
+    <LM id="a-zeens-p51s1">
+      <s.rf>m#m-zeens-p51s1</s.rf>
+      <comment>Jā, šim teikumam tiešām nav beigu pieturzimes. Tas ir virsraksts.</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-zeens-p51s1x1">
+              <reduction>vm000000000</reduction>
+              <role>pred</role>
+              <children>
+                <node id="a-zeens-p51s1x2">
+                  <role>subj</role>
+                  <children>
+                    <xinfo>
+                      <xtype>xApp</xtype>
+                      <tag>n0mpn0</tag>
+                      <children>
+                        <node id="a-zeens-p51s1x4">
+                          <role>basElem</role>
+                          <children>
+                            <coordinfo>
+                              <coordtype>crdParts</coordtype>
+                              <children>
+                                <node id="a-zeens-p51s1w2">
+                                  <m.rf id="m-zeens-p51s1w2">
+                                    <src.rf>annotator</src.rf>
+                                    <w.rf id="w-zeens-p51w2">
+                                      <token>Bērziņš</token>
+                                    </w.rf>
+                                    <form>Bērziņš</form>
+                                    <lemma>Bērziņš</lemma>
+                                    <tag>npmsn1</tag>
+                                  </m.rf>
+                                  <role>crdPart</role>
+                                  <ord>2</ord>
+                                </node>
+                                <node id="a-zeens-p51s1w3">
+                                  <m.rf id="m-zeens-p51s1w3">
+                                    <src.rf>annotator</src.rf>
+                                    <w.rf id="w-zeens-p51w3">
+                                      <token>un</token>
+                                    </w.rf>
+                                    <form>un</form>
+                                    <lemma>un</lemma>
+                                    <tag>cc</tag>
+                                  </m.rf>
+                                  <role>conj</role>
+                                  <ord>3</ord>
+                                </node>
+                                <node id="a-zeens-p51s1w4">
+                                  <m.rf id="m-zeens-p51s1w4">
+                                    <src.rf>annotator</src.rf>
+                                    <w.rf id="w-zeens-p51w4">
+                                      <token>Spanovskis</token>
+                                    </w.rf>
+                                    <form>Spanovskis</form>
+                                    <lemma>Spanovskis</lemma>
+                                    <tag>npmsn2</tag>
+                                  </m.rf>
+                                  <role>crdPart</role>
+                                  <ord>4</ord>
+                                </node>
+                              </children>
+                            </coordinfo>
+                          </children>
+                        </node>
+                        <node id="a-zeens-p51s1w1">
+                          <m.rf id="m-zeens-p51s1w1">
+                            <src.rf>annotator</src.rf>
+                            <w.rf id="w-zeens-p51w1">
+                              <token>Aktieri</token>
+                            </w.rf>
+                            <form>Aktieri</form>
+                            <lemma>aktieris</lemma>
+                            <tag>ncmpn2</tag>
+                          </m.rf>
+                          <role>basElem</role>
+                          <ord>1</ord>
+                        </node>
+                      </children>
+                    </xinfo>
+                  </children>
+                </node>
+                <node id="a-zeens-p51s1x3">
+                  <role>adv</role>
+                  <children>
+                    <xinfo>
+                      <xtype>xPrep</xtype>
+                      <tag>ncmpd0[pre]</tag>
+                      <children>
+                        <node id="a-zeens-p51s1w5">
+                          <m.rf id="m-zeens-p51s1w5">
+                            <src.rf>annotator</src.rf>
+                            <w.rf id="w-zeens-p51w5">
+                              <token>pie</token>
+                            </w.rf>
+                            <form>pie</form>
+                            <lemma>pie</lemma>
+                            <tag>sppd</tag>
+                          </m.rf>
+                          <role>prep</role>
+                          <ord>5</ord>
+                        </node>
+                        <node id="a-zeens-p51s1w8">
+                          <m.rf id="m-zeens-p51s1w8">
+                            <src.rf>annotator</src.rf>
+                            <w.rf id="w-zeens-p51w8">
+                              <token>dziedniekiem</token>
+                            </w.rf>
+                            <form>dziedniekiem</form>
+                            <lemma>dziednieks</lemma>
+                            <tag>ncmpd1</tag>
+                          </m.rf>
+                          <role>basElem</role>
+                          <ord>8</ord>
+                          <children>
+                            <node id="a-zeens-p51s1w6">
+                              <m.rf id="m-zeens-p51s1w6">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p51w6">
+                                  <token>desmit</token>
+                                </w.rf>
+                                <form>desmit</form>
+                                <lemma>desmit</lemma>
+                                <tag>mcs0p0</tag>
+                              </m.rf>
+                              <role>attr</role>
+                              <ord>6</ord>
+                            </node>
+                            <node id="a-zeens-p51s1w7">
+                              <m.rf id="m-zeens-p51s1w7">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p51w7">
+                                  <token>Latvijas</token>
+                                </w.rf>
+                                <form>Latvijas</form>
+                                <lemma>Latvija</lemma>
+                                <tag>npfsg4</tag>
+                              </m.rf>
+                              <role>attr</role>
+                              <ord>7</ord>
+                            </node>
+                          </children>
+                        </node>
+                      </children>
+                    </xinfo>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
   </trees>
 </lvadata>

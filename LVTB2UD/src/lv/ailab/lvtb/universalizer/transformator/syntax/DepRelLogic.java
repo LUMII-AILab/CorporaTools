@@ -230,11 +230,12 @@ public class DepRelLogic
 					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
 					//if (parentTag.matches("v..[^p].....p.*"))
 						return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					if (parentTag.matches("z.*"))
+					String reduction = XPathEngine.get().evaluate(
+							"./reduction", parent);
+					//if (parentTag.matches("z.*"))
+					if (reduction != null && !reduction.isEmpty())
 					{
-						String reduction = XPathEngine.get().evaluate(
-								"./reduction", parent);
-						if (reduction.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
+						if (reduction.matches("v..[^pn].....[a0].*|v..pd...[a0].*|v..pu.*|v..n.*"))
 							return Tuple.of(UDv2Relations.NSUBJ, null);
 						if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
 							return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
