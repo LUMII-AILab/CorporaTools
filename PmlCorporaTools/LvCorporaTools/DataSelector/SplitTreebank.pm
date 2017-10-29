@@ -51,7 +51,7 @@ Params:
    data directory
    probability (0;1), or cross-validation part count {3; 4; 5;...}, or 1 for
        concatenating all files
-   seed [optional]
+   seed [optional, 0 by default]
    output name [optional]
 
 Latvian Treebank project, LUMII, 2013, provided under GPL
@@ -62,7 +62,7 @@ END
 
 	my $dirName = shift @_;
 	my $magicNumber = shift @_;
-	my $seed = shift @_;
+	my $seed = (shift @_ or 0);
 	my $outName = shift @_;
 	
 	srand $seed;
