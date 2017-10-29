@@ -40,8 +40,10 @@ Params:
      2) PML file set name without extension
         (extensions .w, .m, .a, .pml, .txt, .conll, .conllu and no extension
          will be checked)
-     3) any other columns will be ignored
+     3) corpus type, e.g., 'Morphocorpus'
+     4) any other columns will be ignored
    directory name where to put result folders [opt]
+   ommit warnings on missing Morphocorpus files [opt, false by default]
 
 Result:
    folders train, dev, test, skip, not-mentioned
@@ -54,6 +56,7 @@ END
 	my $sourceDirName = shift @_;
 	my $tdtFileName = shift @_;
 	my $destDirName = (shift @_ or $sourceDirName);
+	my $ommitMorphoWarns = shift;
 
 	# Go through TDT file and move mentioned here
 	my %usedFiles = ();
@@ -61,10 +64,11 @@ END
 	my $sourceDir = IO::Dir->new($sourceDirName) or die "Can't access $sourceDirName: $!";
 	while (my $line = <$tdtFile>)
 	{
-		if ($line =~ /^(train|dev|test|skip)\t([^\s]+)/)
+		if ($line =~ /^(train|dev|test|skip)\t([^\s]+)(.*)/)
 		{
 			my $folder = $1;
 			my $fileStub = $2;
+			my $otherInfo = $3;
 			mkdir("$destDirName/$folder") unless(-d "$destDirName/$folder");
 			my @potentialFiles = (
 				"$fileStub.w",
@@ -85,7 +89,8 @@ END
 					$found++;
 				}
 			}
-			warn "Nothing like $fileStub found " unless ($found);
+
+			warn "Nothing like $fileStub found " if (!$found and (!$ommitMorphoWarns or $otherInfo !~ /^\tMorphocorpus([\t\r\n]|$)/));
 		}
 		elsif ($line =~ /^(\s*.+?)\r?\n?$/)
 		{
