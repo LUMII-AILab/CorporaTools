@@ -200,8 +200,8 @@ public class MorphoTransformator {
 	{
 		if (lvtbTag == null || lvtbTag.length() < 1 || lvtbTag.matches("N/[Aa]"))
 			return "_";
-		if (ending == null || ending.length() < 1) return lvtbTag;
-		else return lvtbTag + ending;
+		if (ending == null || ending.length() < 1) return lvtbTag.trim();
+		else return (lvtbTag + ending).trim();
 	}
 
 	/**
