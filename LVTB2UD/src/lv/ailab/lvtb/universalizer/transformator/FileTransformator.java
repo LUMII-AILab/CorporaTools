@@ -63,7 +63,7 @@ public class FileTransformator
 				return;
 			}
 			// Print out information about the start of the new document
-			processed.append("# newDoc");
+			processed.append("# newdoc");
 			String firstSentId = Utils.getId(pmlTrees.item(0));
 			Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(firstSentId);
 			if (idMatcher.matches())
