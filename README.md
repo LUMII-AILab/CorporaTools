@@ -45,6 +45,8 @@ Main work-flows
 * For ID verification before including treebank files into SemBank, consult
   PmlCorporaTools/checkNormalizeSembankIds_sample.bat (Unite might be needed
   beforehand)
+* For splitting whole-document CoNLL-U files to single-paragraph CoNLL-U files,
+  consult PmlCorporaTools/postprocessConlluForSembank_sample.bat
 * For parameter specifics to create a PML fileset accordingly to current
   naming conventions see PmlCorporaTools/LVK2LVTB-PML.readme.md
 * Converting treebank to TigerXML is done as follows: Unite (if needed),

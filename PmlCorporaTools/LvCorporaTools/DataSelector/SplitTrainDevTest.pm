@@ -90,7 +90,7 @@ END
 				}
 			}
 
-			warn "Nothing like $fileStub found " if (!$found and (!$ommitMorphoWarns or $otherInfo !~ /^\tMorphocorpus([\t\r\n]|$)/));
+			warn "Nothing like $fileStub found" if (!$found and (!$ommitMorphoWarns or $otherInfo !~ /^\tMorphocorpus([\t\r\n]|$)/));
 		}
 		elsif ($line =~ /^(\s*.+?)\r?\n?$/)
 		{
