@@ -19,7 +19,7 @@ our @EXPORT_OK = qw(splitCorpus);
 # TODO: Add support for PML-A files.
 #
 # Developed on Strawberry Perl 5.12.3.0
-# Latvian Treebank project, 2013
+# Latvian Treebank project, 2013-2017
 # Lauma Pretkalnina, LUMII, AILab, lauma@ailab.lv
 # Licenced under GPL.
 ###############################################################################
@@ -54,7 +54,7 @@ Params:
    seed [optional, 0 by default]
    output name [optional]
 
-Latvian Treebank project, LUMII, 2013, provided under GPL
+Latvian Treebank project, LUMII, 2013-2017, provided under GPL
 END
 		exit 1;
 	}

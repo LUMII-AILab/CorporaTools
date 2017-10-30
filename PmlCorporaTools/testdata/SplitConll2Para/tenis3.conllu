@@ -1,0 +1,58 @@
+# newdoc id = tenis3
+# newpar id = tenis3-p1
+# sent_id = a-tenis3-p1s1
+# text = Alfrēds un Bernards uz datorlingvistikas konferenci esot ieradušies no rīta.
+1	Alfrēds	Alfrēds	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	8:nsubj	_
+2	un	un	CCONJ	cc	_	3	cc	3:cc	_
+3	Bernards	Bernards	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	1	conj	1:conj|8:nsubj	_
+4	uz	uz	ADP	spsa	_	6	case	6:case	_
+5	datorlingvistikas	datorlingvistika	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	6	nmod	6:nmod:gen	_
+6	konferenci	konference	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	8	obl	8:obl:uz	_
+7	esot	būt	VERB	vcnrpii00an	Evident=Nfh|Mood=Qot|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	aux	8:aux	_
+8	ieradušies	ierasties	VERB	vmypdmpnasnp	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Plur|Reflex=Yes|Tense=Past|VerbForm=Part	0	root	0:root	_
+9	no	no	ADP	spsg	_	10	case	10:case	_
+10	rīta	rīts	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	8	obl	8:obl:no	SpaceAfter=No
+11	.	.	PUNCT	zs	_	8	punct	8:punct	_
+
+# sent_id = a-tenis3-p1s2
+# text = Alfrēds un Teodors uz datorlingvistikas konferenci esot ieradušies no rīta.
+1	Alfrēds	Alfrēds	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	8:nsubj	_
+2	un	un	CCONJ	cc	_	3	cc	3:cc	_
+3	Teodors	Teodors	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	1	conj	1:conj|8:nsubj	_
+4	uz	uz	ADP	spsa	_	6	case	6:case	_
+5	datorlingvistikas	datorlingvistika	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	6	nmod	6:nmod:gen	_
+6	konferenci	konference	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	8	obl	8:obl:uz	_
+7	esot	būt	VERB	vcnrpii00an	Evident=Nfh|Mood=Qot|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	aux	8:aux	_
+8	ieradušies	ierasties	VERB	vmypdmpnasnp	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Plur|Reflex=Yes|Tense=Past|VerbForm=Part	0	root	0:root	_
+9	no	no	ADP	spsg	_	10	case	10:case	_
+10	rīta	rīts	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	8	obl	8:obl:no	SpaceAfter=No
+11	.	.	PUNCT	zs	_	8	punct	8:punct	_
+
+# newpar id = tenis3-p2
+# sent_id = a-tenis3-p2s1
+# text = Alfrēds un Betmens uz datorlingvistikas konferenci esot ieradušies no rīta.
+1	Alfrēds	Alfrēds	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	8:nsubj	_
+2	un	un	CCONJ	cc	_	3	cc	3:cc	_
+3	Betmens	Betmens	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	1	conj	1:conj|8:nsubj	_
+4	uz	uz	ADP	spsa	_	6	case	6:case	_
+5	datorlingvistikas	datorlingvistika	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	6	nmod	6:nmod:gen	_
+6	konferenci	konference	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	8	obl	8:obl:uz	_
+7	esot	būt	VERB	vcnrpii00an	Evident=Nfh|Mood=Qot|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	aux	8:aux	_
+8	ieradušies	ierasties	VERB	vmypdmpnasnp	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Plur|Reflex=Yes|Tense=Past|VerbForm=Part	0	root	0:root	_
+9	no	no	ADP	spsg	_	10	case	10:case	_
+10	rīta	rīts	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	8	obl	8:obl:no	SpaceAfter=No
+11	.	.	PUNCT	zs	_	8	punct	8:punct	_
+
+# sent_id = a-tenis3-p2s2
+# text = Alfrēds un Cūkmens uz datorlingvistikas konferenci esot ieradušies no rīta.
+1	Alfrēds	Alfrēds	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	8	nsubj	8:nsubj	_
+2	un	un	CCONJ	cc	_	3	cc	3:cc	_
+3	Cūkmens	Cūkmens	PROPN	npmsn1	Case=Nom|Gender=Masc|Number=Sing	1	conj	1:conj|8:nsubj	_
+4	uz	uz	ADP	spsa	_	6	case	6:case	_
+5	datorlingvistikas	datorlingvistika	NOUN	ncfsg4	Case=Gen|Gender=Fem|Number=Sing	6	nmod	6:nmod:gen	_
+6	konferenci	konference	NOUN	ncfsa5	Case=Acc|Gender=Fem|Number=Sing	8	obl	8:obl:uz	_
+7	esot	būt	VERB	vcnrpii00an	Evident=Nfh|Mood=Qot|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	aux	8:aux	_
+8	ieradušies	ierasties	VERB	vmypdmpnasnp	Aspect=Perf|Case=Nom|Definite=Ind|Degree=Pos|Gender=Masc|Number=Plur|Reflex=Yes|Tense=Past|VerbForm=Part	0	root	0:root	_
+9	no	no	ADP	spsg	_	10	case	10:case	_
+10	rīta	rīts	NOUN	ncmsg1	Case=Gen|Gender=Masc|Number=Sing	8	obl	8:obl:no	SpaceAfter=No
+11	.	.	PUNCT	zs	_	8	punct	8:punct	_

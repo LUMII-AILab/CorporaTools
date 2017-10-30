@@ -38,7 +38,7 @@ sub processDir
 
 	while (defined(my $inFile = $dir->read))
 	{
-		if ((! -d "$dirName/$inFile") and ($inFile =~ /$filter/))
+		if ((-f "$dirName/$inFile") and ($inFile =~ /$filter/))
 		{
 			my $coreName = $inFile =~ /^(.*)\.[^.]*$/ ? $1 : $inFile;
 			$inFile = $coreName if ($noInExt);
