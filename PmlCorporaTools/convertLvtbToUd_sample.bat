@@ -1,3 +1,5 @@
+:: For standard UD / Sembank release, DO NOT FORGET to remove sample data!
+::@if exist .\data\Corpora\Paraugi rmdir .\data\Corpora\Paraugi /Q /S >nul
 
 :: Prepare LVTB data for transforming (your data goes into folder "data")
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --ord mode=TOKEN --knit
