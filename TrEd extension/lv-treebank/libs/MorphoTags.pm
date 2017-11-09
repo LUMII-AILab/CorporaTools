@@ -35,8 +35,8 @@ our %tags = (
 		'4' => '4',
 		'5' => '5',
 		'6' => '6',
-		'r' => 'Reflexive',
-		'g' => 'Genitiveling'}],
+		'g' => 'Genitiveling',
+		'r' => 'Reflexive'}],
 	]],
 'v' => ['Verb', [
 	['Type', {
@@ -61,7 +61,6 @@ our %tags = (
 		'p' => 'Present',
 		'f' => 'Future',
 		's' => 'Past'}],
-
 	['Transitivity', {
 		't' => 'Transitive',
 		'i' => 'Intransitive'}],
@@ -285,9 +284,6 @@ my $xPredHelper = [
 	'l' => 'Locative'}],
 ];
 
-my $xPrepHelper = [
-];
-
 our %phraseTags = (
 #xPred table
 'act' => ['Active voice', $xPredHelper],
@@ -302,14 +298,25 @@ our %phraseTags = (
 'inf' => ['Infinitive predicate', $xPredHelper],
 'num' => ['Numeral predicate', $xPredHelper],
 #xSimile table
-'spk' => ['Secondary predicative component', [
-	['Subtype', {
-		'sd' => 'Similative part'}],
-	]],
+'sim' => ['Similative construction', []],
+'comp' => ['Comparative construction', []],
 #xPrep table
-'pre' => ['Preposition', $xPrepHelper],
-'post' => ['Postposition', $xPrepHelper],
-'rel' => ['Relative adverb', $xPrepHelper],
+'pre' => ['Preposition', []],
+'post' => ['Postposition', []],
+'rel' => ['Relative adverb', []],
+#xParticle table
+'pos' => ['Positive', []],
+'neg' => ['Negative', []],
+#xApp
+'agr' => ['Agreed apposition', []],
+'non' => ['Non-agreed apposition', []],
+#subrAnal
+'vv' => ['Pronominal phrase', []],
+'ipv' => ['Pronomen with adjective', []],
+'skv' => ['Pronomen with nominal', []],
+'set' => ['Selection construction', []],
+'sal' => ['Gramaticalized comparative', []],
+'part' => ['Multiword particle', []],
 );
 
 our $notRecognized = 'NOT RECOGNIZED';

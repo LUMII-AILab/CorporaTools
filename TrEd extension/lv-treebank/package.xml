@@ -6,7 +6,7 @@
   <pkgname>lv-treebank</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>Latvian Treebank Viewing and Annotation</title>
-  <version>3.0</version>
+  <version>3.1</version>
   <copyright year="2012-2017">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides support for viewing and editing annotations of Latvian
 	TreeBank, analytical and morphological layers.
