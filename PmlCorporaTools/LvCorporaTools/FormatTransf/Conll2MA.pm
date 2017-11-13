@@ -126,16 +126,17 @@ END
 		exit 1;
 	}
 
-	my $wName = shift;
-	my $nameStub = $wName =~ /^(.*[\\\/](.*?))(\.w)?$/ ? $2 : $wName;
-	my $outDirName = shift;
-	my $conllName = (shift or "$1.conll");
+	my $wName = shift @_;
+	my $nameStub = ($wName =~ /^(.*[\\\/](.*?))(\.w)?$/ ? $2 : $wName);
+	my $outDirName = shift @_;
+	my $conllName = (shift @_ or "$1.conll");
 
 	my $w = loadXml($wName, \@FORCE_ARRAY_W);
 	my $conllIn = IO::File->new($conllName, '< :encoding(UTF-8)')
 		or die "Could not open file $conllName: $!";
 
-	my $mOut = IO::File->new("$outDirName/$nameStub.m", '> :encoding(UTF-8)');
+	my $mOut = IO::File->new("$outDirName/$nameStub.m", '> :encoding(UTF-8)')
+		or die "Could not initiate $outDirName/$nameStub.m fro writing: $!";
 	my $timeNow = localtime time;
 	printMFileBegin($mOut, $nameStub, "$progname,  $timeNow");
 	my $aOut = IO::File->new("$outDirName/$nameStub.a", '> :encoding(UTF-8)');
@@ -210,7 +211,7 @@ sub _getNextConllContentLine
 	my $line = ($status->{'unusedConll'} or <$conllIn>);
 	my $mustEndSentence = 0;
 	# Process empty lines, if there any.
-	while ($line and $line !~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\s/)
+	while ($line and $line !~ /^(\d+)\t([\S ]+)\t([\S ]+)\t(\S+)\t(\S+)\s/)
 	{
 		$mustEndSentence = 1 if ($status->{'isInsideOfSentence'});
 		$status->{'unusedConll'} = '';
@@ -281,7 +282,7 @@ sub _doOneTokenOrLine
 	}
 
 	# If the provided CoNLL line do not match, there is nothing more to do.
-	return unless ($conllLine and $conllLine =~ /^(\d+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/);
+	return unless ($conllLine and $conllLine =~ /^(\d+)\t([\S ]+)\t([\S ]+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/);
 
 	my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
 	$conllToken =~ s/_/ /g;

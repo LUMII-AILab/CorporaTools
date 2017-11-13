@@ -27,7 +27,7 @@ sub printMFileBegin
 	</head>
 	<meta>
 		<lang>lv</lang>
-		<annotation_info id="semi-automatic"> $annotationInfo</annotation_info>
+		<annotation_info id="semi-automatic">$annotationInfo</annotation_info>
 	</meta>
 
 END

@@ -61,12 +61,6 @@ sub processDir
 					&$processFileFunct($dirName, $inFile, @otherPrams);
 				};
 			}
-			if ($@)
-			{
-				$baddies++;
-				print $@;
-			}
-
 		}
 	}
 	return $baddies;
