@@ -305,7 +305,7 @@ our %phraseTags = (
 'post' => ['Postposition', []],
 'rel' => ['Relative adverb', []],
 #xParticle table
-'pos' => ['Positive', []],
+'aff' => ['Affirmative', []],
 'neg' => ['Negative', []],
 #xApp
 'agr' => ['Agreed apposition', []],
