@@ -1,19 +1,19 @@
 REM Check if w file matches original text.
-::perl -e "use LvCorporaTools::PMLUtils::CheckW qw(processDir); processDir(@ARGV)" data\original
-::@if exist .\data\checkedW rmdir .\data\checkedW /Q /S >nul
-::@move .\data\original\res .\data\checkedW >nul
-::@copy .\data\original\*.a .\data\checkedW >nul
-::@copy .\data\original\*.m .\data\checkedW >nul
+perl -e "use LvCorporaTools::PMLUtils::CheckW qw(processDir); processDir(@ARGV)" data\original
+@if exist .\data\checkedW rmdir .\data\checkedW /Q /S >nul
+@move .\data\original\res .\data\checkedW >nul
+@copy .\data\original\*.a .\data\checkedW >nul
+@copy .\data\original\*.m .\data\checkedW >nul
 REM MANUAL: check if nothing failed!
 
 :: Prepare for next step.
-::@if exist .\data\checkedAll rmdir .\data\checkedAll /Q /S >nul
-::@mkdir .\data\checkedAll >nul
-::@copy .\data\checkedW\*.a .\data\checkedAll\ >nul
-::@copy .\data\checkedW\*.m .\data\checkedAll\ >nul
-::@copy .\data\checkedW\*.w .\data\checkedAll\ >nul
+@if exist .\data\checkedAll rmdir .\data\checkedAll /Q /S >nul
+@mkdir .\data\checkedAll >nul
+@copy .\data\checkedW\*.a .\data\checkedAll\ >nul
+@copy .\data\checkedW\*.m .\data\checkedAll\ >nul
+@copy .\data\checkedW\*.w .\data\checkedAll\ >nul
 REM Check fileset IDs
-::perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
+perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\checkedAll A
 REM MANUAL: check error messages and correct them!
 
 REM Run ID normalization.
