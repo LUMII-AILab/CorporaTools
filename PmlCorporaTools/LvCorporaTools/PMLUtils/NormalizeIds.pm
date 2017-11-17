@@ -49,6 +49,9 @@ Input files should be provided as UTF-8.
 
 Params:
    data directory
+   get paragraph number from filename [opt, bool, false by default]
+   should log-file contain changed empty node IDs [opt, bool, true by default]
+
 Returns:
    count of failed files
 
@@ -57,24 +60,31 @@ END
 		exit 1;
 	}
 
-	my $dir_name = shift @_;
-	my $dir = IO::Dir->new($dir_name) or die "dir $!";
+	my $dirName = shift @_;
+	my $tryParId = shift @_;
+	my $printChangedXIds = (shift @_ or 1);
+	my $dir = IO::Dir->new($dirName) or die "dir $!";
 	my $problems = 0;
 
 	while (defined(my $in_file = $dir->read))
 	{
-		if ((! -d "$dir_name/$in_file") and ($in_file =~ /^(.+)\.w$/))
+		if ((! -d "$dirName/$in_file") and ($in_file =~ /^(.+)\.w$/))
 		{
+			my $hadProblem = 0;
+			my $nameStub = $1;
+			my $sourceId = $nameStub;
 			eval
 			{
-				local $SIG{__WARN__} = sub { $problems++; warn $_[0] }; # This magic makes eval count warnings.
-				normalizeIds ($dir_name, $1, $1, $1);
+				my $firstPara = 1;
+				if ($tryParId and $nameStub =~ /^(.*?)-p(\d+)$/)
+				{
+					$sourceId = $1;
+					$firstPara = $2;
+				}
+				local $SIG{__WARN__} = sub { $hadProblem = 1; warn $_[0] }; # This magic makes eval count warnings.
+				normalizeIds ($dirName, $nameStub, $nameStub, $sourceId, $firstPara, 1, 1, $printChangedXIds);
 			};
-			if ($@)
-			{
-				$problems++;
-				print $@;
-			}
+			$problems = $problems + $hadProblem;
 		}
 	}
 	if ($problems)
@@ -110,7 +120,7 @@ Params:
    ID of the first paragraph [opt, int, 1 used otherwise]
    ID of the first sentence [opt, int, 1 used otherwise]
    ID of the first token [opt, int, 1 used otherwise]
-   should log-file contain changed empty node IDs [opt, boolean, true by default]
+   should log-file contain changed empty node IDs [opt, bool, true by default]
 
 Latvian Treebank project, LUMII, 2011-2017, provided under GPL
 END

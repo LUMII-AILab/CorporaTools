@@ -17,7 +17,10 @@ REM Check fileset IDs
 REM MANUAL: check error messages and correct them!
 
 REM Run ID normalization.
-::perl -e "use LvCorporaTools::PMLUtils::NormalizeIds qw(processDir); processDir(@ARGV)" data\checkedAll
+:: For single paragraph files do this.
+::perl -e "use LvCorporaTools::PMLUtils::NormalizeIds qw(processDir); processDir(@ARGV)" data\checkedAll 1 0
+:: For whole document files do this.
+::perl -e "use LvCorporaTools::PMLUtils::NormalizeIds qw(processDir); processDir(@ARGV)" data\checkedAll 0 0
 :: Move results to a suitable place
 ::@if exist .\data\normalizedIds rmdir .\data\normalizedIds /Q /S >nul
 ::@move .\data\checkedAll\res .\data\normalizedIds >nul
