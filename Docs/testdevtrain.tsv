@@ -125,7 +125,6 @@ train	c32-p7	Rindkopas	c32_r6
 train	c33-p157	Rindkopas	c33_r163
 train	c33-p43	Rindkopas	c33_r45
 train	c33-p6	Rindkopas	c33_r6
-train	c34-p35	Rindkopas	c34_r37
 train	c36-p59	Rindkopas	c36_r59
 train	c37-p140	Rindkopas	c37_r144
 train	c41-p19	Rindkopas	c41_r19
@@ -351,8 +350,6 @@ train	d65-p106	Rindkopas	d65_r114
 train	d67-p12	Rindkopas	d67_r12
 train	d6-p60	Rindkopas	d6_r72
 train	d70-p2	Rindkopas	d70_r2
-train	d76-p115	Rindkopas	d76_r115
-train	d76-p168	Rindkopas	d76_r168
 train	d79-p7	Rindkopas	d79_r7
 train	d79-p77	Rindkopas	d79_r77
 train	d80-p28	Rindkopas	d80_r28
@@ -440,7 +437,6 @@ train	p1267-p5	Rindkopas	p1267_r8
 dev	p1272-p1	Rindkopas	p1272_r0
 dev	p1284-p4	Rindkopas	p1284_r6
 dev	p1297-p4	Rindkopas	p1297_r5
-dev	p1299-p3	Rindkopas	p1299_r2
 dev	p1304-p2	Rindkopas	p1304_r1
 dev	p1309-p8	Rindkopas	p1309_r14
 dev	p1309-p9	Rindkopas	p1309_r16
@@ -449,13 +445,10 @@ train	p1314-p4	Rindkopas	p1314_r6
 train	p1378-p2	Rindkopas	p1378_r2
 train	p1383-p1	Rindkopas	p1383_r0
 train	p1393-p4	Rindkopas	p1393_r6
-train	p1396-p1	Rindkopas	p1396_r0
-train	p140-p10	Rindkopas	p140_r9
 train	p1425-p9	Rindkopas	p1425_r16
 train	p1425-p10	Rindkopas	p1425_r17
 train	p1425-p11	Rindkopas	p1425_r18
 train	p1438-p7	Rindkopas	p1438_r12
-train	p144-p20	Rindkopas	p144_r19
 train	p1450-p13	Rindkopas	p1450_r15
 train	p1454-p4	Rindkopas	p1454_r5
 train	p1464-p3	Rindkopas	p1464_r3
@@ -469,7 +462,6 @@ train	p1499-p3	Rindkopas	p1499_r4
 train	p1523-p8	Rindkopas	p1523_r8
 train	p1527-p6	Rindkopas	p1527_r6
 train	p1536-p4	Rindkopas	p1536_r4
-train	p153-p36	Rindkopas	p153_r35
 train	p1543-p1	Rindkopas	p1543_r0
 train	p1550-p3	Rindkopas	p1550_r3
 train	p1563-p1	Rindkopas	p1563_r0
@@ -789,7 +781,6 @@ train	p951-p6	Rindkopas	p951_r5
 train	p952-p6	Rindkopas	p952_r5
 train	p966-p4	Rindkopas	p966_r3
 train	p968-p3	Rindkopas	p968_r2
-train	p980-p5	Rindkopas	p980_r9
 train	p999-p1	Rindkopas	p999_r0
 train	s14-p144	Rindkopas	s14_r146
 train	s14-p14	Rindkopas	s14_r15
