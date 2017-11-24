@@ -20,3 +20,5 @@
 /PmlCorporaTools/testdata/SplitTrainDevTest/train
 /PmlCorporaTools/testdata/SplitTrainDevTest/dev
 /PmlCorporaTools/testdata/SplitTrainDevTest/not-mentioned
+/PmlCorporaTools/testdata/SplitBinary/on-list
+/PmlCorporaTools/testdata/SplitBinary/off-list
