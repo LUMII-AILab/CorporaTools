@@ -1,21 +1,28 @@
-
-:: Obtain CoNLL-U files as for UD, but do not fold together in one file,
-:: if "Verbu rindkopas" still uses the old naming convention for paragraphs,
-:: e.g., c1_r15-p1, and thus, should not be transformed to file
-:: c1_r15-p1.conllu from c1_r15.conllu.
+:: Obtain CoNLL-U files as for UD, but do not fold together in one file.
 :: Use only Treebank's normalizedIds branch.
 
-::Let's assume all CoNLL-U files are in PmlCorporaTools/data.
-::[Temporary] Separate "Verbu rindkopas" files.
+:: Let's assume all CoNLL-U files are in PmlCorporaTools/data/fullConllu.
+:: Let's assume Treebank repository is right next to CorporaTools.
+
+REM Split according to Sembank ignore list.
+::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitOnOffList); splitOnOffList(@ARGV)" data\fullConllu ..\..\Treebank\Docs\SemBank-ignored.txt data
+::@move .\data\on-list .\data\ignore >nul
+::@move .\data\off-list .\data\good >nul
+
+:: If "Verbu rindkopas" still uses the old naming convention for paragraphs,
+:: e.g., c1_r15-p1, they should not undergo paragraph splitting transformation,
+:: as it would make file names and IDs wrong for these files, e.g.,
+:: c1_r15.conllu to c1_r15-p1.conllu.
+:: To separate "Verbu rindkopas" one can dom something like this:
 ::@mkdir .\data\verbPar >nul
-::@move .\data\*_r*.conllu .\data\verbPar >nul
+::@move .\data\good\*_r*.conllu .\data\verbPar >nul
 
-:: Call paragraph splitter on the rest of the files.
-::@if exist .\data\oldCorpusPara rmdir .\data\oldCorpusPar /Q /S >nul
-::perl -e "use LvCorporaTools::DataSelector::SplitConll2Para qw(processDir); processDir(@ARGV)" data
-::@move .\data\res .\data\oldCorpusPar >nul
+REM Call paragraph splitter on the files.
+::@if exist .\data\splitedPar rmdir .\data\splitedPar /Q /S >nul
+::perl -e "use LvCorporaTools::DataSelector::SplitConll2Para qw(processDir); processDir(@ARGV)" data\good
+::@move .\data\good\res .\data\splitedPar >nul
 
-REM TODO - check against Sembank ignore list.
-:: Use everything else in verbPar and oldCorpusPar
+:: If you separated "Verbu rindkopas" earlier, use data both in verbPar and
+:: splitedPar.
 
 pause
