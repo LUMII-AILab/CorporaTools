@@ -15,6 +15,7 @@
 ::perl -e "use LvCorporaTools::DataSelector::SplitConll2Para qw(processDir); processDir(@ARGV)" data
 ::@move .\data\res .\data\oldCorpusPar >nul
 
-:: Use everything in verbPar and oldCorpusPar
+REM TODO - check against Sembank ignore list.
+:: Use everything else in verbPar and oldCorpusPar
 
 pause
