@@ -487,9 +487,9 @@ public class PhraseTransformator
 	}
 
 	/**
-	 * Transformation for complex predicates. Predicates are splitted in parts,
-	 * each part ending right after mod or basElem. Each part is processed as
-	 * non-modal predicate, then parts are linked in a chain with xcomp links.
+	 * Transformation for complex predicates. Predicates are expected to have
+	 * only one basElem and either one mod or some aux'es. In case of mod,
+	 * baseElem is attached as xcomp to it. Otherwise, noModXPredUD() are used.
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
@@ -505,37 +505,11 @@ public class PhraseTransformator
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
-		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
-				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
-		Node basElem = Utils.getLastByDescOrd(basElems);
-		if (basElem == null)
-			throw new IllegalArgumentException(
-					"\"" + xType +"\" in sentence \"" + s.id + "\" has no basElem.\n");
 		if (mods == null || mods.getLength() < 1)
-			return noModXPredToUD(Utils.asOrderedList(children), xType, xTag);
+			//return noModXPredToUD(Utils.asOrderedList(children), xType, xTag);
+			return noModXPredToUD(xNode, xType, xTag);
 
-		ArrayList<Node> ordChildren = Utils.asOrderedList(children);
-		LinkedList<Node> buffer = new LinkedList<>();
-		buffer.push(ordChildren.get(ordChildren.size()-1));
-		Node latestRoot = null;
-		for (int i = ordChildren.size() - 2; i >= -1; i--)
-		{
-			String role = null;
-			if (i > -1)	role = XPathEngine.get().evaluate("./role", ordChildren.get(i));
-			if (!LvtbRoles.AUXVERB.equals(role))
-			{
-				Node newRoot = buffer.peek();
-				if (buffer.size() > 1)
-					newRoot = noModXPredToUD(buffer, xType, xTag);
-				if (latestRoot != null) // Nothing to add to last xcomp
-					s.setLink(newRoot, latestRoot, UDv2Relations.XCOMP,
-							Tuple.of(UDv2Relations.XCOMP, null), true, true);
-				latestRoot = newRoot;
-				buffer = new LinkedList<>();
-			}
-			if (i >= 0) buffer.push(ordChildren.get(i));
-		}
-		return latestRoot;
+		return s.allUnderLast(xNode, xType, LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
 	}
 
 	/**
@@ -543,7 +517,7 @@ public class PhraseTransformator
 	 * out from xPred processing. Useful for processing either
 	 * active/passive/nominal predicates or for parts of modal predicates.
 	 * Neutral word order assumed.
-	 * @param sortedNodes
+	 * @param xNode
 	 * @param xType
 	 * @return	PML A-level node: root of the corresponding UD structure.
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
@@ -551,20 +525,25 @@ public class PhraseTransformator
 	 * 									algorithmical error.
 	 */
 	protected Node noModXPredToUD(
-			List<Node> sortedNodes, String xType, String xTag)
+			Node xNode, String xType, String xTag)
 	throws XPathExpressionException
 	{
-		Node lastAux = null;
-		Node lastBasElem = null;
-		for (Node n : sortedNodes)
-		{
-			String role = XPathEngine.get().evaluate("./role", n);
-			if (LvtbRoles.AUXVERB.equals(role)) lastAux = n;
-			else lastBasElem = n;
-		}
+		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
+		Node basElem = Utils.getLastByDescOrd(basElems);
+		if (basElem == null)
+			throw new IllegalArgumentException(
+					"\"" + xType +"\" in sentence \"" + s.id + "\" has no basElem.\n");
+		NodeList auxes = (NodeList) XPathEngine.get().evaluate(
+				"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
+		Node lastAux = Utils.getLastByDescOrd(auxes);
+		if (lastAux == null)
+			throw new IllegalArgumentException(
+					"\"" + xType +"\" in sentence \"" + s.id + "\" has neither auxVerb nor mod.\n");
+
 		String auxLemma = Utils.getLemma(lastAux);
 		//String auxTag = Utils.getTag(lastAux);
-		String basElemTag = Utils.getTag(lastBasElem);
+		String basElemTag = Utils.getTag(basElem);
 
 		boolean nominal = false;
 		boolean passive = false;
@@ -581,15 +560,16 @@ public class PhraseTransformator
 			passive = basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
 		}
 
-		Node newRoot = lastBasElem;
-		if (nominal && lastAux != null && !auxLemma.matches("(ne)?būt"))
+		Node newRoot = basElem;
+		if (nominal && !auxLemma.matches("(ne)?būt"))
 			newRoot = lastAux;
-		s.allAsDependents(newRoot, sortedNodes, xType, null, warnOut);
+		NodeList children = Utils.getPMLNodeChildren(xNode);
+		s.allAsDependents(newRoot, children, xType, null, warnOut);
 		// FIXME vai šeit nesakropļo galvu?
-		if (passive && lastAux != null)
+		if (passive)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
 					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);
-		if (nominal && lastAux!= null && auxLemma.matches("(ne)?būt"))
+		if (nominal && auxLemma.matches("(ne)?būt"))
 			s.setLink(newRoot, lastAux, UDv2Relations.COP,
 					Tuple.of(UDv2Relations.COP, null), true, true);
 		return newRoot;
