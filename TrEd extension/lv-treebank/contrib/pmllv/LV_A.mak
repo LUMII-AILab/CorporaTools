@@ -283,7 +283,7 @@ sub hidable_type
 sub xPred_lacks_basElem
 {
   my $node = shift;
-  return 0 if ($node->{'#name'} ne 'xinfo');
+  return 0 if ($node->{'xtype'} ne 'xPred');
   
   foreach $ch ($node->children)
   {
