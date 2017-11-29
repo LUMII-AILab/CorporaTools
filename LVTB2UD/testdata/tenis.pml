@@ -109,7 +109,7 @@
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
-                      <tag>ncfsa0[preyuz]</tag>
+                      <tag>ncfsa0[pre]</tag>
                       <children>
                         <node id="a-tenis-p1s1w4">
                           <m.rf id="m-tenis-p1s1w4">
@@ -161,7 +161,7 @@
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
-                      <tag>ncmsg0[preyno]</tag>
+                      <tag>ncmsg0[pre]</tag>
                       <children>
                         <node id="a-tenis-p1s1w9">
                           <m.rf id="m-tenis-p1s1w9">
