@@ -12,6 +12,7 @@ node:<? ($this eq $root and LV_A::count_pmc_child($this) != 1) ? '#{red}Root mus
 node:<? LV_A::is_unfinished($this) ? '#{red}Empty field!' : ''?>
 node:<? LV_A::is_allowed_for_parent($this) ? '' : '#{red}Role unsuitable for this parent!' ?>
 node:<? (LV_A::is_wrong_empty_node($this) and LV_A::is_phrase_node($this)) ? '#{red}Phrase node must have children!' : '' ?>
+node:<? (LV_A::xPred_lacks_basElem($this) ? '#{red}xPred must have basElem!' : '' ?>
 node:<? (LV_A::is_wrong_empty_node($this) and not LV_A::is_phrase_node($this)) ? '#{red}Node must have reduction, morphology or phrase!' : '' ?>
 node:<? (($${#name} eq 'xinfo') or ($${#name} eq 'coordinfo') 
 	or ($${#name} eq 'pmcinfo')) and ($this->parent)->attr('m/id')
@@ -30,6 +31,7 @@ node:#{darkgreen}${m/tag}${tag}
 node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction:' if $${reduction}?>
 node:<? '#{darkviolet}${reduction}' if $${reduction}?>
+
 style: #{Node-shape:oval}
        #{Oval-fill:Yellow}
        #{CurrentOval-width:2}

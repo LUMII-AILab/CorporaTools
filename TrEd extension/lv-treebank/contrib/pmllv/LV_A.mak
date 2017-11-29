@@ -279,6 +279,19 @@ sub hidable_type
   return 0;
 }
 
+# Warns, if xPred has no basElem.
+sub xPred_lacks_basElem
+{
+  my $node = shift;
+  return 0 if ($node->{'#name'} ne 'xinfo');
+  
+  foreach $ch ($node->children)
+  {
+	return 0 if ($ch->{'role'} eq 'basElem');
+  }
+  return 1;
+}
+
 # Finds, if node has x-node or pmc-node or coord-node as children.
 sub has_nondep_child
 {
