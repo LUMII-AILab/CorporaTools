@@ -85,6 +85,43 @@ sub swich_styles_ord
   SetCurrentStylesheet($st) if StylesheetExists($st);
 }
 
+# Check on various structural errors
+sub get_structural_errors
+{
+  my $node = shift;
+  my @errors = ();
+  push @errors, 'Only one phrase per dependency node allowed!' 
+    if (count_nondep_child($node) > 1);
+  push @errors, 'Empty field!'
+    if (is_unfinished($node));
+  push @errors, 'Role unsuitable for this parent!'
+    if (!is_allowed_for_parent($node));
+  push @errors, 'Node must have reduction, morphology or phrase!'
+    if (is_wrong_empty_node($node) and not is_phrase_node($node));
+  push @errors, 'Phrase are not allowed under node with morphology!'
+    if (($node->{'#name'} eq 'xinfo' or $node->{'#name'} eq 'coordinfo' or $node->{'#name'} eq 'pmcinfo')
+	  and ($node->parent)->attr('m/id'));
+  push @errors, 'Phrase are not allowed under node with reduction!'
+    if (($node->{'#name'} eq 'xinfo' or $node->{'#name'} eq 'coordinfo' or $node->{'#name'} eq 'pmcinfo')
+	  and ($node->parent)->attr('reduction'));
+  push @errors, 'Phrase node must have children!'
+    if (is_wrong_empty_node($node) and is_phrase_node($node));
+
+  if ($node->{'xtype'} eq 'xPred')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+    my $modCount = count_children_with_with_role($node, 'mod');
+    my $auxVerbCount = count_children_with_with_role($node, 'auxVerb');
+    push @errors, 'xPred must have exactly 1 basElem!'
+      if ($basElemCount != 1);
+	push @errors, 'xPred shouldn\'t have multiple mod!'
+      if ($modCount > 1);
+	push @errors, 'xPred shouldn\'t have auxVerb with mod!'
+	  if ($modCount > 0 and $auxVerbCount > 0);
+  }
+  
+  return \@errors;
+}
 
 # Determine wether the given node has 'N/A' values in any field.
 sub is_unfinished
@@ -233,17 +270,21 @@ sub is_allowed_for_parent
 	}
 	return 0;
   }
-  # insertions goes below sentence or below tied.
-  #if ($node->{'role'} eq 'ins')
-  #{
-  #  foreach (@clauses)
-	#{
-	#  return 1 if ($p->{'pmctype'} eq $_);
-	#}
-    #return 1 if ($p->{'pmctype'} eq 'tied');
-	#return 0;
-  #}
   return 1;
+}
+
+# Count children with given role.
+sub count_children_with_with_role
+{
+  my $node = shift;
+  my $role = shift;
+  
+  my $count = 0;
+  foreach $ch ($node->children)
+  {
+	$count++ if ($ch->{'role'} eq $role);
+  }
+  return $count;
 }
 
 sub get_extendend_morpho
@@ -277,19 +318,6 @@ sub hidable_type
 	return 0;
   }
   return 0;
-}
-
-# Warns, if xPred has no basElem.
-sub xPred_lacks_basElem
-{
-  my $node = shift;
-  return 0 if ($node->{'xtype'} ne 'xPred');
-  
-  foreach $ch ($node->children)
-  {
-	return 0 if ($ch->{'role'} eq 'basElem');
-  }
-  return 1;
 }
 
 # Finds, if node has x-node or pmc-node or coord-node as children.
