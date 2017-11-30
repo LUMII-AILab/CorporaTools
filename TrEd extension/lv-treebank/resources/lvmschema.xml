@@ -2,7 +2,7 @@
 <pml_schema
   xmlns="http://ufal.mff.cuni.cz/pdt/pml/schema/"
   version="1.1">
-  <revision>1.0</revision>
+  <revision>1.1</revision>
   <description>Schema for Latvian Treebank morphology layer.</description>
   <reference name="wdata" readas="pml"/>
   
@@ -66,6 +66,7 @@
     <list ordered="0">
       <choice> <!-- labojumu veidi: burta kļūda - OCR vai taml., ievietots vārds no jauna, w līmeni nepareizi saliktas atstarpes, mainīts skaitļu pieraksts.-->
         <value>spell</value>
+        <value>punct</value>
         <value>insert</value>
         <value>spacing</value> <!-- Lieto arī, ja vajag vienu tokenu sadalīt vairākās morfo vienībās. -->
         <value>num_normalization</value>
