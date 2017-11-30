@@ -90,6 +90,8 @@ sub get_structural_errors
 {
   my $node = shift;
   my @errors = ();
+  push @errors, 'Root must have one PMC!'
+    if ($node eq $root and count_pmc_child($node) != 1);
   push @errors, 'Only one phrase per dependency node allowed!' 
     if (count_nondep_child($node) > 1);
   push @errors, 'Empty field!'
