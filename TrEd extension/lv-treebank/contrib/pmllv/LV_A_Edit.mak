@@ -455,19 +455,17 @@ sub _write_new_m
   print "Opening $ref_id, $ref_file.\n";
   #my $m_file = Open($ref_file, ('-keep' => 1)); #Doesn't work for TrEd 2.x
   my $m_file = Open($ref_file);
-  print "$m_sent_id\n";
-  my $foundSent = 0;
-  while (NextTree())
+  print "Serching $m_sent_id...\n";
+  print "Looking at ".$root->attr('id').".\n";
+  my $foundSent = $root->attr('id') eq $m_sent_id;
+  
+  while (NextTree() and not $foundSent)
   {
-    print $root->attr('id');
-	print "\n";
+    print "Looking at ".$root->attr('id')."\n";
 	
-    if ($root->attr('id') eq $m_sent_id)
-	{
-	  $foundSent = 1;
-	  last;
-	}
-  }
+    $foundSent = 1 if ($root->attr('id') eq $m_sent_id);
+  };
+  
   unless ($foundSent)
   {
     print "Could not find sentence $m_sent_id.\n";
