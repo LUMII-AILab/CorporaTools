@@ -112,12 +112,81 @@ sub get_structural_errors
     my $basElemCount = count_children_with_with_role($node, 'basElem');
     my $modCount = count_children_with_with_role($node, 'mod');
     my $auxVerbCount = count_children_with_with_role($node, 'auxVerb');
-    push @errors, 'xPred must have exactly 1 basElem!'
+    push @errors, 'xPred must have one basElem!'
       if ($basElemCount != 1);
 	push @errors, 'xPred shouldn\'t have multiple mod!'
       if ($modCount > 1);
 	push @errors, 'xPred shouldn\'t have auxVerb with mod!'
 	  if ($modCount > 0 and $auxVerbCount > 0);
+  }
+  
+  if ($node->{'xtype'} eq 'xPrep')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+    my $prepCount = count_children_with_with_role($node, 'prep');
+	push @errors, 'xPrep must have one basElem!'
+      if ($basElemCount != 1);
+	push @errors, 'xPrep must have one prep!'
+      if ($prepCount != 1);
+  }
+  
+  if ($node->{'xtype'} eq 'xSimile')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+    my $prepCount = count_children_with_with_role($node, 'conj');
+	push @errors, 'xSimile must have one basElem!'
+      if ($basElemCount != 1);
+	push @errors, 'xSimile must have one conj!'
+      if ($prepCount != 1);
+  }
+  
+  if ($node->{'xtype'} eq 'xParticle')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+    my $prepCount = count_children_with_with_role($node, 'no');
+	push @errors, 'xSimile must have one basElem!'
+      if ($basElemCount != 1);
+	push @errors, 'xSimile must have one no!'
+      if ($prepCount != 1);
+  }
+  
+  if ($node->{'xtype'} eq 'xNum' or $node->{'xtype'} eq 'xApp'
+    or $node->{'xtype'} eq 'namedEnt' or $node->{'xtype'} eq 'unstruct'
+    or $node->{'xtype'} eq 'subrAnal' or $node->{'xtype'} eq 'coordAnal'
+    or $node->{'xtype'} eq 'phrasElem')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+	push @errors, 'Why would '.$node->{'xtype'}.' have so few basElem?'
+      if ($basElemCount < 2);
+  }
+  
+  if ($node->{'#name'} eq 'coordinfo')
+  {
+    my $crdPartCount = count_children_with_with_role($node, 'crdPart');
+	push @errors, 'Why would '.$node->{'coordtype'}.' have so few crdPart?'
+      if ($crdPartCount < 2);
+  }
+  
+  if ($node->{'pmctype'} eq 'sent' or $node->{'pmctype'} eq 'dirSpPmc'
+    or $node->{'pmctype'} eq 'mainCl' or $node->{'pmctype'} eq 'subrCl'
+    or $node->{'pmctype'} eq 'quot')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+    my $predCount = count_children_with_with_role($node, 'pred');
+	push @errors, $node->{'pmctype'}.' must have one pred or basElem!'
+	  if ($basElemCount + $predCount != 1);
+  }
+  elsif ($node->{'pmctype'} eq 'utter')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+	push @errors, $node->{'pmctype'}.' must have basElem!'
+      if ($basElemCount < 1);
+  }
+  elsif ($node->{'#name'} eq 'pmcinfo')
+  {
+    my $basElemCount = count_children_with_with_role($node, 'basElem');
+	push @errors, $node->{'pmctype'}.' must have one basElem!'
+      if ($basElemCount != 1);
   }
   
   return \@errors;
