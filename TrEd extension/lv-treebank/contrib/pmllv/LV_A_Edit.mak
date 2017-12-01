@@ -369,6 +369,9 @@ sub new_child_node
 # Kinda TODO - authors said, it can't be done much better with knitted files.
 sub new_m_node
 {
+  #TrEd::File::save_file( $grp->{focusedWindow} );
+  #print "Moo $grp\n";
+  #print "Moo ".CurrentWindow()."\n";
   my $context = CurrentContext();
   my $stylesheet = GetCurrentStylesheet();
   my $sentid = $root->{'id'};
@@ -403,6 +406,8 @@ sub new_m_node
   
   # Save changes without questions.
   CurrentFile()->save(FileName());
+  #Save();
+  #TrEd::File::do_save_file_as(CurrentWindow(), CurrentFile(), FileName(), CurrentFile()->backend, 'all', 'ask');
 
   # Create new m-level node. This invokes switching to the m-file, editing it,
   # saving it and switching back again.

@@ -171,7 +171,7 @@ sub get_structural_errors
   
   if ($node->{'pmctype'} eq 'sent' or $node->{'pmctype'} eq 'dirSpPmc'
     or $node->{'pmctype'} eq 'mainCl' or $node->{'pmctype'} eq 'subrCl'
-    or $node->{'pmctype'} eq 'quot')
+    or $node->{'pmctype'} eq 'quot' or $node->{'pmctype'} eq 'insPmc')
   {
     my $basElemCount = count_children_with_with_role($node, 'basElem');
     my $predCount = count_children_with_with_role($node, 'pred');
