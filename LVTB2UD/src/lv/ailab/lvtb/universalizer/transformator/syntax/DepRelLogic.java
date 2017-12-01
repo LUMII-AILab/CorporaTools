@@ -196,7 +196,7 @@ public class DepRelLogic
 		// Nominal++ subject
 		// This procesing is somewhat tricky: it is allowed for nsubj and
 		// nsubjpas to be [rci].*, but it is not allowed for nmod.
-		if (tag.matches("[nampxy].*|v..pd.*|[rci].*"))
+		if (tag.matches("[nampxy].*|v..pd.*|[rci].*|y[npa].*]"))
 		{
 			String parentTag = Utils.getTag(parent);
 			String parentEffType = Utils.getEffectiveLabel(parent);
@@ -247,7 +247,7 @@ public class DepRelLogic
 
 			// SPC subject, subject subject ("vienam cīnīties ir grūtāk")
 			else if ((LvtbRoles.SPC.equals(parentEffType) || LvtbRoles.SUBJ.equals(parentEffType))
-					&& !tag.matches("[rci].*"))
+					&& !tag.matches("[rci].*|yr.*]"))
 			{
 				Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
 				if (m.matches())
@@ -257,7 +257,7 @@ public class DepRelLogic
 					if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
 						return Tuple.of(UDv2Relations.OBL, caseString);
 				}
-				if (tag.matches("[xy].*"))
+				if (tag.matches("[x].*"))
 					return Tuple.of(UDv2Relations.OBL, null);
 			}
 
@@ -279,7 +279,7 @@ public class DepRelLogic
 				else if (parentTag.matches("v..[^pn].....p.*"))
 						return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
 				// Infinitive subjects
-				else if (parentTag.matches("v..[np].*") && !tag.matches("[rci].*]"))
+				else if (parentTag.matches("v..[np].*") && !tag.matches("(yr|[rci]).*]"))
 				{
 					Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
 					if (m.matches())
@@ -289,7 +289,7 @@ public class DepRelLogic
 						if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
 							return Tuple.of(UDv2Relations.OBL, caseString);
 					}
-					if (tag.matches("[xy].*"))
+					if (tag.matches("(x|y[npa]).*"))
 						return Tuple.of(UDv2Relations.OBL, null);
 				}
 			}
@@ -343,7 +343,7 @@ public class DepRelLogic
 			if (parentTag.matches("v..([^p]|p[^d]).*") || LvtbXTypes.XPRED.equals(effParentType))
 				return Tuple.of(UDv2Relations.CCOMP, null); // It is impposible safely to distinguish xcomp for now.
 			if (parentTag.matches("v..pd.*")) return Tuple.of(UDv2Relations.XCOMP, null);
-			if (parentTag.matches("[nampxy].*")) return Tuple.of(UDv2Relations.ACL, null);
+			if (parentTag.matches("[nampx].*|y[npa].*")) return Tuple.of(UDv2Relations.ACL, null);
 		}
 		String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", node);
 		// prepositional SPC
@@ -366,10 +366,10 @@ public class DepRelLogic
 			String baseElemTag = Utils.getTag(basElems.item(0));
 			String prepLemma = Utils.getLemma(preps.item(0));
 			if ("par".equals(prepLemma)
-					&& baseElemTag != null && baseElemTag.matches("[nampxy].*")
+					&& baseElemTag != null && baseElemTag.matches("[nampx].*|y[npa].*")
 					&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
 				return Tuple.of(UDv2Relations.XCOMP, null);
-			else if (parentTag.matches("[nampxy].*|v..pd.*"))
+			else if (parentTag.matches("[nampx].*|y[npa].*|v..pd.*"))
 				//return Tuple.of(UDv2Relations.NMOD, prepLemma == null ? null : prepLemma.toLowerCase());
 				return Tuple.of(UDv2Relations.NMOD, prepLemma);
 		}
@@ -377,9 +377,9 @@ public class DepRelLogic
 		// Simple nominal SPC
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
-		if (tag.matches("x.*|y.*") && parentTag.matches("v..p....ps.*"))
+		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|[xy].*"))
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y[npa].*"))
 		{
 			// TODO Optimize to a single match
 			Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
@@ -435,14 +435,13 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.ADVCL, conjLemma);
 			}
 			// Participal SPC, adverbs in commas
-			if (basElemTag.matches("v..p[pu].*|r.*")) return Tuple.of(UDv2Relations.ADVCL, null);
+			if (basElemTag.matches("v..p[pu].*|r.*|yr.*"))
+				return Tuple.of(UDv2Relations.ADVCL, null);
 			// Nominal SPC
-			if (basElemTag.matches("n.*") ||
-					basElemTag.matches("y.*") &&
-					Utils.getLemma(basElems.item(0)).matches("\\p{Lu}+"))
+			if (basElemTag.matches("n.*") || 	basElemTag.matches("y[np].*"))
 				return Tuple.of(UDv2Relations.APPOS, null);
 			// Adjective SPC
-			if (basElemTag.matches("a.*|v..d.*"))
+			if (basElemTag.matches("a.*|v..d.*|ya.*"))
 				return Tuple.of(UDv2Relations.ACL, null);
 		}
 
@@ -466,13 +465,13 @@ public class DepRelLogic
 					return Tuple.of(UDv2Relations.NMOD, caseString);
 			}
 		}
-		if (tag.matches("y.*") || lemma.equals("%"))
+		if (tag.matches("y[np].*") || lemma.equals("%"))
 			return Tuple.of(UDv2Relations.NMOD, null);
-		if (tag.matches("r.*"))
+		if (tag.matches("r.*|yr.*"))
 			return Tuple.of(UDv2Relations.ADVMOD, null);
 		if (tag.matches("m[cf].*|xn.*"))
 			return Tuple.of(UDv2Relations.NUMMOD, null);
-		if (tag.matches("mo.*|xo.*|v..p.*"))
+		if (tag.matches("mo.*|xo.*|v..p.*|ya.*"))
 			return Tuple.of(UDv2Relations.AMOD, null);
 		if (tag.matches("p.*"))
 			return Tuple.of(UDv2Relations.DET, null);
@@ -521,14 +520,14 @@ public class DepRelLogic
 					return Tuple.of(UDv2Relations.OBL, caseString);
 			}
 		}
-		if (tag.matches("x[fo].*|y.*"))
+		if (tag.matches("x[fo].*|y[npa].*"))
 			return Tuple.of(UDv2Relations.OBL, null);
 
 		String lemma = Utils.getLemma(node);
 
-		if (tag.matches("r.*") || lemma.equals("%"))
+		if (tag.matches("r.*|yr.*") || lemma.equals("%"))
 			return Tuple.of(UDv2Relations.ADVMOD, null);
-		if (tag.matches("q.*"))
+		if (tag.matches("q.*|yd.*"))
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
@@ -546,7 +545,7 @@ public class DepRelLogic
 			if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
 				return Tuple.of(UDv2Relations.OBL, caseString);
 		}
-		if (tag.matches("[xy].*"))
+		if (tag.matches("x.*|y[npa].*"))
 			return Tuple.of(UDv2Relations.OBL, null);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
@@ -561,11 +560,10 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.VOCATIVE, null);
 		if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
-		if (tag != null && tag.matches("[qi].*"))
-			return Tuple.of(UDv2Relations.DISCOURSE, null);
-
 		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 			return Tuple.of(UDv2Relations.CONJ, null);
+		if (tag != null && tag.matches("[qi].*|yd.*"))
+			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
 	}

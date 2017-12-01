@@ -84,14 +84,19 @@ public class PosLogic
 		else if (xpostag.matches("i.*")) return UDv2PosTag.INTJ;
 		else if (xpostag.matches("q.*")) return UDv2PosTag.PART;
 		else if (xpostag.matches("z.*")) return UDv2PosTag.PUNCT;
-		else if (xpostag.matches("z.*")) return UDv2PosTag.PUNCT;
-		else if (xpostag.matches("y.*"))
+		else if (xpostag.matches("yn.*")) return UDv2PosTag.NOUN;
+		else if (xpostag.matches("yp.*")) return UDv2PosTag.PROPN;
+		else if (xpostag.matches("ya.*")) return UDv2PosTag.ADJ;
+		else if (xpostag.matches("yv.*")) return UDv2PosTag.VERB;
+		else if (xpostag.matches("yr.*")) return UDv2PosTag.ADV;
+		else if (xpostag.matches("yd.*")) return UDv2PosTag.SYM;
+		/*else if (xpostag.matches("y.*"))
 		{
 			if (comprLemma.matches("\\p{Lu}+")) return UDv2PosTag.PROPN;
 			else if (comprLemma.matches("(utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.)")) return UDv2PosTag.SYM;
 			else if (comprLemma.matches("\\p{Ll}+-\\p{Ll}")) return UDv2PosTag.NOUN; // Or rarely PROPN
 			else return UDv2PosTag.SYM; // Or sometimes PROPN/NOUN
-		}
+		}*/
 		else if (xpostag.matches("xf.*")) return UDv2PosTag.X; // Or sometimes PROPN/NOUN
 		else if (xpostag.matches("xn.*")) return UDv2PosTag.NUM;
 		else if (xpostag.matches("xo.*")) return UDv2PosTag.ADJ;
