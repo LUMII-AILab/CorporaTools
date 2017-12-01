@@ -505,10 +505,18 @@ public class PhraseTransformator
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
+		// If this is not a modal predicate, do some complicated stuff...
 		if (mods == null || mods.getLength() < 1)
-			//return noModXPredToUD(Utils.asOrderedList(children), xType, xTag);
 			return noModXPredToUD(xNode, xType, xTag);
 
+		// If this is a modal predicate, check if the tag is appropriate, and
+		// then just put basElem under mod.
+		String subtag = xTag != null && xTag.contains("[") ?
+				xTag.substring(xTag.indexOf("[" + 1)) : "";
+		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
+				&& !subtag.startsWith("phase"))
+			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
+					Utils.getId(Utils.getPMLParent(xNode)), xTag);
 		return s.allUnderLast(xNode, xType, LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
 	}
 
@@ -550,18 +558,28 @@ public class PhraseTransformator
 		if (xTag != null && xTag.contains("["))
 		{
 			String subtag = xTag.substring(xTag.indexOf("[" + 1));
-			passive = subtag.startsWith("pas");
-			nominal = subtag.startsWith("subst") || subtag.startsWith("adj") || subtag.startsWith("pronom");
+			if (subtag.startsWith("pass"))
+				passive = true;
+			else if (subtag.startsWith("subst") || subtag.startsWith("adj") ||
+					subtag.startsWith("pronom") || subtag.startsWith("adv") ||
+					subtag.startsWith("inf") || subtag.startsWith("num"))
+				nominal = true;
+			else if (!subtag.startsWith("act"))
+				warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
+						Utils.getId(Utils.getPMLParent(xNode)), xTag);
 		}
+		// TODO atteikties no šīs analīzes.
 		else if (basElemTag != null)
 		{
-			nominal = basElemTag.matches("[napxm].*|v..pd...[ap]p.*]") ||
+			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
+					Utils.getId(Utils.getPMLParent(xNode)), xTag);
+			nominal = basElemTag.matches("[napxm].*|v..n.*|v..pd...[ap]p.*]") ||
 					basElemTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
 			passive = basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
 		}
 
 		Node newRoot = basElem;
-		if (nominal && !auxLemma.matches("(ne)?būt"))
+		if (nominal && !auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)"))
 			newRoot = lastAux;
 		NodeList children = Utils.getPMLNodeChildren(xNode);
 		s.allAsDependents(newRoot, children, xType, null, warnOut);
@@ -569,7 +587,7 @@ public class PhraseTransformator
 		if (passive)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
 					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);
-		if (nominal && auxLemma.matches("(ne)?būt"))
+		if (nominal && auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)"))
 			s.setLink(newRoot, lastAux, UDv2Relations.COP,
 					Tuple.of(UDv2Relations.COP, null), true, true);
 		return newRoot;
