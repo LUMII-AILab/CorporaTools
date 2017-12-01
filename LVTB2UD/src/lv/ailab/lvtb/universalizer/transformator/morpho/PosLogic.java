@@ -35,8 +35,11 @@ public class PosLogic
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;
-		else if (xpostag.matches("v..[^p].*")) return UDv2PosTag.VERB;
-		else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
+		else if (xpostag.matches("v[c].*") && comprLemma.matches("(ne)?būt")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[t].*") && comprLemma.matches("(ne)?(kļūt|tikt|tapt)")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v.*")) return UDv2PosTag.VERB;
+		//else if (xpostag.matches("v..[^p].*")) return UDv2PosTag.VERB;
+		//else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
 		else if (xpostag.matches("a.*"))
 		{
 			if (comprLemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
