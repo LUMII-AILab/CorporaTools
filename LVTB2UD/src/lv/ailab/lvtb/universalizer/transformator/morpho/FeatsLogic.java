@@ -51,24 +51,9 @@ public class FeatsLogic
 		if (xpostag.matches("mo.*") && !comprLemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_DEF);
 
 		//if (xpostag.matches("a.....p.*|rp.*|v.ypd.*")) res.add(UDv2Feat.DEGREE_POS);
-		if (xpostag.matches("a.....p.*|rp.*|mo.*")) res.add(UDv2Feat.DEGREE_POS);
-		if (xpostag.matches("a.....c.*|rc.*")) res.add(UDv2Feat.DEGREE_CMP);
-		if (xpostag.matches("a.....s.*|rs.*")) res.add(UDv2Feat.DEGREE_SUP);
-		if (xpostag.matches("v..pd.*") && form != null)
-		{
-			Wordform correctOne = AnalyzerWrapper.getAVPairs(form, xpostag, warnOut);
-			if (correctOne == null)
-				warnOut.println("Could not initialize Morphology, Degree for participles is not added.");
-			else{
-				String degree = correctOne.getValue(AttributeNames.i_Degree);
-				if (degree == null || degree.equals(AttributeNames.v_Positive)) res.add(UDv2Feat.DEGREE_POS);
-				else if (degree.equals(AttributeNames.v_Comparative)) res.add(UDv2Feat.DEGREE_CMP);
-				else if (degree.equals(AttributeNames.v_Superlative)) res.add(UDv2Feat.DEGREE_SUP);
-				else warnOut.printf("\"%s\" with tag %s has unrecognized degree value %s",
-							form, xpostag, degree);
-			}
-			// TODO: Pēc tagseta izmaiņām pārtaisīt uz taga analīzi.
-		}
+		if (xpostag.matches("a.....p.*|v..pd......p.*|rp.*|mo.*")) res.add(UDv2Feat.DEGREE_POS);
+		if (xpostag.matches("a.....c.*|v..pd......c.*|rc.*")) res.add(UDv2Feat.DEGREE_CMP);
+		if (xpostag.matches("a.....s.*|v..pd......s.*|rs.*")) res.add(UDv2Feat.DEGREE_SUP);
 		// Patalogical cases like "pirmākais un vispirmākais" are not represented.
 
 		// Inflectional features: verbal
