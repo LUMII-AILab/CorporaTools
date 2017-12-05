@@ -6,10 +6,11 @@
 #include "LV_A.mak"
 
 package LV_A_PureDependency;
+use strict;
 
 #binding-context LV_A_PureDependency
 
-BEGIN { import LV_A; }
+BEGIN { import TredMacro; import LV_A; }
 
 sub node_release_hook     { 'stop' };
 sub enable_attr_hook      { 'stop' };

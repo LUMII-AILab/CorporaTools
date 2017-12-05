@@ -15,5 +15,6 @@ package LVPML;
 #binding-context LV_M
 #include "LV_M.mak"
 
-
 #endif lv-treebank
+
+1;

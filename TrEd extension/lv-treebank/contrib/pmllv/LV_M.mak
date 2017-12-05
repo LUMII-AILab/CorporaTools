@@ -3,9 +3,10 @@
 #ifndef LV_M
 #define LV_M
 
+#include <contrib/pml/PML.mak>
+
 package LV_M;
 use strict;
-
 use MorphoTags;
 
 BEGIN { import TredMacro; import PML; }
@@ -182,6 +183,8 @@ sub get_tag_errors
 
 
 #binding-context LV_M
+
+#bind Save to Ctrl+s menu Save
 #bind Redraw_All to Alt+r menu Redraw
 
 #bind new_brother_after to a menu New Node After Current

@@ -7,6 +7,7 @@
 
 package LV_A_Edit;
 use strict;
+use Treex::PML;
 
 BEGIN { import LV_A; import PML; }
 
@@ -163,30 +164,6 @@ sub _has_ord_child
 	return 0;
 }
 
-#sub _give_ord_everybody3
-#{
-#	my $tree = shift;
-#	# Process children recursively.
-#	for my $ch ($tree->children)
-#	{
-#		&_give_ord_everybody2($ch);
-#	}
-#	
-#	# Obtain new id if given node has no ord.
-#	my $new_id = 0;
-#	if ($tree->attr('ord') le 0)
-#	{
-#		my $follower = $tree->following;
-#		while ($follower and $follower->attr('ord') le 0)
-#		{
-#			$follower = $follower->following;
-#		}
-#		$new_id = $follower->attr('ord') if ($follower);
-#		&_rise_ords($new_id);
-#		$tree->set_attr('ord', $new_id)
-#	}	
-#}
-
 # Support function.
 # Adds +1 to each ord, which is equal or greater than integer recieved as
 # first parameter.
@@ -239,10 +216,6 @@ sub new_xinfo_node
   $n->{'xtype'}='N/A';
   $n->{'tag'}='N/A';
   $this = $n;
-#  TredMacro::PlainNewSon($this);
-#  $this->{'#name'}='xinfo';
-#  $this->{'xtype'}='N/A';
-#  $this->{'tag'}='N/A';
 }
 
 # Create new PMC node.
@@ -279,9 +252,6 @@ sub new_coordinfo_node
   $n->{'coordtype'}='N/A';
   $this = $n;
 
-  #TredMacro::PlainNewSon($this);
-  #$this->{'#name'}='coordinfo';
-  #$this->{'coordtype'}='N/A';
 }
 
 # Create backbone structure for coordinated clauses.
@@ -348,7 +318,6 @@ sub new_coordcl_struct
 # Create new ordinary empty node.
 sub new_child_node
 {
-  #TredMacro::PlainNewSon($this);
   my $sentid = $root->{'id'};
   my $n = Treex::PML::Factory->createTypedNode(
 	'a-node.type', $root->type->schema); 
@@ -358,10 +327,6 @@ sub new_child_node
   $n->{'role'}='N/A';
   $this = $n;
 
-#  $sentid .= 'x' . &_get_next_id('x');
-#  $this->{'#name'} = 'node';
-#  $this->{'id'} = $sentid;
-#  $this->{'role'}='N/A';
 }
 
 # Create new ordinary node with "place" for morphology.
@@ -369,9 +334,7 @@ sub new_child_node
 # Kinda TODO - authors said, it can't be done much better with knitted files.
 sub new_m_node
 {
-  #TrEd::File::save_file( $grp->{focusedWindow} );
-  #print "Moo $grp\n";
-  #print "Moo ".CurrentWindow()."\n";
+  
   my $context = CurrentContext();
   my $stylesheet = GetCurrentStylesheet();
   my $sentid = $root->{'id'};
@@ -405,9 +368,12 @@ sub new_m_node
   }
   
   # Save changes without questions.
+  foreach (GetSecondaryFiles())
+  {
+	$_->save();
+  }
   CurrentFile()->save(FileName());
-  #Save();
-  #TrEd::File::do_save_file_as(CurrentWindow(), CurrentFile(), FileName(), CurrentFile()->backend, 'all', 'ask');
+
 
   # Create new m-level node. This invokes switching to the m-file, editing it,
   # saving it and switching back again.
@@ -686,6 +652,8 @@ sub remove_single_child_x
 #bind normalize_m_ords_all_trees to Ctrl+Alt+w menu Recalculate Word Order for All Trees (might take some time)
 #bind normalize_n_ords to Ctrl+n menu Recalculate Node Order (give ords for empty nodes)
 #bind normalize_n_ords_all_trees to Ctrl+Alt+n menu Recalculate Node Order for All Trees (might take some time)
+
+#bind Save to Ctrl+s menu Save
 
 #bind Redraw_All to Alt+r menu Redraw
 #bind swich_styles_vert to Alt+v menu Switch On/Off Vertical Layout

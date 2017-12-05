@@ -7,7 +7,7 @@ text:<? $${m/w/token}eq$${m/form} ?
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
 node:#{darkblue}${role}
 node:#{darkblue}<?
-  my $hid = LV_A_View::has_nondep_child($this);
+  my $hid = LV_A::has_nondep_child($this);
   if ($hid)
   {
     my $rez = '#{darkblue}';
@@ -23,7 +23,7 @@ node:#{darkblue}<?
       if ($_->attr('ord') > 0) {
         $ords{$_->attr('ord')} = ($_->attr('m/form'));
       }
-		my $hid_ch = LV_A_View::has_nondep_child($_);
+		my $hid_ch = LV_A::has_nondep_child($_);
 		if($hid_ch) {
           $subrez .= ' '.$hid_ch->attr('xtype') if ($hid_ch->attr('#name') eq 'xinfo');
           $subrez .= ' '.$hid_ch->attr('pmctype') if ($hid_ch->attr('#name') eq 'pmcinfo');
