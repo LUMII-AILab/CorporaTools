@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ccb0d92-6049-4ca0-a00a-85cb42c5ad1f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/FileTransformator.java" afterPath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/FileTransformator.java" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java" afterPath="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java" />
+      <change beforePath="$PROJECT_DIR$/testdata/zeens.pml" afterPath="$PROJECT_DIR$/testdata/zeens.pml" />
+      <change beforePath="$PROJECT_DIR$/../PmlCorporaTools/convertLvtbToUd_sample.bat" afterPath="$PROJECT_DIR$/../PmlCorporaTools/convertLvtbToUd_sample.bat" />
     </list>
     <ignored path="LVTB2UD.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -22,28 +24,7 @@
     <favorites_list name="LVTB2UD" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="LvtbToUdUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="76" column="43" lean-forward="true" selection-start-line="76" selection-start-column="43" selection-end-line="76" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileTransformator.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/FileTransformator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-241">
-              <caret line="63" column="13" lean-forward="false" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -55,8 +36,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Syst</find>
-      <find>sy</find>
       <find>syste</find>
       <find>system</find>
       <find>proces</find>
@@ -85,6 +64,8 @@
       <find>Xprep</find>
       <find>group</find>
       <find>caseLetter</find>
+      <find>newDoc</find>
+      <find>allAsDependents</find>
     </findStrings>
     <dirStrings>
       <dir>C:\!LaumasDoc\Git\CorporaTools\LVTB2UD\src</dir>
@@ -131,27 +112,27 @@
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/MorphoTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/util/Tuple.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/MorphoTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/util/XPathEngine.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/AnalyzerWrapper.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/PosLogic.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/FeatsLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/EnhancedSyntaxTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/BaseSyntaxTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/conllu/Token.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/SentenceTransformEngine.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/conllu/UDv2Feat.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/TreesyntaxTransformator.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/pml/Utils.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/EllipsisLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/conllu/EnhencedDep.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/GraphsyntaxTransformator.java" />
-        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java" />
         <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/FileTransformator.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/MorphoTransformator.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/PosLogic.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/FeatsLogic.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java" />
+        <option value="$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java" />
       </list>
     </option>
   </component>
@@ -224,8 +205,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -233,45 +212,12 @@
               <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
               <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lv" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lv" type="462c0819:PsiDirectoryNode" />
-              <item name="ailab" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lv" type="462c0819:PsiDirectoryNode" />
-              <item name="ailab" type="462c0819:PsiDirectoryNode" />
-              <item name="lvtb" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LVTB2UD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LVTB2UD" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lv" type="462c0819:PsiDirectoryNode" />
-              <item name="ailab" type="462c0819:PsiDirectoryNode" />
-              <item name="lvtb" type="462c0819:PsiDirectoryNode" />
-              <item name="universalizer" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -303,7 +249,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.build.xml">
+  <component name="RunManager">
+    <configuration name="build.xml" type="AntRunConfiguration" factoryName="Ant Target" />
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -486,7 +433,6 @@
       <option name="initCode" value="" />
       <method />
     </configuration>
-    <configuration name="build.xml" type="AntRunConfiguration" factoryName="Ant Target" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -506,20 +452,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1286" height="776" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23029366" sideWeight="0.4968701" order="7" side_tool="false" content_ui="tabs" x="353" y="566" width="713" height="118" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22992127" sideWeight="0.4968701" order="7" side_tool="false" content_ui="tabs" x="353" y="566" width="713" height="118" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23287672" sideWeight="0.5031299" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23149607" sideWeight="0.5031299" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24433658" sideWeight="0.38485804" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24433658" sideWeight="0.6151419" order="1" side_tool="true" content_ui="tabs" x="25" y="118" width="310" height="512" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26860842" sideWeight="0.31496063" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26860842" sideWeight="0.68503934" order="1" side_tool="true" content_ui="tabs" x="25" y="118" width="310" height="512" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12216829" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -545,7 +490,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="15" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java</url>
+          <line>159</line>
+          <properties />
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="16" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -762,27 +715,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/PosLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1672">
-          <caret line="97" column="25" lean-forward="false" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/FeatsLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1064">
-          <caret line="56" column="46" lean-forward="false" selection-start-line="56" selection-start-column="42" selection-end-line="56" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/MorphoTransformator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1767">
-          <caret line="74" column="29" lean-forward="false" selection-start-line="74" selection-start-column="27" selection-end-line="74" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/util/Tuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
@@ -815,7 +747,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="402">
           <caret line="63" column="5" lean-forward="false" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -823,14 +754,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="269">
           <caret line="116" column="9" lean-forward="false" selection-start-line="116" selection-start-column="9" selection-end-line="116" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1357">
-          <caret line="593" column="53" lean-forward="false" selection-start-line="593" selection-start-column="53" selection-end-line="593" selection-end-column="53" />
         </state>
       </provider>
     </entry>
@@ -838,13 +761,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1577">
           <caret line="88" column="14" lean-forward="false" selection-start-line="88" selection-start-column="14" selection-end-line="88" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-988">
-          <caret line="143" column="9" lean-forward="true" selection-start-line="143" selection-start-column="9" selection-end-line="143" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -859,7 +775,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
           <caret line="162" column="26" lean-forward="false" selection-start-line="162" selection-start-column="26" selection-end-line="162" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -867,15 +782,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
           <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/TreesyntaxTransformator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="63" column="19" lean-forward="false" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -883,14 +789,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="269">
           <caret line="90" column="55" lean-forward="true" selection-start-line="90" selection-start-column="55" selection-end-line="90" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="391" column="43" lean-forward="true" selection-start-line="391" selection-start-column="43" selection-end-line="391" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -901,26 +799,81 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java">
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4560">
-          <caret line="253" column="37" lean-forward="false" selection-start-line="253" selection-start-column="27" selection-end-line="253" selection-end-column="37" />
+        <state relative-caret-position="19">
+          <caret line="76" column="43" lean-forward="false" selection-start-line="76" selection-start-column="43" selection-end-line="76" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/FeatsLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-641">
+          <caret line="53" column="53" lean-forward="false" selection-start-line="53" selection-start-column="39" selection-end-line="53" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/LvtbToUdUI.java">
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/Sentence.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="76" column="43" lean-forward="true" selection-start-line="76" selection-start-column="43" selection-end-line="76" selection-end-column="43" />
+        <state relative-caret-position="142">
+          <caret line="300" column="35" lean-forward="false" selection-start-line="300" selection-start-column="35" selection-end-line="300" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/FileTransformator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-241">
-          <caret line="63" column="13" lean-forward="false" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+        <state relative-caret-position="19">
+          <caret line="39" column="7" lean-forward="false" selection-start-line="39" selection-start-column="7" selection-end-line="39" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/TreesyntaxTransformator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="227" column="62" lean-forward="false" selection-start-line="227" selection-start-column="62" selection-end-line="227" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/MorphoTransformator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="722">
+          <caret line="203" column="45" lean-forward="false" selection-start-line="203" selection-start-column="45" selection-end-line="203" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/morpho/PosLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1596">
+          <caret line="98" column="11" lean-forward="false" selection-start-line="98" selection-start-column="11" selection-end-line="98" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhraseTransformator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="71">
+          <caret line="533" column="23" lean-forward="false" selection-start-line="533" selection-start-column="23" selection-end-line="533" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/DepRelLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="667" column="60" lean-forward="false" selection-start-line="667" selection-start-column="60" selection-end-line="667" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lv/ailab/lvtb/universalizer/transformator/syntax/PhrasePartDepLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="199" column="0" lean-forward="true" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
           <folding />
         </state>
       </provider>

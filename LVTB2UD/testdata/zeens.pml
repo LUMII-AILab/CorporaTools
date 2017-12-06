@@ -2719,7 +2719,7 @@
                   <role>subj</role>
                   <ord>1</ord>
                 </node>
-                <node id="a-zeens-p14s2x2">
+                <node id="a-zeens-p14s2x1">
                   <role>dirSp</role>
                   <children>
                     <pmcinfo>
@@ -2738,7 +2738,7 @@
                           <role>punct</role>
                           <ord>3</ord>
                         </node>
-                        <node id="a-zeens-p14s2x3">
+                        <node id="a-zeens-p14s2x2">
                           <role>basElem</role>
                           <children>
                             <pmcinfo>
@@ -2770,7 +2770,7 @@
                                   <role>no</role>
                                   <ord>6</ord>
                                 </node>
-                                <node id="a-zeens-p14s2x4">
+                                <node id="a-zeens-p14s2x3">
                                   <role>pred</role>
                                   <children>
                                     <xinfo>
@@ -2862,17 +2862,17 @@
                   <coordtype>crdParts</coordtype>
                   <tag>vmnist030an</tag>
                   <children>
-                    <node id="a-zeens-p14s3x5">
+                    <node id="a-zeens-p14s3x2">
                       <reduction>vmnist03san</reduction>
                       <role>crdPart</role>
                       <children>
-                        <node id="a-zeens-p14s3x3">
+                        <node id="a-zeens-p14s3x4">
                           <role>dirSp</role>
                           <children>
                             <pmcinfo>
                               <pmctype>dirSpPmc</pmctype>
                               <children>
-                                <node id="a-zeens-p14s3x4">
+                                <node id="a-zeens-p14s3x5">
                                   <role>basElem</role>
                                   <children>
                                     <pmcinfo>
@@ -2944,7 +2944,7 @@
                         </node>
                       </children>
                     </node>
-                    <node id="a-zeens-p14s3x2">
+                    <node id="a-zeens-p14s3x3">
                       <role>crdPart</role>
                       <children>
                         <xinfo>
@@ -5598,6 +5598,227 @@
         </pmcinfo>
       </children>
     </LM>
+    <LM id="a-zeens-p27s3">
+      <s.rf>m#m-zeens-p27s3</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-zeens-p27s3x1">
+              <role>no</role>
+              <children>
+                <pmcinfo>
+                  <pmctype>particle</pmctype>
+                  <children>
+                    <node id="a-zeens-p27s3w2">
+                      <m.rf id="m-zeens-p27s3w2">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-zeens-p27w12">
+                          <token>,</token>
+                        </w.rf>
+                        <form>,</form>
+                        <lemma>,</lemma>
+                        <tag>zc</tag>
+                      </m.rf>
+                      <role>punct</role>
+                      <ord>2</ord>
+                    </node>
+                    <node id="a-zeens-p27s3w3">
+                      <m.rf id="m-zeens-p27s3w3">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-zeens-p27w13">
+                          <token>vai</token>
+                          <no_space_after>1</no_space_after>
+                        </w.rf>
+                        <form>vai</form>
+                        <lemma>vai</lemma>
+                        <tag>q</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>3</ord>
+                    </node>
+                    <node id="a-zeens-p27s3w4">
+                      <m.rf id="m-zeens-p27s3w4">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-zeens-p27w14">
+                          <token>,</token>
+                        </w.rf>
+                        <form>,</form>
+                        <lemma>,</lemma>
+                        <tag>zc</tag>
+                      </m.rf>
+                      <role>punct</role>
+                      <ord>4</ord>
+                    </node>
+                  </children>
+                </pmcinfo>
+              </children>
+            </node>
+            <node id="a-zeens-p27s3w7">
+              <m.rf id="m-zeens-p27s3w7">
+                <src.rf>annotator</src.rf>
+                <w.rf id="w-zeens-p27w17">
+                  <token>?</token>
+                </w.rf>
+                <form>?</form>
+                <lemma>?</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>7</ord>
+            </node>
+            <node id="a-zeens-p27s3x2">
+              <role>pred</role>
+              <children>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vm0ip001san[adjpfn]</tag>
+                  <children>
+                    <node id="a-zeens-p27s3x3">
+                      <role>auxVerb</role>
+                      <children>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vt0ip001san[actpfn]</tag>
+                          <children>
+                            <node id="a-zeens-p27s3w5">
+                              <m.rf id="m-zeens-p27s3w5">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p27w15">
+                                  <token>esmu</token>
+                                </w.rf>
+                                <form>esmu</form>
+                                <lemma>būt</lemma>
+                                <tag>vcnipii1san</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>5</ord>
+                            </node>
+                            <node id="a-zeens-p27s3w6">
+                              <m.rf id="m-zeens-p27s3w6">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p27w16">
+                                  <token>palikusi</token>
+                                  <no_space_after>1</no_space_after>
+                                </w.rf>
+                                <form>palikusi</form>
+                                <lemma>palikt</lemma>
+                                <tag>vtnpdfsnasnp</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>6</ord>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p27s3w1">
+                      <m.rf id="m-zeens-p27s3w1">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-zeens-p27w11">
+                          <token>Veca</token>
+                          <no_space_after>1</no_space_after>
+                        </w.rf>
+                        <form>Veca</form>
+                        <lemma>veca</lemma>
+                        <tag>affsnnp</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </xinfo>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-zeens-p27s4">
+      <s.rf>m#m-zeens-p27s4</s.rf>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-zeens-p27s4w4">
+              <m.rf id="m-zeens-p27s4w4">
+                <src.rf>annotator</src.rf>
+                <w.rf id="w-zeens-p27w21">
+                  <token>!</token>
+                </w.rf>
+                <form>!</form>
+                <lemma>!</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>4</ord>
+            </node>
+            <node id="a-zeens-p27s4x1">
+              <role>pred</role>
+              <children>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vm0ip001san[adjpfn]</tag>
+                  <children>
+                    <node id="a-zeens-p27s4x2">
+                      <role>auxVerb</role>
+                      <children>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vt0ip001san[actpfn]</tag>
+                          <children>
+                            <node id="a-zeens-p27s4w2">
+                              <m.rf id="m-zeens-p27s4w2">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p27w19">
+                                  <token>šķietu</token>
+                                </w.rf>
+                                <form>šķietu</form>
+                                <lemma>šķist</lemma>
+                                <tag>vtnipi11san</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>2</ord>
+                            </node>
+                            <node id="a-zeens-p27s4w3">
+                              <m.rf id="m-zeens-p27s4w3">
+                                <src.rf>annotator</src.rf>
+                                <w.rf id="w-zeens-p27w20">
+                                  <token>palikusi</token>
+                                  <no_space_after>1</no_space_after>
+                                </w.rf>
+                                <form>palikusi</form>
+                                <lemma>palikt</lemma>
+                                <tag>vtnpdfsnasnp</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>3</ord>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                    <node id="a-zeens-p27s4w1">
+                      <m.rf id="m-zeens-p27s4w1">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-zeens-p27w18">
+                          <token>Veca</token>
+                        </w.rf>
+                        <form>Veca</form>
+                        <lemma>veca</lemma>
+                        <tag>affsnnp</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </xinfo>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
     <LM id="a-zeens-p28s1">
       <s.rf>m#m-zeens-p28s1</s.rf>
       <children>
@@ -7904,7 +8125,7 @@
                   <children>
                     <xinfo>
                       <xtype>subrAnal</xtype>
-                      <tag>N/A</tag>
+                      <tag>pi0msny[set]</tag>
                       <children>
                         <node id="a-zeens-p42s1w1">
                           <m.rf id="m-zeens-p42s1w1">

@@ -505,26 +505,39 @@ public class PhraseTransformator
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
-		// If this is not a modal predicate, do some complicated stuff...
 		if (mods == null || mods.getLength() < 1)
 			return noModXPredToUD(xNode, xType, xTag);
+		else return modXPredToUD(xNode, xType, xTag);
+	}
 
-		// If this is a modal predicate, check if the tag is appropriate, and
-		// then just put basElem under mod.
+	/**
+	 * Specific helper function: implementation of modal predication logic,
+	 * split out from xPred processing.
+	 * @param xNode
+	 * @param xType
+	 * @return	PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */	protected Node modXPredToUD(
+			Node xNode, String xType, String xTag)
+	throws XPathExpressionException
+	{
+		// Check if the tag is appropriate.
 		String subtag = xTag != null && xTag.contains("[") ?
 				xTag.substring(xTag.indexOf("[" + 1)) : "";
 		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
 				&& !subtag.startsWith("phase"))
 			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
 					Utils.getId(Utils.getPMLParent(xNode)), xTag);
-		return s.allUnderLast(xNode, xType, LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
+		// Just put basElem under mod.
+		return s.allUnderLast(xNode, xType,
+				LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
 	}
 
 	/**
 	 * Specific helper function: implementation of aux/auxpass/cop logic, split
-	 * out from xPred processing. Useful for processing either
-	 * active/passive/nominal predicates or for parts of modal predicates.
-	 * Neutral word order assumed.
+	 * out from xPred processing.
 	 * @param xNode
 	 * @param xType
 	 * @return	PML A-level node: root of the corresponding UD structure.
@@ -536,6 +549,7 @@ public class PhraseTransformator
 			Node xNode, String xType, String xTag)
 	throws XPathExpressionException
 	{
+		// Get basElems and warn if there is none.
 		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
 		Node basElem = Utils.getLastByDescOrd(basElems);
@@ -548,9 +562,16 @@ public class PhraseTransformator
 		if (lastAux == null)
 			throw new IllegalArgumentException(
 					"\"" + xType +"\" in sentence \"" + s.id + "\" has neither auxVerb nor mod.\n");
+		if (auxes.getLength() > 1) for (int i = 0; i < auxes.getLength(); i++)
+		{
+			String auxLemma = Utils.getLemma(lastAux);
+			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
+				warnOut.printf("xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".\n",
+						Utils.getId(Utils.getPMLParent(xNode)), auxLemma);
+		}
 
 		String auxLemma = Utils.getLemma(lastAux);
-		//String auxTag = Utils.getTag(lastAux);
+		boolean ultimateAux = auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
 		String basElemTag = Utils.getTag(basElem);
 
 		boolean nominal = false;
@@ -568,29 +589,20 @@ public class PhraseTransformator
 				warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
 						Utils.getId(Utils.getPMLParent(xNode)), xTag);
 		}
-		// TODO atteikties no šīs analīzes.
 		else if (basElemTag != null)
-		{
 			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
 					Utils.getId(Utils.getPMLParent(xNode)), xTag);
-			nominal = basElemTag.matches("[napxm].*|v..n.*|v..pd...[ap]p.*]") ||
-					basElemTag.matches("v..pd...ps.*]") && !auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some nominal are missed to passive or active.
-			passive = basElemTag.matches("v..pd...ps.*]") && auxLemma.matches("(ne)?(tikt|tapt|būt)"); // Some here actually could be nominal.
-		}
 
 		Node newRoot = basElem;
-		if (nominal && !auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)"))
-			newRoot = lastAux;
+		if (!ultimateAux) newRoot = lastAux;
 		NodeList children = Utils.getPMLNodeChildren(xNode);
 		s.allAsDependents(newRoot, children, xType, null, warnOut);
-		// FIXME vai šeit nesakropļo galvu?
-		if (passive)
+		if (passive && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
 					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);
-		if (nominal && auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)"))
+		if (nominal && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.COP,
 					Tuple.of(UDv2Relations.COP, null), true, true);
 		return newRoot;
 	}
-
 }
