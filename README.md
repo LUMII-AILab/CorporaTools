@@ -24,6 +24,8 @@ parameter values and meaning.
 
 Some scripts have not been used several years and might be obselote, sorry.
 
+Folder Docs containing datasplits moved to Treebank repo in 2017-12-11.
+
 Prerequisites
 -------------
 For PmlCorporaTools:
