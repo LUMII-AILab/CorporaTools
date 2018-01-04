@@ -16,6 +16,6 @@ keycode 48 = k K kcedilla Kcedilla
 keycode 45 = l L lcedilla Lcedilla
 
 keycode 14 = z Z zcaron Zcaron
-keycode 15 = c C ccaron Ccaron
-keycode 57 = n N ncedilla Ncedilla
+keycode 16 = c C ccaron Ccaron
+keycode 53 = n N ncedilla Ncedilla
 
