@@ -428,6 +428,12 @@ public class PhraseTransformator
 	{
 		NodeList children = Utils.getAllPMLChildren(xNode);
 		String xTag = Utils.getTag(xNode);
+		if (xTag == null || xTag.isEmpty())
+		{
+			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
+					s.id, xType, xTag);
+			return missingTransform(xNode);
+		}
 		Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal|part).*")
 				.matcher(xTag);
 		if (!subTypeMatcher.matches())
@@ -545,7 +551,7 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		String xTag = Utils.getTag(xNode);
-		if (!xTag.matches("[^\\[]*\\[(sim|comp)[yn].*"))
+		if (xTag == null || xTag.isEmpty() || !xTag.matches("[^\\[]*\\[(sim|comp)[yn].*"))
 		{
 			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
 					s.id, xType, xTag);
@@ -602,8 +608,8 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		// Check if the tag is appropriate.
-		String subtag = xTag != null && xTag.contains("[") ?
-				xTag.substring(xTag.indexOf("[" + 1)) : "";
+		String subtag = (xTag != null && xTag.contains("[") ?
+				xTag.substring(xTag.indexOf("[") + 1) : "");
 		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
 				&& !subtag.startsWith("phase"))
 			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
@@ -656,7 +662,7 @@ public class PhraseTransformator
 		boolean passive = false;
 		if (xTag != null && xTag.contains("["))
 		{
-			String subtag = xTag.substring(xTag.indexOf("[" + 1));
+			String subtag = xTag.substring(xTag.indexOf("[") + 1);
 			if (subtag.startsWith("pass"))
 				passive = true;
 			else if (subtag.startsWith("subst") || subtag.startsWith("adj") ||

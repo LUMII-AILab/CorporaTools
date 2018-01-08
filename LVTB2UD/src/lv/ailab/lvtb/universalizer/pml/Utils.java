@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.pml;
 
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -226,25 +227,37 @@ public class Utils
 	public static String getTag(Node aNode) throws XPathExpressionException
 	{
 		if (aNode == null) return null;
-		String tag = XPathEngine.get().evaluate("./m.rf/tag|./children/xinfo/tag|./children/coordinfo/tag", aNode);
-		if (tag != null && tag.length() > 0) return tag;
-		tag = Utils.getReduction(aNode);
-		if (tag != null && tag.contains("(")) tag = tag.substring(0, tag.indexOf("(")).trim();
+		Node phraseNode;
+
+		if (!Utils.isPhraseNode(aNode))
+		{
+			String tag = XPathEngine.get().evaluate("./m.rf/tag", aNode);
+			if (tag != null && tag.length() > 0) return tag;
+			tag = Utils.getReduction(aNode);
+			if (tag != null && tag.contains("("))
+				tag = tag.substring(0, tag.indexOf("(")).trim();
+			if (tag != null && tag.length() > 0) return tag;
+			phraseNode = Utils.getPhraseNode(aNode);
+		}
+		else phraseNode = aNode;
+
+		if (phraseNode == null) return null;
+		String tag = XPathEngine.get().evaluate("./tag", phraseNode);
 		if (tag != null && tag.length() > 0) return tag;
 
 		NodeList baseParts = (NodeList) XPathEngine.get().evaluate(
-				"./children/pmcinfo/children/node[role='" + LvtbRoles.PRED + "']",
-				aNode, XPathConstants.NODESET);
+				"./children/node[role='" + LvtbRoles.PRED + "']",
+				phraseNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
 			return getTag(getFirstByDescOrd(baseParts));
 		baseParts = (NodeList) XPathEngine.get().evaluate(
-				"./children/pmcinfo/children/node[role='" + LvtbRoles.BASELEM + "']",
-				aNode, XPathConstants.NODESET);
+				"./children/node[role='" + LvtbRoles.BASELEM + "']",
+				phraseNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
 			return getTag(getFirstByDescOrd(baseParts));
 		baseParts = (NodeList) XPathEngine.get().evaluate(
-				"./children/coordinfo/children/node[role='" + LvtbRoles.CRDPART + "']",
-				aNode, XPathConstants.NODESET);
+				"./children/node[role='" + LvtbRoles.CRDPART + "']",
+				phraseNode, XPathConstants.NODESET);
 		if (baseParts != null && baseParts.getLength() > 0)
 			return getTag(getFirstByDescOrd(baseParts));
 		return null;

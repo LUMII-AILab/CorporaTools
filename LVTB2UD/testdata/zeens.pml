@@ -3233,7 +3233,7 @@
                   <children>
                     <xinfo>
                       <xtype>xApp</xtype>
-                      <tag>n0msn0</tag>
+                      <tag>n0msn0[agr]</tag>
                       <children>
                         <node id="a-zeens-p15s1x4">
                           <role>basElem</role>
@@ -4160,7 +4160,7 @@
                             </w.rf>
                             <form>savukārt</form>
                             <lemma>savukārt</lemma>
-                            <tag>r0c</tag>
+                            <tag>r0m</tag>
                           </m.rf>
                           <role>sit</role>
                           <ord>17</ord>
@@ -4790,7 +4790,7 @@
                       <children>
                         <xinfo>
                           <xtype>xSimile</xtype>
-                          <tag>ncfpn0[spksd]</tag>
+                          <tag>ncfpn0[simn]</tag>
                           <children>
                             <node id="a-zeens-p23s1w3">
                               <m.rf id="m-zeens-p23s1w3">
@@ -4973,89 +4973,80 @@
                           <role>obj</role>
                           <ord>8</ord>
                           <children>
-                            <node id="a-zeens-p24s1x2">
+                            <node id="a-zeens-p24s1w7">
+                              <m.rf id="m-zeens-p24s1w7">
+                                <src.rf>experimental</src.rf>
+                                <w.rf id="w-zeens-p24w7">
+                                  <token>divus</token>
+                                </w.rf>
+                                <form>divus</form>
+                                <lemma>divi</lemma>
+                                <tag>mcsmpa</tag>
+                              </m.rf>
                               <role>attr</role>
+                              <ord>7</ord>
                               <children>
-                                <xinfo>
-                                  <xtype>subrAnal</xtype>
-                                  <tag>N/A</tag>
+                                <node id="a-zeens-p24s1x3">
+                                  <role>adv</role>
                                   <children>
-                                    <node id="a-zeens-p24s1x3">
-                                      <role>basElem</role>
+                                    <xinfo>
+                                      <xtype>xSimile</xtype>
+                                      <tag>rcq[compy]</tag>
                                       <children>
-                                        <xinfo>
-                                          <xtype>xSimile</xtype>
-                                          <tag>N/A</tag>
+                                        <node id="a-zeens-p24s1x4">
+                                          <role>basElem</role>
                                           <children>
-                                            <node id="a-zeens-p24s1w6">
-                                              <m.rf id="m-zeens-p24s1w6">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p24w6">
-                                                  <token>kā</token>
-                                                </w.rf>
-                                                <form>kā</form>
-                                                <lemma>kā</lemma>
-                                                <tag>cs</tag>
-                                              </m.rf>
-                                              <role>conj</role>
-                                              <ord>6</ord>
-                                            </node>
-                                            <node id="a-zeens-p24s1w7">
-                                              <m.rf id="m-zeens-p24s1w7">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p24w7">
-                                                  <token>divus</token>
-                                                </w.rf>
-                                                <form>divus</form>
-                                                <lemma>divi</lemma>
-                                                <tag>mcsmpa</tag>
-                                              </m.rf>
-                                              <role>basElem</role>
-                                              <ord>7</ord>
-                                            </node>
+                                            <xinfo>
+                                              <xtype>xParticle</xtype>
+                                              <tag>rcq</tag>
+                                              <children>
+                                                <node id="a-zeens-p24s1w4">
+                                                  <m.rf id="m-zeens-p24s1w4">
+                                                    <src.rf>experimental</src.rf>
+                                                    <w.rf id="w-zeens-p24w4">
+                                                      <token>ne</token>
+                                                    </w.rf>
+                                                    <form>ne</form>
+                                                    <lemma>ne</lemma>
+                                                    <tag>q</tag>
+                                                  </m.rf>
+                                                  <role>no</role>
+                                                  <ord>4</ord>
+                                                </node>
+                                                <node id="a-zeens-p24s1w5">
+                                                  <m.rf id="m-zeens-p24s1w5">
+                                                    <src.rf>experimental</src.rf>
+                                                    <w.rf id="w-zeens-p24w5">
+                                                      <token>vairāk</token>
+                                                    </w.rf>
+                                                    <form>vairāk</form>
+                                                    <lemma>daudz</lemma>
+                                                    <tag>rcq</tag>
+                                                  </m.rf>
+                                                  <role>basElem</role>
+                                                  <ord>5</ord>
+                                                </node>
+                                              </children>
+                                            </xinfo>
                                           </children>
-                                        </xinfo>
+                                        </node>
+                                        <node id="a-zeens-p24s1w6">
+                                          <m.rf id="m-zeens-p24s1w6">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-zeens-p24w6">
+                                              <token>kā</token>
+                                            </w.rf>
+                                            <form>kā</form>
+                                            <lemma>kā</lemma>
+                                            <tag>cs</tag>
+                                          </m.rf>
+                                          <role>conj</role>
+                                          <ord>6</ord>
+                                        </node>
                                       </children>
-                                    </node>
-                                    <node id="a-zeens-p24s1x4">
-                                      <role>basElem</role>
-                                      <children>
-                                        <xinfo>
-                                          <xtype>xParticle</xtype>
-                                          <tag>rcq</tag>
-                                          <children>
-                                            <node id="a-zeens-p24s1w4">
-                                              <m.rf id="m-zeens-p24s1w4">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p24w4">
-                                                  <token>ne</token>
-                                                </w.rf>
-                                                <form>ne</form>
-                                                <lemma>ne</lemma>
-                                                <tag>q</tag>
-                                              </m.rf>
-                                              <role>no</role>
-                                              <ord>4</ord>
-                                            </node>
-                                            <node id="a-zeens-p24s1w5">
-                                              <m.rf id="m-zeens-p24s1w5">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p24w5">
-                                                  <token>vairāk</token>
-                                                </w.rf>
-                                                <form>vairāk</form>
-                                                <lemma>daudz</lemma>
-                                                <tag>rcq</tag>
-                                              </m.rf>
-                                              <role>basElem</role>
-                                              <ord>5</ord>
-                                            </node>
-                                          </children>
-                                        </xinfo>
-                                      </children>
-                                    </node>
+                                    </xinfo>
                                   </children>
-                                </xinfo>
+                                </node>
                               </children>
                             </node>
                           </children>
@@ -5136,65 +5127,56 @@
                           <role>basElem</role>
                           <ord>7</ord>
                           <children>
-                            <node id="a-zeens-p25s1x2">
+                            <node id="a-zeens-p25s1w6">
+                              <m.rf id="m-zeens-p25s1w6">
+                                <src.rf>experimental</src.rf>
+                                <w.rf id="w-zeens-p25w6">
+                                  <token>pārliecinošu</token>
+                                </w.rf>
+                                <form>pārliecinošu</form>
+                                <lemma>pārliecinoša</lemma>
+                                <tag>affsanp</tag>
+                              </m.rf>
                               <role>attr</role>
+                              <ord>6</ord>
                               <children>
-                                <xinfo>
-                                  <xtype>subrAnal</xtype>
-                                  <tag>N/A</tag>
+                                <node id="a-zeens-p25s1x3">
+                                  <role>adv</role>
                                   <children>
-                                    <node id="a-zeens-p25s1x3">
-                                      <role>basElem</role>
+                                    <xinfo>
+                                      <xtype>xSimile</xtype>
+                                      <tag>rcq[compy]</tag>
                                       <children>
-                                        <xinfo>
-                                          <xtype>xSimile</xtype>
-                                          <tag>N/A</tag>
-                                          <children>
-                                            <node id="a-zeens-p25s1w5">
-                                              <m.rf id="m-zeens-p25s1w5">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p25w5">
-                                                  <token>nekā</token>
-                                                </w.rf>
-                                                <form>nekā</form>
-                                                <lemma>nekā</lemma>
-                                                <tag>cs</tag>
-                                              </m.rf>
-                                              <role>conj</role>
-                                              <ord>5</ord>
-                                            </node>
-                                            <node id="a-zeens-p25s1w6">
-                                              <m.rf id="m-zeens-p25s1w6">
-                                                <src.rf>experimental</src.rf>
-                                                <w.rf id="w-zeens-p25w6">
-                                                  <token>pārliecinošu</token>
-                                                </w.rf>
-                                                <form>pārliecinošu</form>
-                                                <lemma>pārliecinoša</lemma>
-                                                <tag>affsanp</tag>
-                                              </m.rf>
-                                              <role>basElem</role>
-                                              <ord>6</ord>
-                                            </node>
-                                          </children>
-                                        </xinfo>
+                                        <node id="a-zeens-p25s1w4">
+                                          <m.rf id="m-zeens-p25s1w4">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-zeens-p25w4">
+                                              <token>vairāk</token>
+                                            </w.rf>
+                                            <form>vairāk</form>
+                                            <lemma>daudz</lemma>
+                                            <tag>rcq</tag>
+                                          </m.rf>
+                                          <role>basElem</role>
+                                          <ord>4</ord>
+                                        </node>
+                                        <node id="a-zeens-p25s1w5">
+                                          <m.rf id="m-zeens-p25s1w5">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-zeens-p25w5">
+                                              <token>nekā</token>
+                                            </w.rf>
+                                            <form>nekā</form>
+                                            <lemma>nekā</lemma>
+                                            <tag>cs</tag>
+                                          </m.rf>
+                                          <role>conj</role>
+                                          <ord>5</ord>
+                                        </node>
                                       </children>
-                                    </node>
-                                    <node id="a-zeens-p25s1w4">
-                                      <m.rf id="m-zeens-p25s1w4">
-                                        <src.rf>experimental</src.rf>
-                                        <w.rf id="w-zeens-p25w4">
-                                          <token>vairāk</token>
-                                        </w.rf>
-                                        <form>vairāk</form>
-                                        <lemma>daudz</lemma>
-                                        <tag>rcq</tag>
-                                      </m.rf>
-                                      <role>basElem</role>
-                                      <ord>4</ord>
-                                    </node>
+                                    </xinfo>
                                   </children>
-                                </xinfo>
+                                </node>
                               </children>
                             </node>
                           </children>
@@ -5254,91 +5236,6 @@
               <role>pred</role>
               <ord>7</ord>
               <children>
-                <node id="a-zeens-p26s1x1">
-                  <role>adv</role>
-                  <children>
-                    <xinfo>
-                      <xtype>subrAnal</xtype>
-                      <tag>N/A</tag>
-                      <children>
-                        <node id="a-zeens-p26s1w2">
-                          <m.rf id="m-zeens-p26s1w2">
-                            <src.rf>experimental</src.rf>
-                            <w.rf id="w-zeens-p26w2">
-                              <token>vairāk</token>
-                            </w.rf>
-                            <form>vairāk</form>
-                            <lemma>daudz</lemma>
-                            <tag>rcq</tag>
-                          </m.rf>
-                          <role>basElem</role>
-                          <ord>2</ord>
-                        </node>
-                        <node id="a-zeens-p26s1x2">
-                          <role>basElem</role>
-                          <children>
-                            <xinfo>
-                              <xtype>xSimile</xtype>
-                              <tag>N/A</tag>
-                              <children>
-                                <node id="a-zeens-p26s1x3">
-                                  <role>basElem</role>
-                                  <children>
-                                    <xinfo>
-                                      <xtype>coordAnal</xtype>
-                                      <tag>r0p</tag>
-                                      <children>
-                                        <node id="a-zeens-p26s1w4">
-                                          <m.rf id="m-zeens-p26s1w4">
-                                            <src.rf>experimental</src.rf>
-                                            <w.rf id="w-zeens-p26w4">
-                                              <token>jebkur</token>
-                                            </w.rf>
-                                            <form>jebkur</form>
-                                            <lemma>jebkur</lemma>
-                                            <tag>r0p</tag>
-                                          </m.rf>
-                                          <role>basElem</role>
-                                          <ord>4</ord>
-                                        </node>
-                                        <node id="a-zeens-p26s1w5">
-                                          <m.rf id="m-zeens-p26s1w5">
-                                            <src.rf>experimental</src.rf>
-                                            <w.rf id="w-zeens-p26w5">
-                                              <token>citur</token>
-                                            </w.rf>
-                                            <form>citur</form>
-                                            <lemma>citur</lemma>
-                                            <tag>r0p</tag>
-                                          </m.rf>
-                                          <role>basElem</role>
-                                          <ord>5</ord>
-                                        </node>
-                                      </children>
-                                    </xinfo>
-                                  </children>
-                                </node>
-                                <node id="a-zeens-p26s1w3">
-                                  <m.rf id="m-zeens-p26s1w3">
-                                    <src.rf>experimental</src.rf>
-                                    <w.rf id="w-zeens-p26w3">
-                                      <token>nekā</token>
-                                    </w.rf>
-                                    <form>nekā</form>
-                                    <lemma>nekā</lemma>
-                                    <tag>cs</tag>
-                                  </m.rf>
-                                  <role>conj</role>
-                                  <ord>3</ord>
-                                </node>
-                              </children>
-                            </xinfo>
-                          </children>
-                        </node>
-                      </children>
-                    </xinfo>
-                  </children>
-                </node>
                 <node id="a-zeens-p26s1w1">
                   <m.rf id="m-zeens-p26s1w1">
                     <src.rf>experimental</src.rf>
@@ -5351,6 +5248,80 @@
                   </m.rf>
                   <role>adv</role>
                   <ord>1</ord>
+                </node>
+                <node id="a-zeens-p26s1w2">
+                  <m.rf id="m-zeens-p26s1w2">
+                    <src.rf>experimental</src.rf>
+                    <w.rf id="w-zeens-p26w2">
+                      <token>vairāk</token>
+                    </w.rf>
+                    <form>vairāk</form>
+                    <lemma>daudz</lemma>
+                    <tag>rcq</tag>
+                  </m.rf>
+                  <role>adv</role>
+                  <ord>2</ord>
+                </node>
+                <node id="a-zeens-p26s1x2">
+                  <role>spc</role>
+                  <children>
+                    <xinfo>
+                      <xtype>xSimile</xtype>
+                      <tag>r0p[compn]</tag>
+                      <children>
+                        <node id="a-zeens-p26s1w3">
+                          <m.rf id="m-zeens-p26s1w3">
+                            <src.rf>experimental</src.rf>
+                            <w.rf id="w-zeens-p26w3">
+                              <token>nekā</token>
+                            </w.rf>
+                            <form>nekā</form>
+                            <lemma>nekā</lemma>
+                            <tag>cs</tag>
+                          </m.rf>
+                          <role>conj</role>
+                          <ord>3</ord>
+                        </node>
+                        <node id="a-zeens-p26s1x3">
+                          <role>basElem</role>
+                          <children>
+                            <xinfo>
+                              <xtype>coordAnal</xtype>
+                              <tag>r0p</tag>
+                              <children>
+                                <node id="a-zeens-p26s1w4">
+                                  <m.rf id="m-zeens-p26s1w4">
+                                    <src.rf>experimental</src.rf>
+                                    <w.rf id="w-zeens-p26w4">
+                                      <token>jebkur</token>
+                                    </w.rf>
+                                    <form>jebkur</form>
+                                    <lemma>jebkur</lemma>
+                                    <tag>r0p</tag>
+                                  </m.rf>
+                                  <role>basElem</role>
+                                  <ord>4</ord>
+                                </node>
+                                <node id="a-zeens-p26s1w5">
+                                  <m.rf id="m-zeens-p26s1w5">
+                                    <src.rf>experimental</src.rf>
+                                    <w.rf id="w-zeens-p26w5">
+                                      <token>citur</token>
+                                    </w.rf>
+                                    <form>citur</form>
+                                    <lemma>citur</lemma>
+                                    <tag>r0p</tag>
+                                  </m.rf>
+                                  <role>basElem</role>
+                                  <ord>5</ord>
+                                </node>
+                              </children>
+                            </xinfo>
+                          </children>
+                        </node>
+                      </children>
+                    </xinfo>
+                  </children>
                 </node>
                 <node id="a-zeens-p26s1w6">
                   <m.rf id="m-zeens-p26s1w6">
@@ -7736,7 +7707,7 @@
                   <children>
                     <xinfo>
                       <xtype>xApp</xtype>
-                      <tag>n0mpa0</tag>
+                      <tag>n0mpa0[non]</tag>
                       <children>
                         <node id="a-zeens-p39s1w4">
                           <m.rf id="m-zeens-p39s1w4">
@@ -7756,7 +7727,7 @@
                           <children>
                             <xinfo>
                               <xtype>xApp</xtype>
-                              <tag>n0msn0</tag>
+                              <tag>n0msn0[non]</tag>
                               <children>
                                 <node id="a-zeens-p39s1w5">
                                   <m.rf id="m-zeens-p39s1w5">
@@ -8541,7 +8512,7 @@
                   <children>
                     <xinfo>
                       <xtype>xApp</xtype>
-                      <tag>xx</tag>
+                      <tag>n00000[non]</tag>
                       <children>
                         <node id="a-zeens-p45s1w1">
                           <m.rf id="m-zeens-p45s1w1">
@@ -8992,7 +8963,7 @@
                           <children>
                             <xinfo>
                               <xtype>xSimile</xtype>
-                              <tag>n0msn0[spksd]</tag>
+                              <tag>n0msn0[simn]</tag>
                               <children>
                                 <node id="a-zeens-p48s1w5">
                                   <m.rf id="m-zeens-p48s1w5">
@@ -9499,7 +9470,7 @@
                               <children>
                                 <xinfo>
                                   <xtype>xSimile</xtype>
-                                  <tag>ncmsn0[sim]</tag>
+                                  <tag>ncmsn0[simn]</tag>
                                   <children>
                                     <node id="a-zeens-p50s1w25">
                                       <m.rf id="m-zeens-p50s1w25">
@@ -9886,7 +9857,7 @@
                   <children>
                     <xinfo>
                       <xtype>xApp</xtype>
-                      <tag>n0mpn0</tag>
+                      <tag>n0mpn0[agr]</tag>
                       <children>
                         <node id="a-zeens-p51s1x4">
                           <role>basElem</role>
