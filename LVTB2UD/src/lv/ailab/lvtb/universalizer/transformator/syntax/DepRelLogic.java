@@ -661,6 +661,7 @@ public class DepRelLogic
 	}
 
 	/**
+	 * TODO: move to sentence or sentence transformation engine
 	 * Print out the given warning and add it to the warning register.
 	 * @param warning	warning to print
 	 * @param warnOut	stream where to print

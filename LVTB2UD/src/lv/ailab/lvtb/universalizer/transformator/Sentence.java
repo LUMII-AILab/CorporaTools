@@ -142,12 +142,13 @@ public class Sentence
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children.
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
 	 *                      be used for DEPREL field and enhanced backbone for
 	 *                      child nodes, or null, if
 	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info.
+	 *                      get this info
 	 * @param warnOut 		where all the warnings goes
 	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
@@ -169,12 +170,13 @@ public class Sentence
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
 	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children.
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
 	 *                      be used for DEPREL field and enhanced backbone for
 	 *                      child nodes, or null, if
 	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info.
+	 *                      get this info
 	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
@@ -199,12 +201,13 @@ public class Sentence
 	 * @param parent		designated parent
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children.
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
 	 *                      be used for DEPREL field and enhanced backbone for
 	 *                      child nodes, or null, if
 	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info.
+	 *                      get this info
 	 * @param warnOut 		where all the warnings goes
 	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
 	 * 									in the PML tree) most probably due to

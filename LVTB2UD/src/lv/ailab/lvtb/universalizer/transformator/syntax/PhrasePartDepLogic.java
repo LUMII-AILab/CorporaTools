@@ -7,6 +7,7 @@ import lv.ailab.lvtb.universalizer.util.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.swing.text.LabelView;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.PrintWriter;
@@ -127,8 +128,29 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.SUBRANAL) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
-			// NB: "vairāk kā/nekā X" and "tāds kā X" roles for "vairāk" and
-			//     "tāds" are asigned in phrase transformator.
+			// TODO check by parents xTag?
+			String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
+			String tag = Utils.getTag(aNode);
+			if (LvtbXTypes.XPREP.equals(subXType))
+			{
+				if (tag.matches("[np].*"))
+				{
+					NodeList preps = (NodeList)XPathEngine.get().evaluate(
+							"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
+							aNode, XPathConstants.NODESET);
+					if (preps.getLength() > 1)
+						warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\"\n.",
+								subXType, Utils.getId(aNode), LvtbRoles.PREP);
+					String prepLemma = Utils.getLemma(preps.item(0));
+					return Tuple.of(UDv2Relations.NMOD, prepLemma);
+				}
+				if (tag.matches("(mc|xn).*")) return Tuple.of(UDv2Relations.NUMMOD, null);
+				if (tag.matches("(a|ya|xo|mo).*")) return Tuple.of(UDv2Relations.AMOD, null);
+			}
+			else if (LvtbXTypes.XSIMILE.equals(subXType)) return Tuple.of(UDv2Relations.CASE, null);
+			else if (tag.matches("p.*")) return Tuple.of(UDv2Relations.DET, null);
+			else if (tag.matches("q.*")) return Tuple.of(UDv2Relations.FLAT, null);
+
 			return Tuple.of(UDv2Relations.COMPOUND, null);
 		}
 
@@ -149,42 +171,22 @@ public class PhrasePartDepLogic
 			String firstAncType = Utils.getAnyLabel(firstAncestor);
 			String secondAncType = Utils.getAnyLabel(secondAncestor);
 
-			// "vairāk kā trīs"
-			NodeList vSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/form='vairāk' or m.rf/form='Vairāk']",
-					secondAncestor, XPathConstants.NODESET);
-			// "ne vairāk kā trīs"
-			NodeList vSiblings2 = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='basElem']/children/xinfo[xtype='xParticle']/children/node[m.rf/form='vairāk' or m.rf/form='Vairāk']",
-					secondAncestor, XPathConstants.NODESET);
-			// "tāds kā dumjš"
-			NodeList tSiblings = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[m.rf/lemma='tāds' or m.rf/lemma='tāda']",
-					secondAncestor, XPathConstants.NODESET);
-			// "tāda paraduma kā nagu graušana
-			//NodeList tSiblings2 = (NodeList)XPathEngine.get().evaluate(
-			//		"./children/node[role='basElem']/children/node[role='attr' and (m.rf/lemma='tāds' or m.rf/lemma='tāda')]",
-			//		secongAncestor, XPathConstants.NODESET);
-
 			// Check the specific roles
 			if (LvtbRoles.BASELEM.equals(firstAncType))
 			{
 				if (LvtbPmcTypes.SPCPMC.equals(secondAncType) ||
 						LvtbPmcTypes.INSPMC.equals(secondAncType))
 					return Tuple.of(UDv2Relations.MARK, null);
-				if (LvtbXTypes.XPRED.equals(secondAncType) || LvtbPmcTypes.UTTER.equals(secondAncType) ||
-						LvtbXTypes.SUBRANAL.equals(secondAncType) && tSiblings != null &&
-						tSiblings.getLength() > 0)
+				if (LvtbXTypes.XPRED.equals(secondAncType) || LvtbPmcTypes.UTTER.equals(secondAncType))
 					return Tuple.of(UDv2Relations.DISCOURSE, null);
-				if (LvtbXTypes.SUBRANAL.equals(secondAncType) && (vSiblings != null &&
-						vSiblings.getLength() > 0 || vSiblings2 != null && vSiblings2.getLength() > 0))
-					return Tuple.of(UDv2Relations.FIXED, null);
 			}
 			// In generic SPC case use mark, in generic ADV we use discourse.
 			if (LvtbRoles.SPC.equals(firstAncType))
 				return Tuple.of(UDv2Relations.MARK, null);
-			if (LvtbRoles.ADV.equals(firstAncType))
-				return Tuple.of(UDv2Relations.DISCOURSE, null);
+
+			// NO adv + xSimile instances in data! Is this old?
+			//if (LvtbRoles.ADV.equals(firstAncType))
+			//	return Tuple.of(UDv2Relations.DISCOURSE, null);
 			
 			Node effAncestor = secondAncestor;
 			if (LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(effAncestor)))
@@ -194,8 +196,10 @@ public class PhrasePartDepLogic
 			if (LvtbRoles.SPC.equals(effAncLabel) || LvtbPmcTypes.SPCPMC.equals(effAncLabel)
 					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
 				return Tuple.of(UDv2Relations.MARK, null);
-			if (LvtbRoles.ADV.equals(effAncLabel))
-				return Tuple.of(UDv2Relations.DISCOURSE, null);
+
+			// NO adv + xSimile instances in data! Is this old?
+			//if (LvtbRoles.ADV.equals(effAncLabel))
+			//	return Tuple.of(UDv2Relations.DISCOURSE, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))

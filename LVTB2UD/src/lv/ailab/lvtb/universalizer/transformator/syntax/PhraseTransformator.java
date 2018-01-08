@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Logic for creating dependency structures from LVTB phrase-style structures.
@@ -94,9 +96,7 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbXTypes.XPREP))
 			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, LvtbRoles.PREP, null, true, warnOut);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
-			// If relinking (for "vairāk nekā" constructions) will be needed, it
-			// will be done when processing the parent node.
-			return s.allUnderLast(phraseNode, phraseType, LvtbRoles.BASELEM, null,null, true, warnOut);
+			return xSimileToUD(phraseNode, phraseType);
 
 		// Specific.
 		if (phraseType.equals(LvtbXTypes.UNSTRUCT))
@@ -415,12 +415,7 @@ public class PhraseTransformator
 	}
 
 	/**
-	 * Transformation for subrAnal
-	 * - special treatment for
-	 *   -- "vairāk kā/nekā X" constructions with xSimile: conj from xSimile is
-	 *      rearanged under "vairāk"
-	 *   -- "tāds kā X" construction with xSimile: xSimile's basElem is root.
-	 * - otherwise just make first element root.
+	 * Transformation for subrAnal, based on subtag.
 	 * @param xNode
 	 * @param xType
 	 * @return PML A-level node: root of the corresponding UD structure.
@@ -432,58 +427,141 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		NodeList children = Utils.getAllPMLChildren(xNode);
-
-		Node first = Utils.getFirstByDescOrd(children);
-		Node last = Utils.getLastByDescOrd(children);
-		Node lastPhrase = Utils.getPhraseNode(last);
-		if (children != null && children.getLength() == 2  &&
-				LvtbXTypes.XSIMILE.equals(Utils.getAnyLabel(lastPhrase)))
+		String xTag = Utils.getTag(xNode);
+		Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal|part).*")
+				.matcher(xTag);
+		if (!subTypeMatcher.matches())
 		{
-			Node firstPhrase = Utils.getPhraseNode(first);
-			if (firstPhrase != null)
-			{
-				NodeList firstChildren = Utils.getAllPMLChildren(firstPhrase);
-				Node lastOfFirst = Utils.getLastByDescOrd(firstChildren);
-				// "Ne vairāk kā x"
-				if (firstChildren != null && firstChildren.getLength() == 2  &&
-						LvtbXTypes.XPARTICLE.equals(Utils.getAnyLabel(firstPhrase)) &&
-						("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", lastOfFirst)) ||
-						"Vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", lastOfFirst))))
-				{
-					NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
-							"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
-					s.setLink(last, lastOfFirst, UDv2Relations.ADVMOD,
-							Tuple.of(UDv2Relations.ADVMOD, null), true, true);
-					if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
-						s.changeHead(lastOfFirst, simileConjs.item(i));
-
-					return last;
-				}
-			}
-			// "vairāk kā x"
-			else if ("vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)) ||
-					"Vairāk".equals(XPathEngine.get().evaluate("./m.rf/form", first)))
-			{
-				// Tricky part, where subordinated xSimile structure also must be
-				// rearanged.
-				NodeList simileConjs = (NodeList) XPathEngine.get().evaluate(
-						"./children/node[role='" + LvtbRoles.CONJ + "']", lastPhrase, XPathConstants.NODESET);
-				s.setLink(last, first, UDv2Relations.ADVMOD,
-						Tuple.of(UDv2Relations.ADVMOD, null), true, true);
-				if (simileConjs != null) for (int i = 0; i < simileConjs.getLength(); i++)
-					s.changeHead(first, simileConjs.item(i));
-				return last;
-			}
-			// "tāds kā x"
-			else if ("tāds".equals(Utils.getLemma(first)) || "tāda".equals(Utils.getLemma(first)))
-			{
-				s.setLink(last, first, UDv2Relations.DET,
-						Tuple.of(UDv2Relations.DET, null), true, true);
-				return last;
-			}
+			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
+					s.id, xType, xTag);
+			return missingTransform(xNode);
 		}
 
-		return s.allUnderFirst(xNode, xType, LvtbRoles.BASELEM, null, false, warnOut);
+		String subType = subTypeMatcher.group(1);
+		switch (subType)
+		{
+			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
+			case "vv" : return s.allUnderFirst(
+					xNode, xType, LvtbRoles.BASELEM, null, false, warnOut);
+			case "part" : return s.allUnderFirst(
+					xNode, xType, LvtbRoles.BASELEM, null, false, warnOut);
+			case "ipv" :
+			{
+				NodeList adjs = (NodeList)XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.BASELEM +
+								"' and (starts-with(m.rf/tag,'a') or starts-with(m.rf/tag,'ya') or starts-with(xinfo/tag,'a') or starts-with(xinfo/tag,'ya'))]",
+						xNode, XPathConstants.NODESET);
+				if (adjs.getLength() < 1)
+				{
+					warnOut.printf(
+							"\"%s\" in sentence \"%s\" has no adjective \"%s\".\n",
+							xTag, s.id, LvtbRoles.BASELEM);
+					adjs = children;
+				}
+				else if (adjs.getLength() > 1) warnOut.printf(
+						"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n",
+						xTag, s.id, LvtbRoles.BASELEM);
+				Node newRoot = Utils.getLastByOrd(adjs);
+				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				return newRoot;
+			}
+			case "skv" :
+			{
+				NodeList nums = (NodeList)XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.BASELEM +
+								"' and (starts-with(m.rf/tag,'mc') or starts-with(m.rf/tag,'xn') or starts-with(xinfo/tag,'mc') or starts-with(xinfo/tag,'xn'))]",
+						xNode, XPathConstants.NODESET);
+				if (nums.getLength() < 1)
+				{
+					warnOut.printf(
+							"\"%s\" in sentence \"%s\" has no numeral \"%s\".\n",
+							xTag, s.id, LvtbRoles.BASELEM);
+					nums = children;
+				}
+				else if (nums.getLength() > 1) warnOut.printf(
+						"\"%s\" in sentence \"%s\" has more than one numeral \"%s\".\n",
+						xTag, s.id, LvtbRoles.BASELEM);
+				Node newRoot = Utils.getLastByOrd(nums);
+				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				return newRoot;
+			}
+			case "set" :
+			{
+				NodeList noPrepBases = (NodeList)XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.BASELEM +
+								"' and not(xinfo/xtype='" + LvtbXTypes.XPREP + "')]",
+						xNode, XPathConstants.NODESET);
+				if (noPrepBases.getLength() < 1)
+				{
+					warnOut.printf(
+							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
+							xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+					noPrepBases = children;
+				}
+				else if (noPrepBases.getLength() > 1) warnOut.printf(
+						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
+						xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+				Node newRoot = Utils.getLastByOrd(noPrepBases);
+				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				return newRoot;
+			}
+			case "sal" :
+			{
+				NodeList noSimBases = (NodeList)XPathEngine.get().evaluate(
+						"./children/node[role='" + LvtbRoles.BASELEM +
+								"' and not(xinfo/xtype='" + LvtbXTypes.XSIMILE + "')]",
+						xNode, XPathConstants.NODESET);
+				if (noSimBases.getLength() < 1)
+				{
+					warnOut.printf(
+							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
+							xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+					noSimBases = children;
+				}
+				else if (noSimBases.getLength() > 1) warnOut.printf(
+						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
+						xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+				Node newRoot = Utils.getLastByOrd(noSimBases);
+				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				return newRoot;
+			}
+		}
+		warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
+				s.id, xType, xTag);
+		return missingTransform(xNode);
+	}
+
+	/**
+	 * Transformation for xSimile construction. Grammaticalization feature in
+	 * xTag is required for successful transformation.
+	 * @param xNode
+	 * @param xType
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public Node xSimileToUD(Node xNode, String xType)
+	throws XPathExpressionException
+	{
+		String xTag = Utils.getTag(xNode);
+		if (!xTag.matches("[^\\[]*\\[(sim|comp)[yn].*"))
+		{
+			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
+					s.id, xType, xTag);
+			return missingTransform(xNode);
+		}
+		boolean gramzed = xTag.matches("[^\\[]*\\[(sim|comp)y.*");
+		if (gramzed)
+		{
+			NodeList children = Utils.getAllPMLChildren(xNode);
+			Node newRoot = Utils.getFirstByDescOrd(children);
+			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
+			s.allAsDependents(newRoot, children, null,
+					Tuple.of(UDv2Relations.FIXED, null), warnOut);
+			return newRoot;
+		}
+		return s.allUnderLast(xNode, xType, LvtbRoles.BASELEM, null,null, true, warnOut);
 	}
 
 	/**
