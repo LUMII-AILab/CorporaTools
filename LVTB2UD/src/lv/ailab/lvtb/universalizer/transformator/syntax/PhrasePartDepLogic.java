@@ -131,6 +131,7 @@ public class PhrasePartDepLogic
 			// TODO check by parents xTag?
 			String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 			String tag = Utils.getTag(aNode);
+			System.out.println("ID: " + nodeId + "; tag: " + tag + "; child xtype: " + subXType);
 			if (LvtbXTypes.XPREP.equals(subXType))
 			{
 				if (tag.matches("[np].*"))

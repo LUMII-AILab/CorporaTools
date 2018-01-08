@@ -461,14 +461,14 @@ public class PhraseTransformator
 				{
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no adjective \"%s\".\n",
-							xTag, s.id, LvtbRoles.BASELEM);
+							xType, s.id, LvtbRoles.BASELEM);
 					adjs = children;
 				}
 				else if (adjs.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n",
-						xTag, s.id, LvtbRoles.BASELEM);
+						xType, s.id, LvtbRoles.BASELEM);
 				Node newRoot = Utils.getLastByOrd(adjs);
-				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, null, warnOut);
 				return newRoot;
 			}
 			case "skv" :
@@ -481,54 +481,54 @@ public class PhraseTransformator
 				{
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no numeral \"%s\".\n",
-							xTag, s.id, LvtbRoles.BASELEM);
+							xType, s.id, LvtbRoles.BASELEM);
 					nums = children;
 				}
 				else if (nums.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one numeral \"%s\".\n",
 						xTag, s.id, LvtbRoles.BASELEM);
 				Node newRoot = Utils.getLastByOrd(nums);
-				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, null, warnOut);
 				return newRoot;
 			}
 			case "set" :
 			{
 				NodeList noPrepBases = (NodeList)XPathEngine.get().evaluate(
 						"./children/node[role='" + LvtbRoles.BASELEM +
-								"' and not(xinfo/xtype='" + LvtbXTypes.XPREP + "')]",
+								"' and not(children/xinfo/xtype='" + LvtbXTypes.XPREP + "')]",
 						xNode, XPathConstants.NODESET);
 				if (noPrepBases.getLength() < 1)
 				{
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
-							xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 					noPrepBases = children;
 				}
 				else if (noPrepBases.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
-						xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 				Node newRoot = Utils.getLastByOrd(noPrepBases);
-				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, null, warnOut);
 				return newRoot;
 			}
 			case "sal" :
 			{
 				NodeList noSimBases = (NodeList)XPathEngine.get().evaluate(
 						"./children/node[role='" + LvtbRoles.BASELEM +
-								"' and not(xinfo/xtype='" + LvtbXTypes.XSIMILE + "')]",
+								"' and not(children/xinfo/xtype='" + LvtbXTypes.XSIMILE + "')]",
 						xNode, XPathConstants.NODESET);
 				if (noSimBases.getLength() < 1)
 				{
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
-							xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
 					noSimBases = children;
 				}
 				else if (noSimBases.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
-						xTag, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
 				Node newRoot = Utils.getLastByOrd(noSimBases);
-				s.allAsDependents(newRoot, children, subType, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, null, warnOut);
 				return newRoot;
 			}
 		}
