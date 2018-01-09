@@ -36,6 +36,8 @@ public class PhrasePartDepLogic
 	 * @param aNode			node for which the DEPREL must be obtained
 	 * @param phraseType	type of phrase in relation to which DEPREL must be
 	 *                      chosen
+	 * @param phraseTag		tag of phrase in relation to which DEPREL must be
+	 *                      chosen (can/should be null for pmc nodes)
 	 * @param warnOut 		where all the warnings goes
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
@@ -44,11 +46,14 @@ public class PhrasePartDepLogic
 	 * 									algorithmical error.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
-			Node aNode, String phraseType, PrintWriter warnOut)
+			Node aNode, String phraseType, String phraseTag, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		String nodeId = Utils.getId(aNode);
 		String lvtbRole = Utils.getRole(aNode);
+		String subTag = phraseTag.contains("[")
+				? phraseTag.substring(phraseTag.indexOf("[") + 1)
+				: "";
 
 		if ((phraseType.equals(LvtbPmcTypes.SENT) ||
 				phraseType.equals(LvtbPmcTypes.UTTER) ||
@@ -128,11 +133,11 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.SUBRANAL) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
-			// TODO check by parents xTag?
+
 			String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 			String tag = Utils.getTag(aNode);
-			System.out.println("ID: " + nodeId + "; tag: " + tag + "; child xtype: " + subXType);
-			if (LvtbXTypes.XPREP.equals(subXType))
+
+			if (LvtbXTypes.XPREP.equals(subXType) && subTag.startsWith("set"))
 			{
 				if (tag.matches("[np].*"))
 				{
@@ -148,11 +153,20 @@ public class PhrasePartDepLogic
 				if (tag.matches("(mc|xn).*")) return Tuple.of(UDv2Relations.NUMMOD, null);
 				if (tag.matches("(a|ya|xo|mo).*")) return Tuple.of(UDv2Relations.AMOD, null);
 			}
-			else if (LvtbXTypes.XSIMILE.equals(subXType)) return Tuple.of(UDv2Relations.CASE, null);
-			else if (tag.matches("p.*")) return Tuple.of(UDv2Relations.DET, null);
-			else if (tag.matches("q.*")) return Tuple.of(UDv2Relations.FLAT, null);
 
-			return Tuple.of(UDv2Relations.COMPOUND, null);
+			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.startsWith("ipv"))
+				return Tuple.of(UDv2Relations.DET, null);
+			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.startsWith("sal"))
+				return Tuple.of(UDv2Relations.CASE, null);
+
+			else if (tag.matches("p.*") && subTag.startsWith("vv"))
+				return Tuple.of(UDv2Relations.COMPOUND, null);
+			else if (tag.matches("p.*") && subTag.startsWith("ipv"))
+				return Tuple.of(UDv2Relations.DET, null);
+			else if (tag.matches("(mc|xn).*") && subTag.startsWith("skv"))
+				return Tuple.of(UDv2Relations.NUMMOD, null);
+			else if (tag.matches("q.*") && subTag.startsWith("part"))
+				return Tuple.of(UDv2Relations.FLAT, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPREP) &&

@@ -613,6 +613,60 @@ public class Utils
 	}
 
 	/**
+	 * Find node with the biggest ord value. Nodes with no ord are ignored.
+	 * @param nodes list of nodes where to search
+	 * @return	node with largest given ord value
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static Node getLastByOrd(List<Node> nodes)
+			throws XPathExpressionException
+	{
+		if (nodes == null) return null;
+		if (nodes.size() == 1) return nodes.get(0);
+		int biggestOrd = Integer.MIN_VALUE;
+		Node bestNode = null;
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			int ord = Utils.getOrd(nodes.get(i));
+			if (ord > 0 && ord > biggestOrd)
+			{
+				biggestOrd = ord;
+				bestNode = nodes.get(i);
+			}
+		}
+		return bestNode;
+	}
+	/**
+	 * Find node with the smallest ord nonzero value. Nodes with no ord are
+	 * ignored.
+	 * @param nodes list of nodes where to search
+	 * @return	node with largest given ord value
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static Node getFirstByOrd(List<Node> nodes)
+			throws XPathExpressionException
+	{
+		if (nodes == null) return null;
+		if (nodes.size() == 1) return nodes.get(0);
+		int smallestOrd = Integer.MAX_VALUE;
+		Node bestNode = null;
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			int ord = Utils.getOrd(nodes.get(i));
+			if (ord > 0 && ord < smallestOrd)
+			{
+				smallestOrd = ord;
+				bestNode = nodes.get(i);
+			}
+		}
+		return bestNode;
+	}
+
+	/**
 	 * Transform NodeList to ArrayList of Node.
 	 * @param nodes	list to tranform
 	 * @return	transformed list (original node ordering is preserved)

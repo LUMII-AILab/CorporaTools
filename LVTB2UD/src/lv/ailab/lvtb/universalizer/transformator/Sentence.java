@@ -144,6 +144,9 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children; can be null, if
 	 *                      childDeprel is given
+	 * @param phraseTag     phrase tag from PML data, used for obtaining
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
 	 *                      be used for DEPREL field and enhanced backbone for
 	 *                      child nodes, or null, if
@@ -155,11 +158,11 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
-			Node newRoot, NodeList children, String phraseType,
+			Node newRoot, NodeList children, String phraseType, String phraseTag,
 			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		allAsDependents(newRoot, Utils.asList(children), phraseType, childDeprel, warnOut);
+		allAsDependents(newRoot, Utils.asList(children), phraseType, phraseTag, childDeprel, warnOut);
 	}
 
 	/**
@@ -172,6 +175,9 @@ public class Sentence
 	 * @param phraseType    phrase type from PML data, used for obtaining
 	 *                      correct UD role for children; can be null, if
 	 *                      childDeprel is given
+	 * @param phraseTag     phrase tag from PML data, used for obtaining
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
 	 *                      be used for DEPREL field and enhanced backbone for
 	 *                      child nodes, or null, if
@@ -182,7 +188,7 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
-			Node newRoot, List<Node> children, String phraseType,
+			Node newRoot, List<Node> children, String phraseType, String phraseTag,
 			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
@@ -191,7 +197,7 @@ public class Sentence
 		// Process children.
 		for (Node child : children)
 		{
-			addAsDependent(newRoot, child, phraseType, childDeprel, warnOut);
+			addAsDependent(newRoot, child, phraseType, phraseTag, childDeprel, warnOut);
 		}
 	}
 	/**
@@ -201,6 +207,9 @@ public class Sentence
 	 * @param parent		designated parent
 	 * @param child			designated child
 	 * @param phraseType    phrase type from PML data, used for obtaining
+	 *                      correct UD role for children; can be null, if
+	 *                      childDeprel is given
+	 * @param phraseTag     phrase tag from PML data, used for obtaining
 	 *                      correct UD role for children; can be null, if
 	 *                      childDeprel is given
 	 * @param childDeprel	dependency role + enhanced dependencies postfix to
@@ -214,15 +223,15 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public void addAsDependent (
-			Node parent, Node child, String phraseType, Tuple<UDv2Relations, String> childDeprel,
-			PrintWriter warnOut)
+			Node parent, Node child, String phraseType, String phraseTag,
+			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
 		if (child == null ) return;
 		if (child.equals(parent) || child.isSameNode(parent)) return;
 
 		if (childDeprel == null) childDeprel =
-				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, warnOut);
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, phraseTag, warnOut);
 		setLink(parent, child, childDeprel.first, childDeprel, true,true);
 	}
 
@@ -232,6 +241,8 @@ public class Sentence
 	 * child.
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
+	 *                      	correct UD role for children
+	 * @param phraseTag	    	phrase tag from PML data, used for obtaining
 	 *                      	correct UD role for children
 	 * @param newRootType		rubroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
@@ -249,7 +260,7 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public Node allUnderFirst(
-			Node phraseNode, String phraseType, String newRootType,
+			Node phraseNode, String phraseType, String phraseTag, String newRootType,
 			Tuple<UDv2Relations, String> childDeprel, boolean warnMoreThanOne,
 			PrintWriter warnOut)
 	throws XPathExpressionException
@@ -271,7 +282,7 @@ public class Sentence
 		if (newRoot == null)
 			throw new IllegalArgumentException(
 					"\"" + phraseType +"\" in sentence \"" + id + "\" seems to be empty.\n");
-		allAsDependents(newRoot, children, phraseType, childDeprel, warnOut);
+		allAsDependents(newRoot, children, phraseType, phraseTag, childDeprel, warnOut);
 		return newRoot;
 	}
 
@@ -281,6 +292,8 @@ public class Sentence
 	 * child.
 	 * @param phraseNode		node whose children must be processed
 	 * @param phraseType    	phrase type from PML data, used for obtaining
+	 *                      	correct UD role for children
+	 * @param phraseTag	    	phrase tag from PML data, used for obtaining
 	 *                      	correct UD role for children
 	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
@@ -299,7 +312,7 @@ public class Sentence
 	 * 									algorithmical error.
 	 */
 	public Node allUnderLast(
-			Node phraseNode, String phraseType, String newRootType,
+			Node phraseNode, String phraseType, String phraseTag, String newRootType,
 			String newRootBackUpType, Tuple<UDv2Relations, String> childDeprel,
 			boolean warnMoreThanOne, PrintWriter warnOut)
 	throws XPathExpressionException
@@ -325,7 +338,7 @@ public class Sentence
 		if (newRoot == null)
 			throw new IllegalArgumentException(
 					"\"" + phraseType +"\" in sentence \"" + id + "\" seems to be empty.\n");
-		allAsDependents(newRoot, children, phraseType, childDeprel, warnOut);
+		allAsDependents(newRoot, children, phraseType, phraseTag, childDeprel, warnOut);
 		return newRoot;
 	}
 
