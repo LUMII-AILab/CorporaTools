@@ -404,7 +404,7 @@ public class DepRelLogic
 				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, Utils.getId(node), LvtbRoles.CONJ), warnOut);
 			String conjLemma = Utils.getLemma(conjs.item(0));
-			return Tuple.of(UDv2Relations.ADVCL, conjLemma);
+			return Tuple.of(UDv2Relations.OBL, conjLemma);
 		}
 
 		// Participal SPC
