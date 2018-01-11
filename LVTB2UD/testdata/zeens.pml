@@ -517,7 +517,7 @@
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
-                  <tag>vmnip003san</tag>
+                  <tag>vm0ip003san[actpmn]</tag>
                   <children>
                     <node id="a-zeens-p7s1w2">
                       <m.rf id="m-zeens-p7s1w2">
@@ -9333,7 +9333,7 @@
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
-                  <tag>vmnip0030an[modals00]</tag>
+                  <tag>vm0dp0030an[acts00]</tag>
                   <children>
                     <node id="a-zeens-p50s1w15">
                       <m.rf id="m-zeens-p50s1w15">

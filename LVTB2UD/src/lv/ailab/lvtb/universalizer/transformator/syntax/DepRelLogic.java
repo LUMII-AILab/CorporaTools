@@ -374,6 +374,20 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.NMOD, prepLemma);
 		}
 
+		// SPC with comparison
+		if (xType != null && xType.equals(LvtbXTypes.XSIMILE))
+		{
+			NodeList conjs = (NodeList)XPathEngine.get().evaluate(
+					"./children/xinfo/children/node[role='" + LvtbRoles.CONJ + "']",
+					node, XPathConstants.NODESET);
+			if (conjs.getLength() > 1)
+				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".",
+						xType, Utils.getId(node), LvtbRoles.CONJ), warnOut);
+			String conjLemma = Utils.getLemma(conjs.item(0));
+			if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
+				return Tuple.of(UDv2Relations.NMOD, conjLemma);
+			return Tuple.of(UDv2Relations.OBL, conjLemma);
+		}
 		// Simple nominal SPC
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
@@ -392,19 +406,6 @@ public class DepRelLogic
 			}
 			if (tag.matches("[xy].*"))
 				return Tuple.of(UDv2Relations.ACL, null);
-		}
-
-		// SPC with comparison
-		if (xType != null && xType.equals(LvtbXTypes.XSIMILE))
-		{
-			NodeList conjs = (NodeList)XPathEngine.get().evaluate(
-					"./children/xinfo/children/node[role='" + LvtbRoles.CONJ + "']",
-					node, XPathConstants.NODESET);
-			if (conjs.getLength() > 1)
-				warn(String.format("\"%s\" with ID \"%s\" has multiple \"%s\".",
-						xType, Utils.getId(node), LvtbRoles.CONJ), warnOut);
-			String conjLemma = Utils.getLemma(conjs.item(0));
-			return Tuple.of(UDv2Relations.OBL, conjLemma);
 		}
 
 		// Participal SPC

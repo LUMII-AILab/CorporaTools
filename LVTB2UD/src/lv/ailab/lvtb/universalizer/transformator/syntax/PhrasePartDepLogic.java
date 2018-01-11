@@ -51,7 +51,7 @@ public class PhrasePartDepLogic
 	{
 		String nodeId = Utils.getId(aNode);
 		String lvtbRole = Utils.getRole(aNode);
-		String subTag = phraseTag.contains("[")
+		String subTag = phraseTag != null && phraseTag.contains("[")
 				? phraseTag.substring(phraseTag.indexOf("[") + 1)
 				: "";
 
