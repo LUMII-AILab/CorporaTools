@@ -154,10 +154,8 @@ public class PhrasePartDepLogic
 				if (tag.matches("(a|ya|xo|mo).*")) return Tuple.of(UDv2Relations.AMOD, null);
 			}
 
-			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.startsWith("ipv"))
+			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.matches("(ipv|sal).*"))
 				return Tuple.of(UDv2Relations.DET, null);
-			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.startsWith("sal"))
-				return Tuple.of(UDv2Relations.CASE, null);
 
 			else if (tag.matches("p.*") && subTag.startsWith("vv"))
 				return Tuple.of(UDv2Relations.COMPOUND, null);
