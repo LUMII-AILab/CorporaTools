@@ -193,9 +193,9 @@ public class PhrasePartDepLogic
 				if (LvtbXTypes.XPRED.equals(secondAncType) || LvtbPmcTypes.UTTER.equals(secondAncType))
 					return Tuple.of(UDv2Relations.DISCOURSE, null);
 			}
-			// In generic SPC case use mark, in generic ADV we use discourse.
+			// In generic SPC (without PMC) case use case.
 			if (LvtbRoles.SPC.equals(firstAncType))
-				return Tuple.of(UDv2Relations.MARK, null);
+				return Tuple.of(UDv2Relations.CASE, null);
 
 			// NO adv + xSimile instances in data! Is this old?
 			//if (LvtbRoles.ADV.equals(firstAncType))
@@ -206,7 +206,9 @@ public class PhrasePartDepLogic
 				effAncestor = Utils.getEffectiveAncestor(effAncestor);
 			String effAncLabel = Utils.getAnyLabel(effAncestor);
 
-			if (LvtbRoles.SPC.equals(effAncLabel) || LvtbPmcTypes.SPCPMC.equals(effAncLabel)
+			// What to do ith this? Do we even need it?
+			//if (LvtbRoles.SPC.equals(effAncLabel))
+			if (LvtbPmcTypes.SPCPMC.equals(effAncLabel)
 					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
 				return Tuple.of(UDv2Relations.MARK, null);
 
