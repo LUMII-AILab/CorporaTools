@@ -3,12 +3,14 @@ package lv.ailab.lvtb.universalizer.pml.utils;
 import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbHelperRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.PrintWriter;
 
 /**
  * Utility methods for processing PML XML node's fields.
@@ -135,6 +137,25 @@ public class NodeFieldUtils
 		red = red.substring(red.indexOf('(')+1);
 		if (red.endsWith(")")) red = red.substring(0, red.length()-1);
 		return red;
+	}
+
+	/**
+	 * Find reduction field value for given node, split in tag and lemma, and
+	 * then induce lemma with the help of morphological analyzer.
+	 * @param node node to analyze
+	 * @return	reduction lemma
+	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
+	 * 									in the PML tree) most probably due to
+	 * 									algorithmical error.
+	 */
+	public static String getReductionLemma(Node node, PrintWriter warnOut)
+	throws XPathExpressionException
+	{
+		String tag = getReductionTagPart(node);
+		String form = getReductionFormPart(node);
+		if (tag == null || form == null || tag.isEmpty() || form.isEmpty())
+			return null;
+		return AnalyzerWrapper.getLemma(form, tag, warnOut);
 	}
 
 	/**

@@ -646,13 +646,19 @@ public class PhraseTransformator
 		if (auxes.getLength() > 1) for (int i = 0; i < auxes.getLength(); i++)
 		{
 			String auxLemma = NodeFieldUtils.getLemma(lastAux);
-			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
+			String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, warnOut);
+			if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
+			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)") &&
+					!auxRedLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
 				warnOut.printf("xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".\n",
 						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), auxLemma);
 		}
 
 		String auxLemma = NodeFieldUtils.getLemma(lastAux);
-		boolean ultimateAux = auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
+		String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, warnOut);
+		if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
+		boolean ultimateAux = auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
+				auxRedLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
 		String basElemTag = NodeFieldUtils.getTag(basElem);
 
 		boolean nominal = false;
