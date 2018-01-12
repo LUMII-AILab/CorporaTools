@@ -405,7 +405,9 @@ sub _loadM
 				'rf' => @ref ? \@ref : undef,
 				'deleted' => $del,
 				'form_change' => @change ? \@change : undef,
-				'form' => $thisM->{'form'}->{'content'},};
+				'form' => $thisM->{'form'}->{'content'},
+				'tag' => $thisM->{'tag'}->{'content'},
+			};
 		} (keys %{$sent->{'m'}}));
 	}
 
@@ -586,18 +588,29 @@ sub _checkFormChange
 	my $w2token = shift @_;
 	
 	my @res = ();
-	
+
+
 	for my $m (keys %$m2w)
 	{
 		my $v = $m2w->{$m};
 		if (not defined $v->{'rf'} or @{$v->{'rf'}} == 0 ) # Verify m with no 'rf'.
 		{
-			my $contains = 0;
+			my $containsIns = 0;
+			my $containsPunct = 0;
 			for my $change (@{$v->{'form_change'}})
 			{
-				$contains = 1 if ($change eq 'insert');
+				$containsIns = 1 if ($change eq 'insert');
+				$containsPunct = 1 if ($change eq 'punct');
 			}
-			push @res, $m unless ($contains);
+			my $problem = 0;
+			#eval
+			#{
+			#	local $SIG{__WARN__} = sub { $problem = 1; warn $_[0] }; # This magic makes eval count warnings.
+			push @res,
+				$m unless ($containsIns && ($containsPunct || $v->{'tag'} !~ /^z/ ));
+			#};
+			#print Dumper(($m => $v)) if ($problem);
+			#print  if ($problem);
 		}
 		elsif (@{$v->{'rf'}} == 1) 	# Verify m with single 'rf'.
 		{
@@ -609,16 +622,21 @@ sub _checkFormChange
 					($v->{'form_change'} and @{$v->{'form_change'}} > 0));
 		} else					# Verify m with multiple 'rf'.
 		{
-			my $contains = 0;
+			my $containsUni = 0;
+			my $containsPunct = 0;
 			for my $change (@{$v->{'form_change'}})
 			{
-				$contains = 1 if ($change eq 'union');
+				$containsUni = 1 if ($change eq 'union');
+				$containsPunct = 1 if ($change eq 'punct');
 			}
 			my $tok = join '', (map {defined($w2token->{$_}) ? $w2token->{$_} : ''} @{$v->{'rf'}});
 			$tok =~ s/^\s*(.*?)\s*$/$1/;
-			push @res, $m unless ($contains);
+			my $form = $v->{'form'};
 			push @res, $m
-				if ($contains and $tok ne $v->{'form'} and @{$v->{'form_change'}} < 2);
+				if (!$containsUni or
+					($tok ne $form and @{$v->{'form_change'}} < 2) or
+					(!$containsPunct and $tok =~ /([.,!?()]+\Q$form\E[.,!?()]*|[.,!?()]*\Q$form\E[.,!?()]+)/));
+
 		}
 	}
 	
