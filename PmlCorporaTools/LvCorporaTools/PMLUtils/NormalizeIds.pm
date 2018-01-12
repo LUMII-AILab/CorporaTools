@@ -62,10 +62,9 @@ END
 
 	my $dirName = shift @_;
 	my $tryParId = shift @_;
-	my $printChangedXIds = (shift @_ or 1);
+	my $printChangedXIds = @_ ? shift @_ : 1;
 	my $dir = IO::Dir->new($dirName) or die "dir $!";
-	my $problems = 0;
-
+	print "Parameter: $printChangedXIds\n";
 	while (defined(my $in_file = $dir->read))
 	{
 		if ((! -d "$dirName/$in_file") and ($in_file =~ /^(.+)\.w$/))
@@ -134,7 +133,7 @@ END
 	my $firstPara = (shift @_ or 1);
 	my $firstSent = (shift @_ or 1);
 	my $firstWord = (shift @_ or 1);
-	my $printChangedXIds = (shift @_ or 1);
+	my $printChangedXIds = @_ ? shift @_ : 1;
 
 	my $xmls = &load($dirPrefix, $oldName);
 
@@ -235,7 +234,7 @@ sub doOutput
 	my $newName = shift @_;	
 	my $xmls = shift @_;
 	my $idMap = shift @_;
-	my $printChangedXIds = (shift @_ or 1);
+	my $printChangedXIds = @_ ? shift @_ : 1;
 	#my $res = (shift @_ or $xmls->{'xml'});
 
 	mkpath("$dirPrefix/res/");
