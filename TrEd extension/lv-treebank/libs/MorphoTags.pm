@@ -127,6 +127,9 @@ our %tags = (
 		'p' => 'Positive',
 		'c' => 'Comparative',
 		's' => 'Superlative'}],
+	['Negative', {
+		'n' => 'No',
+		'y' => 'Yes'}],
 	]],
 'a' => ['Adjective', [
 	['Type', {
@@ -284,6 +287,12 @@ my $xPredHelper = [
 	'l' => 'Locative'}],
 ];
 
+my $xSimileHelper = [
+['Gramaticalized', {
+	'y' => 'Yes',
+	'n' => 'No'}],
+];
+
 our %phraseTags = (
 #xPred table
 'act' => ['Active voice', $xPredHelper],
@@ -298,8 +307,8 @@ our %phraseTags = (
 'inf' => ['Infinitive predicate', $xPredHelper],
 'num' => ['Numeral predicate', $xPredHelper],
 #xSimile table
-'sim' => ['Similative construction', []],
-'comp' => ['Comparative construction', []],
+'sim' => ['Similative construction', $xSimileHelper],
+'comp' => ['Comparative construction', $xSimileHelper],
 #xPrep table
 'pre' => ['Preposition', []],
 'post' => ['Postposition', []],
