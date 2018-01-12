@@ -3,9 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import lv.semti.morphology.analyzer.Wordform;
-import lv.semti.morphology.attributes.AttributeNames;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

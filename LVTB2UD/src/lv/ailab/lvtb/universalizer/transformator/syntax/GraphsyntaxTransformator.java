@@ -1,13 +1,14 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.util.Tuple;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -87,23 +88,23 @@ public class GraphsyntaxTransformator
 			ArrayList<Node> subjs = new ArrayList<>();
 			NodeList tmp = (NodeList) XPathEngine.get().evaluate(
 					"./children/node[role/text()='subj']", xPredList.item(xPredI), XPathConstants.NODESET);
-			if (tmp != null) subjs.addAll(Utils.asList(tmp));
+			if (tmp != null) subjs.addAll(NodeListUtils.asList(tmp));
 			boolean predIsCoordinated = false;
-			Node ancestor = Utils.getPMLParent(xPredList.item(xPredI));
+			Node ancestor = NodeUtils.getPMLParent(xPredList.item(xPredI));
 			while (ancestor.getNodeName().equals("coordinfo"))
 			{
-				ancestor = Utils.getPMLParent(ancestor); // PML node
+				ancestor = NodeUtils.getPMLParent(ancestor); // PML node
 				tmp = (NodeList) XPathEngine.get().evaluate(
 						"./children/node[role/text()='subj']", ancestor , XPathConstants.NODESET);
-				if (tmp != null) subjs.addAll(Utils.asList(tmp));
-				ancestor = Utils.getPMLParent(ancestor); // PML node or phrase
+				if (tmp != null) subjs.addAll(NodeListUtils.asList(tmp));
+				ancestor = NodeUtils.getPMLParent(ancestor); // PML node or phrase
 				predIsCoordinated = true;
 			}
 			// If no subjects found, nothing to do.
 			if (subjs.isEmpty()) continue;
 
 			// Work on each xPred part
-			NodeList xPredParts = Utils.getPMLNodeChildren(Utils.getPhraseNode(xPredList.item(xPredI)));
+			NodeList xPredParts = NodeUtils.getPMLNodeChildren(NodeUtils.getPhraseNode(xPredList.item(xPredI)));
 			if (xPredParts != null)
 				for (int xPredPartI = 0; xPredPartI < xPredParts.getLength(); xPredPartI++)
 			{
@@ -122,7 +123,7 @@ public class GraphsyntaxTransformator
 				// must be made.
 				for (Node subj : subjs)
 				{
-					String subjLvtbRole = Utils.getRole(subj); // It should be "subj" always.
+					String subjLvtbRole = NodeFieldUtils.getRole(subj); // It should be "subj" always.
 					// Find each coordinated subject part.
 					HashSet<String> subjIds = s.getCoordPartsUnderOrNode(subj);
 					// Find each coordinated x-part part.
@@ -187,10 +188,10 @@ public class GraphsyntaxTransformator
 		if (partNodeTok.equals(wholeCoordNodeTok)) return;
 
 		// This is coordination's dependency head or phrase containing it.
-		Node coordParentNode = Utils.getPMLParent(wholeCoordANode);
-		Node coordGrandParentNode = Utils.getPMLParent(coordParentNode);
+		Node coordParentNode = NodeUtils.getPMLParent(wholeCoordANode);
+		Node coordGrandParentNode = NodeUtils.getPMLParent(coordParentNode);
 
-		if (Utils.isPhraseNode(coordParentNode))
+		if (NodeUtils.isPhraseNode(coordParentNode))
 		{
 			// Renaming for convenience
 			Node phrase = coordParentNode;
@@ -206,11 +207,11 @@ public class GraphsyntaxTransformator
 					|| coordParentNode.getNodeName().equals("pmcinfo"))
 			{
 				Token phraseRootToken = s.getEnhancedOrBaseToken(phraseParent);
-				NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+				NodeList phraseParts = NodeUtils.getPMLNodeChildren(phrase);
 				if (phraseParts != null)
 					for (int phrasePartI = 0; phrasePartI < phraseParts.getLength(); phrasePartI++)
 					{
-						if (Utils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
+						if (NodeFieldUtils.getAnyLabel(phraseParts.item(phrasePartI)).equals(LvtbRoles.PUNCT)
 								|| phraseParts.item(phrasePartI).isSameNode(coordPartNode))
 							continue;
 
@@ -224,11 +225,11 @@ public class GraphsyntaxTransformator
 		} else
 		{
 			// Link between parent of the coordination and coordinated part.
-			if (!Utils.isRoot(coordParentNode) && !wholeCoordNodeTok.depsBackbone.isRootDep())
+			if (!NodeUtils.isRoot(coordParentNode) && !wholeCoordNodeTok.depsBackbone.isRootDep())
 			{
 				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
 						coordPartNode, coordParentNode,
-						Utils.getRole(wholeCoordANode), warnOut);
+						NodeFieldUtils.getRole(wholeCoordANode), warnOut);
 				//partNodeTok.deps.add(parentNodeTok.depsBackbone);
 				s.setEnhLink(coordParentNode, coordPartNode, role,
 						false, false);
@@ -236,13 +237,13 @@ public class GraphsyntaxTransformator
 		}
 
 		// Links between dependants of the coordination and coordinated parts.
-		NodeList dependents = Utils.getPMLNodeChildren(wholeCoordANode);
+		NodeList dependents = NodeUtils.getPMLNodeChildren(wholeCoordANode);
 		if (dependents != null)
 			for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
 			{
 				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
 						dependents.item(dependentI), coordPartNode,
-						Utils.getRole(dependents.item(dependentI)),
+						NodeFieldUtils.getRole(dependents.item(dependentI)),
 						warnOut);
 				s.setEnhLink(coordPartNode, dependents.item(dependentI),
 						role,false,false);

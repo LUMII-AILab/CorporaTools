@@ -3,9 +3,12 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.util.Tuple;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -49,8 +52,8 @@ public class PhraseTransformator
 	public Node anyPhraseToUD(Node phraseNode)
 	throws XPathExpressionException
 	{
-		String phraseType = Utils.getPhraseType(phraseNode);
-		String phraseTag = Utils.getTag(phraseNode);
+		String phraseType = NodeFieldUtils.getPhraseType(phraseNode);
+		String phraseTag = NodeFieldUtils.getTag(phraseNode);
 
 		//======= PMC ==========================================================
 
@@ -123,10 +126,10 @@ public class PhraseTransformator
 	public Node missingTransform(Node phraseNode)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(phraseNode);
-		String phraseType = Utils.getPhraseType(phraseNode);
-		String phraseTag = Utils.getTag(phraseNode);
-		Node newRoot = Utils.getFirstByDescOrd(children);
+		NodeList children = NodeUtils.getAllPMLChildren(phraseNode);
+		String phraseType = NodeFieldUtils.getPhraseType(phraseNode);
+		String phraseTag = NodeFieldUtils.getTag(phraseNode);
+		Node newRoot = NodeListUtils.getFirstByDescOrd(children);
 		s.allAsDependents(newRoot, children, phraseType, phraseTag, null, warnOut);
 		return newRoot;
 	}
@@ -145,7 +148,7 @@ public class PhraseTransformator
 	protected Node sentencyToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(pmcNode);
+		NodeList children = NodeUtils.getAllPMLChildren(pmcNode);
 
 		// Find the structure root.
 		NodeList preds = (NodeList)XPathEngine.get().evaluate(
@@ -155,19 +158,19 @@ public class PhraseTransformator
 		if (preds != null && preds.getLength() > 1)
 			warnOut.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.PRED, pmcType);
-		if (preds != null && preds.getLength() > 0) newRoot = Utils.getFirstByDescOrd(preds);
+		if (preds != null && preds.getLength() > 0) newRoot = NodeListUtils.getFirstByDescOrd(preds);
 		else
 		{
 			preds = (NodeList)XPathEngine.get().evaluate(
 					"./children/node[role='" + LvtbRoles.BASELEM +"']",
 					pmcNode, XPathConstants.NODESET);
-			newRoot = Utils.getFirstByDescOrd(preds);
+			newRoot = NodeListUtils.getFirstByDescOrd(preds);
 		}
 		if (newRoot == null)
 		{
 			warnOut.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
-			newRoot = Utils.getFirstByDescOrd(children);
+			newRoot = NodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
@@ -190,31 +193,31 @@ public class PhraseTransformator
 	protected Node utterToUD(Node pmcNode, String pmcType)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(pmcNode);
+		NodeList children = NodeUtils.getAllPMLChildren(pmcNode);
 
 		// Find the structure root.
 		NodeList basElems = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.BASELEM +"']",
 				pmcNode, XPathConstants.NODESET);
 		Node newRoot = null;
-		if (basElems != null && basElems.getLength() > 0) newRoot = Utils.getFirstByDescOrd(basElems);
+		if (basElems != null && basElems.getLength() > 0) newRoot = NodeListUtils.getFirstByDescOrd(basElems);
 		if (newRoot == null)
 		{
 			warnOut.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
 					s.id, LvtbRoles.BASELEM, pmcType);
-			newRoot = Utils.getFirstByDescOrd(children);
+			newRoot = NodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
 
 		if (basElems!= null && basElems.getLength() > 1 && children.getLength() > basElems.getLength())
 		{
-			ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
+			ArrayList<Node> sortedChildren = NodeListUtils.asOrderedList(children);
 			ArrayList<Node> rootChildren = new ArrayList<>();
 			// If utter starts with punct, they are going to be root children.
 			while (sortedChildren.size() > 0)
 			{
-				String role = Utils.getRole(sortedChildren.get(0));
+				String role = NodeFieldUtils.getRole(sortedChildren.get(0));
 				if (role.equals(LvtbRoles.PUNCT))
 					rootChildren.add(sortedChildren.remove(0));
 				else break;
@@ -222,7 +225,7 @@ public class PhraseTransformator
 			// First "clause" until punctuation is going to be root children.
 			while (sortedChildren.size() > 0)
 			{
-				String role = Utils.getRole(sortedChildren.get(0));
+				String role = NodeFieldUtils.getRole(sortedChildren.get(0));
 				if (!role.equals(LvtbRoles.PUNCT))
 					rootChildren.add(sortedChildren.remove(0));
 				else break;
@@ -231,7 +234,7 @@ public class PhraseTransformator
 			LinkedList<Node> lastPunct = new LinkedList<>();
 			while (sortedChildren.size() > 0)
 			{
-				String role = Utils.getRole(sortedChildren.get(sortedChildren.size()-1));
+				String role = NodeFieldUtils.getRole(sortedChildren.get(sortedChildren.size()-1));
 				if (role.equals(LvtbRoles.PUNCT))
 					lastPunct.push(sortedChildren.remove(sortedChildren.size()-1));
 				else break;
@@ -240,7 +243,7 @@ public class PhraseTransformator
 			s.allAsDependents(newRoot, rootChildren, pmcType, null, null, warnOut);
 
 			// now let's process what is left
-			Token rootTok = s.pmlaToConll.get(Utils.getId(newRoot));
+			Token rootTok = s.pmlaToConll.get(NodeFieldUtils.getId(newRoot));
 			while (sortedChildren.size() > 0)
 			{
 				ArrayList<Node> nextPart = new ArrayList<>();
@@ -249,7 +252,7 @@ public class PhraseTransformator
 				// find next stop
 				while (sortedChildren.size() > 0)
 				{
-					String role = Utils.getRole(sortedChildren.get(0));
+					String role = NodeFieldUtils.getRole(sortedChildren.get(0));
 					if (role.equals(LvtbRoles.PUNCT) && nextPart.size() > 0)
 						break;
 					else if (role.equals(LvtbRoles.BASELEM) && subroot == null)
@@ -280,8 +283,8 @@ public class PhraseTransformator
 	public Node crdPartsToUD(Node coordNode, String coordType, String coordTag)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(coordNode);
-		return coordPartsChildListToUD(Utils.asOrderedList(children), coordType, coordTag, warnOut);
+		NodeList children = NodeUtils.getAllPMLChildren(coordNode);
+		return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, warnOut);
 	}
 
 	/**
@@ -296,33 +299,33 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		// Get all the children.
-		NodeList children = Utils.getAllPMLChildren(coordNode);
+		NodeList children = NodeUtils.getAllPMLChildren(coordNode);
 		// Check if there are any semicolons.
 		NodeList semicolons = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
 		// No semicolons => process as ordinary coordination.
 		if (semicolons == null || semicolons.getLength() < 1)
-			return coordPartsChildListToUD(Utils.asOrderedList(children), coordType, coordTag, warnOut);
+			return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, warnOut);
 
 		// If semicolon(s) is (are) present, split on semicolon and then process
 		// each part as ordinary coordination.
-		ArrayList<Node> sortedSemicolons = Utils.asOrderedList(semicolons);
-		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
-		int semicOrd = Utils.getOrd(sortedSemicolons.get(0));
+		ArrayList<Node> sortedSemicolons = NodeListUtils.asOrderedList(semicolons);
+		ArrayList<Node> sortedChildren = NodeListUtils.asOrderedList(children);
+		int semicOrd = NodeFieldUtils.getOrd(sortedSemicolons.get(0));
 		Node newRoot = coordPartsChildListToUD(
-				Utils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, warnOut);
+				NodeListUtils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, warnOut);
 		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
-			int nextSemicOrd = Utils.getOrd(sortedSemicolons.get(i));
+			int nextSemicOrd = NodeFieldUtils.getOrd(sortedSemicolons.get(i));
 			Node newSubroot = coordPartsChildListToUD(
-					Utils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, coordTag, warnOut);
+					NodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, coordTag, warnOut);
 			s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 			semicOrd = nextSemicOrd;
 		}
 		// last
 		Node newSubroot = coordPartsChildListToUD(
-				Utils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, coordTag, warnOut);
+				NodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, coordTag, warnOut);
 		s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 				Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 		return newRoot;
@@ -393,7 +396,7 @@ public class PhraseTransformator
 	public Node unstructToUd(Node xNode, String xType, String xTag)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(xNode);
+		NodeList children = NodeUtils.getAllPMLChildren(xNode);
 		NodeList foreigns = (NodeList)XPathEngine.get().evaluate(
 				"./children/node[m.rf/tag='xf']", xNode, XPathConstants.NODESET);
 		NodeList punct = (NodeList)XPathEngine.get().evaluate(
@@ -418,7 +421,7 @@ public class PhraseTransformator
 	public Node subrAnalToUD(Node xNode, String xType, String xTag)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(xNode);
+		NodeList children = NodeUtils.getAllPMLChildren(xNode);
 		if (xTag == null || xTag.isEmpty())
 		{
 			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
@@ -451,7 +454,7 @@ public class PhraseTransformator
 				for (int i = 0; i < basElems.getLength(); i++)
 				{
 					Node current = basElems.item(i);
-					String tag = Utils.getTag(current);
+					String tag = NodeFieldUtils.getTag(current);
 					if (tag.matches("(a|ya).*")) adjs.add(current);
 				}
 				if (adjs.size() < 1)
@@ -459,12 +462,12 @@ public class PhraseTransformator
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no adjective \"%s\".\n",
 							xType, s.id, LvtbRoles.BASELEM);
-					adjs = Utils.asList(children);
+					adjs = NodeListUtils.asList(children);
 				}
 				else if (adjs.size() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n",
 						xType, s.id, LvtbRoles.BASELEM);
-				Node newRoot = Utils.getLastByOrd(adjs);
+				Node newRoot = NodeListUtils.getLastByOrd(adjs);
 				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
 				return newRoot;
 			}
@@ -477,7 +480,7 @@ public class PhraseTransformator
 				for (int i = 0; i < basElems.getLength(); i++)
 				{
 					Node current = basElems.item(i);
-					String tag = Utils.getTag(current);
+					String tag = NodeFieldUtils.getTag(current);
 					if (tag.matches("p.*")) prons.add(current);
 				}
 				if (prons.size() < 1)
@@ -485,12 +488,12 @@ public class PhraseTransformator
 					warnOut.printf(
 							"\"%s\" in sentence \"%s\" has no pronominal \"%s\".\n",
 							xType, s.id, LvtbRoles.BASELEM);
-					prons = Utils.asList(children);
+					prons = NodeListUtils.asList(children);
 				}
 				else if (prons.size() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".\n",
 						xTag, s.id, LvtbRoles.BASELEM);
-				Node newRoot = Utils.getFirstByOrd(prons);
+				Node newRoot = NodeListUtils.getFirstByOrd(prons);
 				s.allAsDependents(newRoot, children, xType, xTag,null, warnOut);
 				return newRoot;
 			}
@@ -510,7 +513,7 @@ public class PhraseTransformator
 				else if (noPrepBases.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
 						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
-				Node newRoot = Utils.getLastByOrd(noPrepBases);
+				Node newRoot = NodeListUtils.getLastByOrd(noPrepBases);
 				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
 				return newRoot;
 			}
@@ -530,7 +533,7 @@ public class PhraseTransformator
 				else if (noSimBases.getLength() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
 						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
-				Node newRoot = Utils.getLastByOrd(noSimBases);
+				Node newRoot = NodeListUtils.getLastByOrd(noSimBases);
 				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
 				return newRoot;
 			}
@@ -560,8 +563,8 @@ public class PhraseTransformator
 		boolean gramzed = xTag.matches("[^\\[]*\\[(sim|comp)y.*");
 		if (gramzed)
 		{
-			NodeList children = Utils.getAllPMLChildren(xNode);
-			Node newRoot = Utils.getFirstByDescOrd(children);
+			NodeList children = NodeUtils.getAllPMLChildren(xNode);
+			Node newRoot = NodeListUtils.getFirstByDescOrd(children);
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
 			s.allAsDependents(newRoot, children, xType, xTag,
 					Tuple.of(UDv2Relations.FIXED, null), warnOut);
@@ -583,7 +586,7 @@ public class PhraseTransformator
 	public Node xPredToUD(Node xNode, String xType, String xTag)
 	throws XPathExpressionException
 	{
-		NodeList children = Utils.getAllPMLChildren(xNode);
+		NodeList children = NodeUtils.getAllPMLChildren(xNode);
 		if (children.getLength() == 1) return children.item(0);
 		NodeList mods = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.MOD +"']", xNode, XPathConstants.NODESET);
@@ -609,7 +612,7 @@ public class PhraseTransformator
 		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
 				&& !subtag.startsWith("phase"))
 			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-					Utils.getId(Utils.getPMLParent(xNode)), xTag);
+					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 		// Just put basElem under mod.
 		return s.allUnderLast(xNode, xType, xTag,
 				LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
@@ -630,27 +633,27 @@ public class PhraseTransformator
 		// Get basElems and warn if there is none.
 		NodeList basElems = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
-		Node basElem = Utils.getLastByDescOrd(basElems);
+		Node basElem = NodeListUtils.getLastByDescOrd(basElems);
 		if (basElem == null)
 			throw new IllegalArgumentException(
 					"\"" + xType +"\" in sentence \"" + s.id + "\" has no basElem.\n");
 		NodeList auxes = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
-		Node lastAux = Utils.getLastByDescOrd(auxes);
+		Node lastAux = NodeListUtils.getLastByDescOrd(auxes);
 		if (lastAux == null)
 			throw new IllegalArgumentException(
 					"\"" + xType +"\" in sentence \"" + s.id + "\" has neither auxVerb nor mod.\n");
 		if (auxes.getLength() > 1) for (int i = 0; i < auxes.getLength(); i++)
 		{
-			String auxLemma = Utils.getLemma(lastAux);
+			String auxLemma = NodeFieldUtils.getLemma(lastAux);
 			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
 				warnOut.printf("xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".\n",
-						Utils.getId(Utils.getPMLParent(xNode)), auxLemma);
+						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), auxLemma);
 		}
 
-		String auxLemma = Utils.getLemma(lastAux);
+		String auxLemma = NodeFieldUtils.getLemma(lastAux);
 		boolean ultimateAux = auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
-		String basElemTag = Utils.getTag(basElem);
+		String basElemTag = NodeFieldUtils.getTag(basElem);
 
 		boolean nominal = false;
 		boolean passive = false;
@@ -665,15 +668,15 @@ public class PhraseTransformator
 				nominal = true;
 			else if (!subtag.startsWith("act"))
 				warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-						Utils.getId(Utils.getPMLParent(xNode)), xTag);
+						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 		}
 		else if (basElemTag != null)
 			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-					Utils.getId(Utils.getPMLParent(xNode)), xTag);
+					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 
 		Node newRoot = basElem;
 		if (!ultimateAux) newRoot = lastAux;
-		NodeList children = Utils.getPMLNodeChildren(xNode);
+		NodeList children = NodeUtils.getPMLNodeChildren(xNode);
 		s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
 		if (passive && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,

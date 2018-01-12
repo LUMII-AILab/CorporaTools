@@ -1,13 +1,14 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -98,9 +99,9 @@ public class TreesyntaxTransformator
 		Node newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
 			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
-		s.pmlaToConll.put(Utils.getId(s.pmlTree), s.pmlaToConll.get(Utils.getId(newRoot)));
-		if (s.pmlaToEnhConll.containsKey(Utils.getId(newRoot)))
-			s.pmlaToEnhConll.put(Utils.getId(s.pmlTree), s.pmlaToEnhConll.get(Utils.getId(newRoot)));
+		s.pmlaToConll.put(NodeFieldUtils.getId(s.pmlTree), s.pmlaToConll.get(NodeFieldUtils.getId(newRoot)));
+		if (s.pmlaToEnhConll.containsKey(NodeFieldUtils.getId(newRoot)))
+			s.pmlaToEnhConll.put(NodeFieldUtils.getId(s.pmlTree), s.pmlaToEnhConll.get(NodeFieldUtils.getId(newRoot)));
 		s.setRoot(newRoot, true);
 		relinkDependents(s.pmlTree, newRoot, newRoot);
 	}
@@ -159,9 +160,9 @@ public class TreesyntaxTransformator
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
 		if (s.hasFailed) return;
-		if (debug) System.out.printf("Working on node \"%s\".\n", Utils.getId(aNode));
+		if (debug) System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
 
-		NodeList children = Utils.getAllPMLChildren(aNode);
+		NodeList children = NodeUtils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
 
 		transformDepSubtrees(aNode);
@@ -170,7 +171,7 @@ public class TreesyntaxTransformator
 		Node newBasicRoot = aNode;
 		Node newEnhancedRoot = aNode;
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
-		Node phraseNode = Utils.getPhraseNode(aNode);
+		Node phraseNode = NodeUtils.getPhraseNode(aNode);
 
 		//// Process phrase overlords.
 		if (phraseNode != null)
@@ -185,8 +186,8 @@ public class TreesyntaxTransformator
 
 			if (inducePhraseTags)
 			{
-				String phraseTag = Utils.getTag(aNode);
-				String newRootTag = Utils.getTag(newBasicRoot);
+				String phraseTag = NodeFieldUtils.getTag(aNode);
+				String newRootTag = NodeFieldUtils.getTag(newBasicRoot);
 				if ((phraseTag == null || phraseTag.length() < 1 || phraseTag.matches("N/[Aa]")) &&
 						newRootTag != null && newRootTag.length() > 0)
 				{
@@ -204,7 +205,7 @@ public class TreesyntaxTransformator
 			}
 		}
 		//// Process reduction nodes.
-		else if (Utils.isReductionNode(aNode))
+		else if (NodeUtils.isReductionNode(aNode))
 		{
 
 			Node redRoot = EllipsisLogic.newParent(aNode, warnOut);
@@ -217,7 +218,7 @@ public class TreesyntaxTransformator
 
 			// Make new token for ellipsis.
 			// Decimal token (reduction node) must be inserted after newRootToken.
-			Token newRootToken = s.pmlaToConll.get(Utils.getId(newBasicRoot));
+			Token newRootToken = s.pmlaToConll.get(NodeFieldUtils.getId(newBasicRoot));
 			int position = s.conll.indexOf(newRootToken) + 1;
 			while (position < s.conll.size() && newRootToken.idBegin == s.conll.get(position).idBegin)
 				position++;
@@ -226,11 +227,11 @@ public class TreesyntaxTransformator
 			decimalToken.idSub = s.conll.get(position-1).idSub+1;
 			decimalToken.idEnd = decimalToken.idBegin;
 			decimalToken.xpostag = MorphoTransformator.getXpostag(
-					Utils.getReductionTagPart(aNode), null);
-			decimalToken.form = Utils.getReductionFormPart(aNode);
+					NodeFieldUtils.getReductionTagPart(aNode), null);
+			decimalToken.form = NodeFieldUtils.getReductionFormPart(aNode);
 			if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
 				warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n",
-						Utils.getId(aNode), Utils.getReduction(aNode));
+						NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
 			else
 			{
 				if (decimalToken.form != null && !decimalToken.form.isEmpty())
@@ -242,16 +243,16 @@ public class TreesyntaxTransformator
 						decimalToken.form, decimalToken.lemma, decimalToken.xpostag, aNode, warnOut);
 			}
 			s.conll.add(position, decimalToken);
-			s.pmlaToEnhConll.put(Utils.getId(aNode), decimalToken);
+			s.pmlaToEnhConll.put(NodeFieldUtils.getId(aNode), decimalToken);
 			if (s.hasFailed) return;
 
 			transformSubtree(newBasicRoot);
 		}
 
 		//// Add information about new subroot in the result structure.
-		s.pmlaToConll.put(Utils.getId(aNode), s.pmlaToConll.get(Utils.getId(newBasicRoot)));
-		if (s.pmlaToEnhConll.containsKey(Utils.getId(newEnhancedRoot)))
-			s.pmlaToEnhConll.put(Utils.getId(aNode), s.pmlaToEnhConll.get(Utils.getId(newEnhancedRoot)));
+		s.pmlaToConll.put(NodeFieldUtils.getId(aNode), s.pmlaToConll.get(NodeFieldUtils.getId(newBasicRoot)));
+		if (s.pmlaToEnhConll.containsKey(NodeFieldUtils.getId(newEnhancedRoot)))
+			s.pmlaToEnhConll.put(NodeFieldUtils.getId(aNode), s.pmlaToEnhConll.get(NodeFieldUtils.getId(newEnhancedRoot)));
 
 		//// Process dependants (except the newRoot).
 		relinkDependents(aNode, newBasicRoot, newEnhancedRoot);
@@ -276,14 +277,14 @@ public class TreesyntaxTransformator
 	{
 		if (s.hasFailed) return;
 		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
-		if (s.pmlaToConll.get(Utils.getId(newBaseDepRoot)) != s.pmlaToConll.get(Utils.getId(parentANode)) ||
+		if (s.pmlaToConll.get(NodeFieldUtils.getId(newBaseDepRoot)) != s.pmlaToConll.get(NodeFieldUtils.getId(parentANode)) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
 		{
 			/*System.out.println("sentence " + s.id);
-			System.out.println("base " + s.pmlaToConll.get(Utils.getId(parentANode)).getFirstColumn() + " vs. " + s.pmlaToConll.get(Utils.getId(newBaseDepRoot)).getFirstColumn());
+			System.out.println("base " + s.pmlaToConll.get(NodeUtils.getId(parentANode)).getFirstColumn() + " vs. " + s.pmlaToConll.get(NodeUtils.getId(newBaseDepRoot)).getFirstColumn());
 			System.out.println("enhanced " + s.getEnhancedOrBaseToken(parentANode).getFirstColumn() + " vs. " + s.getEnhancedOrBaseToken(newEnhDepRoot).getFirstColumn());
-			System.out.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));//*/
-			warnOut.printf("Can't relink dependents from %s to %s\n", Utils.getId(parentANode), Utils.getId(newBaseDepRoot));
+			System.out.printf("Can't relink dependents from %s to %s\n", NodeUtils.getId(parentANode), NodeUtils.getId(newBaseDepRoot));//*/
+			warnOut.printf("Can't relink dependents from %s to %s\n", NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot));
 			s.hasFailed = true;
 			return;
 		}

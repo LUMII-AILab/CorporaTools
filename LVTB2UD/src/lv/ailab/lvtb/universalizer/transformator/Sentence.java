@@ -5,10 +5,12 @@ import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
-import lv.ailab.lvtb.universalizer.util.Tuple;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -102,24 +104,24 @@ public class Sentence
 	throws XPathExpressionException
 	{
 		if (aNode == null) return;
-		NodeList dependants = Utils.getPMLNodeChildren(aNode);
+		NodeList dependants = NodeUtils.getPMLNodeChildren(aNode);
 		if (dependants != null) for (int i = 0; i < dependants.getLength(); i++)
 			populateCoordPartsUnder(dependants.item(i));
-		Node phrase = Utils.getPhraseNode(aNode);
+		Node phrase = NodeUtils.getPhraseNode(aNode);
 		if (phrase == null) return;
-		NodeList phraseParts = Utils.getPMLNodeChildren(phrase);
+		NodeList phraseParts = NodeUtils.getPMLNodeChildren(phrase);
 		if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
 			populateCoordPartsUnder(phraseParts.item(i));
 
-		String id = Utils.getId(aNode);
+		String id = NodeFieldUtils.getId(aNode);
 		if (phrase.getNodeName().equals("coordinfo"))
 		{
 			HashSet<String> eqs = coordPartsUnder.get(id);
 			if (eqs == null) eqs = new HashSet<>();
 			if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
 			{
-				String partId = Utils.getId(phraseParts.item(i));
-				String role = Utils.getRole(phraseParts.item(i));
+				String partId = NodeFieldUtils.getId(phraseParts.item(i));
+				String role = NodeFieldUtils.getRole(phraseParts.item(i));
 				if (LvtbRoles.CRDPART.equals(role))
 				{
 					if (coordPartsUnder.containsKey(partId))
@@ -162,7 +164,7 @@ public class Sentence
 			Tuple<UDv2Relations, String> childDeprel, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		allAsDependents(newRoot, Utils.asList(children), phraseType, phraseTag, childDeprel, warnOut);
+		allAsDependents(newRoot, NodeListUtils.asList(children), phraseType, phraseTag, childDeprel, warnOut);
 	}
 
 	/**
@@ -272,12 +274,12 @@ public class Sentence
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
 					phraseType, id, newRootType);
-		Node newRoot = Utils.getFirstByDescOrd(potentialRoots);
+		Node newRoot = NodeListUtils.getFirstByDescOrd(potentialRoots);
 		if (newRoot == null)
 		{
 			warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
-			newRoot = Utils.getFirstByDescOrd(children);
+			newRoot = NodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
@@ -325,15 +327,15 @@ public class Sentence
 				(potentialRoots == null || potentialRoots.getLength() < 1))
 			potentialRoots = (NodeList)XPathEngine.get().evaluate(
 					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
-		Node newRoot = Utils.getLastByDescOrd(potentialRoots);
+		Node newRoot = NodeListUtils.getLastByDescOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
 			warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n",
-					phraseType, id, Utils.getAnyLabel(newRoot));
+					phraseType, id, NodeFieldUtils.getAnyLabel(newRoot));
 		if (newRoot == null)
 		{
 			warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n",
 					phraseType, id, newRootType);
-			newRoot = Utils.getLastByDescOrd(children);
+			newRoot = NodeListUtils.getLastByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(
@@ -363,11 +365,11 @@ public class Sentence
 						 boolean setBackbone, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
-		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(parent));
+		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
+		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(parent));
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency, but avoid circular dependencies.
@@ -407,11 +409,11 @@ public class Sentence
 						    boolean setBackbone, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
-		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(parent));
+		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
+		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(parent));
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set enhanced dependencies, but avoid circular.
@@ -439,8 +441,8 @@ public class Sentence
 	public void setBaseLink (Node parent, Node child, UDv2Relations baseDep)
 			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(Utils.getId(parent));
-		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
+		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
+		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
 
 		// Set base dependency, but avoid circular dependencies.
 		if (!rootBaseToken.equals(childBaseToken))
@@ -465,8 +467,8 @@ public class Sentence
 	public void setRoot (Node node, boolean cleanOldDeps)
 			throws XPathExpressionException
 	{
-		Token childBaseToken = pmlaToConll.get(Utils.getId(node));
-		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(node));
+		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(node));
+		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(node));
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency.
@@ -493,11 +495,11 @@ public class Sentence
 	public void changeHead (Node newParent, Node child)
 			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(Utils.getId(newParent));
-		Token rootEnhToken = pmlaToEnhConll.get(Utils.getId(newParent));
+		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(newParent));
+		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(newParent));
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(Utils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(Utils.getId(child));
+		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
+		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency, but avoid circular dependencies.
@@ -530,7 +532,7 @@ public class Sentence
 			throws XPathExpressionException
 	{
 		if (aNode == null) return null;
-		String id = Utils.getId(aNode);
+		String id = NodeFieldUtils.getId(aNode);
 		if (id == null) return null;
 		Token resToken = pmlaToEnhConll.get(id);
 		if (resToken == null) resToken = pmlaToConll.get(id);
@@ -582,6 +584,6 @@ public class Sentence
 	public HashSet<String> getCoordPartsUnderOrNode (Node aNode)
 	throws XPathExpressionException
 	{
-		return getCoordPartsUnderOrNode(Utils.getId(aNode));
+		return getCoordPartsUnderOrNode(NodeFieldUtils.getId(aNode));
 	}
 }

@@ -1,8 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.PmlLoader;
-import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -64,7 +64,7 @@ public class FileTransformator
 			}
 			// Print out information about the start of the new document
 			processed.append("# newdoc");
-			String firstSentId = Utils.getId(pmlTrees.item(0));
+			String firstSentId = NodeFieldUtils.getId(pmlTrees.item(0));
 			Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(firstSentId);
 			if (idMatcher.matches())
 			{
@@ -104,14 +104,14 @@ public class FileTransformator
 				conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
 			} catch (Exception e)
 			{
-				String treeId = Utils.getId(pmlTrees.item(i));
+				String treeId = NodeFieldUtils.getId(pmlTrees.item(i));
 				warningsLog.printf("A sentence %s failed with an exception: ", treeId);
 				e.printStackTrace(warningsLog);
 				System.out.printf("A sentence %s failed with an exception %s.\n", treeId, e.toString());
 			}
 			if (i > 0)
 			{
-				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(Utils.getId(pmlTrees.item(i)));
+				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(NodeFieldUtils.getId(pmlTrees.item(i)));
 				if (idMatcher.matches())
 				{
 					String nextParaID = idMatcher.group(1);

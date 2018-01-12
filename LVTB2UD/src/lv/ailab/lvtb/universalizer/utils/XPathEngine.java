@@ -1,4 +1,4 @@
-package lv.ailab.lvtb.universalizer.util;
+package lv.ailab.lvtb.universalizer.utils;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;

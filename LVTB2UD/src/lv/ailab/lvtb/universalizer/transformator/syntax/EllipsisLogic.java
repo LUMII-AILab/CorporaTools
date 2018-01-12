@@ -2,7 +2,9 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -28,15 +30,15 @@ public class EllipsisLogic
 	{
 		// This method should not be used for transforming phrase nodes or nodes
 		// with morphology.
-		if (Utils.getPhraseNode(aNode) != null || Utils.getMNode(aNode) != null)
+		if (NodeUtils.getPhraseNode(aNode) != null || NodeUtils.getMNode(aNode) != null)
 			return null;
 
-		NodeList children = Utils.getPMLNodeChildren(aNode);
+		NodeList children = NodeUtils.getPMLNodeChildren(aNode);
 		if (children == null) return null;
 
-		ArrayList<Node> sortedChildren = Utils.asOrderedList(children);
-		String lvtbEffRole = Utils.getEffectiveLabel(aNode);
-		String lvtbTag = Utils.getTag(aNode);
+		ArrayList<Node> sortedChildren = NodeListUtils.asOrderedList(children);
+		String lvtbEffRole = NodeFieldUtils.getEffectiveLabel(aNode);
+		String lvtbTag = NodeFieldUtils.getTag(aNode);
 		
 		// Rules for specific parents.
 		if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*")
@@ -47,10 +49,10 @@ public class EllipsisLogic
 				for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Could not determine potential UD role during ellipsis processing for " + Utils
+							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils
 									.getId(n));
 				if (noRedUDrole.equals(UDv2Relations.AUX) || noRedUDrole.equals(UDv2Relations.COP))
 					return n;
@@ -66,10 +68,10 @@ public class EllipsisLogic
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
+							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
 		}
@@ -84,10 +86,10 @@ public class EllipsisLogic
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, Utils.getPMLParent(n), Utils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
-							"Could not determine potential UD role during ellipsis processing for " + Utils.getId(n));
+							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils.getId(n));
 				if (noRedUDrole.equals(role)) return n;
 			}
 		}

@@ -10,7 +10,7 @@ package lv.ailab.lvtb.universalizer.pml;
 public class LvtbHelperRoles
 {
 	/**
-	 * Utils.getAnyLabel() result for root node.
+	 * NodeFieldUtils.getAnyLabel() result for root node.
 	 */
 	public static final String ROOT = "root";
 }

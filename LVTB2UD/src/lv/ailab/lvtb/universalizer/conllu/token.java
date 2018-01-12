@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
-import lv.ailab.lvtb.universalizer.util.Tuple;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.Comparator;

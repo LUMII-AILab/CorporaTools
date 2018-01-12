@@ -2,8 +2,10 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
-import lv.ailab.lvtb.universalizer.pml.Utils;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import org.w3c.dom.NodeList;
@@ -29,7 +31,7 @@ public class PosLogic
 			String lemma, String xpostag, Node aNode, PrintWriter warnOut)
 	throws XPathExpressionException
 	{
-		String lvtbRole = Utils.getRole(aNode);
+		String lvtbRole = NodeFieldUtils.getRole(aNode);
 		String comprLemma = lemma;
 		if (comprLemma == null) comprLemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
@@ -56,13 +58,13 @@ public class PosLogic
 			if (lvtbRole.equals(LvtbRoles.ATTR)) return UDv2PosTag.DET;
 			else if (lvtbRole.equals(LvtbRoles.BASELEM) && comprLemma.matches("tād[sa]"))
 			{
-				Node parent = Utils.getPMLParent(aNode);
-				if (!LvtbXTypes.SUBRANAL.equals(Utils.getRole(parent)))
+				Node parent = NodeUtils.getPMLParent(aNode);
+				if (!LvtbXTypes.SUBRANAL.equals(NodeFieldUtils.getRole(parent)))
 					return UDv2PosTag.PRON;
 
-				NodeList children = Utils.getAllPMLChildren(parent);
-				Node first = Utils.getFirstByDescOrd(children);
-				Node last = Utils.getLastByDescOrd(children);
+				NodeList children = NodeUtils.getAllPMLChildren(parent);
+				Node first = NodeListUtils.getFirstByDescOrd(children);
+				Node last = NodeListUtils.getLastByDescOrd(children);
 				if (children != null && children.getLength() == 2  &&
 						(aNode.isSameNode(first)) &&
 						LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))

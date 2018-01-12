@@ -1,7 +1,5 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
-import lv.ailab.lvtb.universalizer.util.Tuple;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

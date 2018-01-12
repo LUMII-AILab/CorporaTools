@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
-import lv.ailab.lvtb.universalizer.util.Tuple;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 /**
  * Description of one enhanced dependency link - head ID's string

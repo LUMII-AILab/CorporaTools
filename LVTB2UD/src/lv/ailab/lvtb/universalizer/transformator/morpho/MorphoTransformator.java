@@ -3,10 +3,10 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.pml.Utils;
+import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.util.XPathEngine;
-import lv.ailab.lvtb.universalizer.util.Tuple;
+import lv.ailab.lvtb.universalizer.utils.XPathEngine;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -66,7 +66,7 @@ public class MorphoTransformator {
 
 			// Determine, if paragraph has border before this token.
 			boolean paragraphChange = false;
-			String mId = Utils.getMId(nodes.item(0));
+			String mId = NodeFieldUtils.getMId(nodes.item(0));
 			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
 				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
 			else warnOut.println(
@@ -113,9 +113,9 @@ public class MorphoTransformator {
 				!lvtbTag.matches("x[no].*") &&
 				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 		{
-			int baseOrd = Utils.getOrd(aNode);
+			int baseOrd = NodeFieldUtils.getOrd(aNode);
 			if (baseOrd < 1)
-				throw new IllegalArgumentException("Node " + Utils.getId(aNode) + "has no ord value");
+				throw new IllegalArgumentException("Node " + NodeFieldUtils.getId(aNode) + "has no ord value");
 
 			String[] forms = mForm.split(" ");
 			String[] lemmas = mLemma.split(" ");
@@ -144,7 +144,7 @@ public class MorphoTransformator {
 			}
 			if (paragraphChange) firstTok.misc = "NewPar=Yes";
 			s.conll.add(firstTok);
-			s.pmlaToConll.put(Utils.getId(aNode), firstTok);
+			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), firstTok);
 
 			// The rest
 			for (int i = 1; i < forms.length && i < lemmas.length; i++)
@@ -174,7 +174,7 @@ public class MorphoTransformator {
 		} else
 		{
 			Token nextTok = new Token(
-					Utils.getOrd(aNode) + offset, mForm, mLemma,
+					NodeFieldUtils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
@@ -185,7 +185,7 @@ public class MorphoTransformator {
 			else if (paragraphChange)
 				nextTok.misc = "NewPar=Yes";
 			s.conll.add(nextTok);
-			s.pmlaToConll.put(Utils.getId(aNode), nextTok);
+			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), nextTok);
 		}
 		return offset;
 	}
