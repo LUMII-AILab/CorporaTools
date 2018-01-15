@@ -5,7 +5,7 @@
 :: Let's assume Treebank repository is right next to CorporaTools.
 
 REM Split according to Sembank ignore list.
-::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitOnOffList); splitOnOffList(@ARGV)" data\fullConllu ..\..\Treebank\Docs\SemBank-ignored.txt data
+::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitOnOffList); splitOnOffList(@ARGV)" data\fullConllu ..\..\Treebank\Datasplits\SemBank-ignored.tsv data
 ::@move .\data\on-list .\data\ignore >nul
 ::@move .\data\off-list .\data\good >nul
 
