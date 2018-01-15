@@ -635,7 +635,8 @@ sub _checkFormChange
 			push @res, $m
 				if (!$containsUni or
 					($tok ne $form and @{$v->{'form_change'}} < 2) or
-					(!$containsPunct and $tok =~ /([.,!?()]+\Q$form\E[.,!?()]*|[.,!?()]*\Q$form\E[.,!?()]+)/));
+					(!$containsPunct and $tok =~ /([.,!?()]+\Q$form\E[.,!?()]*|[.,!?()]*\Q$form\E[.,!?()]+)/) or
+					($containsPunct and $tok !~ /\p{P}/ and $form !~ /\p{P}/)); # "punct" label should be used only in relation to punctuation marks, not average words.
 
 		}
 	}
