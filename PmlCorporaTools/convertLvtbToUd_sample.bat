@@ -11,7 +11,7 @@
 :: Copy results from CorporaTools/LVTB2UD/out/production/data/conll-u to data/complete
 
 :: Create data splits in folders data/train, data/test, data/dev
-::perl -e "use LvCorporaTools::DataSelector::SplitTrainDevTest qw(makeTDT); makeTDT(@ARGV)" data/complete ../Datasplits/testdevtrain.tsv data
+::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitTDT); splitTDT(@ARGV)" data/complete ../../Treebank/Datasplits/testdevtrain.tsv data
 
 :: Fold everything neatly (assumed files are separated in folders "train", "test", "dev" and "complete")
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/train --fold p=1 name=lv-ud-train
