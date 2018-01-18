@@ -91,8 +91,10 @@ public class Token
 	 * 10th column.
 	 * MISC: Any other annotation.
 	 * SpaceAfter=No
+	 * NewPar=Yes
+	 * LvtbNodeId=...
 	 */
-	public String misc = null;
+	public HashSet<String> misc = new HashSet<>();
 
 	public Token() { }
 
@@ -254,8 +256,14 @@ public class Token
 		}
 		// 10
 		res.append("\t");
-		if (misc == null|| misc.length() < 1) res.append("_");
-		else res.append(misc);
+		if (misc == null|| misc.size() < 1) res.append("_");
+		else
+		{
+			//res.append(misc);
+			res.append(misc.stream()
+					.sorted(String.CASE_INSENSITIVE_ORDER)
+					.reduce((a, b) -> a + "|" + b).orElse("_"));
+		}
 		res.append("\n");
 
 		return res.toString();

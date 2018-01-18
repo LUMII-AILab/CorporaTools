@@ -492,7 +492,7 @@ public class PhraseTransformator
 				}
 				else if (prons.size() > 1) warnOut.printf(
 						"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".\n",
-						xTag, s.id, LvtbRoles.BASELEM);
+						xType, s.id, LvtbRoles.BASELEM);
 				Node newRoot = NodeListUtils.getFirstByOrd(prons);
 				s.allAsDependents(newRoot, children, xType, xTag,null, warnOut);
 				return newRoot;
@@ -636,7 +636,7 @@ public class PhraseTransformator
 		Node basElem = NodeListUtils.getLastByDescOrd(basElems);
 		if (basElem == null)
 			throw new IllegalArgumentException(
-					"\"" + xType +"\" in sentence \"" + s.id + "\" has no basElem.\n");
+					"\"" + xType +"\" in sentence \"" + s.id + "\" has no \"basElem\".\n");
 		NodeList auxes = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
 		Node lastAux = NodeListUtils.getLastByDescOrd(auxes);

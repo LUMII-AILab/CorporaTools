@@ -25,6 +25,7 @@ public class SentenceTransformEngine
 	protected TreesyntaxTransformator syntTransf;
 	protected GraphsyntaxTransformator enhSyntTransf;
 	protected PrintWriter warnOut;
+	public static boolean ADD_NODE_IDS = false;
 	public static boolean DEBUG = false;
 	public static boolean WARN_ELLIPSIS = false;
 	public static boolean WARN_OMISSIONS = true;
@@ -40,7 +41,7 @@ public class SentenceTransformEngine
 	{
 		s = new Sentence(pmlTree);
 		this.warnOut = warnOut;
-		morphoTransf = new MorphoTransformator(s, warnOut);
+		morphoTransf = new MorphoTransformator(s, ADD_NODE_IDS, warnOut);
 		syntTransf = new TreesyntaxTransformator(s, warnOut, INDUCE_PHRASE_TAGS, DEBUG);
 		enhSyntTransf = new GraphsyntaxTransformator(s, warnOut);
 	}

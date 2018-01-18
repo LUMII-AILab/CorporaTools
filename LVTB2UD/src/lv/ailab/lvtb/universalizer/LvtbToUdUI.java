@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.transformator.FileTransformator;
+import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
 
 import java.io.*;
 
@@ -36,10 +37,11 @@ public class LvtbToUdUI
 	public static String inputDataPath = "./data/pml/";
 	public static String logPath = "./data/log/";
 	public static String outputDataPath = "./data/conll-u/";
+	public static boolean ADD_NODE_IDS = true;
 	/**
 	 * Rename newswire IDs' document part.
 	 */
-	public static boolean CHANGE_IDS = true;
+	public static boolean CHANGE_IDS = false;
 	/**
 	 * What to when a file contains an untransformable tree? For true - whole
 	 * file is omitted; for false - only specific tree.
@@ -49,6 +51,7 @@ public class LvtbToUdUI
 	public static void main(String[] args) throws Exception
 	{
 		File folder = new File(inputDataPath);
+		SentenceTransformEngine.ADD_NODE_IDS = ADD_NODE_IDS;
 		if (!folder.exists())
 		{
 			System.out.println(

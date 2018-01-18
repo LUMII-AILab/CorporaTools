@@ -23,11 +23,13 @@ public class MorphoTransformator {
 	 */
 	public Sentence s;
 	protected PrintWriter warnOut;
+	public boolean addNodeIds = false;
 
-	public MorphoTransformator(Sentence sent, PrintWriter warnOut)
+	public MorphoTransformator(Sentence sent, boolean addNodeIds, PrintWriter warnOut)
 	{
 		s = sent;
 		this.warnOut = warnOut;
+		this.addNodeIds = addNodeIds;
 	}
 
 	/**
@@ -102,6 +104,7 @@ public class MorphoTransformator {
 		String mForm = XPathEngine.get().evaluate("./form", mNode);
 		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
 		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
+		String lvtbAId = NodeFieldUtils.getId(aNode);
 		boolean noSpaceAfter = false;
 		if ("1".equals(XPathEngine.get().evaluate(
 				"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", mNode)))
@@ -126,6 +129,8 @@ public class MorphoTransformator {
 			// First one is different.
 			Token firstTok = new Token(baseOrd + offset, forms[0],
 					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
+			if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+				firstTok.misc.add("LvtbNodeId=" + lvtbAId);
 			if (lvtbTag.matches("xf.*"))
 			{
 				warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
@@ -142,7 +147,7 @@ public class MorphoTransformator {
 				firstTok.upostag = UDv2PosTag.PART;
 				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, warnOut);
 			}
-			if (paragraphChange) firstTok.misc = "NewPar=Yes";
+			if (paragraphChange) firstTok.misc.add("NewPar=Yes");
 			s.conll.add(firstTok);
 			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), firstTok);
 
@@ -152,6 +157,8 @@ public class MorphoTransformator {
 				offset++;
 				Token nextTok = new Token(baseOrd + offset, forms[i],
 						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
+				if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+					nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
@@ -164,7 +171,7 @@ public class MorphoTransformator {
 				}
 				nextTok.head = Tuple.of(firstTok.getFirstColumn(), firstTok);
 				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
-					nextTok.misc = "SpaceAfter=No";
+					nextTok.misc.add("SpaceAfter=No");
 				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
 				else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
 				else nextTok.deprel = UDv2Relations.FIXED;
@@ -176,14 +183,14 @@ public class MorphoTransformator {
 			Token nextTok = new Token(
 					NodeFieldUtils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
+			if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-			if (noSpaceAfter && paragraphChange)
-				nextTok.misc = "NewPar=Yes|SpaceAfter=No";
-			else if (noSpaceAfter)
-				nextTok.misc = "SpaceAfter=No";
-			else if (paragraphChange)
-				nextTok.misc = "NewPar=Yes";
+			if (noSpaceAfter)
+				nextTok.misc.add("SpaceAfter=No");
+			if (paragraphChange)
+				nextTok.misc.add("NewPar=Yes");
 			s.conll.add(nextTok);
 			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), nextTok);
 		}
@@ -214,7 +221,7 @@ public class MorphoTransformator {
 		for (Token t : s.conll)
 		{
 			s.text = s.text + t.form;
-			if (t.misc == null || !t.misc.matches(".*?\\bSpaceAfter=No\\b.*"))
+			if (t.misc == null || !t.misc.contains("SpaceAfter=No"))
 				s.text = s.text + " ";
 		}
 		s.text = s.text.trim();
