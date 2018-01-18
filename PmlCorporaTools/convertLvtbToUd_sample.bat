@@ -1,4 +1,4 @@
-:: For standard UD / Sembank release, DO NOT FORGET to remove sample data!
+:: For standard UD release, DO NOT FORGET to remove sample data!
 :: (For standard Sembank release sample files will be handled by ignore list.)
 ::@if exist .\data\Corpora\Paraugi rmdir .\data\Corpora\Paraugi /Q /S >nul
 
