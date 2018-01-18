@@ -19,18 +19,15 @@ import java.util.regex.Pattern;
 // TODO  sentences after first error, if omittWholeOnError = true
 public class FileTransformator
 {
-	/**
-	 * Rename newswire IDs' document part.
-	 */
-	public boolean changeIds;
 	public StringBuilder processed;
+	protected TransformationParams params;
 	public int omitted;
 	private int added;
 	public int all;
 
-	public FileTransformator(boolean changeIds)
+	public FileTransformator(TransformationParams params)
 	{
-		this.changeIds = changeIds;
+		this.params = params;
 		processed = new StringBuilder();
 		omitted = 0;
 		added = 0;
@@ -70,15 +67,15 @@ public class FileTransformator
 			{
 				String dicIdForPrint = firstSentId.substring(firstSentId.indexOf("-") + 1,
 						firstSentId.lastIndexOf("-"));
-				if (changeIds)
-					dicIdForPrint = dicIdForPrint.replace("LETA", "newswire");
+				//if (params.CHANGE_IDS != null && params.CHANGE_IDS)
+				//	dicIdForPrint = dicIdForPrint.replace("LETA", "newswire");
 				processed.append(" id = ");
 				processed.append(dicIdForPrint);
 				paragraphId = idMatcher.group(1);
 
 			}
 			processed.append("\n");
-			// Print out information about the start of the first paragraph
+			// Print out information about the start of the first paragraph.
 			processed.append("# newpar");
 			if (!paragraphId.isEmpty())
 			{
@@ -87,9 +84,19 @@ public class FileTransformator
 			}
 			processed.append("\n");
 		}
-		// Process trees
+		// Process all trees, one by one...
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
+			// However, there is no use to continue processing, if in case of
+			// an error the whole file will be ommited and there already has
+			// been an error.
+			if (params.OMIT_WHOLE_FILES && omitted > 0)
+			{
+				omitted = pmlTrees.getLength();
+				break;
+			}
+
+			// A "FIXME" comment mean unfinished and thus untransformable sentence.
 			String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
 			if (comment != null && comment.startsWith("FIXME"))
 			{
@@ -98,10 +105,13 @@ public class FileTransformator
 				omitted++;
 				continue;
 			}
+
+			// Try transforming tree.
 			String conllTree = null;
 			try
 			{
-				conllTree = SentenceTransformEngine.treeToConll(pmlTrees.item(i), warningsLog);
+				conllTree = SentenceTransformEngine.treeToConll(
+						pmlTrees.item(i), params, warningsLog);
 			} catch (Exception e)
 			{
 				String treeId = NodeFieldUtils.getId(pmlTrees.item(i));
@@ -109,6 +119,8 @@ public class FileTransformator
 				e.printStackTrace(warningsLog);
 				System.out.printf("A sentence %s failed with an exception %s.\n", treeId, e.toString());
 			}
+
+			// Has a new paragraph started?
 			if (i > 0)
 			{
 				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(NodeFieldUtils.getId(pmlTrees.item(i)));
@@ -125,6 +137,7 @@ public class FileTransformator
 				}
 			}
 
+			// Store obtained results and update stats.
 			if (conllTree != null)
 			{
 				processed.append(conllTree);
@@ -139,19 +152,17 @@ public class FileTransformator
 	 * an empty file or a file containing no sentences
 	 * @param conllOut    		path for the new result file
 	 * @param warningsLog 		log for warnings
-	 * @param omitWholeOnError   if true, then in case of at least one omitted
-	 *                           tree, whole file will be omitted.
 	 * @return	if the file was actually written
 	 */
 	public boolean writeResult(
-			String conllOut, PrintWriter warningsLog, boolean omitWholeOnError)
+			String conllOut, PrintWriter warningsLog)
 	throws IOException
 	{
 		if (omitted + added != all)
 		{
 			throw new IllegalStateException("Algorithmic error! Omitted Trees + Good Trees != All Trees!");
 		}
-		if (omitWholeOnError && omitted > 0 || all - omitted < 1)
+		if (params.OMIT_WHOLE_FILES && omitted > 0 || all - omitted < 1)
 		{
 			System.out.println("Finished - nothing to write.");
 			warningsLog.println("Finished - nothing to write.");

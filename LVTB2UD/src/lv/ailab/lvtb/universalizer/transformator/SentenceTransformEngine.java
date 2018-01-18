@@ -25,24 +25,16 @@ public class SentenceTransformEngine
 	protected TreesyntaxTransformator syntTransf;
 	protected GraphsyntaxTransformator enhSyntTransf;
 	protected PrintWriter warnOut;
-	public static boolean ADD_NODE_IDS = false;
-	public static boolean DEBUG = false;
-	public static boolean WARN_ELLIPSIS = false;
-	public static boolean WARN_OMISSIONS = true;
-	public static boolean DO_ENHANCED = true;
-	/**
-	 * For already processed nodes without tag set the phrase tag based on node
-	 * chosen as substructure root.
-	 */
-	public static boolean INDUCE_PHRASE_TAGS = true;
+	protected TransformationParams params;
 
-	public SentenceTransformEngine(Node pmlTree, PrintWriter warnOut)
+	public SentenceTransformEngine(Node pmlTree, TransformationParams params, PrintWriter warnOut)
 			throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
 		this.warnOut = warnOut;
-		morphoTransf = new MorphoTransformator(s, ADD_NODE_IDS, warnOut);
-		syntTransf = new TreesyntaxTransformator(s, warnOut, INDUCE_PHRASE_TAGS, DEBUG);
+		this.params = params;
+		morphoTransf = new MorphoTransformator(s, params, warnOut);
+		syntTransf = new TreesyntaxTransformator(s, params, warnOut);
 		enhSyntTransf = new GraphsyntaxTransformator(s, warnOut);
 	}
 
@@ -57,18 +49,18 @@ public class SentenceTransformEngine
 	 */
 	public boolean transform() throws XPathExpressionException
 	{
-		if (DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
+		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
 		morphoTransf.transformTokens();
 		warnOut.flush();
 		morphoTransf.extractSendenceText();
 		warnOut.flush();
 		boolean noMoreEllipsis = syntTransf.preprocessEmptyEllipsis();
-		if (WARN_ELLIPSIS && !noMoreEllipsis)
+		if (params.WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		syntTransf.transformBaseSyntax();
 		warnOut.flush();
-		if (DO_ENHANCED)
+		if (params.DO_ENHANCED)
 		{
 			enhSyntTransf.transformEnhancedSyntax();
 			warnOut.flush();
@@ -81,18 +73,19 @@ public class SentenceTransformEngine
 	 * transform given PML tree and get the string representation for the
 	 * resulting CoNLL-U table.
 	 * @param pmlTree	tree to transform
+	 * @param params	transformation parameters
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
 	 */
-	public static String treeToConll(Node pmlTree, PrintWriter warnOut)
+	public static String treeToConll(Node pmlTree, TransformationParams params, PrintWriter warnOut)
 	{
 		String id ="<unknown>";
 		try {
-			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, warnOut);
+			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, params, warnOut);
 			id = t.s.id;
 			boolean res = t.transform();
 			if (res) return t.s.toConllU();
-			if (WARN_OMISSIONS)
+			if (params.WARN_OMISSIONS)
 				warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
 		} catch (NullPointerException|IllegalArgumentException e)
 		{

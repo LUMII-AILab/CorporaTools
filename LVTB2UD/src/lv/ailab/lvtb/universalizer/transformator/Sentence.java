@@ -81,8 +81,9 @@ public class Sentence
 	{
 		StringBuilder res = new StringBuilder();
 		res.append("# sent_id = ");
-		if (LvtbToUdUI.CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
-		else res.append(id);
+		//if (params.CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
+		//else
+		res.append(id);
 		res.append("\n");
 		res.append("# text = ");
 		res.append(text);

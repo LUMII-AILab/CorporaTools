@@ -5,6 +5,7 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import org.w3c.dom.Node;
@@ -22,14 +23,14 @@ public class MorphoTransformator {
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
+	protected TransformationParams params;
 	protected PrintWriter warnOut;
-	public boolean addNodeIds = false;
 
-	public MorphoTransformator(Sentence sent, boolean addNodeIds, PrintWriter warnOut)
+	public MorphoTransformator(Sentence sent, TransformationParams params, PrintWriter warnOut)
 	{
 		s = sent;
 		this.warnOut = warnOut;
-		this.addNodeIds = addNodeIds;
+		this.params = params;
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class MorphoTransformator {
 			// First one is different.
 			Token firstTok = new Token(baseOrd + offset, forms[0],
 					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-			if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
 				firstTok.misc.add("LvtbNodeId=" + lvtbAId);
 			if (lvtbTag.matches("xf.*"))
 			{
@@ -157,7 +158,7 @@ public class MorphoTransformator {
 				offset++;
 				Token nextTok = new Token(baseOrd + offset, forms[i],
 						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-				if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+				if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
 					nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
@@ -183,7 +184,7 @@ public class MorphoTransformator {
 			Token nextTok = new Token(
 					NodeFieldUtils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
-			if (addNodeIds && lvtbAId != null && !lvtbAId.isEmpty())
+			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
 				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);

@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
@@ -30,28 +31,20 @@ public class TreesyntaxTransformator
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
-	/**
-	 * Should missing phrase tags be filled with some kind of heuristics.
-	 */
-	public boolean inducePhraseTags;
-	/**
-	 * Print debug info.
-	 */
-	public boolean debug;
 
+	protected TransformationParams params;
 	protected PhraseTransformator pTransf;
 	/**
 	 * Stream for warnings.
 	 */
 	protected PrintWriter warnOut;
 
-	public TreesyntaxTransformator(Sentence sent, PrintWriter warnOut,
-								   boolean inducePhraseTags, boolean debug)
+	public TreesyntaxTransformator(Sentence sent, TransformationParams params,
+								   PrintWriter warnOut)
 	{
 		s = sent;
 		this.warnOut = warnOut;
-		this.inducePhraseTags = inducePhraseTags;
-		this.debug = debug;
+		this.params = params;
 		pTransf = new PhraseTransformator(s, warnOut);
 	}
 
@@ -160,7 +153,7 @@ public class TreesyntaxTransformator
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
 		if (s.hasFailed) return;
-		if (debug) System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
+		if (params.DEBUG) System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
 
 		NodeList children = NodeUtils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
@@ -184,7 +177,7 @@ public class TreesyntaxTransformator
 				throw new IllegalStateException(
 						"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
 
-			if (inducePhraseTags)
+			if (params.INDUCE_PHRASE_TAGS)
 			{
 				String phraseTag = NodeFieldUtils.getTag(aNode);
 				String newRootTag = NodeFieldUtils.getTag(newBasicRoot);
