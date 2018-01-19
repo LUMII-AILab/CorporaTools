@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.transformator.FileTransformator;
-import lv.ailab.lvtb.universalizer.transformator.Logger;
+import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 
 import java.io.*;

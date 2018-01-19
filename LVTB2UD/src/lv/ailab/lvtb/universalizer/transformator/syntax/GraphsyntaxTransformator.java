@@ -6,7 +6,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
-import lv.ailab.lvtb.universalizer.transformator.Logger;
+import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 

@@ -2,10 +2,10 @@ package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.syntax.*;
+import lv.ailab.lvtb.universalizer.utils.Logger;
 import org.w3c.dom.Node;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 
 /**
  * Logic for transforming LVTB sentence annotations to UD.

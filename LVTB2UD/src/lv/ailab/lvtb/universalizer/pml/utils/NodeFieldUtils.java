@@ -3,7 +3,7 @@ package lv.ailab.lvtb.universalizer.pml.utils;
 import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbHelperRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.transformator.Logger;
+import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 
 /**
  * Utility methods for processing PML XML node's fields.

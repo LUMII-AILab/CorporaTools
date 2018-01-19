@@ -1,4 +1,4 @@
-package lv.ailab.lvtb.universalizer.transformator;
+package lv.ailab.lvtb.universalizer.utils;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
