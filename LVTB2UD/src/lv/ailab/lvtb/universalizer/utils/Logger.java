@@ -49,32 +49,48 @@ public class Logger
 		statusOut.printf("%s trees found...\n", treeCount);
 	}
 
-	public void finishFile(boolean empty)
+	public void finishFileNormal(boolean empty)
 	{
+		// Last sentence should have ended in a emptied idMappingDesc.
+		if (!idMappingDesc.isEmpty())
+			throw new IllegalArgumentException(
+					"Even if file ends in a normal way, Logger.idMappingDesc is not empty!");
 		if (empty)
 			statusOut.printf("Finished - nothing to write.\n");
 		else
 			statusOut.printf("Finished.\n");
-		nextSentence();
 	}
-	public void failFileForException(Exception e)
+	public void finishFileWithException(Exception e)
 	{
+		// It is possible, that last sentence has not ended well.
+		finishSentenceNormal(true);
 		statusOut.printf("File failed with exception: ");
 		e.printStackTrace(statusOut);
-		nextSentence();
 	}
-	public void failFileForExtension(String fileName)
+	public void finishFileWithBadExt(String fileName)
 	{
 		statusOut.printf(
 				"Oops! Unexpected extension for file \"%s\"!\n", fileName);
 	}
-	public void failFileForAUTO()
+	public void finishFileWithAUTO()
 	{
 		statusOut.printf(
 				"File starts with \"AUTO\" comment, everything is ommited!\n");
 	}
 
-	public void failSentenceForException(String treeId, Exception e, boolean algorithmic)
+	public void finishSentenceNormal(boolean hasFailed)
+	{
+		if (!hasFailed && idMappingOut != null)
+		{
+			for (String s : idMappingDesc)
+				idMappingOut.println(s);
+			if (!idMappingDesc.isEmpty()) idMappingOut.println();
+		}
+		warnings = new HashSet<>();
+		idMappingDesc = new ArrayList<>();
+		flush();
+	}
+	public void finishSentenceWithException(String treeId, Exception e, boolean algorithmic)
 	{
 		if (algorithmic)
 			statusOut.printf("Transforming sentence %s completely failed! Might be algorithmic error.\n", treeId);
@@ -82,22 +98,22 @@ public class Logger
 			statusOut.printf("Transforming sentence %s completely failed! Check structure and try again.\n", treeId);
 		//statusOut.printf("A sentence %s failed with an exception: ", treeId);
 		e.printStackTrace(statusOut);
-		nextSentence();
+		finishSentenceNormal(true);
 	}
-	public void failSentenceForFIXME()
+	public void finishSentenceWithFIXME()
 	{
 		statusOut.printf("A sentence with \"FIXME\" ommited.\n");
-		nextSentence();
+		finishSentenceNormal(true);
 	}
-	public void warnForOmittedSentence(String treeId)
+	public void finishSentenceWithOmit(String treeId)
 	{
 		statusOut.printf("Sentence %s is being omitted.\n", treeId);
-		nextSentence();
+		finishSentenceNormal(true);
 	}
+
 	public void warnForAnalyzerException(Exception e)
 	{
 		statusOut.printf("Analyzer failed, probably while reading lexicon: %s\n", e.getMessage());
-		nextSentence();
 	}
 	public void doInsentenceWarning(String warning)
 	{
@@ -107,12 +123,12 @@ public class Logger
 			warnings.add(warning);
 		}
 	}
+	public void addIdMapping(String sentenceID, String tokFirstCol, String lvtbNodeId)
+	{
+		idMappingDesc.add(String.format(
+				"%s#%s\t%s", sentenceID, tokFirstCol, lvtbNodeId));
+	}
 
-
-	/**
-	 * You are supposed to somehow finish all files and sentences before calling
-	 * this.
-	 */
 	public void finalStatsAndClose(int omittedFiles, int omittedTrees)
 	{
 		if (omittedFiles == 0 && omittedTrees == 0)
@@ -128,12 +144,6 @@ public class Logger
 		flush();
 		statusOut.close();
 		if (idMappingOut != null) idMappingOut.close();
-	}
-
-	protected void nextSentence()
-	{
-		warnings = new HashSet<>();
-		flush();
 	}
 
 	public void flush()

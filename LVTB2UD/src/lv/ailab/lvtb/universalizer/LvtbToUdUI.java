@@ -61,8 +61,7 @@ public class LvtbToUdUI
 		if (!outFolder.exists()) outFolder.mkdirs();
 		File logFolder = new File(logPath);
 		if (!logFolder.exists()) logFolder.mkdirs();
-		//logger = new Logger(logFolder + "/status.log", logFolder + "/ids.log");
-		logger = new Logger(logFolder + "/status.log", null);
+		logger = new Logger(logFolder + "/status.log", logFolder + "/ids.log");
 		File[] listOfFiles = folder.listFiles();
 		int omittedTrees = 0;
 		int omittedFiles = 0;
@@ -90,7 +89,7 @@ public class LvtbToUdUI
 				System.out.printf("File failed with exception %s.\n", e.toString());
 				//statusOut.print("File failed with exception: ");
 				//e.printStackTrace(statusOut);
-				logger.failFileForException(e);
+				logger.finishFileWithException(e);
 				omittedTrees = omittedTrees + ft.all;
 				omittedFiles++;
 			}
@@ -100,7 +99,7 @@ public class LvtbToUdUI
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
 				//statusOut.println(
 				//		"Oops! Unexpected extension for file \"" + fileName + "\"!");
-				logger.failFileForExtension(fileName);
+				logger.finishFileWithBadExt(fileName);
 			}
 		}
 		if (omittedFiles == 0 && omittedTrees == 0)

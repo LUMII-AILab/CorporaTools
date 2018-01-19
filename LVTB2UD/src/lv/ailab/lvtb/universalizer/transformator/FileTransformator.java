@@ -58,7 +58,7 @@ public class FileTransformator
 			{
 				//warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
 				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
-				logger.failFileForAUTO();
+				logger.finishFileWithAUTO();
 				omitted = pmlTrees.getLength();
 				return;
 			}
@@ -105,7 +105,7 @@ public class FileTransformator
 			{
 				//warningsLog.println("A sentence with \"FIXME\" ommited.");
 				System.out.println("A sentence with \"FIXME\" ommited.");
-				logger.failSentenceForFIXME();
+				logger.finishSentenceWithFIXME();
 				omitted++;
 				continue;
 			}
@@ -123,7 +123,7 @@ public class FileTransformator
 				//e.printStackTrace(warningsLog);
 				System.out.printf("Transforming sentence %s completely failed! Check structure and try again.\n", treeId);
 				e.printStackTrace();
-				logger.failSentenceForException(treeId, e, false);
+				logger.finishSentenceWithException(treeId, e, false);
 			}
 
 			// Has a new paragraph started?
@@ -172,7 +172,7 @@ public class FileTransformator
 		if (params.OMIT_WHOLE_FILES && omitted > 0 || all - omitted < 1)
 		{
 			System.out.println("Finished - nothing to write.");
-			logger.finishFile(true);
+			logger.finishFileNormal(true);
 			//warningsLog.println("Finished - nothing to write.");
 			return false;
 		}
@@ -183,7 +183,7 @@ public class FileTransformator
 		out.close();
 		System.out.println("Finished.");
 		//warningsLog.println("Finished.");
-		logger.finishFile(false);
+		logger.finishFileNormal(false);
 		return true;
 	}
 }

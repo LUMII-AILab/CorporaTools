@@ -204,7 +204,7 @@ public class TreesyntaxTransformator
 		//// Process reduction nodes.
 		else if (NodeUtils.isReductionNode(aNode))
 		{
-
+			String nodeId = NodeFieldUtils.getId(aNode);
 			Node redRoot = EllipsisLogic.newParent(aNode, dpTransf, logger);
 			if (redRoot == null)
 			{
@@ -230,7 +230,7 @@ public class TreesyntaxTransformator
 				//warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n", NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
 				logger.doInsentenceWarning(String.format(
 						"Ellipsis node %s with reduction field \"%s\" has no tag.",
-						NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode)));
+						nodeId, NodeFieldUtils.getReduction(aNode)));
 			else
 			{
 				if (decimalToken.form != null && !decimalToken.form.isEmpty())
@@ -241,8 +241,13 @@ public class TreesyntaxTransformator
 				decimalToken.feats = FeatsLogic.getUFeats(
 						decimalToken.form, decimalToken.lemma, decimalToken.xpostag, aNode, logger);
 			}
+			if (params.ADD_NODE_IDS && nodeId != null && !nodeId.isEmpty())
+			{
+				decimalToken.misc.add("LvtbNodeId=" + nodeId);
+				logger.addIdMapping(s.id, decimalToken.getFirstColumn(), nodeId);
+			}
 			s.conll.add(position, decimalToken);
-			s.pmlaToEnhConll.put(NodeFieldUtils.getId(aNode), decimalToken);
+			s.pmlaToEnhConll.put(nodeId, decimalToken);
 			if (s.hasFailed) return;
 
 			transformSubtree(newBasicRoot);

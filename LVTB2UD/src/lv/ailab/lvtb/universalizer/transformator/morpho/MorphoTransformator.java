@@ -36,7 +36,7 @@ public class MorphoTransformator {
 	/**
 	 * Create CoNLL-U token table, fill in ID, FORM, LEMMA, XPOSTAG, UPOSTAG and
 	 * FEATS fields.
-	 * @throws XPathExpressionException    unsuccessfull XPathevaluation (anywhere
+	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
@@ -134,7 +134,10 @@ public class MorphoTransformator {
 			Token firstTok = new Token(baseOrd + offset, forms[0],
 					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
 			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
+			{
 				firstTok.misc.add("LvtbNodeId=" + lvtbAId);
+				logger.addIdMapping(s.id, firstTok.getFirstColumn(), lvtbAId);
+			}
 			if (lvtbTag.matches("xf.*"))
 			{
 				//warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
@@ -164,7 +167,11 @@ public class MorphoTransformator {
 				Token nextTok = new Token(baseOrd + offset, forms[i],
 						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
 				if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
+				{
 					nextTok.misc.add("LvtbNodeId=" + lvtbAId);
+					logger.addIdMapping(s.id, nextTok.getFirstColumn(), lvtbAId);
+
+				}
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
 					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
@@ -190,7 +197,10 @@ public class MorphoTransformator {
 					NodeFieldUtils.getOrd(aNode) + offset, mForm, mLemma,
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
+			{
 				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
+				logger.addIdMapping(s.id, nextTok.getFirstColumn(), lvtbAId);
+			}
 			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 			if (noSpaceAfter)

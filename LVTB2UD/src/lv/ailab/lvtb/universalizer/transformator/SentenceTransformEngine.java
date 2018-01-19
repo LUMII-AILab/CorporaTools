@@ -65,6 +65,7 @@ public class SentenceTransformEngine
 			enhSyntTransf.transformEnhancedSyntax();
 			logger.flush();
 		}
+		logger.finishSentenceNormal(s.hasFailed);
 		return !s.hasFailed;
 	}
 
@@ -86,7 +87,7 @@ public class SentenceTransformEngine
 			boolean res = t.transform();
 			if (res) return t.s.toConllU();
 			if (params.WARN_OMISSIONS)
-				logger.warnForOmittedSentence(id);
+				logger.finishSentenceWithOmit(id);
 				//warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
 		} catch (NullPointerException|IllegalArgumentException e)
 		{
@@ -94,7 +95,7 @@ public class SentenceTransformEngine
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
 			//e.printStackTrace(warnOut);
 			e.printStackTrace();
-			logger.failSentenceForException(id, e, false);
+			logger.finishSentenceWithException(id, e, false);
 			//throw e;
 		}
 		catch (XPathExpressionException|IllegalStateException e)
@@ -103,7 +104,7 @@ public class SentenceTransformEngine
 			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
 			//e.printStackTrace(warnOut);
 			e.printStackTrace();
-			logger.failSentenceForException(id, e, false);
+			logger.finishSentenceWithException(id, e, false);
 		}
 		return null;
 	}
