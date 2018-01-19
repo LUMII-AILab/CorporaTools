@@ -5,13 +5,13 @@ import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
@@ -28,7 +28,7 @@ public class PosLogic
 	}*/
 
 	public static UDv2PosTag getUPosTag(
-			String lemma, String xpostag, Node aNode, PrintWriter warnOut)
+			String lemma, String xpostag, Node aNode, Logger logger)
 	throws XPathExpressionException
 	{
 		String lvtbRole = NodeFieldUtils.getRole(aNode);
@@ -104,8 +104,9 @@ public class PosLogic
 		else if (xpostag.matches("xo.*")) return UDv2PosTag.ADJ;
 		else if (xpostag.matches("xu.*")) return UDv2PosTag.SYM;
 		else if (xpostag.matches("xx.*")) return UDv2PosTag.SYM; // Or sometimes PROPN/NOUN
-		else warnOut.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n",
-					lemma, xpostag);
+		//else warnOut.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n", lemma, xpostag);
+		else logger.doInsentenceWarning(String.format(
+				"Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".", lemma, xpostag));
 
 		return UDv2PosTag.X;
 	}

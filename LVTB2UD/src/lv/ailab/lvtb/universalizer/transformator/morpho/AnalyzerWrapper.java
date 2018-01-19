@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.semti.morphology.analyzer.Analyzer;
 import lv.semti.morphology.analyzer.Word;
 import lv.semti.morphology.analyzer.Wordform;
@@ -19,7 +20,7 @@ public class AnalyzerWrapper
 		return morphoEngineSing;
 	}
 
-	public static Wordform getAVPairs(String form, String postag, PrintWriter warnOut)
+	public static Wordform getAVPairs(String form, String postag, Logger logger)
 	{
 		try
 		{
@@ -29,13 +30,14 @@ public class AnalyzerWrapper
 			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
 		} catch (Exception e)
 		{
-			warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
+			logger.warnForAnalyzerException(e);
+			//warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
 			return null;
 		}
 
 	}
 
-	public static String getLemma(String form, String postag, PrintWriter warnOut)
+	public static String getLemma(String form, String postag, Logger logger)
 	{
 		try
 		{
@@ -45,7 +47,8 @@ public class AnalyzerWrapper
 			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
 		} catch (Exception e)
 		{
-			warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
+			logger.warnForAnalyzerException(e);
+			//warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
 			return null;
 		}
 	}

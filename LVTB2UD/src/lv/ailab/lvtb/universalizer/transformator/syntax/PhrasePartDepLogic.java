@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
@@ -11,7 +12,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 
 /**
  * Relation between phrase part names used in LVTB and dependency labeling used
@@ -38,7 +38,7 @@ public class PhrasePartDepLogic
 	 *                      chosen
 	 * @param phraseTag		tag of phrase in relation to which DEPREL must be
 	 *                      chosen (can/should be null for pmc nodes)
-	 * @param warnOut 		where all the warnings goes
+	 * @param logger 		where all the warnings goes
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
@@ -46,7 +46,7 @@ public class PhrasePartDepLogic
 	 * 									algorithmical error.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
-			Node aNode, String phraseType, String phraseTag, PrintWriter warnOut)
+			Node aNode, String phraseType, String phraseTag, Logger logger)
 	throws XPathExpressionException
 	{
 		String nodeId = NodeFieldUtils.getId(aNode);
@@ -145,8 +145,10 @@ public class PhrasePartDepLogic
 							"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
 							aNode, XPathConstants.NODESET);
 					if (preps.getLength() > 1)
-						warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\"\n.",
-								subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP);
+						logger.doInsentenceWarning(String.format(
+								"\"%s\" with ID \"%s\" has multiple \"%s\".",
+								subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP));
+						//warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\"\n.", subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP);
 					String prepLemma = NodeFieldUtils.getLemma(preps.item(0));
 					return Tuple.of(UDv2Relations.NMOD, prepLemma);
 				}
@@ -226,8 +228,10 @@ public class PhrasePartDepLogic
 				return Tuple.of(UDv2Relations.XCOMP, null);
 		}
 
-		warnOut.printf("\"%s\" (%s) in \"%s\" has no UD label.\n",
-				lvtbRole, nodeId, phraseType);
+		logger.doInsentenceWarning(String.format(
+				"\"%s\" (%s) in \"%s\" has no UD label.",
+				lvtbRole, nodeId, phraseType));
+		//warnOut.printf("\"%s\" (%s) in \"%s\" has no UD label.\n", lvtbRole, nodeId, phraseType);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 }

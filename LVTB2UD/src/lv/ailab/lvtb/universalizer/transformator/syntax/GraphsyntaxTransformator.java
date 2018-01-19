@@ -6,6 +6,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
@@ -29,15 +30,24 @@ public class GraphsyntaxTransformator
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
+	// TODO - do not duplicate for GraphsyntaxTransformator and TreesyntaxTransformator?
 	/**
-	 * Stream for warnings.
+	 * Dependency role logic.
 	 */
-	protected PrintWriter warnOut;
+	protected DepRelLogic dpTransf;
+	/**
+	 * Stream for warnings and other logs.
+	 */
+	protected Logger logger;
 
-	public GraphsyntaxTransformator(Sentence sent, PrintWriter warnOut)
+
+
+	public GraphsyntaxTransformator(Sentence sent, Logger logger)
 	{
 		s = sent;
-		this.warnOut = warnOut;
+		this.logger = logger;
+		dpTransf = new DepRelLogic(logger);
+
 	}
 
 	/**
@@ -138,8 +148,8 @@ public class GraphsyntaxTransformator
 						{
 							Node xPartNode = s.findPmlNode(xPartId);
 							// TODO tweak this, when nested xPreds will be made.
-							Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
-									subjNode, xPredList.item(xPredI), subjLvtbRole, warnOut);
+							Tuple<UDv2Relations, String> role = dpTransf.depToUDEnhanced(
+									subjNode, xPredList.item(xPredI), subjLvtbRole);
 									//subjNode, xPartNode, subjLvtbRole, warnOut);
 							// Only UD subjects will have aditional link.
 							//if (role.first == UDv2Relations.NSUBJ ||
@@ -227,9 +237,9 @@ public class GraphsyntaxTransformator
 			// Link between parent of the coordination and coordinated part.
 			if (!NodeUtils.isRoot(coordParentNode) && !wholeCoordNodeTok.depsBackbone.isRootDep())
 			{
-				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
+				Tuple<UDv2Relations, String> role = dpTransf.depToUDEnhanced(
 						coordPartNode, coordParentNode,
-						NodeFieldUtils.getRole(wholeCoordANode), warnOut);
+						NodeFieldUtils.getRole(wholeCoordANode));
 				//partNodeTok.deps.add(parentNodeTok.depsBackbone);
 				s.setEnhLink(coordParentNode, coordPartNode, role,
 						false, false);
@@ -241,10 +251,9 @@ public class GraphsyntaxTransformator
 		if (dependents != null)
 			for (int dependentI = 0; dependentI < dependents.getLength(); dependentI++)
 			{
-				Tuple<UDv2Relations, String> role = DepRelLogic.getSingleton().depToUDEnhanced(
+				Tuple<UDv2Relations, String> role = dpTransf.depToUDEnhanced(
 						dependents.item(dependentI), coordPartNode,
-						NodeFieldUtils.getRole(dependents.item(dependentI)),
-						warnOut);
+						NodeFieldUtils.getRole(dependents.item(dependentI)));
 				s.setEnhLink(coordPartNode, dependents.item(dependentI),
 						role,false,false);
 			}

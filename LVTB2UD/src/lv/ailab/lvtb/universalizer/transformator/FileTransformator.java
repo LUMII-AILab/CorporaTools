@@ -37,15 +37,16 @@ public class FileTransformator
 	/**
 	 * Transform a single knitted LV TreeBank PML file to UD.
 	 * @param inputPath   path to PML file
-	 * @param warningsLog log for warnings
+	 * @param logger	 log for warnings and IDs
 	 */
 	public void readAndTransform(
-			String inputPath, PrintWriter warningsLog)
+			String inputPath, Logger logger)
 			throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
 	{
 		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
 		System.out.printf("%s trees. ", pmlTrees.getLength());
-		warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
+		logger.printFoundTreesCount(pmlTrees.getLength());
+		//warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
 		String paragraphId = "";
 		// Print info in the file beginning.
 		if (pmlTrees.getLength() > 0)
@@ -54,8 +55,9 @@ public class FileTransformator
 			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
 			if (firstComment != null && firstComment.startsWith("AUTO"))
 			{
-				warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
+				//warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
 				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
+				logger.failFileForAUTO();
 				omitted = pmlTrees.getLength();
 				return;
 			}
@@ -100,8 +102,9 @@ public class FileTransformator
 			String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
 			if (comment != null && comment.startsWith("FIXME"))
 			{
-				warningsLog.println("A sentence with \"FIXME\" ommited.");
+				//warningsLog.println("A sentence with \"FIXME\" ommited.");
 				System.out.println("A sentence with \"FIXME\" ommited.");
+				logger.failSentenceForFIXME();
 				omitted++;
 				continue;
 			}
@@ -111,13 +114,15 @@ public class FileTransformator
 			try
 			{
 				conllTree = SentenceTransformEngine.treeToConll(
-						pmlTrees.item(i), params, warningsLog);
+						pmlTrees.item(i), params, logger);
 			} catch (Exception e)
 			{
 				String treeId = NodeFieldUtils.getId(pmlTrees.item(i));
-				warningsLog.printf("A sentence %s failed with an exception: ", treeId);
-				e.printStackTrace(warningsLog);
-				System.out.printf("A sentence %s failed with an exception %s.\n", treeId, e.toString());
+				//warningsLog.printf("A sentence %s failed with an exception: ", treeId);
+				//e.printStackTrace(warningsLog);
+				System.out.printf("Transforming sentence %s completely failed! Check structure and try again.\n", treeId);
+				e.printStackTrace();
+				logger.failSentenceForException(treeId, e, false);
 			}
 
 			// Has a new paragraph started?
@@ -150,22 +155,24 @@ public class FileTransformator
 	/**
 	 * Make new file and print out the transformation results. Do not make
 	 * an empty file or a file containing no sentences
-	 * @param conllOut    		path for the new result file
-	 * @param warningsLog 		log for warnings
+	 * @param conllOut    	path for the new result file
+	 * @param logger 		log for warnings and ID mappings
 	 * @return	if the file was actually written
 	 */
 	public boolean writeResult(
-			String conllOut, PrintWriter warningsLog)
+			String conllOut, Logger logger)
 	throws IOException
 	{
 		if (omitted + added != all)
 		{
-			throw new IllegalStateException("Algorithmic error! Omitted Trees + Good Trees != All Trees!");
+			throw new IllegalStateException(
+					"Algorithmic error! Omitted Trees + Good Trees != All Trees!");
 		}
 		if (params.OMIT_WHOLE_FILES && omitted > 0 || all - omitted < 1)
 		{
 			System.out.println("Finished - nothing to write.");
-			warningsLog.println("Finished - nothing to write.");
+			logger.finishFile(true);
+			//warningsLog.println("Finished - nothing to write.");
 			return false;
 		}
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
@@ -174,7 +181,8 @@ public class FileTransformator
 		out.flush();
 		out.close();
 		System.out.println("Finished.");
-		warningsLog.println("Finished.");
+		//warningsLog.println("Finished.");
+		logger.finishFile(false);
 		return true;
 	}
 }

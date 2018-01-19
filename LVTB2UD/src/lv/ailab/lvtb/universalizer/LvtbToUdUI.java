@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer;
 
 import lv.ailab.lvtb.universalizer.transformator.FileTransformator;
-import lv.ailab.lvtb.universalizer.transformator.SentenceTransformEngine;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 
 import java.io.*;
@@ -39,6 +39,7 @@ public class LvtbToUdUI
 	public static String logPath = "./data/log/";
 	public static String outputDataPath = "./data/conll-u/";
 	public static TransformationParams params = new TransformationParams();
+	public static Logger logger;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -60,7 +61,8 @@ public class LvtbToUdUI
 		if (!outFolder.exists()) outFolder.mkdirs();
 		File logFolder = new File(logPath);
 		if (!logFolder.exists()) logFolder.mkdirs();
-		PrintWriter statusOut = new PrintWriter(new PrintWriter(logFolder + "/log.txt", "UTF-8"), true);
+		//logger = new Logger(logFolder + "/status.log", logFolder + "/ids.log");
+		logger = new Logger(logFolder + "/status.log", null);
 		File[] listOfFiles = folder.listFiles();
 		int omittedTrees = 0;
 		int omittedFiles = 0;
@@ -72,10 +74,11 @@ public class LvtbToUdUI
 			if (fileName.endsWith(".pml")) try
 			{
 				System.out.printf("Processing file \"%s\", ", fileName);
-				statusOut.printf("Processing file \"%s\", ", fileName);
+				logger.startFile(fileName);
+				//statusOut.printf("Processing file \"%s\", ", fileName);
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
-				ft.readAndTransform(f.getAbsolutePath(), statusOut);
-				boolean madeFile = ft.writeResult(outPath, statusOut);
+				ft.readAndTransform(f.getAbsolutePath(), logger);
+				boolean madeFile = ft.writeResult(outPath, logger);
 				if (madeFile) omittedTrees = omittedTrees + ft.omitted;
 				else
 				{
@@ -85,8 +88,9 @@ public class LvtbToUdUI
 			} catch (Exception e)
 			{
 				System.out.printf("File failed with exception %s.\n", e.toString());
-				statusOut.print("File failed with exception: ");
-				e.printStackTrace(statusOut);
+				//statusOut.print("File failed with exception: ");
+				//e.printStackTrace(statusOut);
+				logger.failFileForException(e);
 				omittedTrees = omittedTrees + ft.all;
 				omittedFiles++;
 			}
@@ -94,31 +98,21 @@ public class LvtbToUdUI
 			{
 				System.out.println(
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
-				statusOut.println(
-						"Oops! Unexpected extension for file \"" + fileName + "\"!");
+				//statusOut.println(
+				//		"Oops! Unexpected extension for file \"" + fileName + "\"!");
+				logger.failFileForExtension(fileName);
 			}
 		}
 		if (omittedFiles == 0 && omittedTrees == 0)
-		{
 			System.out.println("Everything is finished, nothing was omited.");
-			statusOut.println("Everything is finished, nothing was omited.");
-		} else if (omittedFiles == 0)
-		{
+		else if (omittedFiles == 0)
 			System.out.printf(
 					"Everything is finished, %s trees was omited.\n", omittedTrees);
-			statusOut.printf(
-					"Everything is finished, %s trees was omited.\n", omittedTrees);
-		} else
-		{
+		else
 			System.out.printf(
 					"Everything is finished, %s files and at least %s trees was omited.\n",
 					omittedFiles, omittedTrees);
-			statusOut.printf(
-					"Everything is finished, %s files and at least %s trees was omited.\n",
-					omittedFiles, omittedTrees);
-		}
-		statusOut.flush();
-		statusOut.close();
+		logger.finalStatsAndClose(omittedFiles, omittedTrees);
 	}
 
 	/**

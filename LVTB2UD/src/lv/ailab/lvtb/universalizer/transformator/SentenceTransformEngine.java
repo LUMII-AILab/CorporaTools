@@ -24,18 +24,18 @@ public class SentenceTransformEngine
 	protected MorphoTransformator morphoTransf;
 	protected TreesyntaxTransformator syntTransf;
 	protected GraphsyntaxTransformator enhSyntTransf;
-	protected PrintWriter warnOut;
+	protected Logger logger;
 	protected TransformationParams params;
 
-	public SentenceTransformEngine(Node pmlTree, TransformationParams params, PrintWriter warnOut)
+	public SentenceTransformEngine(Node pmlTree, TransformationParams params, Logger logger)
 			throws XPathExpressionException
 	{
 		s = new Sentence(pmlTree);
-		this.warnOut = warnOut;
+		this.logger = logger;
 		this.params = params;
-		morphoTransf = new MorphoTransformator(s, params, warnOut);
-		syntTransf = new TreesyntaxTransformator(s, params, warnOut);
-		enhSyntTransf = new GraphsyntaxTransformator(s, warnOut);
+		morphoTransf = new MorphoTransformator(s, params, logger);
+		syntTransf = new TreesyntaxTransformator(s, params, logger);
+		enhSyntTransf = new GraphsyntaxTransformator(s, logger);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class SentenceTransformEngine
 		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
 		morphoTransf.transformTokens();
-		warnOut.flush();
+		logger.flush();
 		morphoTransf.extractSendenceText();
-		warnOut.flush();
+		logger.flush();
 		boolean noMoreEllipsis = syntTransf.preprocessEmptyEllipsis();
 		if (params.WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		syntTransf.transformBaseSyntax();
-		warnOut.flush();
+		logger.flush();
 		if (params.DO_ENHANCED)
 		{
 			enhSyntTransf.transformEnhancedSyntax();
-			warnOut.flush();
+			logger.flush();
 		}
 		return !s.hasFailed;
 	}
@@ -77,31 +77,33 @@ public class SentenceTransformEngine
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
 	 */
-	public static String treeToConll(Node pmlTree, TransformationParams params, PrintWriter warnOut)
+	public static String treeToConll(Node pmlTree, TransformationParams params, Logger logger)
 	{
 		String id ="<unknown>";
 		try {
-			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, params, warnOut);
+			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, params, logger);
 			id = t.s.id;
 			boolean res = t.transform();
 			if (res) return t.s.toConllU();
 			if (params.WARN_OMISSIONS)
-				warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
+				logger.warnForOmittedSentence(id);
+				//warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
 		} catch (NullPointerException|IllegalArgumentException e)
 		{
-			warnOut.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
+			//warnOut.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
-			e.printStackTrace(warnOut);
+			//e.printStackTrace(warnOut);
 			e.printStackTrace();
+			logger.failSentenceForException(id, e, false);
 			//throw e;
 		}
 		catch (XPathExpressionException|IllegalStateException e)
 		{
-			warnOut.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
+			//warnOut.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
 			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
-			e.printStackTrace(warnOut);
+			//e.printStackTrace(warnOut);
 			e.printStackTrace();
-			//throw new RuntimeException(e);
+			logger.failSentenceForException(id, e, false);
 		}
 		return null;
 	}

@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
@@ -15,7 +16,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 
 /**
  * This is the part of the transformation where base UD tree is made. This part
@@ -34,18 +34,21 @@ public class TreesyntaxTransformator
 
 	protected TransformationParams params;
 	protected PhraseTransformator pTransf;
+	// TODO - do not duplicate for GraphsyntaxTransformator and TreesyntaxTransformator?
+	protected DepRelLogic dpTransf;
 	/**
 	 * Stream for warnings.
 	 */
-	protected PrintWriter warnOut;
+	protected Logger logger;
 
 	public TreesyntaxTransformator(Sentence sent, TransformationParams params,
-								   PrintWriter warnOut)
+								   Logger logger)
 	{
 		s = sent;
-		this.warnOut = warnOut;
+		this.logger = logger;
 		this.params = params;
-		pTransf = new PhraseTransformator(s, warnOut);
+		pTransf = new PhraseTransformator(s, logger);
+		dpTransf = new DepRelLogic(logger);
 	}
 
 	/**
@@ -153,7 +156,8 @@ public class TreesyntaxTransformator
 	protected void transformSubtree (Node aNode) throws XPathExpressionException
 	{
 		if (s.hasFailed) return;
-		if (params.DEBUG) System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
+		if (params.DEBUG)
+			System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
 
 		NodeList children = NodeUtils.getAllPMLChildren(aNode);
 		if (children == null || children.getLength() < 1) return;
@@ -201,7 +205,7 @@ public class TreesyntaxTransformator
 		else if (NodeUtils.isReductionNode(aNode))
 		{
 
-			Node redRoot = EllipsisLogic.newParent(aNode, warnOut);
+			Node redRoot = EllipsisLogic.newParent(aNode, dpTransf, logger);
 			if (redRoot == null)
 			{
 				s.hasFailed = true;
@@ -223,17 +227,19 @@ public class TreesyntaxTransformator
 					NodeFieldUtils.getReductionTagPart(aNode), null);
 			decimalToken.form = NodeFieldUtils.getReductionFormPart(aNode);
 			if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
-				warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n",
-						NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
+				//warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n", NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
+				logger.doInsentenceWarning(String.format(
+						"Ellipsis node %s with reduction field \"%s\" has no tag.",
+						NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode)));
 			else
 			{
 				if (decimalToken.form != null && !decimalToken.form.isEmpty())
 					decimalToken.lemma = AnalyzerWrapper.getLemma(
-							decimalToken.form, decimalToken.xpostag, warnOut);
+							decimalToken.form, decimalToken.xpostag, logger);
 				decimalToken.upostag = PosLogic.getUPosTag(
-						decimalToken.lemma, decimalToken.xpostag, aNode, warnOut);
+						decimalToken.lemma, decimalToken.xpostag, aNode, logger);
 				decimalToken.feats = FeatsLogic.getUFeats(
-						decimalToken.form, decimalToken.lemma, decimalToken.xpostag, aNode, warnOut);
+						decimalToken.form, decimalToken.lemma, decimalToken.xpostag, aNode, logger);
 			}
 			s.conll.add(position, decimalToken);
 			s.pmlaToEnhConll.put(NodeFieldUtils.getId(aNode), decimalToken);
@@ -273,11 +279,10 @@ public class TreesyntaxTransformator
 		if (s.pmlaToConll.get(NodeFieldUtils.getId(newBaseDepRoot)) != s.pmlaToConll.get(NodeFieldUtils.getId(parentANode)) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
 		{
-			/*System.out.println("sentence " + s.id);
-			System.out.println("base " + s.pmlaToConll.get(NodeUtils.getId(parentANode)).getFirstColumn() + " vs. " + s.pmlaToConll.get(NodeUtils.getId(newBaseDepRoot)).getFirstColumn());
-			System.out.println("enhanced " + s.getEnhancedOrBaseToken(parentANode).getFirstColumn() + " vs. " + s.getEnhancedOrBaseToken(newEnhDepRoot).getFirstColumn());
-			System.out.printf("Can't relink dependents from %s to %s\n", NodeUtils.getId(parentANode), NodeUtils.getId(newBaseDepRoot));//*/
-			warnOut.printf("Can't relink dependents from %s to %s\n", NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot));
+			//warnOut.printf("Can't relink dependents from %s to %s\n", NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot));
+			logger.doInsentenceWarning(String.format(
+					"Can't relink dependents from %s to %s!",
+					NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot)));
 			s.hasFailed = true;
 			return;
 		}
@@ -288,9 +293,9 @@ public class TreesyntaxTransformator
 			for (int i = 0; i < pmlDependents.getLength(); i++)
 			{
 				s.setBaseLink(newBaseDepRoot, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUDBase(pmlDependents.item(i), warnOut));
+						dpTransf.depToUDBase(pmlDependents.item(i)));
 				s.setEnhLink(newEnhDepRoot, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUDEnhanced(pmlDependents.item(i), warnOut),
+						dpTransf.depToUDEnhanced(pmlDependents.item(i)),
 						true,true);
 				/*s.setLink(parentANode, pmlDependents.item(i),
 						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),

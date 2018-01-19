@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.pml.utils;
 import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbHelperRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
@@ -142,20 +143,21 @@ public class NodeFieldUtils
 	/**
 	 * Find reduction field value for given node, split in tag and lemma, and
 	 * then induce lemma with the help of morphological analyzer.
-	 * @param node node to analyze
+	 * @param node		node to analyze
+	 * @param logger	where to print errors
 	 * @return	reduction lemma
 	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
 	 * 									in the PML tree) most probably due to
 	 * 									algorithmical error.
 	 */
-	public static String getReductionLemma(Node node, PrintWriter warnOut)
+	public static String getReductionLemma(Node node, Logger logger)
 	throws XPathExpressionException
 	{
 		String tag = getReductionTagPart(node);
 		String form = getReductionFormPart(node);
 		if (tag == null || form == null || tag.isEmpty() || form.isEmpty())
 			return null;
-		return AnalyzerWrapper.getLemma(form, tag, warnOut);
+		return AnalyzerWrapper.getLemma(form, tag, logger);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -20,12 +21,7 @@ import java.util.ArrayList;
  */
 public class EllipsisLogic
 {
-	public static Node newParent (Node aNode, PrintWriter warnOut)
-			throws XPathExpressionException
-	{
-		return newParent(aNode, DepRelLogic.getSingleton(), warnOut);
-	}
-	public static Node newParent (Node aNode, DepRelLogic drLogic, PrintWriter warnOut)
+	public static Node newParent (Node aNode, DepRelLogic drLogic, Logger logger)
 	throws XPathExpressionException
 	{
 		// This method should not be used for transforming phrase nodes or nodes
@@ -49,7 +45,7 @@ public class EllipsisLogic
 				for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n)).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils
@@ -68,7 +64,7 @@ public class EllipsisLogic
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n)).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils.getId(n));
@@ -86,7 +82,7 @@ public class EllipsisLogic
 			for (UDv2Relations role : priorities) for (Node n : sortedChildren)
 			{
 				UDv2Relations noRedUDrole = drLogic.depToUDLogic(
-						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n), warnOut).first;
+						n, NodeUtils.getPMLParent(n), NodeFieldUtils.getRole(n)).first;
 				if (noRedUDrole == null)
 					throw new IllegalStateException(
 							"Could not determine potential UD role during ellipsis processing for " + NodeFieldUtils.getId(n));

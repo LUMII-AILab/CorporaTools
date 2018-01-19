@@ -6,6 +6,7 @@ import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
@@ -14,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,12 +34,12 @@ public class PhraseTransformator
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
-	protected PrintWriter warnOut;
+	protected Logger logger;
 
-	public PhraseTransformator(Sentence sent, PrintWriter warnOut)
+	public PhraseTransformator(Sentence sent, Logger logger)
 	{
 		s = sent;
-		this.warnOut = warnOut;
+		this.logger = logger;
 	}
 
 	/**
@@ -65,14 +65,14 @@ public class PhraseTransformator
 			return utterToUD(phraseNode, phraseType);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.PRED, null, true, warnOut);
+			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.PRED, null, true, logger);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, true, warnOut);
+			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, true, logger);
 		if (phraseType.equals(LvtbPmcTypes.INTERJ) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, false, warnOut);
+			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, false, logger);
 
 		//======= COORD ========================================================
 
@@ -86,19 +86,19 @@ public class PhraseTransformator
 		// Multiple basElem, root is the last.
 		if (phraseType.equals(LvtbXTypes.XAPP) ||
 				phraseType.equals(LvtbXTypes.XNUM))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, false, warnOut);
+			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, false, logger);
 
 		// Multiple basElem, root is the first.
 		if (phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.NAMEDENT) ||
 				phraseType.equals(LvtbXTypes.COORDANAL))
-			return s.allUnderFirst(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null, false, warnOut);
+			return s.allUnderFirst(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null, false, logger);
 
 		// Only one basElem
 		if (phraseType.equals(LvtbXTypes.XPARTICLE))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, true, warnOut);
+			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, true, logger);
 		if (phraseType.equals(LvtbXTypes.XPREP))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, LvtbRoles.PREP, null, true, warnOut);
+			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, LvtbRoles.PREP, null, true, logger);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
 			return xSimileToUD(phraseNode, phraseType, phraseTag);
 
@@ -110,8 +110,9 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbXTypes.XPRED))
 			return xPredToUD(phraseNode, phraseType, phraseTag);
 
-			warnOut.printf("Sentence \"%s\" has unrecognized \"%s\".\n",
-				s.id, phraseType);
+		logger.doInsentenceWarning(String.format(
+				"Sentence \"%s\" has unrecognized \"%s\".", s.id, phraseType));
+		//warnOut.printf("Sentence \"%s\" has unrecognized \"%s\".\n", s.id, phraseType);
 		return missingTransform(phraseNode);
 	}
 
@@ -130,7 +131,7 @@ public class PhraseTransformator
 		String phraseType = NodeFieldUtils.getPhraseType(phraseNode);
 		String phraseTag = NodeFieldUtils.getTag(phraseNode);
 		Node newRoot = NodeListUtils.getFirstByDescOrd(children);
-		s.allAsDependents(newRoot, children, phraseType, phraseTag, null, warnOut);
+		s.allAsDependents(newRoot, children, phraseType, phraseTag, null, logger);
 		return newRoot;
 	}
 
@@ -156,8 +157,10 @@ public class PhraseTransformator
 				pmcNode, XPathConstants.NODESET);
 		Node newRoot = null;
 		if (preds != null && preds.getLength() > 1)
-			warnOut.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n",
-					s.id, LvtbRoles.PRED, pmcType);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has more than one \"%s\" in \"%s\".",
+					s.id, LvtbRoles.PRED, pmcType));
+			//warnOut.printf("Sentence \"%s\" has more than one \"%s\" in \"%s\".\n", s.id, LvtbRoles.PRED, pmcType);
 		if (preds != null && preds.getLength() > 0) newRoot = NodeListUtils.getFirstByDescOrd(preds);
 		else
 		{
@@ -168,15 +171,18 @@ public class PhraseTransformator
 		}
 		if (newRoot == null)
 		{
-			warnOut.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n",
-					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".",
+					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType));
+			//warnOut.printf("Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".\n", s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType);
 			newRoot = NodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
-			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
+			throw new IllegalArgumentException(String.format(
+					"Sentence \"%s\" seems to be empty", s.id));
 
 		// Create dependency structure in conll table.
-		s.allAsDependents(newRoot, children, pmcType, null, null, warnOut);
+		s.allAsDependents(newRoot, children, pmcType, null, null, logger);
 
 		return newRoot;
 	}
@@ -203,12 +209,15 @@ public class PhraseTransformator
 		if (basElems != null && basElems.getLength() > 0) newRoot = NodeListUtils.getFirstByDescOrd(basElems);
 		if (newRoot == null)
 		{
-			warnOut.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
-					s.id, LvtbRoles.BASELEM, pmcType);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has no \"%s\" in \"%s\".",
+					s.id, LvtbRoles.BASELEM, pmcType));
+			//warnOut.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n", s.id, LvtbRoles.BASELEM, pmcType);
 			newRoot = NodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
-			throw new IllegalArgumentException("Sentence \"" + s.id + "\" seems to be empty.\n");
+			throw new IllegalArgumentException(String.format(
+					"Sentence \"%s\" seems to be empty", s.id));
 
 		if (basElems!= null && basElems.getLength() > 1 && children.getLength() > basElems.getLength())
 		{
@@ -240,7 +249,7 @@ public class PhraseTransformator
 				else break;
 			}
 			rootChildren.addAll(lastPunct);
-			s.allAsDependents(newRoot, rootChildren, pmcType, null, null, warnOut);
+			s.allAsDependents(newRoot, rootChildren, pmcType, null, null, logger);
 
 			// now let's process what is left
 			Token rootTok = s.pmlaToConll.get(NodeFieldUtils.getId(newRoot));
@@ -261,12 +270,12 @@ public class PhraseTransformator
 				}
 
 				// process found part
-				s.allAsDependents(subroot, nextPart, pmcType, null, null, warnOut);
+				s.allAsDependents(subroot, nextPart, pmcType, null, null, logger);
 				s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
 						Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 			}
 		}
-		else s.allAsDependents(newRoot, children, pmcType, null, null, warnOut);
+		else s.allAsDependents(newRoot, children, pmcType, null, null, logger);
 
 		return newRoot;
 	}
@@ -284,7 +293,7 @@ public class PhraseTransformator
 	throws XPathExpressionException
 	{
 		NodeList children = NodeUtils.getAllPMLChildren(coordNode);
-		return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, warnOut);
+		return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, logger);
 	}
 
 	/**
@@ -305,7 +314,7 @@ public class PhraseTransformator
 				"./children/node[m.rf/lemma=';']", coordNode, XPathConstants.NODESET);
 		// No semicolons => process as ordinary coordination.
 		if (semicolons == null || semicolons.getLength() < 1)
-			return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, warnOut);
+			return coordPartsChildListToUD(NodeListUtils.asOrderedList(children), coordType, coordTag, logger);
 
 		// If semicolon(s) is (are) present, split on semicolon and then process
 		// each part as ordinary coordination.
@@ -313,19 +322,19 @@ public class PhraseTransformator
 		ArrayList<Node> sortedChildren = NodeListUtils.asOrderedList(children);
 		int semicOrd = NodeFieldUtils.getOrd(sortedSemicolons.get(0));
 		Node newRoot = coordPartsChildListToUD(
-				NodeListUtils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, warnOut);
+				NodeListUtils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, logger);
 		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
 			int nextSemicOrd = NodeFieldUtils.getOrd(sortedSemicolons.get(i));
 			Node newSubroot = coordPartsChildListToUD(
-					NodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, coordTag, warnOut);
+					NodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, coordTag, logger);
 			s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 			semicOrd = nextSemicOrd;
 		}
 		// last
 		Node newSubroot = coordPartsChildListToUD(
-				NodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, coordTag, warnOut);
+				NodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, coordTag, logger);
 		s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 				Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 		return newRoot;
@@ -343,7 +352,7 @@ public class PhraseTransformator
 	 * 									algorithmical error.
 	 */
 	protected Node coordPartsChildListToUD(
-			List<Node> sortedNodes, String coordType, String coordTag, PrintWriter warnOut)
+			List<Node> sortedNodes, String coordType, String coordTag, Logger logger)
 	throws XPathExpressionException
 	{
 		// Find the structure root.
@@ -355,12 +364,12 @@ public class PhraseTransformator
 		{
 			if (LvtbRoles.CRDPART.equals(XPathEngine.get().evaluate("./role", n)))
 			{
-				s.allAsDependents(n, postponed, coordType, coordTag, null, warnOut);
+				s.allAsDependents(n, postponed, coordType, coordTag, null, logger);
 				lastSubroot = n;
 				if (newRoot == null)
 					newRoot = n;
 				else
-					s.addAsDependent(newRoot, n, coordType, coordTag, null, warnOut);
+					s.addAsDependent(newRoot, n, coordType, coordTag, null, logger);
 				postponed = new ArrayList<>();
 			} else postponed.add(n);
 		}
@@ -368,18 +377,21 @@ public class PhraseTransformator
 		if (!postponed.isEmpty())
 		{
 			if (lastSubroot != null)
-				s.allAsDependents(lastSubroot, postponed, coordType, coordTag, null, warnOut);
+				s.allAsDependents(lastSubroot, postponed, coordType, coordTag, null, logger);
 			else
 			{
-				warnOut.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n",
-						s.id, LvtbRoles.CRDPART, coordType);
+				logger.doInsentenceWarning(String.format(
+						"Sentence \"%s\" has no \"%s\" in \"%s\".",
+						s.id, LvtbRoles.CRDPART, coordType));
+				//warnOut.printf("Sentence \"%s\" has no \"%s\" in \"%s\".\n", s.id, LvtbRoles.CRDPART, coordType);
 				if (sortedNodes.get(0) != null )
 				{
 					newRoot = sortedNodes.get(0);
-					s.allAsDependents(newRoot, sortedNodes, coordType, coordTag, null, warnOut);
+					s.allAsDependents(newRoot, sortedNodes, coordType, coordTag, null, logger);
 				}
-				else throw new IllegalArgumentException(
-						"\"" + coordType +"\" in sentence \"" + s.id + "\" seems to be empty.\n");
+				else throw new IllegalArgumentException(String.format(
+						"\"%s\" in sentence \"%s\" seems to be empty",
+						coordType, s.id));
 			}
 		}
 		return newRoot;
@@ -406,9 +418,9 @@ public class PhraseTransformator
 			|| punct != null && foreigns.getLength() > 0
 				&& children.getLength() == foreigns.getLength() + punct.getLength()))
 			return s.allUnderFirst(xNode, xType, xTag, LvtbRoles.BASELEM,
-					Tuple.of(UDv2Relations.FLAT_FOREIGN, null), false, warnOut);
+					Tuple.of(UDv2Relations.FLAT_FOREIGN, null), false, logger);
 		else return s.allUnderFirst(xNode, xType, xTag, LvtbRoles.BASELEM,
-				null, false, warnOut);
+				null, false, logger);
 	}
 
 	/**
@@ -424,16 +436,20 @@ public class PhraseTransformator
 		NodeList children = NodeUtils.getAllPMLChildren(xNode);
 		if (xTag == null || xTag.isEmpty())
 		{
-			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
-					s.id, xType, xTag);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
+					s.id, xType, xTag));
+			//warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n", s.id, xType, xTag);
 			return missingTransform(xNode);
 		}
 		Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal|part).*")
 				.matcher(xTag);
 		if (!subTypeMatcher.matches())
 		{
-			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
-					s.id, xType, xTag);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
+					s.id, xType, xTag));
+			//warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n", s.id, xType, xTag);
 			return missingTransform(xNode);
 		}
 
@@ -442,9 +458,9 @@ public class PhraseTransformator
 		{
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
 			case "vv" : return s.allUnderFirst(
-					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, warnOut);
+					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, logger);
 			case "part" : return s.allUnderFirst(
-					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, warnOut);
+					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, logger);
 			case "ipv" :
 			{
 				NodeList basElems = (NodeList)XPathEngine.get().evaluate(
@@ -459,16 +475,19 @@ public class PhraseTransformator
 				}
 				if (adjs.size() < 1)
 				{
-					warnOut.printf(
-							"\"%s\" in sentence \"%s\" has no adjective \"%s\".\n",
-							xType, s.id, LvtbRoles.BASELEM);
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has no adjective \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has no adjective \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 					adjs = NodeListUtils.asList(children);
 				}
-				else if (adjs.size() > 1) warnOut.printf(
-						"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n",
-						xType, s.id, LvtbRoles.BASELEM);
+				else if (adjs.size() > 1)
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 				Node newRoot = NodeListUtils.getLastByOrd(adjs);
-				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
 			case "skv" :
@@ -485,16 +504,19 @@ public class PhraseTransformator
 				}
 				if (prons.size() < 1)
 				{
-					warnOut.printf(
-							"\"%s\" in sentence \"%s\" has no pronominal \"%s\".\n",
-							xType, s.id, LvtbRoles.BASELEM);
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has no pronominal \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has no pronominal \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 					prons = NodeListUtils.asList(children);
 				}
-				else if (prons.size() > 1) warnOut.printf(
-						"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".\n",
-						xType, s.id, LvtbRoles.BASELEM);
+				else if (prons.size() > 1)
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 				Node newRoot = NodeListUtils.getFirstByOrd(prons);
-				s.allAsDependents(newRoot, children, xType, xTag,null, warnOut);
+				s.allAsDependents(newRoot, children, xType, xTag,null, logger);
 				return newRoot;
 			}
 			case "set" :
@@ -505,16 +527,19 @@ public class PhraseTransformator
 						xNode, XPathConstants.NODESET);
 				if (noPrepBases.getLength() < 1)
 				{
-					warnOut.printf(
-							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 					noPrepBases = children;
 				}
-				else if (noPrepBases.getLength() > 1) warnOut.printf(
-						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
-						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
+				else if (noPrepBases.getLength() > 1)
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 				Node newRoot = NodeListUtils.getLastByOrd(noPrepBases);
-				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
 			case "sal" :
@@ -525,21 +550,26 @@ public class PhraseTransformator
 						xNode, XPathConstants.NODESET);
 				if (noSimBases.getLength() < 1)
 				{
-					warnOut.printf(
-							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
 					noSimBases = children;
 				}
-				else if (noSimBases.getLength() > 1) warnOut.printf(
-						"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n",
-						xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
+				else if (noSimBases.getLength() > 1)
+					logger.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
+							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
+					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE);
 				Node newRoot = NodeListUtils.getLastByOrd(noSimBases);
-				s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
+				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
 		}
-		warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
-				s.id, xType, xTag);
+		logger.doInsentenceWarning(String.format(
+				"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
+				s.id, xType, xTag));
+		//warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n", s.id, xType, xTag);
 		return missingTransform(xNode);
 	}
 
@@ -556,8 +586,10 @@ public class PhraseTransformator
 	{
 		if (xTag == null || xTag.isEmpty() || !xTag.matches("[^\\[]*\\[(sim|comp)[yn].*"))
 		{
-			warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n",
-					s.id, xType, xTag);
+			logger.doInsentenceWarning(String.format(
+					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
+					s.id, xType, xTag));
+			//warnOut.printf("Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".\n", s.id, xType, xTag);
 			return missingTransform(xNode);
 		}
 		boolean gramzed = xTag.matches("[^\\[]*\\[(sim|comp)y.*");
@@ -567,11 +599,11 @@ public class PhraseTransformator
 			Node newRoot = NodeListUtils.getFirstByDescOrd(children);
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
 			s.allAsDependents(newRoot, children, xType, xTag,
-					Tuple.of(UDv2Relations.FIXED, null), warnOut);
+					Tuple.of(UDv2Relations.FIXED, null), logger);
 			return newRoot;
 		}
 		return s.allUnderLast(xNode, xType, xTag, LvtbRoles.BASELEM,
-				null,null, true, warnOut);
+				null,null, true, logger);
 	}
 
 	/**
@@ -611,11 +643,13 @@ public class PhraseTransformator
 				xTag.substring(xTag.indexOf("[") + 1) : "");
 		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
 				&& !subtag.startsWith("phase"))
-			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
+			logger.doInsentenceWarning(String.format(
+					"xPred \"%s\" has a problematic tag \"%s\".",
+					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag));
+			//warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n", NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 		// Just put basElem under mod.
 		return s.allUnderLast(xNode, xType, xTag,
-				LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, warnOut);
+				LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, logger);
 	}
 
 	/**
@@ -635,27 +669,31 @@ public class PhraseTransformator
 				"./children/node[role='" + LvtbRoles.BASELEM +"']", xNode, XPathConstants.NODESET);
 		Node basElem = NodeListUtils.getLastByDescOrd(basElems);
 		if (basElem == null)
-			throw new IllegalArgumentException(
-					"\"" + xType +"\" in sentence \"" + s.id + "\" has no \"basElem\".\n");
+			throw new IllegalArgumentException(String.format(
+					"\"%s\" in sentence \"%s\" has no \"basElem\"",
+					xType, s.id));
 		NodeList auxes = (NodeList) XPathEngine.get().evaluate(
 				"./children/node[role='" + LvtbRoles.AUXVERB +"']", xNode, XPathConstants.NODESET);
 		Node lastAux = NodeListUtils.getLastByDescOrd(auxes);
 		if (lastAux == null)
-			throw new IllegalArgumentException(
-					"\"" + xType +"\" in sentence \"" + s.id + "\" has neither auxVerb nor mod.\n");
+			throw new IllegalArgumentException(String.format(
+					"\"%s\" in sentence \"%s\" has neither \"auxVerb\" nor \"mod\"",
+					xType, s.id));
 		if (auxes.getLength() > 1) for (int i = 0; i < auxes.getLength(); i++)
 		{
 			String auxLemma = NodeFieldUtils.getLemma(lastAux);
-			String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, warnOut);
+			String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, logger);
 			if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
 			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)") &&
 					!auxRedLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
-				warnOut.printf("xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".\n",
-						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), auxLemma);
+				logger.doInsentenceWarning(String.format(
+						"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
+						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), auxLemma));
+				//warnOut.printf("xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".\n", NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), auxLemma);
 		}
 
 		String auxLemma = NodeFieldUtils.getLemma(lastAux);
-		String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, warnOut);
+		String auxRedLemma = NodeFieldUtils.getReductionLemma(lastAux, logger);
 		if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
 		boolean ultimateAux = auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
 				auxRedLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
@@ -673,17 +711,21 @@ public class PhraseTransformator
 					subtag.startsWith("inf") || subtag.startsWith("num"))
 				nominal = true;
 			else if (!subtag.startsWith("act"))
-				warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
+				logger.doInsentenceWarning(String.format(
+						"xPred \"%s\" has a problematic tag \"%s\".",
+						NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag));
+				//warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n", NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 		}
 		else if (basElemTag != null)
-			warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n",
-					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
+			logger.doInsentenceWarning(String.format(
+					"xPred \"%s\" has a problematic tag \"%s\".",
+					NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag));
+			//warnOut.printf("xPred \"%s\" has a problematic tag \"%s\".\n", NodeFieldUtils.getId(NodeUtils.getPMLParent(xNode)), xTag);
 
 		Node newRoot = basElem;
 		if (!ultimateAux) newRoot = lastAux;
 		NodeList children = NodeUtils.getPMLNodeChildren(xNode);
-		s.allAsDependents(newRoot, children, xType, xTag, null, warnOut);
+		s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 		if (passive && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
 					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);

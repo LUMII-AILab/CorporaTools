@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class FeatsLogic
 {
 	public static ArrayList<UDv2Feat> getUFeats(
-			String form, String lemma, String xpostag, Node aNode, PrintWriter warnOut)
+			String form, String lemma, String xpostag, Node aNode, Logger logger)
 	throws XPathExpressionException
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();

@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.transformator.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.utils.XPathEngine;
@@ -13,7 +14,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +24,12 @@ public class MorphoTransformator {
 	 */
 	public Sentence s;
 	protected TransformationParams params;
-	protected PrintWriter warnOut;
+	protected Logger logger;
 
-	public MorphoTransformator(Sentence sent, TransformationParams params, PrintWriter warnOut)
+	public MorphoTransformator(Sentence sent, TransformationParams params, Logger logger)
 	{
 		s = sent;
-		this.warnOut = warnOut;
+		this.logger = logger;
 		this.params = params;
 	}
 
@@ -64,16 +64,18 @@ public class MorphoTransformator {
 			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
 					s.pmlTree, XPathConstants.NODESET);
 			if (nodes.getLength() > 1)
-				warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",
-						s.id, currentOrd);
+				//warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",	s.id, currentOrd);
+				logger.doInsentenceWarning(String.format(
+						"\"%s\" has several nodes with ord \"%s\", only first used!", s.id, currentOrd));
 
 			// Determine, if paragraph has border before this token.
 			boolean paragraphChange = false;
 			String mId = NodeFieldUtils.getMId(nodes.item(0));
 			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
 				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
-			else warnOut.println(
-					"Node id \"" + mId + "\" does not match paragraph searching pattern!");
+			//else warnOut.println("Node id \"" + mId + "\" does not match paragraph searching pattern!");
+			else logger.doInsentenceWarning(String.format(
+					"Node id \"%s\" does not match paragraph searching pattern!", mId));
 			if (prevMId!= null && !prevMId.equals(mId))
 				paragraphChange = true;
 
@@ -124,8 +126,9 @@ public class MorphoTransformator {
 			String[] forms = mForm.split(" ");
 			String[] lemmas = mLemma.split(" ");
 			if (forms.length != lemmas.length)
-				warnOut.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces!\n",
-						s.id, mForm, mLemma);
+				//warnOut.printf("\"%s\" form \"%s\" do not match \"%s\" on spaces!\n", s.id, mForm, mLemma);
+				logger.doInsentenceWarning(String.format(
+						"\"%s\" form \"%s\" do not match \"%s\" on spaces!", s.id, mForm, mLemma));
 
 			// First one is different.
 			Token firstTok = new Token(baseOrd + offset, forms[0],
@@ -134,19 +137,21 @@ public class MorphoTransformator {
 				firstTok.misc.add("LvtbNodeId=" + lvtbAId);
 			if (lvtbTag.matches("xf.*"))
 			{
-				warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
+				//warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
+				logger.doInsentenceWarning(String.format(
+						"Processing unsplit xf \"%s\", check in treebank!", mForm));
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, logger);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 			}
 			else if (lvtbTag.matches("x[ux].*"))
 			{
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, warnOut);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, warnOut);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, logger);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 			}
 			else
 			{
 				firstTok.upostag = UDv2PosTag.PART;
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, warnOut);
+				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, logger);
 			}
 			if (paragraphChange) firstTok.misc.add("NewPar=Yes");
 			s.conll.add(firstTok);
@@ -162,13 +167,13 @@ public class MorphoTransformator {
 					nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
+					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 				}
 				else
 				{
 					nextTok.upostag = UDv2PosTag.PART;
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, warnOut);
+					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, logger);
 				}
 				nextTok.head = Tuple.of(firstTok.getFirstColumn(), firstTok);
 				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
@@ -186,8 +191,8 @@ public class MorphoTransformator {
 					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
 			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
 				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
-			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, warnOut);
-			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, warnOut);
+			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
+			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 			if (noSpaceAfter)
 				nextTok.misc.add("SpaceAfter=No");
 			if (paragraphChange)
