@@ -153,7 +153,7 @@ public class PhrasePartDepLogic
 					return Tuple.of(UDv2Relations.NMOD, prepLemma);
 				}
 				if (tag.matches("(mc|xn).*")) return Tuple.of(UDv2Relations.NUMMOD, null);
-				if (tag.matches("(a|ya|xo|mo).*")) return Tuple.of(UDv2Relations.AMOD, null);
+				if (tag.matches("(a|ya|xo|mo|v..pd).*")) return Tuple.of(UDv2Relations.AMOD, null);
 			}
 
 			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.matches("(ipv|sal).*"))

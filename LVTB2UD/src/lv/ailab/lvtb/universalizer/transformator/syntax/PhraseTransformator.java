@@ -471,7 +471,7 @@ public class PhraseTransformator
 				{
 					Node current = basElems.item(i);
 					String tag = NodeFieldUtils.getTag(current);
-					if (tag.matches("(a|ya).*")) adjs.add(current);
+					if (tag.matches("(a|ya|v..pd).*")) adjs.add(current);
 				}
 				if (adjs.size() < 1)
 				{
