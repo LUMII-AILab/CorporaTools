@@ -3,14 +3,12 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.PmlMNode;
 import lv.ailab.lvtb.universalizer.utils.Logger;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created on 2016-04-20.
@@ -20,8 +18,7 @@ import java.util.ArrayList;
 public class FeatsLogic
 {
 	public static ArrayList<UDv2Feat> getUFeats(
-			String form, String lemma, String xpostag, Node aNode, Logger logger)
-	throws XPathExpressionException
+			String form, String lemma, String xpostag, PmlANode aNode, Logger logger)
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
 		String comprLemma = lemma;
@@ -109,46 +106,85 @@ public class FeatsLogic
 		if (xpostag.matches("r0.*") && comprLemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
 			res.add(UDv2Feat.PRONTYPE_INT);
 		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
-				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_INT);
 		if (xpostag.matches("pr.*")) res.add(UDv2Feat.PRONTYPE_REL);
 		if (xpostag.matches("pd.*")) res.add(UDv2Feat.PRONTYPE_DEM);
 		if (xpostag.matches("r0.*") && comprLemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
 			res.add(UDv2Feat.PRONTYPE_DEM);
 		if (xpostag.matches("n.*") && comprLemma.equals("t(ur|ej)iene") &&
-				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_DEM);
 		if (xpostag.matches("pg.*")) res.add(UDv2Feat.PRONTYPE_TOT);
 		if (xpostag.matches("r0.*") && comprLemma.matches("vienmēr|visur|visad(iņ)?"))
 			res.add(UDv2Feat.PRONTYPE_TOT);
 		if (xpostag.matches("n.*") && comprLemma.equals("vis(ur|ad)iene") &&
-				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_TOT);
 		if (xpostag.matches("p.....y.*")) res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("r0.*") && comprLemma.matches("ne.*"))
 			res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("n.*") && comprLemma.equals("nek(ur|ad)iene") &&
-				LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("pi.*")) res.add(UDv2Feat.PRONTYPE_IND);
 		if (xpostag.matches("r0.*") &&
-				LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
-			NodeList result = (NodeList) XPathEngine.get().evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
-			if (result != null && result.getLength() > 0)
+			List<PmlANode> siblings = aNode.getParent().getChildren();
+			boolean particleSib = false;
+			for (PmlANode sib : siblings)
+			{
+				PmlMNode sibM = sib.getM();
+				String sibLemma = sibM == null ? "" : sibM.getLemma();
+				String sibTag = sibM == null ? "" : sibM.getTag();
+				if (sibTag.startsWith("q") &&
+						sibLemma.matches("kaut|diez(in)?|nez(in)?"))
+				{
+					particleSib = true;
+					break;
+				}
+			}
+			if (particleSib)
 			{
 				res.add(UDv2Feat.PRONTYPE_IND);
 				res.remove(UDv2Feat.PRONTYPE_INT);
 			}
 		}
 		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
-				LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
+				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
+				//LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
-			NodeList result = (NodeList) XPathEngine.get()
-					.evaluate("../node[m.rf/tag = 'qs' and (m.rf/lemma = 'kaut' or m.rf/lemma = 'diez' or m.rf/lemma = 'diezin' or m.rf/lemma = 'nez' or m.rf/lemma = 'nezin')]", aNode, XPathConstants.NODESET);
-			if (result != null && result.getLength() > 0 &&
-					LvtbRoles.BASELEM.equals(XPathEngine.get().evaluate("../../../../role", aNode)) &&
-					LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../../../../../xtype", aNode)))
+			List<PmlANode> siblings = aNode.getParent().getChildren();
+			boolean particleSib = false;
+			for (PmlANode sib : siblings)
+			{
+				PmlMNode sibM = sib.getM();
+				String sibLemma = sibM == null ? "" : sibM.getLemma();
+				String sibTag = sibM == null ? "" : sibM.getTag();
+				if (sibTag.startsWith("q") &&
+						sibLemma.matches("kaut|diez(in)?|nez(in)?"))
+				{
+					particleSib = true;
+					break;
+				}
+			}
+			PmlANode parent = aNode.getParent();
+			PmlANode grandParent = parent == null ? null : parent.getParent();
+			String gpRole = grandParent == null ? null : grandParent.getRole();
+			PmlANode greatGrandParent = grandParent == null ? null : grandParent.getParent();
+			String ggpPhraseType = greatGrandParent == null ? null : greatGrandParent.getPhraseType();
+			PmlANode.Type ggpNodeType = greatGrandParent == null ? null : greatGrandParent.getNodeType();
+			if (particleSib && LvtbRoles.BASELEM.equals(gpRole)
+					&& PmlANode.Type.X == ggpNodeType
+					&& LvtbXTypes.XPREP.equals(ggpPhraseType))
+					//LvtbRoles.BASELEM.equals(XPathEngine.get().evaluate("../../../../role", aNode)) &&
+					//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../../../../../xtype", aNode)))
 				res.add(UDv2Feat.PRONTYPE_IND);
 		}
 

@@ -1,9 +1,10 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
-import lv.ailab.lvtb.universalizer.PmlLoader;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.PmlXmlLoader;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.xmldom.XmlDomANode;
+import lv.ailab.lvtb.universalizer.pml.xmldom.XPathEngine;
 import lv.ailab.lvtb.universalizer.utils.Logger;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
  */
 // TODO: make omittWholeOnError class variable and do not process any more
 // TODO  sentences after first error, if omittWholeOnError = true
-public class FileTransformator
+public class PmlXmlFileTransformator
 {
 	public StringBuilder processed;
 	protected TransformationParams params;
@@ -26,7 +27,7 @@ public class FileTransformator
 	private int added;
 	public int all;
 
-	public FileTransformator(TransformationParams params)
+	public PmlXmlFileTransformator(TransformationParams params)
 	{
 		this.params = params;
 		processed = new StringBuilder();
@@ -44,10 +45,9 @@ public class FileTransformator
 			String inputPath, Logger logger)
 			throws SAXException, ParserConfigurationException, XPathExpressionException, IOException
 	{
-		NodeList pmlTrees = PmlLoader.getTrees(inputPath);
+		NodeList pmlTrees = PmlXmlLoader.getTrees(inputPath);
 		System.out.printf("%s trees. ", pmlTrees.getLength());
 		logger.printFoundTreesCount(pmlTrees.getLength());
-		//warningsLog.printf("%s trees found...\n", pmlTrees.getLength());
 		String paragraphId = "";
 		// Print info in the file beginning.
 		if (pmlTrees.getLength() > 0)
@@ -56,7 +56,6 @@ public class FileTransformator
 			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
 			if (firstComment != null && firstComment.startsWith("AUTO"))
 			{
-				//warningsLog.println("File starts with \"AUTO\" comment, everything is ommited!");
 				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
 				logger.finishFileWithAUTO();
 				omitted = pmlTrees.getLength();
@@ -64,7 +63,7 @@ public class FileTransformator
 			}
 			// Print out information about the start of the new document
 			processed.append("# newdoc");
-			String firstSentId = NodeFieldUtils.getId(pmlTrees.item(0));
+			String firstSentId = XPathEngine.get().evaluate("./@id", pmlTrees.item(0));
 			Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(firstSentId);
 			if (idMatcher.matches())
 			{
@@ -95,7 +94,9 @@ public class FileTransformator
 			// been an error.
 			if (params.OMIT_WHOLE_FILES && omitted > 0)
 			{
+				//omitted = pmlTrees.getLength() - added;
 				omitted = pmlTrees.getLength();
+				added = 0;
 				break;
 			}
 
@@ -103,7 +104,6 @@ public class FileTransformator
 			String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
 			if (comment != null && comment.startsWith("FIXME"))
 			{
-				//warningsLog.println("A sentence with \"FIXME\" ommited.");
 				System.out.println("A sentence with \"FIXME\" ommited.");
 				logger.finishSentenceWithFIXME();
 				omitted++;
@@ -111,17 +111,18 @@ public class FileTransformator
 			}
 
 			// Try transforming tree.
+			PmlANode pmlTree = new XmlDomANode(pmlTrees.item(i));
 			String conllTree = null;
 			try
 			{
 				conllTree = SentenceTransformEngine.treeToConll(
-						pmlTrees.item(i), params, logger);
+						pmlTree, params, logger);
 			} catch (Exception e)
 			{
-				String treeId = NodeFieldUtils.getId(pmlTrees.item(i));
-				//warningsLog.printf("A sentence %s failed with an exception: ", treeId);
-				//e.printStackTrace(warningsLog);
-				System.out.printf("Transforming sentence %s completely failed! Check structure and try again.\n", treeId);
+				String treeId = pmlTree.getId();
+				System.out.printf(
+						"Transforming sentence %s completely failed! Check structure and try again.\n",
+						treeId);
 				e.printStackTrace();
 				logger.finishSentenceWithException(treeId, e, false);
 			}
@@ -129,7 +130,7 @@ public class FileTransformator
 			// Has a new paragraph started?
 			if (i > 0)
 			{
-				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(NodeFieldUtils.getId(pmlTrees.item(i)));
+				Matcher idMatcher = Pattern.compile("a-(.*-p\\d+)s\\d+").matcher(pmlTree.getId());
 				if (idMatcher.matches())
 				{
 					String nextParaID = idMatcher.group(1);
@@ -166,14 +167,14 @@ public class FileTransformator
 	{
 		if (omitted + added != all)
 		{
-			throw new IllegalStateException(
-					"Algorithmic error! Omitted Trees + Good Trees != All Trees!");
+			throw new IllegalStateException(String.format(
+					"Algorithmic error! Omitted Trees (%s) + Good Trees (%s) != All Trees(%s)",
+					omitted, added, all));
 		}
 		if (params.OMIT_WHOLE_FILES && omitted > 0 || all - omitted < 1)
 		{
 			System.out.println("Finished - nothing to write.");
 			logger.finishFileNormal(true);
-			//warningsLog.println("Finished - nothing to write.");
 			return false;
 		}
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
@@ -182,7 +183,6 @@ public class FileTransformator
 		out.flush();
 		out.close();
 		System.out.println("Finished.");
-		//warningsLog.println("Finished.");
 		logger.finishFileNormal(false);
 		return true;
 	}

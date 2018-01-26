@@ -4,18 +4,12 @@ import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +34,7 @@ public class Sentence
 	/**
 	 * LVTB PML representation of the tree.
 	 */
-	public Node pmlTree;
+	public PmlANode pmlTree;
 	/**
 	 * UD dependency tree as and conll-style array.
 	 */
@@ -69,10 +63,10 @@ public class Sentence
 	 */
 	public boolean hasFailed;
 
-	public Sentence(Node pmlTree) throws XPathExpressionException
+	public Sentence(PmlANode pmlTree)
 	{
 		this.pmlTree = pmlTree;
-		id = XPathEngine.get().evaluate("./@id", this.pmlTree);
+		id = pmlTree.getId();
 		hasFailed = false;
 	}
 
@@ -94,34 +88,32 @@ public class Sentence
 	}
 
 	public void populateCoordPartsUnder()
-	throws XPathExpressionException
 	{
 		coordPartsUnder = new HashMap<>();
 		populateCoordPartsUnder(pmlTree);
 	}
 
-	protected void populateCoordPartsUnder(Node aNode)
-	throws XPathExpressionException
+	protected void populateCoordPartsUnder(PmlANode aNode)
 	{
 		if (aNode == null) return;
-		NodeList dependants = NodeUtils.getPMLNodeChildren(aNode);
-		if (dependants != null) for (int i = 0; i < dependants.getLength(); i++)
-			populateCoordPartsUnder(dependants.item(i));
-		Node phrase = NodeUtils.getPhraseNode(aNode);
+		List<PmlANode> dependants = aNode.getChildren();
+		if (dependants != null) for (PmlANode dependant : dependants)
+			populateCoordPartsUnder(dependant);
+		PmlANode phrase = aNode.getPhraseNode();
 		if (phrase == null) return;
-		NodeList phraseParts = NodeUtils.getPMLNodeChildren(phrase);
-		if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
-			populateCoordPartsUnder(phraseParts.item(i));
+		List<PmlANode> phraseParts = phrase.getChildren();
+		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
+			populateCoordPartsUnder(phrasePart);
 
-		String id = NodeFieldUtils.getId(aNode);
-		if (phrase.getNodeName().equals("coordinfo"))
+		String id = aNode.getId();
+		if (phrase.getNodeType() == PmlANode.Type.COORD)
 		{
 			HashSet<String> eqs = coordPartsUnder.get(id);
 			if (eqs == null) eqs = new HashSet<>();
-			if (phraseParts != null) for (int i = 0; i < phraseParts.getLength(); i++)
+			if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
 			{
-				String partId = NodeFieldUtils.getId(phraseParts.item(i));
-				String role = NodeFieldUtils.getRole(phraseParts.item(i));
+				String partId = phrasePart.getId();
+				String role = phrasePart.getRole();
 				if (LvtbRoles.CRDPART.equals(role))
 				{
 					if (coordPartsUnder.containsKey(partId))
@@ -131,9 +123,6 @@ public class Sentence
 			}
 			coordPartsUnder.put(id, eqs);
 		}
-		/*else if (phrase.getNodeName().equals("xinfo")
-			|| phrase.getNodeName().equals("pmcinfo"))
-		{}//*/
 	}
 
 	/**
@@ -155,50 +144,15 @@ public class Sentence
 	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
 	 *                      get this info
 	 * @param logger 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
 	public void allAsDependents(
-			Node newRoot, NodeList children, String phraseType, String phraseTag,
+			PmlANode newRoot, List<PmlANode> children, String phraseType, String phraseTag,
 			Tuple<UDv2Relations, String> childDeprel, Logger logger)
-	throws XPathExpressionException
-	{
-		allAsDependents(newRoot, NodeListUtils.asList(children), phraseType, phraseTag, childDeprel, logger);
-	}
-
-	/**
-	 * Make a list of given nodes children of the designated parent. Set UD
-	 * deprel, deps and deps backbone for each child. If designated parent is
-	 * included in child list node, circular dependency is not made, role is not
-	 * set.
-	 * @param newRoot		designated parent
-	 * @param children		list of child nodes
-	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param phraseTag     phrase tag from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param childDeprel	dependency role + enhanced dependencies postfix to
-	 *                      be used for DEPREL field and enhanced backbone for
-	 *                      child nodes, or null, if
-	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info
-	 * @param logger 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	public void allAsDependents(
-			Node newRoot, List<Node> children, String phraseType, String phraseTag,
-			Tuple<UDv2Relations, String> childDeprel, Logger logger)
-	throws XPathExpressionException
 	{
 		if (children == null || children.isEmpty()) return;
 
 		// Process children.
-		for (Node child : children)
+		for (PmlANode child : children)
 		{
 			addAsDependent(newRoot, child, phraseType, phraseTag, childDeprel, logger);
 		}
@@ -221,17 +175,12 @@ public class Sentence
 	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
 	 *                      get this info
 	 * @param logger 		where all the warnings goes
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
 	public void addAsDependent (
-			Node parent, Node child, String phraseType, String phraseTag,
+			PmlANode parent, PmlANode child, String phraseType, String phraseTag,
 			Tuple<UDv2Relations, String> childDeprel, Logger logger)
-	throws XPathExpressionException
 	{
-		if (child == null ) return;
-		if (child.equals(parent) || child.isSameNode(parent)) return;
+		if (child == null || child.isSameNode(parent)) return;
 
 		if (childDeprel == null) childDeprel =
 				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, phraseTag, logger);
@@ -258,33 +207,30 @@ public class Sentence
 	 *                          is found
 	 * @param logger 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public Node allUnderFirst(
-			Node phraseNode, String phraseType, String phraseTag, String newRootType,
+	public PmlANode allUnderFirst(
+			PmlANode phraseNode, String phraseType, String phraseTag, String newRootType,
 			Tuple<UDv2Relations, String> childDeprel, boolean warnMoreThanOne,
 			Logger logger)
-	throws XPathExpressionException
 	{
-		NodeList children = (NodeList)XPathEngine.get().evaluate(
-				"./children/*", phraseNode, XPathConstants.NODESET);
-		NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
-				"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
-		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
+
+		//NodeList children = (NodeList)XPathEngine.get().evaluate(
+		//		"./children/*", phraseNode, XPathConstants.NODESET);
+		List<PmlANode> children = phraseNode.getChildren();
+		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
+		if (warnMoreThanOne && potentialRoots != null && potentialRoots.size() > 1)
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
 					phraseType, id, newRootType));
 			//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n", phraseType, id, newRootType);
-		Node newRoot = NodeListUtils.getFirstByDescOrd(potentialRoots);
+		PmlANode newRoot = PmlANodeListUtils.getFirstByDescOrd(potentialRoots);
 		if (newRoot == null)
 		{
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
 					phraseType, id, newRootType));
 			//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n", phraseType, id, newRootType);
-			newRoot = NodeListUtils.getFirstByDescOrd(children);
+			newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
@@ -315,29 +261,24 @@ public class Sentence
 	 *                          is found
 	 * @param logger 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public Node allUnderLast(
-			Node phraseNode, String phraseType, String phraseTag, String newRootType,
+	public PmlANode allUnderLast(
+			PmlANode phraseNode, String phraseType, String phraseTag, String newRootType,
 			String newRootBackUpType, Tuple<UDv2Relations, String> childDeprel,
 			boolean warnMoreThanOne, Logger logger)
-	throws XPathExpressionException
 	{
-		NodeList children = (NodeList)XPathEngine.get().evaluate(
-				"./children/*", phraseNode, XPathConstants.NODESET);
-		NodeList potentialRoots = (NodeList)XPathEngine.get().evaluate(
-				"./children/node[role='" + newRootType +"']", phraseNode, XPathConstants.NODESET);
+		//NodeList children = (NodeList)XPathEngine.get().evaluate(
+		//		"./children/*", phraseNode, XPathConstants.NODESET);
+		List<PmlANode> children = phraseNode.getChildren();
+		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
 		if (newRootBackUpType != null &&
-				(potentialRoots == null || potentialRoots.getLength() < 1))
-			potentialRoots = (NodeList)XPathEngine.get().evaluate(
-					"./children/node[role='" + newRootBackUpType +"']", phraseNode, XPathConstants.NODESET);
-		Node newRoot = NodeListUtils.getLastByDescOrd(potentialRoots);
-		if (warnMoreThanOne && potentialRoots != null && potentialRoots.getLength() > 1)
+				(potentialRoots == null || potentialRoots.size() < 1))
+			potentialRoots = phraseNode.getChildren(newRootBackUpType);
+		PmlANode newRoot = PmlANodeListUtils.getLastByDescOrd(potentialRoots);
+		if (warnMoreThanOne && potentialRoots != null && potentialRoots.size() > 1)
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
-					phraseType, id, NodeFieldUtils.getAnyLabel(newRoot)));
+					phraseType, id, newRoot.getAnyLabel()));
 			//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n", phraseType, id, NodeFieldUtils.getAnyLabel(newRoot));
 		if (newRoot == null)
 		{
@@ -345,7 +286,7 @@ public class Sentence
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
 					phraseType, id, newRootType));
-			newRoot = NodeListUtils.getLastByDescOrd(children);
+			newRoot = PmlANodeListUtils.getLastByDescOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
@@ -368,19 +309,16 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void setLink (Node parent, Node child, UDv2Relations baseDep, Tuple<UDv2Relations, String> enhancedDep,
+	public void setLink (PmlANode parent, PmlANode child, UDv2Relations baseDep,
+						 Tuple<UDv2Relations, String> enhancedDep,
 						 boolean setBackbone, boolean cleanOldDeps)
-			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
-		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(parent));
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency, but avoid circular dependencies.
@@ -412,19 +350,16 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void setEnhLink (Node parent, Node child, Tuple<UDv2Relations, String> enhancedDep,
+	public void setEnhLink (PmlANode parent, PmlANode child,
+							Tuple<UDv2Relations, String> enhancedDep,
 						    boolean setBackbone, boolean cleanOldDeps)
-			throws XPathExpressionException
 	{
-		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
-		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(parent));
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set enhanced dependencies, but avoid circular.
@@ -445,15 +380,11 @@ public class Sentence
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param baseDep	label to be used for enhanced dependency
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void setBaseLink (Node parent, Node child, UDv2Relations baseDep)
-			throws XPathExpressionException
+	public void setBaseLink (PmlANode parent, PmlANode child, UDv2Relations baseDep)
 	{
-		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(parent));
-		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token childBaseToken = pmlaToConll.get(child.getId());
 
 		// Set base dependency, but avoid circular dependencies.
 		if (!rootBaseToken.equals(childBaseToken))
@@ -471,15 +402,11 @@ public class Sentence
 	 * @param node 			PML node to be made root
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void setRoot (Node node, boolean cleanOldDeps)
-			throws XPathExpressionException
+	public void setRoot (PmlANode node, boolean cleanOldDeps)
 	{
-		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(node));
-		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(node));
+		Token childBaseToken = pmlaToConll.get(node.getId());
+		Token childEnhToken = pmlaToEnhConll.get(node.getId());
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency.
@@ -499,18 +426,14 @@ public class Sentence
 	 * tokens.
 	 * @param newParent	new parent
 	 * @param child		child node whose attachment should be changed
-	 * @throws XPathExpressionException	unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void changeHead (Node newParent, Node child)
-			throws XPathExpressionException
+	public void changeHead (PmlANode newParent, PmlANode child)
 	{
-		Token rootBaseToken = pmlaToConll.get(NodeFieldUtils.getId(newParent));
-		Token rootEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(newParent));
+		Token rootBaseToken = pmlaToConll.get(newParent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(newParent.getId());
 		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(NodeFieldUtils.getId(child));
-		Token childEnhToken = pmlaToEnhConll.get(NodeFieldUtils.getId(child));
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency, but avoid circular dependencies.
@@ -535,35 +458,15 @@ public class Sentence
 	 * token assigned, return assigned base token.
 	 * @param aNode	node whose token must be found
 	 * @return	enhanced token or base token, or null (in that order)
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public Token getEnhancedOrBaseToken(Node aNode)
-			throws XPathExpressionException
+	public Token getEnhancedOrBaseToken(PmlANode aNode)
 	{
 		if (aNode == null) return null;
-		String id = NodeFieldUtils.getId(aNode);
+		String id = aNode.getId();
 		if (id == null) return null;
 		Token resToken = pmlaToEnhConll.get(id);
 		if (resToken == null) resToken = pmlaToConll.get(id);
 		return resToken;
-	}
-
-	/**
-	 * Find PML node by given ID.
-	 * @param id	an ID to search
-	 * @return	first node found
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	public Node findPmlNode(String id) throws XPathExpressionException
-	{
-		NodeList res = (NodeList) XPathEngine.get().evaluate(
-				".//node[@id='"+ id + "']", pmlTree, XPathConstants.NODESET);
-		if (res == null || res.getLength() < 1) return null;
-		return res.item(0);
 	}
 
 	/**
@@ -592,9 +495,9 @@ public class Sentence
 	 * @param aNode	node whose coordination parts are needed
 	 * @return	IDs of coordinated parts or node itself
 	 */
-	public HashSet<String> getCoordPartsUnderOrNode (Node aNode)
-	throws XPathExpressionException
+	public HashSet<String> getCoordPartsUnderOrNode (PmlANode aNode)
 	{
-		return getCoordPartsUnderOrNode(NodeFieldUtils.getId(aNode));
+		return getCoordPartsUnderOrNode(aNode.getId());
 	}
+
 }

@@ -2,16 +2,12 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeListUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.utils.Logger;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
-import org.w3c.dom.Node;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathExpressionException;
+import java.util.List;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
@@ -21,17 +17,12 @@ import javax.xml.xpath.XPathExpressionException;
  */
 public class PosLogic
 {
-	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.
-	public static UDv2PosTag getUPostTagForPart(String lemma, String xpostag, Node aNode, boolean isLast)
-	throws XPathExpressionException
-	{
-	}*/
+	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.*/
 
 	public static UDv2PosTag getUPosTag(
-			String lemma, String xpostag, Node aNode, Logger logger)
-	throws XPathExpressionException
+			String lemma, String xpostag, PmlANode aNode, Logger logger)
 	{
-		String lvtbRole = NodeFieldUtils.getRole(aNode);
+		String lvtbRole = aNode.getRole();
 		String comprLemma = lemma;
 		if (comprLemma == null) comprLemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
@@ -58,16 +49,20 @@ public class PosLogic
 			if (lvtbRole.equals(LvtbRoles.ATTR)) return UDv2PosTag.DET;
 			else if (lvtbRole.equals(LvtbRoles.BASELEM) && comprLemma.matches("tād[sa]"))
 			{
-				Node parent = NodeUtils.getPMLParent(aNode);
-				if (!LvtbXTypes.SUBRANAL.equals(NodeFieldUtils.getRole(parent)))
+				PmlANode parent = aNode.getParent();
+				if (!LvtbXTypes.SUBRANAL.equals(parent.getRole()))
 					return UDv2PosTag.PRON;
 
-				NodeList children = NodeUtils.getAllPMLChildren(parent);
-				Node first = NodeListUtils.getFirstByDescOrd(children);
-				Node last = NodeListUtils.getLastByDescOrd(children);
-				if (children != null && children.getLength() == 2  &&
-						(aNode.isSameNode(first)) &&
-						LvtbXTypes.XSIMILE.equals(XPathEngine.get().evaluate("./children/xinfo/xtype", last)))
+				//NodeList children = NodeUtils.getAllPMLChildren(parent);
+				List<PmlANode> children = parent.getChildren();
+				PmlANode first = PmlANodeListUtils.getFirstByDescOrd(children);
+				PmlANode last = PmlANodeListUtils.getLastByDescOrd(children);
+				PmlANode lastPhrase = last == null ? null : last.getPhraseNode();
+				if (parent.getPhraseNode() == null &&
+						children != null && children.size() == 2  &&
+						(aNode.isSameNode(first)) && lastPhrase != null &&
+						lastPhrase.getNodeType() == PmlANode.Type.X &&
+						LvtbXTypes.XSIMILE.equals(lastPhrase.getPhraseType()))
 					return UDv2PosTag.DET;
 			}
 			return UDv2PosTag.PRON;

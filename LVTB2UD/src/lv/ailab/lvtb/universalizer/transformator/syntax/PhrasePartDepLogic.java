@@ -2,16 +2,9 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
+import java.util.List;
 
 /**
  * Relation between phrase part names used in LVTB and dependency labeling used
@@ -41,16 +34,12 @@ public class PhrasePartDepLogic
 	 * @param logger 		where all the warnings goes
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
-			Node aNode, String phraseType, String phraseTag, Logger logger)
-	throws XPathExpressionException
+			PmlANode aNode, String phraseType, String phraseTag, Logger logger)
 	{
-		String nodeId = NodeFieldUtils.getId(aNode);
-		String lvtbRole = NodeFieldUtils.getRole(aNode);
+		String nodeId = aNode.getId();
+		String lvtbRole = aNode.getRole();
 		String subTag = phraseTag != null && phraseTag.contains("[")
 				? phraseTag.substring(phraseTag.indexOf("[") + 1)
 				: "";
@@ -63,12 +52,15 @@ public class PhrasePartDepLogic
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC))
 			if (lvtbRole.equals(LvtbRoles.NO))
 			{
-				String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
+				//String subPmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", aNode);
+				PmlANode subPhrase = aNode.getPhraseNode();
+				String subPmcType =  subPhrase == null ? null
+						: aNode.getPhraseNode().getAnyLabel();
 				if (LvtbPmcTypes.ADDRESS.equals(subPmcType))
 					return Tuple.of(UDv2Relations.VOCATIVE, null);
 				if (LvtbPmcTypes.INTERJ.equals(subPmcType) || LvtbPmcTypes.PARTICLE.equals(subPmcType))
 					return Tuple.of(UDv2Relations.DISCOURSE, null);
-				String tag = NodeFieldUtils.getTag(aNode);
+				String tag = aNode.getAnyTag();
 				if (tag != null && tag.matches("[qi].*"))
 					return Tuple.of(UDv2Relations.DISCOURSE, null);
 				if (tag != null && tag.matches("n...v.*"))
@@ -91,7 +83,7 @@ public class PhrasePartDepLogic
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC))
 			if (lvtbRole.equals(LvtbRoles.CONJ))
 			{
-				String tag = NodeFieldUtils.getTag(aNode);
+				String tag = aNode.getAnyTag();
 				if (tag.matches("cc.*"))
 					return Tuple.of(UDv2Relations.CC, null);
 				if (tag.matches("cs.*"))
@@ -134,22 +126,27 @@ public class PhrasePartDepLogic
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
 
-			String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
-			String tag = NodeFieldUtils.getTag(aNode);
+			//String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
+			PmlANode subPhrase = aNode.getPhraseNode();
+			String subXType =  subPhrase == null ? null
+					: aNode.getPhraseNode().getAnyLabel();
+			String tag = aNode.getAnyTag();
 
 			if (LvtbXTypes.XPREP.equals(subXType) && subTag.startsWith("set"))
 			{
 				if (tag.matches("[np].*"))
 				{
-					NodeList preps = (NodeList)XPathEngine.get().evaluate(
-							"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
-							aNode, XPathConstants.NODESET);
-					if (preps.getLength() > 1)
+					List<? extends  PmlANode> preps =
+							subPhrase.getChildren(LvtbRoles.PREP);
+					//NodeList preps = (NodeList)XPathEngine.get().evaluate(
+					//		"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
+					//		aNode, XPathConstants.NODESET);
+					if (preps.size() > 1)
 						logger.doInsentenceWarning(String.format(
 								"\"%s\" with ID \"%s\" has multiple \"%s\".",
-								subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP));
+								subXType, aNode.getId(), LvtbRoles.PREP));
 						//warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\"\n.", subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP);
-					String prepLemma = NodeFieldUtils.getLemma(preps.item(0));
+					String prepLemma = preps.get(0).getM().getLemma();
 					return Tuple.of(UDv2Relations.NMOD, prepLemma);
 				}
 				if (tag.matches("(mc|xn).*")) return Tuple.of(UDv2Relations.NUMMOD, null);
@@ -181,10 +178,10 @@ public class PhrasePartDepLogic
 		{
 			// For now let us assume, that conjunction can't be coordinated.
 			// Then parent in this situation is the xSimile itself.
-			Node firstAncestor = NodeUtils.getEffectiveAncestor(NodeUtils.getPMLParent(aNode)); // node/xinfo/pmcinfo/phraseinfo
-			Node secondAncestor = NodeUtils.getEffectiveAncestor(firstAncestor); // node/xinfo/pmcinfo/phraseinfo
-			String firstAncType = NodeFieldUtils.getAnyLabel(firstAncestor);
-			String secondAncType = NodeFieldUtils.getAnyLabel(secondAncestor);
+			PmlANode firstAncestor = aNode.getParent().getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
+			PmlANode secondAncestor = firstAncestor.getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
+			String firstAncType = firstAncestor.getAnyLabel();
+			String secondAncType = secondAncestor.getAnyLabel();
 
 			// Check the specific roles
 			if (LvtbRoles.BASELEM.equals(firstAncType))
@@ -203,10 +200,10 @@ public class PhrasePartDepLogic
 			//if (LvtbRoles.ADV.equals(firstAncType))
 			//	return Tuple.of(UDv2Relations.DISCOURSE, null);
 			
-			Node effAncestor = secondAncestor;
-			if (LvtbXTypes.XPARTICLE.equals(NodeFieldUtils.getAnyLabel(effAncestor)))
-				effAncestor = NodeUtils.getEffectiveAncestor(effAncestor);
-			String effAncLabel = NodeFieldUtils.getAnyLabel(effAncestor);
+			PmlANode effAncestor = secondAncestor;
+			if (LvtbXTypes.XPARTICLE.equals(effAncestor.getAnyLabel()))
+				effAncestor = effAncestor.getEffectiveAncestor();
+			String effAncLabel = effAncestor.getAnyLabel();
 
 			// What to do ith this? Do we even need it?
 			//if (LvtbRoles.SPC.equals(effAncLabel))

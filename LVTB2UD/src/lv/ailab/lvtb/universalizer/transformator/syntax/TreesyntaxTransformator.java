@@ -1,8 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeUtils;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
@@ -10,12 +9,8 @@ import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
+import java.util.List;
 
 /**
  * This is the part of the transformation where base UD tree is made. This part
@@ -54,50 +49,43 @@ public class TreesyntaxTransformator
 	/**
 	 * Remove the ellipsis nodes that can be ignored in latter processing.
 	 * @return	 true if all ellipsis was removed
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public boolean preprocessEmptyEllipsis() throws XPathExpressionException
+	public boolean preprocessEmptyEllipsis()
 	{
 		// Childless, empty reductions are removed.
-		NodeList ellipsisChildren = (NodeList) XPathEngine.get().evaluate(
-				".//node[reduction and not(m.rf) and not(children)]", s.pmlTree, XPathConstants.NODESET);
-		if (ellipsisChildren != null) for (int i = 0; i < ellipsisChildren.getLength(); i++)
-		{
-			Node current = ellipsisChildren.item(i);
-			current.getParentNode().removeChild(current);
-		}
+		List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
+		if (ellipsisChildren != null)
+			for (PmlANode ellipsisChild : ellipsisChildren)
+				ellipsisChild.delete();
 
 		// Check if there is other reductions.
-		ellipsisChildren = (NodeList) XPathEngine.get().evaluate(
-				".//node[reduction and not(m.rf)]", s.pmlTree, XPathConstants.NODESET);
-		if (ellipsisChildren != null && ellipsisChildren.getLength() > 0) return false;
-
-		return true;
+		ellipsisChildren = s.pmlTree.getEllipsisDescendants(false);
+		return ellipsisChildren == null || ellipsisChildren.size() <= 0;
 	}
 
 	/**
 	 * Fill in DEPREL and HEAD fields in CoNLL-U table.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void transformBaseSyntax() throws XPathExpressionException
+	public void transformBaseSyntax()
 	{
-		Node pmlPmc = (Node)XPathEngine.get().evaluate(
-				"./children/pmcinfo", s.pmlTree, XPathConstants.NODE);
+		PmlANode pmlPmc = s.pmlTree.getPhraseNode();
+		if (pmlPmc == null || pmlPmc.getNodeType() != PmlANode.Type.PMC)
+		{
+			s.hasFailed = true;
+			return;
+		}
 		transformDepSubtrees(s.pmlTree);
 		if (s.hasFailed) return;
 		transformPhraseParts(pmlPmc);
 		if (s.hasFailed) return;
 
-		Node newRoot = pTransf.anyPhraseToUD(pmlPmc);
+		PmlANode newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
-			throw new IllegalArgumentException("Sentence " + s.id +" has no root PMC.");
-		s.pmlaToConll.put(NodeFieldUtils.getId(s.pmlTree), s.pmlaToConll.get(NodeFieldUtils.getId(newRoot)));
-		if (s.pmlaToEnhConll.containsKey(NodeFieldUtils.getId(newRoot)))
-			s.pmlaToEnhConll.put(NodeFieldUtils.getId(s.pmlTree), s.pmlaToEnhConll.get(NodeFieldUtils.getId(newRoot)));
+			throw new IllegalArgumentException(String.format(
+					"Sentence %s has no root PMC.", s.id));
+		s.pmlaToConll.put(s.pmlTree.getId(), s.pmlaToConll.get(newRoot.getId()));
+		if (s.pmlaToEnhConll.containsKey(newRoot.getId()))
+			s.pmlaToEnhConll.put(s.pmlTree.getId(), s.pmlaToEnhConll.get(newRoot.getId()));
 		s.setRoot(newRoot, true);
 		relinkDependents(s.pmlTree, newRoot, newRoot);
 	}
@@ -106,69 +94,58 @@ public class TreesyntaxTransformator
 	 * Helper method: find all dependency children and process subtrees they are
 	 * heads of.
 	 * @param parentANode	node whose dependency children will be processed
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
+
 	 */
-	protected void transformDepSubtrees(Node parentANode)
-			throws XPathExpressionException
+	protected void transformDepSubtrees(PmlANode parentANode)
 	{
 		if (s.hasFailed) return;
-		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
-				"./children/node", parentANode, XPathConstants.NODESET);
-		if (pmlDependents != null && pmlDependents.getLength() > 0)
-			for (int i = 0; i < pmlDependents.getLength(); i++)
-			{
-				transformSubtree(pmlDependents.item(i));
-				if (s.hasFailed) return;
-			}
+		List<PmlANode> pmlDependents = parentANode.getChildren();
+		if (pmlDependents == null || pmlDependents.isEmpty()) return;
+		for (PmlANode pmlDependent : pmlDependents)
+		{
+			transformSubtree(pmlDependent);
+			if (s.hasFailed) return;
+		}
 	}
 
 	/**
 	 * Helper method: process subtrees under each part of PML phrase.
 	 * @param phraseInfoNode	node whose dependency children will be processed
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	protected void transformPhraseParts(Node phraseInfoNode)
-			throws XPathExpressionException
+	protected void transformPhraseParts(PmlANode phraseInfoNode)
 	{
 		if (s.hasFailed) return;
-		NodeList parts = (NodeList)XPathEngine.get().evaluate(
-				"./children/node", phraseInfoNode, XPathConstants.NODESET);
-		if (parts != null && parts.getLength() > 0)
-			for (int i = 0; i < parts.getLength(); i++)
-			{
-				transformSubtree(parts.item(i));
-				if (s.hasFailed) return;
-			}
+		List<PmlANode> parts = phraseInfoNode.getChildren();
+		if (parts == null || parts.isEmpty()) return;
+		for (PmlANode part : parts)
+		{
+			transformSubtree(part);
+			if (s.hasFailed) return;
+		}
 	}
 
 	/**
 	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for given
 	 * subtree.
 	 * @param aNode	root of the subtree to process
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	protected void transformSubtree (Node aNode) throws XPathExpressionException
+	protected void transformSubtree (PmlANode aNode)
 	{
 		if (s.hasFailed) return;
 		if (params.DEBUG)
-			System.out.printf("Working on node \"%s\".\n", NodeFieldUtils.getId(aNode));
+			System.out.printf("Working on node \"%s\".\n", aNode.getId());
 
-		NodeList children = NodeUtils.getAllPMLChildren(aNode);
-		if (children == null || children.getLength() < 1) return;
+		List<PmlANode> children = aNode.getChildren();
+		PmlANode phraseNode = aNode.getPhraseNode();
+		if (phraseNode == null && (children == null || children.size() < 1))
+			return;
 
 		transformDepSubtrees(aNode);
 		if (s.hasFailed) return;
 
-		Node newBasicRoot = aNode;
-		Node newEnhancedRoot = aNode;
+		PmlANode newBasicRoot = aNode;
+		PmlANode newEnhancedRoot = aNode;
 		// Valid LVTB PMLs have no more than one type of phrase - pmc, x or coord.
-		Node phraseNode = NodeUtils.getPhraseNode(aNode);
 
 		//// Process phrase overlords.
 		if (phraseNode != null)
@@ -183,29 +160,22 @@ public class TreesyntaxTransformator
 
 			if (params.INDUCE_PHRASE_TAGS)
 			{
-				String phraseTag = NodeFieldUtils.getTag(aNode);
-				String newRootTag = NodeFieldUtils.getTag(newBasicRoot);
+				String phraseTag = aNode.getAnyTag();
+				String newRootTag = newBasicRoot.getAnyTag();
 				if ((phraseTag == null || phraseTag.length() < 1 || phraseTag.matches("N/[Aa]")) &&
 						newRootTag != null && newRootTag.length() > 0)
 				{
-					String type = phraseNode.getNodeName();
-					if (type.equals("xinfo") || type.equals("coordinfo"))
-					{
-						Node tag = (Node)XPathEngine.get().evaluate("./tag", phraseNode, XPathConstants.NODE);
-						if (tag == null) tag = phraseNode.getOwnerDocument().createElement("tag");
-						while (tag.getFirstChild() != null)
-							tag.removeChild(tag.getFirstChild());
-						tag.appendChild(phraseNode.getOwnerDocument().createTextNode(newRootTag + "[INDUCED]"));
-						phraseNode.appendChild(tag);
-					}
+					PmlANode.Type type = phraseNode.getNodeType();
+					if (type == PmlANode.Type.X || type == PmlANode.Type.COORD)
+						phraseNode.setPhraseTag(newRootTag + "[INDUCED]");
 				}
 			}
 		}
 		//// Process reduction nodes.
-		else if (NodeUtils.isReductionNode(aNode))
+		else if (aNode.isPureReductionNode())
 		{
-			String nodeId = NodeFieldUtils.getId(aNode);
-			Node redRoot = EllipsisLogic.newParent(aNode, dpTransf, logger);
+			String nodeId = aNode.getId();
+			PmlANode redRoot = EllipsisLogic.newParent(aNode, dpTransf, logger);
 			if (redRoot == null)
 			{
 				s.hasFailed = true;
@@ -215,7 +185,7 @@ public class TreesyntaxTransformator
 
 			// Make new token for ellipsis.
 			// Decimal token (reduction node) must be inserted after newRootToken.
-			Token newRootToken = s.pmlaToConll.get(NodeFieldUtils.getId(newBasicRoot));
+			Token newRootToken = s.pmlaToConll.get(newBasicRoot.getId());
 			int position = s.conll.indexOf(newRootToken) + 1;
 			while (position < s.conll.size() && newRootToken.idBegin == s.conll.get(position).idBegin)
 				position++;
@@ -224,13 +194,13 @@ public class TreesyntaxTransformator
 			decimalToken.idSub = s.conll.get(position-1).idSub+1;
 			decimalToken.idEnd = decimalToken.idBegin;
 			decimalToken.xpostag = MorphoTransformator.getXpostag(
-					NodeFieldUtils.getReductionTagPart(aNode), null);
-			decimalToken.form = NodeFieldUtils.getReductionFormPart(aNode);
+					aNode.getReductionTagPart(), null);
+			decimalToken.form = aNode.getReductionFormPart();
 			if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
 				//warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n", NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
 				logger.doInsentenceWarning(String.format(
 						"Ellipsis node %s with reduction field \"%s\" has no tag.",
-						nodeId, NodeFieldUtils.getReduction(aNode)));
+						nodeId, aNode.getReduction()));
 			else
 			{
 				if (decimalToken.form != null && !decimalToken.form.isEmpty())
@@ -254,9 +224,9 @@ public class TreesyntaxTransformator
 		}
 
 		//// Add information about new subroot in the result structure.
-		s.pmlaToConll.put(NodeFieldUtils.getId(aNode), s.pmlaToConll.get(NodeFieldUtils.getId(newBasicRoot)));
-		if (s.pmlaToEnhConll.containsKey(NodeFieldUtils.getId(newEnhancedRoot)))
-			s.pmlaToEnhConll.put(NodeFieldUtils.getId(aNode), s.pmlaToEnhConll.get(NodeFieldUtils.getId(newEnhancedRoot)));
+		s.pmlaToConll.put(aNode.getId(), s.pmlaToConll.get(newBasicRoot.getId()));
+		if (s.pmlaToEnhConll.containsKey(newEnhancedRoot.getId()))
+			s.pmlaToEnhConll.put(aNode.getId(), s.pmlaToEnhConll.get(newEnhancedRoot.getId()));
 
 		//// Process dependants (except the newRoot).
 		relinkDependents(aNode, newBasicRoot, newEnhancedRoot);
@@ -272,40 +242,31 @@ public class TreesyntaxTransformator
 	 *                  		base UD structure
 	 * @param newEnhDepRoot		node that will be the root of the coresponding
 	 *                  		enhanced UD structure
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	protected void relinkDependents(Node parentANode, Node newBaseDepRoot, Node newEnhDepRoot)
-			throws XPathExpressionException
+	protected void relinkDependents(
+			PmlANode parentANode, PmlANode newBaseDepRoot, PmlANode newEnhDepRoot)
 	{
 		if (s.hasFailed) return;
 		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
-		if (s.pmlaToConll.get(NodeFieldUtils.getId(newBaseDepRoot)) != s.pmlaToConll.get(NodeFieldUtils.getId(parentANode)) ||
+		if (s.pmlaToConll.get(newBaseDepRoot.getId()) != s.pmlaToConll.get(parentANode.getId()) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
 		{
-			//warnOut.printf("Can't relink dependents from %s to %s\n", NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot));
 			logger.doInsentenceWarning(String.format(
 					"Can't relink dependents from %s to %s!",
-					NodeFieldUtils.getId(parentANode), NodeFieldUtils.getId(newBaseDepRoot)));
+					parentANode.getId(), newBaseDepRoot.getId()));
 			s.hasFailed = true;
 			return;
 		}
 
-		NodeList pmlDependents = (NodeList)XPathEngine.get().evaluate(
-				"./children/node", parentANode, XPathConstants.NODESET);
-		if (pmlDependents != null && pmlDependents.getLength() > 0)
-			for (int i = 0; i < pmlDependents.getLength(); i++)
+		List<PmlANode> pmlDependents = parentANode.getChildren();
+		if (pmlDependents != null && pmlDependents.size() > 0)
+			for (PmlANode pmlDependent : pmlDependents)
 			{
-				s.setBaseLink(newBaseDepRoot, pmlDependents.item(i),
-						dpTransf.depToUDBase(pmlDependents.item(i)));
-				s.setEnhLink(newEnhDepRoot, pmlDependents.item(i),
-						dpTransf.depToUDEnhanced(pmlDependents.item(i)),
-						true,true);
-				/*s.setLink(parentANode, pmlDependents.item(i),
-						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), false, warnOut),
-						DepRelLogic.getSingleton().depToUD(pmlDependents.item(i), true, warnOut),
-						true,true);*/
+				s.setBaseLink(newBaseDepRoot, pmlDependent,
+						dpTransf.depToUDBase(pmlDependent));
+				s.setEnhLink(newEnhDepRoot, pmlDependent,
+						dpTransf.depToUDEnhanced(pmlDependent),
+						true, true);
 			}
 	}
 }

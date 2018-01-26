@@ -3,20 +3,14 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.pml.utils.NodeFieldUtils;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.PmlMNode;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
-import lv.ailab.lvtb.universalizer.utils.XPathEngine;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MorphoTransformator {
 	/**
@@ -36,13 +30,11 @@ public class MorphoTransformator {
 	/**
 	 * Create CoNLL-U token table, fill in ID, FORM, LEMMA, XPOSTAG, UPOSTAG and
 	 * FEATS fields.
-	 * @throws XPathExpressionException unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public void transformTokens() throws XPathExpressionException
+	public void transformTokens()
 	{
-		// Selects ord numbers from the tree.
+		List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
+		/*// Selects ord numbers from the tree.
 		NodeList ordNodes = (NodeList) XPathEngine.get().evaluate(".//node[m.rf]/ord",
 				s.pmlTree, XPathConstants.NODESET);
 		List<Integer> ords = new ArrayList<>();
@@ -52,25 +44,32 @@ public class MorphoTransformator {
 			if (ordText != null && ordText.trim().length() > 0)
 				ords.add(Integer.parseInt(ordText.trim()));
 		}
-		ords = ords.stream().sorted().collect(Collectors.toList());
+		ords = ords.stream().sorted().collect(Collectors.toList());//*/
 		// Finds all nodes and makes CoNLL-U tokens from them.
 		int offset = 0;
 		String prevMId = null;
-		for (int currentOrd : ords)
+		int prevOrd = Integer.MIN_VALUE;
+		//for (int currentOrd : ords)
+		for (PmlANode current : tokenNodes)
 		{
-			if (currentOrd < 1) continue;
+			PmlMNode currentM = current.getM();
+			Integer currentOrd = current.getOrd();
+			if (currentOrd == null || currentOrd < 1) continue;
 
 			// Find the m node to be processed.
-			NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
-					s.pmlTree, XPathConstants.NODESET);
-			if (nodes.getLength() > 1)
+			//NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
+			//		s.pmlTree, XPathConstants.NODESET);
+			if (prevOrd == currentOrd)
+			{
 				//warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",	s.id, currentOrd);
 				logger.doInsentenceWarning(String.format(
-						"\"%s\" has several nodes with ord \"%s\", only first used!", s.id, currentOrd));
+						"\"%s\" has several nodes with ord \"%s\", arbitrary order used!", s.id, currentOrd));
+				offset++;
+			}
 
 			// Determine, if paragraph has border before this token.
 			boolean paragraphChange = false;
-			String mId = NodeFieldUtils.getMId(nodes.item(0));
+			String mId = currentM.getId();
 			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
 				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
 			//else warnOut.println("Node id \"" + mId + "\" does not match paragraph searching pattern!");
@@ -80,9 +79,10 @@ public class MorphoTransformator {
 				paragraphChange = true;
 
 			// Make new token.
-			offset = transformCurrentToken(nodes.item(0), offset, paragraphChange);
+			offset = transformCurrentToken(current, offset, paragraphChange);
 
 			prevMId = mId;
+			prevOrd = currentOrd;
 		}
 	}
 
@@ -95,23 +95,15 @@ public class MorphoTransformator {
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
 	 * @return Offset for next token.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	protected int transformCurrentToken(Node aNode, int offset, boolean paragraphChange)
-			throws XPathExpressionException
+	protected int transformCurrentToken(PmlANode aNode, int offset, boolean paragraphChange)
 	{
-		Node mNode = (Node)XPathEngine.get().evaluate("./m.rf[1]",
-				aNode, XPathConstants.NODE);
-		String mForm = XPathEngine.get().evaluate("./form", mNode);
-		String mLemma = XPathEngine.get().evaluate("./lemma", mNode);
-		String lvtbTag = XPathEngine.get().evaluate("./tag", mNode);
-		String lvtbAId = NodeFieldUtils.getId(aNode);
-		boolean noSpaceAfter = false;
-		if ("1".equals(XPathEngine.get().evaluate(
-				"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", mNode)))
-			noSpaceAfter = true;
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String lvtbAId = aNode.getId();
+		boolean noSpaceAfter = mNode.getNoSpaceAfter();
 
 		// Starting from UD v2 numbers and certain abbrieavations are allowed to
 		// be tokens with spaces.
@@ -119,9 +111,10 @@ public class MorphoTransformator {
 				!lvtbTag.matches("x[no].*") &&
 				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 		{
-			int baseOrd = NodeFieldUtils.getOrd(aNode);
+			int baseOrd = aNode.getOrd();
 			if (baseOrd < 1)
-				throw new IllegalArgumentException("Node " + NodeFieldUtils.getId(aNode) + "has no ord value");
+				throw new IllegalArgumentException(String.format(
+						"Node %s has no ord value", aNode.getId()));
 
 			String[] forms = mForm.split(" ");
 			String[] lemmas = mLemma.split(" ");
@@ -158,7 +151,7 @@ public class MorphoTransformator {
 			}
 			if (paragraphChange) firstTok.misc.add("NewPar=Yes");
 			s.conll.add(firstTok);
-			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), firstTok);
+			s.pmlaToConll.put(aNode.getId(), firstTok);
 
 			// The rest
 			for (int i = 1; i < forms.length && i < lemmas.length; i++)
@@ -194,8 +187,7 @@ public class MorphoTransformator {
 		} else
 		{
 			Token nextTok = new Token(
-					NodeFieldUtils.getOrd(aNode) + offset, mForm, mLemma,
-					getXpostag(XPathEngine.get().evaluate("./tag", mNode), null));
+					aNode.getOrd() + offset, mForm, mLemma, 	getXpostag(lvtbTag, null));
 			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
 			{
 				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
@@ -208,7 +200,7 @@ public class MorphoTransformator {
 			if (paragraphChange)
 				nextTok.misc.add("NewPar=Yes");
 			s.conll.add(nextTok);
-			s.pmlaToConll.put(NodeFieldUtils.getId(aNode), nextTok);
+			s.pmlaToConll.put(aNode.getId(), nextTok);
 		}
 		return offset;
 	}

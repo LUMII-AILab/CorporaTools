@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer;
 
-import lv.ailab.lvtb.universalizer.transformator.FileTransformator;
+import lv.ailab.lvtb.universalizer.transformator.PmlXmlFileTransformator;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 
@@ -69,12 +69,11 @@ public class LvtbToUdUI
 		{
 			String fileName = f.getName();
 			if (f.isDirectory() || f.getName().startsWith("~")) continue;
-			FileTransformator ft = new FileTransformator(params);
+			PmlXmlFileTransformator ft = new PmlXmlFileTransformator(params);
 			if (fileName.endsWith(".pml")) try
 			{
 				System.out.printf("Processing file \"%s\", ", fileName);
 				logger.startFile(fileName);
-				//statusOut.printf("Processing file \"%s\", ", fileName);
 				String outPath = outputDataPath + fileName.substring(0, fileName.length() - 3) + "conllu";
 				ft.readAndTransform(f.getAbsolutePath(), logger);
 				boolean madeFile = ft.writeResult(outPath, logger);
@@ -87,8 +86,6 @@ public class LvtbToUdUI
 			} catch (Exception e)
 			{
 				System.out.printf("File failed with exception %s.\n", e.toString());
-				//statusOut.print("File failed with exception: ");
-				//e.printStackTrace(statusOut);
 				logger.finishFileWithException(e);
 				omittedTrees = omittedTrees + ft.all;
 				omittedFiles++;
@@ -97,8 +94,6 @@ public class LvtbToUdUI
 			{
 				System.out.println(
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
-				//statusOut.println(
-				//		"Oops! Unexpected extension for file \"" + fileName + "\"!");
 				logger.finishFileWithBadExt(fileName);
 			}
 		}

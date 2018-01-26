@@ -1,11 +1,9 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.syntax.*;
 import lv.ailab.lvtb.universalizer.utils.Logger;
-import org.w3c.dom.Node;
-
-import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Logic for transforming LVTB sentence annotations to UD.
@@ -27,8 +25,8 @@ public class SentenceTransformEngine
 	protected Logger logger;
 	protected TransformationParams params;
 
-	public SentenceTransformEngine(Node pmlTree, TransformationParams params, Logger logger)
-			throws XPathExpressionException
+	public SentenceTransformEngine(
+			PmlANode pmlTree, TransformationParams params, Logger logger)
 	{
 		s = new Sentence(pmlTree);
 		this.logger = logger;
@@ -43,11 +41,8 @@ public class SentenceTransformEngine
 	 * @return	true, if tree has no untranformable ellipsis; false if tree
 	 * 			contains untransformable ellipsis and, thus, result data
 	 * 		    has garbage syntax.
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
 	 */
-	public boolean transform() throws XPathExpressionException
+	public boolean transform()
 	{
 		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
@@ -78,7 +73,8 @@ public class SentenceTransformEngine
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed.
 	 */
-	public static String treeToConll(Node pmlTree, TransformationParams params, Logger logger)
+	public static String treeToConll(
+			PmlANode pmlTree, TransformationParams params, Logger logger)
 	{
 		String id ="<unknown>";
 		try {
@@ -98,7 +94,7 @@ public class SentenceTransformEngine
 			logger.finishSentenceWithException(id, e, false);
 			//throw e;
 		}
-		catch (XPathExpressionException|IllegalStateException e)
+		catch (IllegalStateException e)
 		{
 			//warnOut.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
 			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");

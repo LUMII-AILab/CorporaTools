@@ -1,4 +1,4 @@
-package lv.ailab.lvtb.universalizer.utils;
+package lv.ailab.lvtb.universalizer.pml.xmldom;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
