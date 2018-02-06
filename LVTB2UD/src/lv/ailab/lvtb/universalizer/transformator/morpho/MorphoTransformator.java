@@ -136,12 +136,12 @@ public class MorphoTransformator {
 				//warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
 				logger.doInsentenceWarning(String.format(
 						"Processing unsplit xf \"%s\", check in treebank!", mForm));
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, logger);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 			}
 			else if (lvtbTag.matches("x[ux].*"))
 			{
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.lemma, firstTok.xpostag, aNode, logger);
+				firstTok.upostag = PosLogic.getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
 			}
 			else
@@ -167,7 +167,7 @@ public class MorphoTransformator {
 				}
 				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
 				{
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
+					nextTok.upostag = PosLogic.getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 				}
 				else
@@ -193,7 +193,7 @@ public class MorphoTransformator {
 				nextTok.misc.add("LvtbNodeId=" + lvtbAId);
 				logger.addIdMapping(s.id, nextTok.getFirstColumn(), lvtbAId);
 			}
-			nextTok.upostag = PosLogic.getUPosTag(nextTok.lemma, nextTok.xpostag, aNode, logger);
+			nextTok.upostag = PosLogic.getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 			nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
 			if (noSpaceAfter)
 				nextTok.misc.add("SpaceAfter=No");

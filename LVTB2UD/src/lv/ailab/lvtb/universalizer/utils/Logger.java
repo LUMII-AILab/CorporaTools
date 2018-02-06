@@ -8,8 +8,7 @@ import java.util.HashSet;
 
 /**
  * Class for printing out in the log files various kinds of additional
- * information. Currently it does warning logging.
- * It is planned to add ID mapping logging.
+ * information. Currently it does warning logging and ID mapping logging.
  */
 public class Logger
 {
@@ -23,19 +22,41 @@ public class Logger
 	protected HashSet<String> warnings;
 	protected ArrayList<String> idMappingDesc;
 
-	public Logger(String statusOutPath, String logOutPath)
+	/**
+	 * @param statusOutPath		filename for printing various status messages;
+	 *                          if null, System.out is used (will lead to a bit
+	 *                      	repetative output for file opening/closing
+	 *                      	messages)
+	 * @param idMappingOutPath	filename for printing mapping between PML IDs
+	 *                          and conll token numbers; if null, this info is
+	 *                          not printed anywhere
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	public Logger(String statusOutPath, String idMappingOutPath)
 			throws FileNotFoundException, UnsupportedEncodingException
 	{
-		statusOut = new PrintWriter(new PrintWriter(statusOutPath, "UTF-8"), true);
-		if (logOutPath != null && !logOutPath.isEmpty())
-			idMappingOut = new PrintWriter(new PrintWriter(logOutPath, "UTF-8"), true);
+		if (statusOutPath != null && !statusOutPath.isEmpty())
+			statusOut = new PrintWriter(new PrintWriter(statusOutPath, "UTF-8"), true);
+		else statusOut = new PrintWriter(System.out);
+		if (idMappingOutPath != null && !idMappingOutPath.isEmpty())
+			idMappingOut = new PrintWriter(new PrintWriter(idMappingOutPath, "UTF-8"), true);
 		warnings = new HashSet<>();
 		idMappingDesc = new ArrayList<>();
 	}
 
+	/**
+	 * @param statusOut		flow for printing various status messages; if null,
+	 *                      System.out is used (will lead to a bit repetative
+	 *                      output for file opening/closing messages)
+	 * @param idMappingOut	flow printing mapping between PML IDs and conll
+	 *                      token numbers; if null, this info is not printed
+	 *                      anywhere
+	 */
 	public Logger(PrintWriter statusOut, PrintWriter idMappingOut)
 	{
-		this.statusOut = statusOut;
+		if (statusOut != null) this.statusOut = statusOut;
+		else statusOut = new PrintWriter(System.out);
 		this.idMappingOut = idMappingOut;
 		warnings = new HashSet<>();
 		idMappingDesc = new ArrayList<>();
