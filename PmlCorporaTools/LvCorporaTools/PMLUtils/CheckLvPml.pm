@@ -644,17 +644,21 @@ sub _checkFormChange
 	# Verify cases when mutiple m reference single w.
 	for my $w (keys %$w2m)
 	{
+		# Previously
 		if (@{$w2m->{$w}} > 1)
 		{
+			# Previously we requested just to have 'spacing' form_change.
+			# Changed as an always error in 2018-02-07.
 			for my $m (@{$w2m->{$w}})
 			{
-				my $v = $m2w->{$m};
-				my $contains = 0;
-				for my $change (@{$v->{'form_change'}})
-				{
-					$contains = 1 if ($change eq 'spacing');
-				}
-				push @res, $m unless ($contains);
+#				my $v = $m2w->{$m};
+#				my $contains = 0;
+#				for my $change (@{$v->{'form_change'}})
+#				{
+#					$contains = 1 if ($change eq 'spacing');
+#				}
+#				push @res, $m unless ($contains);
+				push @res, $m;
 			}
 		}
 	}

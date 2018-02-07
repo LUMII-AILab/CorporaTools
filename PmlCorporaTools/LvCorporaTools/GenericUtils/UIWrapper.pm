@@ -50,6 +50,7 @@ sub processDir
 				{
 					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
 					local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
+					local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval warn on die and count it as problem.
 					&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
 				};
 			}
@@ -59,6 +60,7 @@ sub processDir
 				{
 					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
 					local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
+					local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval warn on die and count it as problem.
 					&$processFileFunct($dirName, $inFile, @otherPrams);
 				};
 			}
