@@ -3,8 +3,8 @@
   <head>
     <schema href="lvaschema.xml" />
     <references>
-      <reffile id="m" name="mdata" href="../CairoCiclingCorpus.m" />
-      <reffile id="w" name="wdata" href="../CairoCiclingCorpus.w" />
+      <reffile id="m" name="mdata" href="../c70-Cairo.m" />
+      <reffile id="w" name="wdata" href="../c70-Cairo.w" />
     </references>
   </head>
   <meta>
@@ -13,16 +13,16 @@
     </annotation_info>
   </meta>
   <trees>
-    <LM id="a-CairoCiclingCorpus-p1s1">
-      <s.rf>m#m-CairoCiclingCorpus-p1s1</s.rf>
+    <LM id="a-c70-Cairo-p1s1">
+      <s.rf>m#m-c70-Cairo-p1s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p1s1w2">
-              <m.rf id="m-CairoCiclingCorpus-p1s1w2">
+            <node id="a-c70-Cairo-p1s1w2">
+              <m.rf id="m-c70-Cairo-p1s1w2">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p1w2">
+                <w.rf id="w-c70-Cairo-p1w2">
                   <token>uzrakstīja</token>
                 </w.rf>
                 <form>uzrakstīja</form>
@@ -32,10 +32,10 @@
               <role>pred</role>
               <ord>2</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p1s1w1">
-                  <m.rf id="m-CairoCiclingCorpus-p1s1w1">
+                <node id="a-c70-Cairo-p1s1w1">
+                  <m.rf id="m-c70-Cairo-p1s1w1">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p1w1">
+                    <w.rf id="w-c70-Cairo-p1w1">
                       <token>Meitene</token>
                     </w.rf>
                     <form>Meitene</form>
@@ -45,10 +45,10 @@
                   <role>subj</role>
                   <ord>1</ord>
                 </node>
-                <node id="a-CairoCiclingCorpus-p1s1w5">
-                  <m.rf id="m-CairoCiclingCorpus-p1s1w5">
+                <node id="a-c70-Cairo-p1s1w5">
+                  <m.rf id="m-c70-Cairo-p1s1w5">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p1w5">
+                    <w.rf id="w-c70-Cairo-p1w5">
                       <token>draudzenei</token>
                       <no_space_after>1</no_space_after>
                     </w.rf>
@@ -59,10 +59,10 @@
                   <role>obj</role>
                   <ord>5</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p1s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p1s1w4">
+                    <node id="a-c70-Cairo-p1s1w4">
+                      <m.rf id="m-c70-Cairo-p1s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p1w4">
+                        <w.rf id="w-c70-Cairo-p1w4">
                           <token>savai</token>
                         </w.rf>
                         <form>savai</form>
@@ -74,10 +74,10 @@
                     </node>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p1s1w3">
-                  <m.rf id="m-CairoCiclingCorpus-p1s1w3">
+                <node id="a-c70-Cairo-p1s1w3">
+                  <m.rf id="m-c70-Cairo-p1s1w3">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p1w3">
+                    <w.rf id="w-c70-Cairo-p1w3">
                       <token>vēstuli</token>
                     </w.rf>
                     <form>vēstuli</form>
@@ -89,10 +89,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p1s1w6">
-              <m.rf id="m-CairoCiclingCorpus-p1s1w6">
+            <node id="a-c70-Cairo-p1s1w6">
+              <m.rf id="m-c70-Cairo-p1s1w6">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p1w6">
+                <w.rf id="w-c70-Cairo-p1w6">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -106,16 +106,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p2s1">
-      <s.rf>m#m-CairoCiclingCorpus-p2s1</s.rf>
+    <LM id="a-c70-Cairo-p2s1">
+      <s.rf>m#m-c70-Cairo-p2s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p2s1w7">
-              <m.rf id="m-CairoCiclingCorpus-p2s1w7">
+            <node id="a-c70-Cairo-p2s1w7">
+              <m.rf id="m-c70-Cairo-p2s1w7">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p2w7">
+                <w.rf id="w-c70-Cairo-p2w7">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -125,10 +125,10 @@
               <role>punct</role>
               <ord>7</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p2s1w2">
-              <m.rf id="m-CairoCiclingCorpus-p2s1w2">
+            <node id="a-c70-Cairo-p2s1w2">
+              <m.rf id="m-c70-Cairo-p2s1w2">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p2w2">
+                <w.rf id="w-c70-Cairo-p2w2">
                   <token>šķiet</token>
                   <no_space_after>1</no_space_after>
                 </w.rf>
@@ -139,16 +139,16 @@
               <role>pred</role>
               <ord>2</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p2s1x1">
+                <node id="a-c70-Cairo-p2s1x1">
                   <role>subjCl</role>
                   <children>
                     <pmcinfo>
                       <pmctype>subrCl</pmctype>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p2s1w5">
-                          <m.rf id="m-CairoCiclingCorpus-p2s1w5">
+                        <node id="a-c70-Cairo-p2s1w5">
+                          <m.rf id="m-c70-Cairo-p2s1w5">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p2w5">
+                            <w.rf id="w-c70-Cairo-p2w5">
                               <token>līst</token>
                             </w.rf>
                             <form>līst</form>
@@ -158,10 +158,10 @@
                           <role>pred</role>
                           <ord>5</ord>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p2s1w6">
-                              <m.rf id="m-CairoCiclingCorpus-p2s1w6">
+                            <node id="a-c70-Cairo-p2s1w6">
+                              <m.rf id="m-c70-Cairo-p2s1w6">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p2w6">
+                                <w.rf id="w-c70-Cairo-p2w6">
                                   <token>lietus</token>
                                   <no_space_after>1</no_space_after>
                                 </w.rf>
@@ -174,10 +174,10 @@
                             </node>
                           </children>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p2s1w4">
-                          <m.rf id="m-CairoCiclingCorpus-p2s1w4">
+                        <node id="a-c70-Cairo-p2s1w4">
+                          <m.rf id="m-c70-Cairo-p2s1w4">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p2w4">
+                            <w.rf id="w-c70-Cairo-p2w4">
                               <token>ka</token>
                             </w.rf>
                             <form>ka</form>
@@ -187,10 +187,10 @@
                           <role>conj</role>
                           <ord>4</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p2s1w3">
-                          <m.rf id="m-CairoCiclingCorpus-p2s1w3">
+                        <node id="a-c70-Cairo-p2s1w3">
+                          <m.rf id="m-c70-Cairo-p2s1w3">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p2w3">
+                            <w.rf id="w-c70-Cairo-p2w3">
                               <token>,</token>
                             </w.rf>
                             <form>,</form>
@@ -208,10 +208,10 @@
             </node>
           </children>
         </pmcinfo>
-        <node id="a-CairoCiclingCorpus-p2s1w1">
-          <m.rf id="m-CairoCiclingCorpus-p2s1w1">
+        <node id="a-c70-Cairo-p2s1w1">
+          <m.rf id="m-c70-Cairo-p2s1w1">
             <src.rf>semi-automatic</src.rf>
-            <w.rf id="w-CairoCiclingCorpus-p2w1">
+            <w.rf id="w-c70-Cairo-p2w1">
               <token>Man</token>
             </w.rf>
             <form>Man</form>
@@ -223,23 +223,23 @@
         </node>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p3s1">
-      <s.rf>m#m-CairoCiclingCorpus-p3s1</s.rf>
+    <LM id="a-c70-Cairo-p3s1">
+      <s.rf>m#m-c70-Cairo-p3s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p3s1x1">
+            <node id="a-c70-Cairo-p3s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0is0030an[modals00]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p3s1w2">
-                      <m.rf id="m-CairoCiclingCorpus-p3s1w2">
+                    <node id="a-c70-Cairo-p3s1w2">
+                      <m.rf id="m-c70-Cairo-p3s1w2">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p3w2">
+                        <w.rf id="w-c70-Cairo-p3w2">
                           <token>centās</token>
                         </w.rf>
                         <form>centās</form>
@@ -249,10 +249,10 @@
                       <role>mod</role>
                       <ord>2</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p3s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p3s1w3">
+                    <node id="a-c70-Cairo-p3s1w3">
+                      <m.rf id="m-c70-Cairo-p3s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p3w3">
+                        <w.rf id="w-c70-Cairo-p3w3">
                           <token>atmest</token>
                         </w.rf>
                         <form>atmest</form>
@@ -262,16 +262,16 @@
                       <role>basElem</role>
                       <ord>3</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p3s1x2">
+                        <node id="a-c70-Cairo-p3s1x2">
                           <role>obj</role>
                           <children>
                             <coordinfo>
                               <coordtype>crdParts</coordtype>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p3s1w5">
-                                  <m.rf id="m-CairoCiclingCorpus-p3s1w5">
+                                <node id="a-c70-Cairo-p3s1w5">
+                                  <m.rf id="m-c70-Cairo-p3s1w5">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p3w5">
+                                    <w.rf id="w-c70-Cairo-p3w5">
                                       <token>un</token>
                                     </w.rf>
                                     <form>un</form>
@@ -281,10 +281,10 @@
                                   <role>conj</role>
                                   <ord>5</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p3s1w6">
-                                  <m.rf id="m-CairoCiclingCorpus-p3s1w6">
+                                <node id="a-c70-Cairo-p3s1w6">
+                                  <m.rf id="m-c70-Cairo-p3s1w6">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p3w6">
+                                    <w.rf id="w-c70-Cairo-p3w6">
                                       <token>dzeršanu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -295,10 +295,10 @@
                                   <role>crdPart</role>
                                   <ord>6</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p3s1w4">
-                                  <m.rf id="m-CairoCiclingCorpus-p3s1w4">
+                                <node id="a-c70-Cairo-p3s1w4">
+                                  <m.rf id="m-c70-Cairo-p3s1w4">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p3w4">
+                                    <w.rf id="w-c70-Cairo-p3w4">
                                       <token>smēķēšanu</token>
                                     </w.rf>
                                     <form>smēķēšanu</form>
@@ -316,10 +316,10 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-CairoCiclingCorpus-p3s1w1">
-                  <m.rf id="m-CairoCiclingCorpus-p3s1w1">
+                <node id="a-c70-Cairo-p3s1w1">
+                  <m.rf id="m-c70-Cairo-p3s1w1">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p3w1">
+                    <w.rf id="w-c70-Cairo-p3w1">
                       <token>Viņš</token>
                     </w.rf>
                     <form>Viņš</form>
@@ -331,10 +331,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p3s1w7">
-              <m.rf id="m-CairoCiclingCorpus-p3s1w7">
+            <node id="a-c70-Cairo-p3s1w7">
+              <m.rf id="m-c70-Cairo-p3s1w7">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p3w7">
+                <w.rf id="w-c70-Cairo-p3w7">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -348,23 +348,23 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p4s1">
-      <s.rf>m#m-CairoCiclingCorpus-p4s1</s.rf>
+    <LM id="a-c70-Cairo-p4s1">
+      <s.rf>m#m-c70-Cairo-p4s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p4s1x1">
+            <node id="a-c70-Cairo-p4s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip002san[modals00]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p4s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p4s1w3">
+                    <node id="a-c70-Cairo-p4s1w3">
+                      <m.rf id="m-c70-Cairo-p4s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p4w3">
+                        <w.rf id="w-c70-Cairo-p4w3">
                           <token>gribi</token>
                         </w.rf>
                         <form>gribi</form>
@@ -374,10 +374,10 @@
                       <role>mod</role>
                       <ord>3</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p4s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p4s1w4">
+                    <node id="a-c70-Cairo-p4s1w4">
+                      <m.rf id="m-c70-Cairo-p4s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p4w4">
+                        <w.rf id="w-c70-Cairo-p4w4">
                           <token>iet</token>
                           <no_space_after>1</no_space_after>
                         </w.rf>
@@ -390,10 +390,10 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-CairoCiclingCorpus-p4s1w2">
-                  <m.rf id="m-CairoCiclingCorpus-p4s1w2">
+                <node id="a-c70-Cairo-p4s1w2">
+                  <m.rf id="m-c70-Cairo-p4s1w2">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p4w2">
+                    <w.rf id="w-c70-Cairo-p4w2">
                       <token>tu</token>
                     </w.rf>
                     <form>tu</form>
@@ -405,10 +405,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p4s1w1">
-              <m.rf id="m-CairoCiclingCorpus-p4s1w1">
+            <node id="a-c70-Cairo-p4s1w1">
+              <m.rf id="m-c70-Cairo-p4s1w1">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p4w1">
+                <w.rf id="w-c70-Cairo-p4w1">
                   <token>Vai</token>
                 </w.rf>
                 <form>Vai</form>
@@ -418,10 +418,10 @@
               <role>no</role>
               <ord>1</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p4s1w5">
-              <m.rf id="m-CairoCiclingCorpus-p4s1w5">
+            <node id="a-c70-Cairo-p4s1w5">
+              <m.rf id="m-c70-Cairo-p4s1w5">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p4w5">
+                <w.rf id="w-c70-Cairo-p4w5">
                   <token>?</token>
                 </w.rf>
                 <form>?</form>
@@ -435,22 +435,22 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p5s1">
-      <s.rf>m#m-CairoCiclingCorpus-p5s1</s.rf>
+    <LM id="a-c70-Cairo-p5s1">
+      <s.rf>m#m-c70-Cairo-p5s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p5s1x1">
+            <node id="a-c70-Cairo-p5s1x1">
               <role>no</role>
               <children>
                 <pmcinfo>
                   <pmctype>address</pmctype>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p5s1w1">
-                      <m.rf id="m-CairoCiclingCorpus-p5s1w1">
+                    <node id="a-c70-Cairo-p5s1w1">
+                      <m.rf id="m-c70-Cairo-p5s1w1">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p5w1">
+                        <w.rf id="w-c70-Cairo-p5w1">
                           <token>Sem</token>
                           <no_space_after>1</no_space_after>
                         </w.rf>
@@ -461,10 +461,10 @@
                       <role>basElem</role>
                       <ord>1</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p5s1w2">
-                      <m.rf id="m-CairoCiclingCorpus-p5s1w2">
+                    <node id="a-c70-Cairo-p5s1w2">
+                      <m.rf id="m-c70-Cairo-p5s1w2">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p5w2">
+                        <w.rf id="w-c70-Cairo-p5w2">
                           <token>,</token>
                         </w.rf>
                         <form>,</form>
@@ -478,10 +478,10 @@
                 </pmcinfo>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p5s1w5">
-              <m.rf id="m-CairoCiclingCorpus-p5s1w5">
+            <node id="a-c70-Cairo-p5s1w5">
+              <m.rf id="m-c70-Cairo-p5s1w5">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p5w5">
+                <w.rf id="w-c70-Cairo-p5w5">
                   <token>!</token>
                 </w.rf>
                 <form>!</form>
@@ -491,10 +491,10 @@
               <role>punct</role>
               <ord>5</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p5s1w3">
-              <m.rf id="m-CairoCiclingCorpus-p5s1w3">
+            <node id="a-c70-Cairo-p5s1w3">
+              <m.rf id="m-c70-Cairo-p5s1w3">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p5w3">
+                <w.rf id="w-c70-Cairo-p5w3">
                   <token>atver</token>
                 </w.rf>
                 <form>atver</form>
@@ -504,10 +504,10 @@
               <role>pred</role>
               <ord>3</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p5s1w4">
-                  <m.rf id="m-CairoCiclingCorpus-p5s1w4">
+                <node id="a-c70-Cairo-p5s1w4">
+                  <m.rf id="m-c70-Cairo-p5s1w4">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p5w4">
+                    <w.rf id="w-c70-Cairo-p5w4">
                       <token>logu</token>
                       <no_space_after>1</no_space_after>
                     </w.rf>
@@ -524,16 +524,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p6s1">
-      <s.rf>m#m-CairoCiclingCorpus-p6s1</s.rf>
+    <LM id="a-c70-Cairo-p6s1">
+      <s.rf>m#m-c70-Cairo-p6s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p6s1w7">
-              <m.rf id="m-CairoCiclingCorpus-p6s1w7">
+            <node id="a-c70-Cairo-p6s1w7">
+              <m.rf id="m-c70-Cairo-p6s1w7">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p6w7">
+                <w.rf id="w-c70-Cairo-p6w7">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -543,10 +543,10 @@
               <role>punct</role>
               <ord>7</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p6s1w2">
-              <m.rf id="m-CairoCiclingCorpus-p6s1w2">
+            <node id="a-c70-Cairo-p6s1w2">
+              <m.rf id="m-c70-Cairo-p6s1w2">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p6w2">
+                <w.rf id="w-c70-Cairo-p6w2">
                   <token>lika</token>
                 </w.rf>
                 <form>lika</form>
@@ -556,10 +556,10 @@
               <role>pred</role>
               <ord>2</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p6s1w4">
-                  <m.rf id="m-CairoCiclingCorpus-p6s1w4">
+                <node id="a-c70-Cairo-p6s1w4">
+                  <m.rf id="m-c70-Cairo-p6s1w4">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p6w4">
+                    <w.rf id="w-c70-Cairo-p6w4">
                       <token>vīram</token>
                     </w.rf>
                     <form>vīram</form>
@@ -569,10 +569,10 @@
                   <role>obj</role>
                   <ord>4</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p6s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p6s1w3">
+                    <node id="a-c70-Cairo-p6s1w3">
+                      <m.rf id="m-c70-Cairo-p6s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p6w3">
+                        <w.rf id="w-c70-Cairo-p6w3">
                           <token>savam</token>
                         </w.rf>
                         <form>savam</form>
@@ -584,10 +584,10 @@
                     </node>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p6s1w5">
-                  <m.rf id="m-CairoCiclingCorpus-p6s1w5">
+                <node id="a-c70-Cairo-p6s1w5">
+                  <m.rf id="m-c70-Cairo-p6s1w5">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p6w5">
+                    <w.rf id="w-c70-Cairo-p6w5">
                       <token>nomazgāt</token>
                     </w.rf>
                     <form>nomazgāt</form>
@@ -597,10 +597,10 @@
                   <role>spc</role>
                   <ord>5</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p6s1w6">
-                      <m.rf id="m-CairoCiclingCorpus-p6s1w6">
+                    <node id="a-c70-Cairo-p6s1w6">
+                      <m.rf id="m-c70-Cairo-p6s1w6">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p6w6">
+                        <w.rf id="w-c70-Cairo-p6w6">
                           <token>mašīnu</token>
                           <no_space_after>1</no_space_after>
                         </w.rf>
@@ -613,10 +613,10 @@
                     </node>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p6s1w1">
-                  <m.rf id="m-CairoCiclingCorpus-p6s1w1">
+                <node id="a-c70-Cairo-p6s1w1">
+                  <m.rf id="m-c70-Cairo-p6s1w1">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p6w1">
+                    <w.rf id="w-c70-Cairo-p6w1">
                       <token>Viņa</token>
                     </w.rf>
                     <form>Viņa</form>
@@ -632,16 +632,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p7s1">
-      <s.rf>m#m-CairoCiclingCorpus-p7s1</s.rf>
+    <LM id="a-c70-Cairo-p7s1">
+      <s.rf>m#m-c70-Cairo-p7s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p7s1w3">
-              <m.rf id="m-CairoCiclingCorpus-p7s1w3">
+            <node id="a-c70-Cairo-p7s1w3">
+              <m.rf id="m-c70-Cairo-p7s1w3">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p7w3">
+                <w.rf id="w-c70-Cairo-p7w3">
                   <token>nokrāsoja</token>
                 </w.rf>
                 <form>nokrāsoja</form>
@@ -651,10 +651,10 @@
               <role>pred</role>
               <ord>3</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p7s1w6">
-                  <m.rf id="m-CairoCiclingCorpus-p7s1w6">
+                <node id="a-c70-Cairo-p7s1w6">
+                  <m.rf id="m-c70-Cairo-p7s1w6">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p7w6">
+                    <w.rf id="w-c70-Cairo-p7w6">
                       <token>krāsā</token>
                       <no_space_after>1</no_space_after>
                     </w.rf>
@@ -665,10 +665,10 @@
                   <role>spc</role>
                   <ord>6</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p7s1w5">
-                      <m.rf id="m-CairoCiclingCorpus-p7s1w5">
+                    <node id="a-c70-Cairo-p7s1w5">
+                      <m.rf id="m-c70-Cairo-p7s1w5">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p7w5">
+                        <w.rf id="w-c70-Cairo-p7w5">
                           <token>sarkanā</token>
                         </w.rf>
                         <form>sarkanā</form>
@@ -680,10 +680,10 @@
                     </node>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p7s1w4">
-                  <m.rf id="m-CairoCiclingCorpus-p7s1w4">
+                <node id="a-c70-Cairo-p7s1w4">
+                  <m.rf id="m-c70-Cairo-p7s1w4">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p7w4">
+                    <w.rf id="w-c70-Cairo-p7w4">
                       <token>žogu</token>
                     </w.rf>
                     <form>žogu</form>
@@ -693,10 +693,10 @@
                   <role>obj</role>
                   <ord>4</ord>
                 </node>
-                <node id="a-CairoCiclingCorpus-p7s1w2">
-                  <m.rf id="m-CairoCiclingCorpus-p7s1w2">
+                <node id="a-c70-Cairo-p7s1w2">
+                  <m.rf id="m-c70-Cairo-p7s1w2">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p7w2">
+                    <w.rf id="w-c70-Cairo-p7w2">
                       <token>kaimiņi</token>
                     </w.rf>
                     <form>kaimiņi</form>
@@ -706,10 +706,10 @@
                   <role>subj</role>
                   <ord>2</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p7s1w1">
-                      <m.rf id="m-CairoCiclingCorpus-p7s1w1">
+                    <node id="a-c70-Cairo-p7s1w1">
+                      <m.rf id="m-c70-Cairo-p7s1w1">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p7w1">
+                        <w.rf id="w-c70-Cairo-p7w1">
                           <token>Pētera</token>
                         </w.rf>
                         <form>Pētera</form>
@@ -723,10 +723,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p7s1w7">
-              <m.rf id="m-CairoCiclingCorpus-p7s1w7">
+            <node id="a-c70-Cairo-p7s1w7">
+              <m.rf id="m-c70-Cairo-p7s1w7">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p7w7">
+                <w.rf id="w-c70-Cairo-p7w7">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -740,16 +740,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p8s1">
-      <s.rf>m#m-CairoCiclingCorpus-p8s1</s.rf>
+    <LM id="a-c70-Cairo-p8s1">
+      <s.rf>m#m-c70-Cairo-p8s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p8s1w7">
-              <m.rf id="m-CairoCiclingCorpus-p8s1w7">
+            <node id="a-c70-Cairo-p8s1w7">
+              <m.rf id="m-c70-Cairo-p8s1w7">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p8w7">
+                <w.rf id="w-c70-Cairo-p8w7">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -759,17 +759,17 @@
               <role>punct</role>
               <ord>7</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p8s1x1">
+            <node id="a-c70-Cairo-p8s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip003san[adjsmn]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p8s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p8s1w4">
+                    <node id="a-c70-Cairo-p8s1w4">
+                      <m.rf id="m-c70-Cairo-p8s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p8w4">
+                        <w.rf id="w-c70-Cairo-p8w4">
                           <token>foršāks</token>
                         </w.rf>
                         <form>foršāks</form>
@@ -779,17 +779,17 @@
                       <role>basElem</role>
                       <ord>4</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p8s1x2">
+                        <node id="a-c70-Cairo-p8s1x2">
                           <role>spc</role>
                           <children>
                             <xinfo>
                               <xtype>xSimile</xtype>
-                              <tag>ps0msnn[comp]</tag>
+                              <tag>ps0msnn[compn]</tag>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p8s1w5">
-                                  <m.rf id="m-CairoCiclingCorpus-p8s1w5">
+                                <node id="a-c70-Cairo-p8s1w5">
+                                  <m.rf id="m-c70-Cairo-p8s1w5">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p8w5">
+                                    <w.rf id="w-c70-Cairo-p8w5">
                                       <token>nekā</token>
                                     </w.rf>
                                     <form>nekā</form>
@@ -799,10 +799,10 @@
                                   <role>conj</role>
                                   <ord>5</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p8s1w6">
-                                  <m.rf id="m-CairoCiclingCorpus-p8s1w6">
+                                <node id="a-c70-Cairo-p8s1w6">
+                                  <m.rf id="m-c70-Cairo-p8s1w6">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p8w6">
+                                    <w.rf id="w-c70-Cairo-p8w6">
                                       <token>tavējais</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -819,10 +819,10 @@
                         </node>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p8s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p8s1w3">
+                    <node id="a-c70-Cairo-p8s1w3">
+                      <m.rf id="m-c70-Cairo-p8s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p8w3">
+                        <w.rf id="w-c70-Cairo-p8w3">
                           <token>ir</token>
                         </w.rf>
                         <form>ir</form>
@@ -834,10 +834,10 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-CairoCiclingCorpus-p8s1w2">
-                  <m.rf id="m-CairoCiclingCorpus-p8s1w2">
+                <node id="a-c70-Cairo-p8s1w2">
+                  <m.rf id="m-c70-Cairo-p8s1w2">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p8w2">
+                    <w.rf id="w-c70-Cairo-p8w2">
                       <token>tētis</token>
                     </w.rf>
                     <form>tētis</form>
@@ -847,10 +847,10 @@
                   <role>subj</role>
                   <ord>2</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p8s1w1">
-                      <m.rf id="m-CairoCiclingCorpus-p8s1w1">
+                    <node id="a-c70-Cairo-p8s1w1">
+                      <m.rf id="m-c70-Cairo-p8s1w1">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p8w1">
+                        <w.rf id="w-c70-Cairo-p8w1">
                           <token>Mans</token>
                         </w.rf>
                         <form>Mans</form>
@@ -868,28 +868,28 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p9s1">
-      <s.rf>m#m-CairoCiclingCorpus-p9s1</s.rf>
+    <LM id="a-c70-Cairo-p9s1">
+      <s.rf>m#m-c70-Cairo-p9s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p9s1x1">
+            <node id="a-c70-Cairo-p9s1x1">
               <role>basElem</role>
               <children>
                 <coordinfo>
                   <coordtype>crdClauses</coordtype>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p9s1x2">
+                    <node id="a-c70-Cairo-p9s1x2">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p9s1w2">
-                              <m.rf id="m-CairoCiclingCorpus-p9s1w2">
+                            <node id="a-c70-Cairo-p9s1w2">
+                              <m.rf id="m-c70-Cairo-p9s1w2">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p9w2">
+                                <w.rf id="w-c70-Cairo-p9w2">
                                   <token>ieguva</token>
                                 </w.rf>
                                 <form>ieguva</form>
@@ -899,10 +899,10 @@
                               <role>pred</role>
                               <ord>2</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p9s1w1">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w1">
+                                <node id="a-c70-Cairo-p9s1w1">
+                                  <m.rf id="m-c70-Cairo-p9s1w1">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w1">
+                                    <w.rf id="w-c70-Cairo-p9w1">
                                       <token>Marija</token>
                                     </w.rf>
                                     <form>Marija</form>
@@ -912,10 +912,10 @@
                                   <role>subj</role>
                                   <ord>1</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p9s1w3">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w3">
+                                <node id="a-c70-Cairo-p9s1w3">
+                                  <m.rf id="m-c70-Cairo-p9s1w3">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w3">
+                                    <w.rf id="w-c70-Cairo-p9w3">
                                       <token>bronzu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -932,16 +932,16 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p9s1x3">
+                    <node id="a-c70-Cairo-p9s1x3">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p9s1w11">
-                              <m.rf id="m-CairoCiclingCorpus-p9s1w11">
+                            <node id="a-c70-Cairo-p9s1w11">
+                              <m.rf id="m-c70-Cairo-p9s1w11">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p9w11">
+                                <w.rf id="w-c70-Cairo-p9w11">
                                   <token>—</token>
                                 </w.rf>
                                 <form>—</form>
@@ -952,10 +952,10 @@
                               <role>pred</role>
                               <ord>11</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p9s1w10">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w10">
+                                <node id="a-c70-Cairo-p9s1w10">
+                                  <m.rf id="m-c70-Cairo-p9s1w10">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w10">
+                                    <w.rf id="w-c70-Cairo-p9w10">
                                       <token>Džeina</token>
                                     </w.rf>
                                     <form>Džeina</form>
@@ -965,10 +965,10 @@
                                   <role>subj</role>
                                   <ord>10</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p9s1w12">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w12">
+                                <node id="a-c70-Cairo-p9s1w12">
+                                  <m.rf id="m-c70-Cairo-p9s1w12">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w12">
+                                    <w.rf id="w-c70-Cairo-p9w12">
                                       <token>zeltu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -985,16 +985,16 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p9s1x4">
+                    <node id="a-c70-Cairo-p9s1x4">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p9s1w6">
-                              <m.rf id="m-CairoCiclingCorpus-p9s1w6">
+                            <node id="a-c70-Cairo-p9s1w6">
+                              <m.rf id="m-c70-Cairo-p9s1w6">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p9w6">
+                                <w.rf id="w-c70-Cairo-p9w6">
                                   <token>—</token>
                                 </w.rf>
                                 <form>—</form>
@@ -1005,10 +1005,10 @@
                               <role>pred</role>
                               <ord>6</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p9s1w5">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w5">
+                                <node id="a-c70-Cairo-p9s1w5">
+                                  <m.rf id="m-c70-Cairo-p9s1w5">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w5">
+                                    <w.rf id="w-c70-Cairo-p9w5">
                                       <token>Pēteris</token>
                                     </w.rf>
                                     <form>Pēteris</form>
@@ -1018,10 +1018,10 @@
                                   <role>subj</role>
                                   <ord>5</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p9s1w7">
-                                  <m.rf id="m-CairoCiclingCorpus-p9s1w7">
+                                <node id="a-c70-Cairo-p9s1w7">
+                                  <m.rf id="m-c70-Cairo-p9s1w7">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p9w7">
+                                    <w.rf id="w-c70-Cairo-p9w7">
                                       <token>sudrabu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -1038,10 +1038,10 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p9s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p9s1w4">
+                    <node id="a-c70-Cairo-p9s1w4">
+                      <m.rf id="m-c70-Cairo-p9s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p9w4">
+                        <w.rf id="w-c70-Cairo-p9w4">
                           <token>,</token>
                         </w.rf>
                         <form>,</form>
@@ -1051,10 +1051,10 @@
                       <role>punct</role>
                       <ord>4</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p9s1w8">
-                      <m.rf id="m-CairoCiclingCorpus-p9s1w8">
+                    <node id="a-c70-Cairo-p9s1w8">
+                      <m.rf id="m-c70-Cairo-p9s1w8">
                         <src.rf>manual</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p9w8">
+                        <w.rf id="w-c70-Cairo-p9w8">
                           <token>,</token>
                         </w.rf>
                         <form>,</form>
@@ -1064,10 +1064,10 @@
                       <role>punct</role>
                       <ord>8</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p9s1w9">
-                      <m.rf id="m-CairoCiclingCorpus-p9s1w9">
+                    <node id="a-c70-Cairo-p9s1w9">
+                      <m.rf id="m-c70-Cairo-p9s1w9">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p9w9">
+                        <w.rf id="w-c70-Cairo-p9w9">
                           <token>un</token>
                         </w.rf>
                         <form>un</form>
@@ -1081,10 +1081,10 @@
                 </coordinfo>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p9s1w13">
-              <m.rf id="m-CairoCiclingCorpus-p9s1w13">
+            <node id="a-c70-Cairo-p9s1w13">
+              <m.rf id="m-c70-Cairo-p9s1w13">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p9w13">
+                <w.rf id="w-c70-Cairo-p9w13">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -1098,16 +1098,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p10s1">
-      <s.rf>m#m-CairoCiclingCorpus-p10s1</s.rf>
+    <LM id="a-c70-Cairo-p10s1">
+      <s.rf>m#m-c70-Cairo-p10s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p10s1w1">
-              <m.rf id="m-CairoCiclingCorpus-p10s1w1">
+            <node id="a-c70-Cairo-p10s1w1">
+              <m.rf id="m-c70-Cairo-p10s1w1">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p10w1">
+                <w.rf id="w-c70-Cairo-p10w1">
                   <token>Vai</token>
                 </w.rf>
                 <form>Vai</form>
@@ -1117,10 +1117,10 @@
               <role>no</role>
               <ord>1</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p10s1w8">
-              <m.rf id="m-CairoCiclingCorpus-p10s1w8">
+            <node id="a-c70-Cairo-p10s1w8">
+              <m.rf id="m-c70-Cairo-p10s1w8">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p10w8">
+                <w.rf id="w-c70-Cairo-p10w8">
                   <token>?</token>
                 </w.rf>
                 <form>?</form>
@@ -1130,17 +1130,17 @@
               <role>punct</role>
               <ord>8</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p10s1x1">
+            <node id="a-c70-Cairo-p10s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip0030an[substsfn]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p10s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p10s1w3">
+                    <node id="a-c70-Cairo-p10s1w3">
+                      <m.rf id="m-c70-Cairo-p10s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p10w3">
+                        <w.rf id="w-c70-Cairo-p10w3">
                           <token>ir</token>
                         </w.rf>
                         <form>ir</form>
@@ -1150,10 +1150,10 @@
                       <role>auxVerb</role>
                       <ord>3</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p10s1w7">
-                      <m.rf id="m-CairoCiclingCorpus-p10s1w7">
+                    <node id="a-c70-Cairo-p10s1w7">
+                      <m.rf id="m-c70-Cairo-p10s1w7">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p10w7">
+                        <w.rf id="w-c70-Cairo-p10w7">
                           <token>valsts</token>
                           <no_space_after>1</no_space_after>
                         </w.rf>
@@ -1164,16 +1164,16 @@
                       <role>basElem</role>
                       <ord>7</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p10s1x2">
+                        <node id="a-c70-Cairo-p10s1x2">
                           <role>attr</role>
                           <children>
                             <coordinfo>
                               <coordtype>crdParts</coordtype>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p10s1w4">
-                                  <m.rf id="m-CairoCiclingCorpus-p10s1w4">
+                                <node id="a-c70-Cairo-p10s1w4">
+                                  <m.rf id="m-c70-Cairo-p10s1w4">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p10w4">
+                                    <w.rf id="w-c70-Cairo-p10w4">
                                       <token>liela</token>
                                     </w.rf>
                                     <form>liela</form>
@@ -1183,10 +1183,10 @@
                                   <role>crdPart</role>
                                   <ord>4</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p10s1w5">
-                                  <m.rf id="m-CairoCiclingCorpus-p10s1w5">
+                                <node id="a-c70-Cairo-p10s1w5">
+                                  <m.rf id="m-c70-Cairo-p10s1w5">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p10w5">
+                                    <w.rf id="w-c70-Cairo-p10w5">
                                       <token>vai</token>
                                     </w.rf>
                                     <form>vai</form>
@@ -1196,10 +1196,10 @@
                                   <role>conj</role>
                                   <ord>5</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p10s1w6">
-                                  <m.rf id="m-CairoCiclingCorpus-p10s1w6">
+                                <node id="a-c70-Cairo-p10s1w6">
+                                  <m.rf id="m-c70-Cairo-p10s1w6">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p10w6">
+                                    <w.rf id="w-c70-Cairo-p10w6">
                                       <token>maza</token>
                                     </w.rf>
                                     <form>maza</form>
@@ -1217,10 +1217,10 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-CairoCiclingCorpus-p10s1w2">
-                  <m.rf id="m-CairoCiclingCorpus-p10s1w2">
+                <node id="a-c70-Cairo-p10s1w2">
+                  <m.rf id="m-c70-Cairo-p10s1w2">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p10w2">
+                    <w.rf id="w-c70-Cairo-p10w2">
                       <token>Igvasu</token>
                     </w.rf>
                     <form>Igvasu</form>
@@ -1236,16 +1236,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p11s1">
-      <s.rf>m#m-CairoCiclingCorpus-p11s1</s.rf>
+    <LM id="a-c70-Cairo-p11s1">
+      <s.rf>m#m-c70-Cairo-p11s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p11s1w10">
-              <m.rf id="m-CairoCiclingCorpus-p11s1w10">
+            <node id="a-c70-Cairo-p11s1w10">
+              <m.rf id="m-c70-Cairo-p11s1w10">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p11w10">
+                <w.rf id="w-c70-Cairo-p11w10">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -1255,17 +1255,17 @@
               <role>punct</role>
               <ord>10</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p11s1x1">
+            <node id="a-c70-Cairo-p11s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0is0030an[modals00]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p11s1w2">
-                      <m.rf id="m-CairoCiclingCorpus-p11s1w2">
+                    <node id="a-c70-Cairo-p11s1w2">
+                      <m.rf id="m-c70-Cairo-p11s1w2">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p11w2">
+                        <w.rf id="w-c70-Cairo-p11w2">
                           <token>izvēlēties</token>
                         </w.rf>
                         <form>izvēlēties</form>
@@ -1275,16 +1275,16 @@
                       <role>basElem</role>
                       <ord>2</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p11s1x2">
+                        <node id="a-c70-Cairo-p11s1x2">
                           <role>obj</role>
                           <children>
                             <coordinfo>
                               <coordtype>crdParts</coordtype>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p11s1w3">
-                                  <m.rf id="m-CairoCiclingCorpus-p11s1w3">
+                                <node id="a-c70-Cairo-p11s1w3">
+                                  <m.rf id="m-c70-Cairo-p11s1w3">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p11w3">
+                                    <w.rf id="w-c70-Cairo-p11w3">
                                       <token>ne</token>
                                     </w.rf>
                                     <form>ne</form>
@@ -1294,17 +1294,17 @@
                                   <role>conj</role>
                                   <ord>3</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p11s1x3">
+                                <node id="a-c70-Cairo-p11s1x3">
                                   <role>crdPart</role>
                                   <children>
                                     <xinfo>
                                       <xtype>namedEnt</xtype>
                                       <tag>npmsa0</tag>
                                       <children>
-                                        <node id="a-CairoCiclingCorpus-p11s1w5">
-                                          <m.rf id="m-CairoCiclingCorpus-p11s1w5">
+                                        <node id="a-c70-Cairo-p11s1w5">
+                                          <m.rf id="m-c70-Cairo-p11s1w5">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p11w5">
+                                            <w.rf id="w-c70-Cairo-p11w5">
                                               <token>Smitu</token>
                                               <no_space_after>1</no_space_after>
                                             </w.rf>
@@ -1315,10 +1315,10 @@
                                           <role>basElem</role>
                                           <ord>5</ord>
                                         </node>
-                                        <node id="a-CairoCiclingCorpus-p11s1w4">
-                                          <m.rf id="m-CairoCiclingCorpus-p11s1w4">
+                                        <node id="a-c70-Cairo-p11s1w4">
+                                          <m.rf id="m-c70-Cairo-p11s1w4">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p11w4">
+                                            <w.rf id="w-c70-Cairo-p11w4">
                                               <token>Pēteri</token>
                                             </w.rf>
                                             <form>Pēteri</form>
@@ -1332,17 +1332,17 @@
                                     </xinfo>
                                   </children>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p11s1x4">
+                                <node id="a-c70-Cairo-p11s1x4">
                                   <role>crdPart</role>
                                   <children>
                                     <xinfo>
                                       <xtype>namedEnt</xtype>
                                       <tag>npfsa0</tag>
                                       <children>
-                                        <node id="a-CairoCiclingCorpus-p11s1w8">
-                                          <m.rf id="m-CairoCiclingCorpus-p11s1w8">
+                                        <node id="a-c70-Cairo-p11s1w8">
+                                          <m.rf id="m-c70-Cairo-p11s1w8">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p11w8">
+                                            <w.rf id="w-c70-Cairo-p11w8">
                                               <token>Mariju</token>
                                             </w.rf>
                                             <form>Mariju</form>
@@ -1352,10 +1352,10 @@
                                           <role>basElem</role>
                                           <ord>8</ord>
                                         </node>
-                                        <node id="a-CairoCiclingCorpus-p11s1w9">
-                                          <m.rf id="m-CairoCiclingCorpus-p11s1w9">
+                                        <node id="a-c70-Cairo-p11s1w9">
+                                          <m.rf id="m-c70-Cairo-p11s1w9">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p11w9">
+                                            <w.rf id="w-c70-Cairo-p11w9">
                                               <token>Braunu</token>
                                               <no_space_after>1</no_space_after>
                                             </w.rf>
@@ -1370,10 +1370,10 @@
                                     </xinfo>
                                   </children>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p11s1w7">
-                                  <m.rf id="m-CairoCiclingCorpus-p11s1w7">
+                                <node id="a-c70-Cairo-p11s1w7">
+                                  <m.rf id="m-c70-Cairo-p11s1w7">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p11w7">
+                                    <w.rf id="w-c70-Cairo-p11w7">
                                       <token>ne</token>
                                     </w.rf>
                                     <form>ne</form>
@@ -1383,10 +1383,10 @@
                                   <role>conj</role>
                                   <ord>7</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p11s1w6">
-                                  <m.rf id="m-CairoCiclingCorpus-p11s1w6">
+                                <node id="a-c70-Cairo-p11s1w6">
+                                  <m.rf id="m-c70-Cairo-p11s1w6">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p11w6">
+                                    <w.rf id="w-c70-Cairo-p11w6">
                                       <token>,</token>
                                     </w.rf>
                                     <form>,</form>
@@ -1402,10 +1402,10 @@
                         </node>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p11s1w1">
-                      <m.rf id="m-CairoCiclingCorpus-p11s1w1">
+                    <node id="a-c70-Cairo-p11s1w1">
+                      <m.rf id="m-c70-Cairo-p11s1w1">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p11w1">
+                        <w.rf id="w-c70-Cairo-p11w1">
                           <token>Nevarēja</token>
                         </w.rf>
                         <form>Nevarēja</form>
@@ -1423,16 +1423,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p12s1">
-      <s.rf>m#m-CairoCiclingCorpus-p12s1</s.rf>
+    <LM id="a-c70-Cairo-p12s1">
+      <s.rf>m#m-c70-Cairo-p12s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p12s1w9">
-              <m.rf id="m-CairoCiclingCorpus-p12s1w9">
+            <node id="a-c70-Cairo-p12s1w9">
+              <m.rf id="m-c70-Cairo-p12s1w9">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p12w9">
+                <w.rf id="w-c70-Cairo-p12w9">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -1442,10 +1442,10 @@
               <role>punct</role>
               <ord>9</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p12s1w2">
-              <m.rf id="m-CairoCiclingCorpus-p12s1w2">
+            <node id="a-c70-Cairo-p12s1w2">
+              <m.rf id="m-c70-Cairo-p12s1w2">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p12w2">
+                <w.rf id="w-c70-Cairo-p12w2">
                   <token>nav</token>
                 </w.rf>
                 <form>nav</form>
@@ -1455,17 +1455,17 @@
               <role>pred</role>
               <ord>2</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p12s1x1">
+                <node id="a-c70-Cairo-p12s1x1">
                   <role>subj</role>
                   <children>
                     <xinfo>
                       <xtype>xParticle</xtype>
                       <tag>ncfsg0[neg]</tag>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p12s1w3">
-                          <m.rf id="m-CairoCiclingCorpus-p12s1w3">
+                        <node id="a-c70-Cairo-p12s1w3">
+                          <m.rf id="m-c70-Cairo-p12s1w3">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p12w3">
+                            <w.rf id="w-c70-Cairo-p12w3">
                               <token>ne</token>
                             </w.rf>
                             <form>ne</form>
@@ -1475,10 +1475,10 @@
                           <role>no</role>
                           <ord>3</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p12s1w4">
-                          <m.rf id="m-CairoCiclingCorpus-p12s1w4">
+                        <node id="a-c70-Cairo-p12s1w4">
+                          <m.rf id="m-c70-Cairo-p12s1w4">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p12w4">
+                            <w.rf id="w-c70-Cairo-p12w4">
                               <token>jausmas</token>
                               <no_space_after>1</no_space_after>
                             </w.rf>
@@ -1491,16 +1491,16 @@
                         </node>
                       </children>
                     </xinfo>
-                    <node id="a-CairoCiclingCorpus-p12s1x2">
+                    <node id="a-c70-Cairo-p12s1x2">
                       <role>attrCl</role>
                       <children>
                         <pmcinfo>
                           <pmctype>subrCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p12s1w8">
-                              <m.rf id="m-CairoCiclingCorpus-p12s1w8">
+                            <node id="a-c70-Cairo-p12s1w8">
+                              <m.rf id="m-c70-Cairo-p12s1w8">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p12w8">
+                                <w.rf id="w-c70-Cairo-p12w8">
                                   <token>uzrakstīja</token>
                                   <no_space_after>1</no_space_after>
                                 </w.rf>
@@ -1511,10 +1511,10 @@
                               <role>pred</role>
                               <ord>8</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p12s1w6">
-                                  <m.rf id="m-CairoCiclingCorpus-p12s1w6">
+                                <node id="a-c70-Cairo-p12s1w6">
+                                  <m.rf id="m-c70-Cairo-p12s1w6">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p12w6">
+                                    <w.rf id="w-c70-Cairo-p12w6">
                                       <token>kurš</token>
                                     </w.rf>
                                     <form>kurš</form>
@@ -1524,10 +1524,10 @@
                                   <role>subj</role>
                                   <ord>6</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p12s1w7">
-                                  <m.rf id="m-CairoCiclingCorpus-p12s1w7">
+                                <node id="a-c70-Cairo-p12s1w7">
+                                  <m.rf id="m-c70-Cairo-p12s1w7">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p12w7">
+                                    <w.rf id="w-c70-Cairo-p12w7">
                                       <token>to</token>
                                     </w.rf>
                                     <form>to</form>
@@ -1539,10 +1539,10 @@
                                 </node>
                               </children>
                             </node>
-                            <node id="a-CairoCiclingCorpus-p12s1w5">
-                              <m.rf id="m-CairoCiclingCorpus-p12s1w5">
+                            <node id="a-c70-Cairo-p12s1w5">
+                              <m.rf id="m-c70-Cairo-p12s1w5">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p12w5">
+                                <w.rf id="w-c70-Cairo-p12w5">
                                   <token>,</token>
                                 </w.rf>
                                 <form>,</form>
@@ -1562,10 +1562,10 @@
             </node>
           </children>
         </pmcinfo>
-        <node id="a-CairoCiclingCorpus-p12s1w1">
-          <m.rf id="m-CairoCiclingCorpus-p12s1w1">
+        <node id="a-c70-Cairo-p12s1w1">
+          <m.rf id="m-c70-Cairo-p12s1w1">
             <src.rf>semi-automatic</src.rf>
-            <w.rf id="w-CairoCiclingCorpus-p12w1">
+            <w.rf id="w-c70-Cairo-p12w1">
               <token>Viņiem</token>
             </w.rf>
             <form>Viņiem</form>
@@ -1577,16 +1577,16 @@
         </node>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p13s1">
-      <s.rf>m#m-CairoCiclingCorpus-p13s1</s.rf>
+    <LM id="a-c70-Cairo-p13s1">
+      <s.rf>m#m-c70-Cairo-p13s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p13s1w5">
-              <m.rf id="m-CairoCiclingCorpus-p13s1w5">
+            <node id="a-c70-Cairo-p13s1w5">
+              <m.rf id="m-c70-Cairo-p13s1w5">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p13w5">
+                <w.rf id="w-c70-Cairo-p13w5">
                   <token>?</token>
                 </w.rf>
                 <form>?</form>
@@ -1596,10 +1596,10 @@
               <role>punct</role>
               <ord>5</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p13s1w4">
-              <m.rf id="m-CairoCiclingCorpus-p13s1w4">
+            <node id="a-c70-Cairo-p13s1w4">
+              <m.rf id="m-c70-Cairo-p13s1w4">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p13w4">
+                <w.rf id="w-c70-Cairo-p13w4">
                   <token>skaties</token>
                   <no_space_after>1</no_space_after>
                 </w.rf>
@@ -1610,17 +1610,17 @@
               <role>pred</role>
               <ord>4</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p13s1x1">
+                <node id="a-c70-Cairo-p13s1x1">
                   <role>adv</role>
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
                       <tag>pr000an</tag>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p13s1w2">
-                          <m.rf id="m-CairoCiclingCorpus-p13s1w2">
+                        <node id="a-c70-Cairo-p13s1w2">
+                          <m.rf id="m-c70-Cairo-p13s1w2">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p13w2">
+                            <w.rf id="w-c70-Cairo-p13w2">
                               <token>ko</token>
                             </w.rf>
                             <form>ko</form>
@@ -1630,10 +1630,10 @@
                           <role>basElem</role>
                           <ord>2</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p13s1w1">
-                          <m.rf id="m-CairoCiclingCorpus-p13s1w1">
+                        <node id="a-c70-Cairo-p13s1w1">
+                          <m.rf id="m-c70-Cairo-p13s1w1">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p13w1">
+                            <w.rf id="w-c70-Cairo-p13w1">
                               <token>Uz</token>
                             </w.rf>
                             <form>Uz</form>
@@ -1647,10 +1647,10 @@
                     </xinfo>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p13s1w3">
-                  <m.rf id="m-CairoCiclingCorpus-p13s1w3">
+                <node id="a-c70-Cairo-p13s1w3">
+                  <m.rf id="m-c70-Cairo-p13s1w3">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p13w3">
+                    <w.rf id="w-c70-Cairo-p13w3">
                       <token>tu</token>
                     </w.rf>
                     <form>tu</form>
@@ -1666,16 +1666,16 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p14s1">
-      <s.rf>m#m-CairoCiclingCorpus-p14s1</s.rf>
+    <LM id="a-c70-Cairo-p14s1">
+      <s.rf>m#m-c70-Cairo-p14s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p14s1w9">
-              <m.rf id="m-CairoCiclingCorpus-p14s1w9">
+            <node id="a-c70-Cairo-p14s1w9">
+              <m.rf id="m-c70-Cairo-p14s1w9">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p14w9">
+                <w.rf id="w-c70-Cairo-p14w9">
                   <token>?</token>
                 </w.rf>
                 <form>?</form>
@@ -1685,10 +1685,10 @@
               <role>punct</role>
               <ord>9</ord>
             </node>
-            <node id="a-CairoCiclingCorpus-p14s1w3">
-              <m.rf id="m-CairoCiclingCorpus-p14s1w3">
+            <node id="a-c70-Cairo-p14s1w3">
+              <m.rf id="m-c70-Cairo-p14s1w3">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p14w3">
+                <w.rf id="w-c70-Cairo-p14w3">
                   <token>domā</token>
                   <no_space_after>1</no_space_after>
                 </w.rf>
@@ -1699,10 +1699,10 @@
               <role>pred</role>
               <ord>3</ord>
               <children>
-                <node id="a-CairoCiclingCorpus-p14s1w1">
-                  <m.rf id="m-CairoCiclingCorpus-p14s1w1">
+                <node id="a-c70-Cairo-p14s1w1">
+                  <m.rf id="m-c70-Cairo-p14s1w1">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p14w1">
+                    <w.rf id="w-c70-Cairo-p14w1">
                       <token>Kā</token>
                     </w.rf>
                     <form>Kā</form>
@@ -1712,23 +1712,23 @@
                   <role>adv</role>
                   <ord>1</ord>
                 </node>
-                <node id="a-CairoCiclingCorpus-p14s1x1">
+                <node id="a-c70-Cairo-p14s1x1">
                   <role>objCl</role>
                   <children>
                     <pmcinfo>
                       <pmctype>subrCl</pmctype>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p14s1x2">
+                        <node id="a-c70-Cairo-p14s1x2">
                           <role>pred</role>
                           <children>
                             <xinfo>
                               <xtype>xPred</xtype>
                               <tag>vm0if002san[modals00]</tag>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p14s1w7">
-                                  <m.rf id="m-CairoCiclingCorpus-p14s1w7">
+                                <node id="a-c70-Cairo-p14s1w7">
+                                  <m.rf id="m-c70-Cairo-p14s1w7">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p14w7">
+                                    <w.rf id="w-c70-Cairo-p14w7">
                                       <token>varēsi</token>
                                     </w.rf>
                                     <form>varēsi</form>
@@ -1738,10 +1738,10 @@
                                   <role>mod</role>
                                   <ord>7</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p14s1w8">
-                                  <m.rf id="m-CairoCiclingCorpus-p14s1w8">
+                                <node id="a-c70-Cairo-p14s1w8">
+                                  <m.rf id="m-c70-Cairo-p14s1w8">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p14w8">
+                                    <w.rf id="w-c70-Cairo-p14w8">
                                       <token>atnākt</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -1754,10 +1754,10 @@
                                 </node>
                               </children>
                             </xinfo>
-                            <node id="a-CairoCiclingCorpus-p14s1w5">
-                              <m.rf id="m-CairoCiclingCorpus-p14s1w5">
+                            <node id="a-c70-Cairo-p14s1w5">
+                              <m.rf id="m-c70-Cairo-p14s1w5">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p14w5">
+                                <w.rf id="w-c70-Cairo-p14w5">
                                   <token>kad</token>
                                 </w.rf>
                                 <form>kad</form>
@@ -1767,10 +1767,10 @@
                               <role>adv</role>
                               <ord>5</ord>
                             </node>
-                            <node id="a-CairoCiclingCorpus-p14s1w6">
-                              <m.rf id="m-CairoCiclingCorpus-p14s1w6">
+                            <node id="a-c70-Cairo-p14s1w6">
+                              <m.rf id="m-c70-Cairo-p14s1w6">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p14w6">
+                                <w.rf id="w-c70-Cairo-p14w6">
                                   <token>tu</token>
                                 </w.rf>
                                 <form>tu</form>
@@ -1782,10 +1782,10 @@
                             </node>
                           </children>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p14s1w4">
-                          <m.rf id="m-CairoCiclingCorpus-p14s1w4">
+                        <node id="a-c70-Cairo-p14s1w4">
+                          <m.rf id="m-c70-Cairo-p14s1w4">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p14w4">
+                            <w.rf id="w-c70-Cairo-p14w4">
                               <token>,</token>
                             </w.rf>
                             <form>,</form>
@@ -1799,10 +1799,10 @@
                     </pmcinfo>
                   </children>
                 </node>
-                <node id="a-CairoCiclingCorpus-p14s1w2">
-                  <m.rf id="m-CairoCiclingCorpus-p14s1w2">
+                <node id="a-c70-Cairo-p14s1w2">
+                  <m.rf id="m-c70-Cairo-p14s1w2">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p14w2">
+                    <w.rf id="w-c70-Cairo-p14w2">
                       <token>tu</token>
                     </w.rf>
                     <form>tu</form>
@@ -1818,28 +1818,28 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p15s1">
-      <s.rf>m#m-CairoCiclingCorpus-p15s1</s.rf>
+    <LM id="a-c70-Cairo-p15s1">
+      <s.rf>m#m-c70-Cairo-p15s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p15s1x1">
+            <node id="a-c70-Cairo-p15s1x1">
               <role>basElem</role>
               <children>
                 <coordinfo>
                   <coordtype>crdClauses</coordtype>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p15s1x2">
+                    <node id="a-c70-Cairo-p15s1x2">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p15s1w2">
-                              <m.rf id="m-CairoCiclingCorpus-p15s1w2">
+                            <node id="a-c70-Cairo-p15s1w2">
+                              <m.rf id="m-c70-Cairo-p15s1w2">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p15w2">
+                                <w.rf id="w-c70-Cairo-p15w2">
                                   <token>nopirka</token>
                                 </w.rf>
                                 <form>nopirka</form>
@@ -1849,10 +1849,10 @@
                               <role>pred</role>
                               <ord>2</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p15s1w3">
-                                  <m.rf id="m-CairoCiclingCorpus-p15s1w3">
+                                <node id="a-c70-Cairo-p15s1w3">
+                                  <m.rf id="m-c70-Cairo-p15s1w3">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p15w3">
+                                    <w.rf id="w-c70-Cairo-p15w3">
                                       <token>mašīnu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -1863,10 +1863,10 @@
                                   <role>obj</role>
                                   <ord>3</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p15s1w1">
-                                  <m.rf id="m-CairoCiclingCorpus-p15s1w1">
+                                <node id="a-c70-Cairo-p15s1w1">
+                                  <m.rf id="m-c70-Cairo-p15s1w1">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p15w1">
+                                    <w.rf id="w-c70-Cairo-p15w1">
                                       <token>Viņš</token>
                                     </w.rf>
                                     <form>Viņš</form>
@@ -1882,20 +1882,20 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p15s1x3">
+                    <node id="a-c70-Cairo-p15s1x3">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p15s1x4">
+                            <node id="a-c70-Cairo-p15s1x4">
                               <reduction>vmnist130an(nopirka)</reduction>
                               <role>pred</role>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p15s1w7">
-                                  <m.rf id="m-CairoCiclingCorpus-p15s1w7">
+                                <node id="a-c70-Cairo-p15s1w7">
+                                  <m.rf id="m-c70-Cairo-p15s1w7">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p15w7">
+                                    <w.rf id="w-c70-Cairo-p15w7">
                                       <token>brālis</token>
                                     </w.rf>
                                     <form>brālis</form>
@@ -1905,25 +1905,25 @@
                                   <role>subj</role>
                                   <ord>7</ord>
                                   <children>
-                                    <node id="a-CairoCiclingCorpus-p15s1w6">
-                                      <m.rf id="m-CairoCiclingCorpus-p15s1w6">
+                                    <node id="a-c70-Cairo-p15s1w6">
+                                      <m.rf id="m-c70-Cairo-p15s1w6">
                                         <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-CairoCiclingCorpus-p15w6">
+                                        <w.rf id="w-c70-Cairo-p15w6">
                                           <token>viņa</token>
                                         </w.rf>
                                         <form>viņa</form>
                                         <lemma>viņš</lemma>
                                         <tag>pp3msgn</tag>
                                       </m.rf>
-                                      <role>subj</role>
+                                      <role>attr</role>
                                       <ord>6</ord>
                                     </node>
                                   </children>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p15s1w9">
-                                  <m.rf id="m-CairoCiclingCorpus-p15s1w9">
+                                <node id="a-c70-Cairo-p15s1w9">
+                                  <m.rf id="m-c70-Cairo-p15s1w9">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p15w9">
+                                    <w.rf id="w-c70-Cairo-p15w9">
                                       <token>velosipēdu</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -1934,10 +1934,10 @@
                                   <role>obj</role>
                                   <ord>9</ord>
                                   <children>
-                                    <node id="a-CairoCiclingCorpus-p15s1w8">
-                                      <m.rf id="m-CairoCiclingCorpus-p15s1w8">
+                                    <node id="a-c70-Cairo-p15s1w8">
+                                      <m.rf id="m-c70-Cairo-p15s1w8">
                                         <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-CairoCiclingCorpus-p15w8">
+                                        <w.rf id="w-c70-Cairo-p15w8">
                                           <token>tikai</token>
                                         </w.rf>
                                         <form>tikai</form>
@@ -1955,10 +1955,10 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p15s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p15s1w4">
+                    <node id="a-c70-Cairo-p15s1w4">
+                      <m.rf id="m-c70-Cairo-p15s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p15w4">
+                        <w.rf id="w-c70-Cairo-p15w4">
                           <token>,</token>
                         </w.rf>
                         <form>,</form>
@@ -1968,10 +1968,10 @@
                       <role>punct</role>
                       <ord>4</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p15s1w5">
-                      <m.rf id="m-CairoCiclingCorpus-p15s1w5">
+                    <node id="a-c70-Cairo-p15s1w5">
+                      <m.rf id="m-c70-Cairo-p15s1w5">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p15w5">
+                        <w.rf id="w-c70-Cairo-p15w5">
                           <token>bet</token>
                         </w.rf>
                         <form>bet</form>
@@ -1985,10 +1985,10 @@
                 </coordinfo>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p15s1w10">
-              <m.rf id="m-CairoCiclingCorpus-p15s1w10">
+            <node id="a-c70-Cairo-p15s1w10">
+              <m.rf id="m-c70-Cairo-p15s1w10">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p15w10">
+                <w.rf id="w-c70-Cairo-p15w10">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -2002,22 +2002,22 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p16s1">
-      <s.rf>m#m-CairoCiclingCorpus-p16s1</s.rf>
+    <LM id="a-c70-Cairo-p16s1">
+      <s.rf>m#m-c70-Cairo-p16s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p16s1x1">
+            <node id="a-c70-Cairo-p16s1x1">
               <role>pred</role>
               <children>
                 <coordinfo>
                   <coordtype>crdParts</coordtype>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p16s1w5">
-                      <m.rf id="m-CairoCiclingCorpus-p16s1w5">
+                    <node id="a-c70-Cairo-p16s1w5">
+                      <m.rf id="m-c70-Cairo-p16s1w5">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p16w5">
+                        <w.rf id="w-c70-Cairo-p16w5">
                           <token>un</token>
                         </w.rf>
                         <form>un</form>
@@ -2027,10 +2027,10 @@
                       <role>conj</role>
                       <ord>5</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p16s1w7">
-                      <m.rf id="m-CairoCiclingCorpus-p16s1w7">
+                    <node id="a-c70-Cairo-p16s1w7">
+                      <m.rf id="m-c70-Cairo-p16s1w7">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p16w7">
+                        <w.rf id="w-c70-Cairo-p16w7">
                           <token>atstāja</token>
                         </w.rf>
                         <form>atstāja</form>
@@ -2040,10 +2040,10 @@
                       <role>crdPart</role>
                       <ord>7</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p16s1w6">
-                          <m.rf id="m-CairoCiclingCorpus-p16s1w6">
+                        <node id="a-c70-Cairo-p16s1w6">
+                          <m.rf id="m-c70-Cairo-p16s1w6">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p16w6">
+                            <w.rf id="w-c70-Cairo-p16w6">
                               <token>tad</token>
                             </w.rf>
                             <form>tad</form>
@@ -2053,10 +2053,10 @@
                           <role>adv</role>
                           <ord>6</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p16s1w8">
-                          <m.rf id="m-CairoCiclingCorpus-p16s1w8">
+                        <node id="a-c70-Cairo-p16s1w8">
+                          <m.rf id="m-c70-Cairo-p16s1w8">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p16w8">
+                            <w.rf id="w-c70-Cairo-p16w8">
                               <token>istabu</token>
                               <no_space_after>1</no_space_after>
                             </w.rf>
@@ -2069,10 +2069,10 @@
                         </node>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p16s1w4">
-                      <m.rf id="m-CairoCiclingCorpus-p16s1w4">
+                    <node id="a-c70-Cairo-p16s1w4">
+                      <m.rf id="m-c70-Cairo-p16s1w4">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p16w4">
+                        <w.rf id="w-c70-Cairo-p16w4">
                           <token>apskāvās</token>
                         </w.rf>
                         <form>apskāvās</form>
@@ -2084,16 +2084,16 @@
                     </node>
                   </children>
                 </coordinfo>
-                <node id="a-CairoCiclingCorpus-p16s1x2">
+                <node id="a-c70-Cairo-p16s1x2">
                   <role>subj</role>
                   <children>
                     <coordinfo>
                       <coordtype>crdParts</coordtype>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p16s1w1">
-                          <m.rf id="m-CairoCiclingCorpus-p16s1w1">
+                        <node id="a-c70-Cairo-p16s1w1">
+                          <m.rf id="m-c70-Cairo-p16s1w1">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p16w1">
+                            <w.rf id="w-c70-Cairo-p16w1">
                               <token>Pēteris</token>
                             </w.rf>
                             <form>Pēteris</form>
@@ -2103,10 +2103,10 @@
                           <role>crdPart</role>
                           <ord>1</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p16s1w3">
-                          <m.rf id="m-CairoCiclingCorpus-p16s1w3">
+                        <node id="a-c70-Cairo-p16s1w3">
+                          <m.rf id="m-c70-Cairo-p16s1w3">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p16w3">
+                            <w.rf id="w-c70-Cairo-p16w3">
                               <token>Marija</token>
                             </w.rf>
                             <form>Marija</form>
@@ -2116,10 +2116,10 @@
                           <role>crdPart</role>
                           <ord>3</ord>
                         </node>
-                        <node id="a-CairoCiclingCorpus-p16s1w2">
-                          <m.rf id="m-CairoCiclingCorpus-p16s1w2">
+                        <node id="a-c70-Cairo-p16s1w2">
+                          <m.rf id="m-c70-Cairo-p16s1w2">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p16w2">
+                            <w.rf id="w-c70-Cairo-p16w2">
                               <token>un</token>
                             </w.rf>
                             <form>un</form>
@@ -2135,10 +2135,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p16s1w9">
-              <m.rf id="m-CairoCiclingCorpus-p16s1w9">
+            <node id="a-c70-Cairo-p16s1w9">
+              <m.rf id="m-c70-Cairo-p16s1w9">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p16w9">
+                <w.rf id="w-c70-Cairo-p16w9">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -2152,35 +2152,35 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p17s1">
-      <s.rf>m#m-CairoCiclingCorpus-p17s1</s.rf>
+    <LM id="a-c70-Cairo-p17s1">
+      <s.rf>m#m-c70-Cairo-p17s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p17s1x1">
+            <node id="a-c70-Cairo-p17s1x1">
               <role>basElem</role>
               <children>
                 <coordinfo>
                   <coordtype>crdClauses</coordtype>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p17s1x2">
+                    <node id="a-c70-Cairo-p17s1x2">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p17s1x4">
+                            <node id="a-c70-Cairo-p17s1x4">
                               <role>pred</role>
                               <children>
                                 <xinfo>
                                   <xtype>xPred</xtype>
                                   <tag>vm0is0030an[modals00]</tag>
                                   <children>
-                                    <node id="a-CairoCiclingCorpus-p17s1w2">
-                                      <m.rf id="m-CairoCiclingCorpus-p17s1w2">
+                                    <node id="a-c70-Cairo-p17s1w2">
+                                      <m.rf id="m-c70-Cairo-p17s1w2">
                                         <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-CairoCiclingCorpus-p17w2">
+                                        <w.rf id="w-c70-Cairo-p17w2">
                                           <token>vajadzēja</token>
                                         </w.rf>
                                         <form>vajadzēja</form>
@@ -2190,10 +2190,10 @@
                                       <role>mod</role>
                                       <ord>2</ord>
                                     </node>
-                                    <node id="a-CairoCiclingCorpus-p17s1w3">
-                                      <m.rf id="m-CairoCiclingCorpus-p17s1w3">
+                                    <node id="a-c70-Cairo-p17s1w3">
+                                      <m.rf id="m-c70-Cairo-p17s1w3">
                                         <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-CairoCiclingCorpus-p17w3">
+                                        <w.rf id="w-c70-Cairo-p17w3">
                                           <token>apgriezt</token>
                                         </w.rf>
                                         <form>apgriezt</form>
@@ -2203,10 +2203,10 @@
                                       <role>basElem</role>
                                       <ord>3</ord>
                                       <children>
-                                        <node id="a-CairoCiclingCorpus-p17s1w4">
-                                          <m.rf id="m-CairoCiclingCorpus-p17s1w4">
+                                        <node id="a-c70-Cairo-p17s1w4">
+                                          <m.rf id="m-c70-Cairo-p17s1w4">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p17w4">
+                                            <w.rf id="w-c70-Cairo-p17w4">
                                               <token>matus</token>
                                               <no_space_after>1</no_space_after>
                                             </w.rf>
@@ -2225,10 +2225,10 @@
                             </node>
                           </children>
                         </pmcinfo>
-                        <node id="a-CairoCiclingCorpus-p17s1w1">
-                          <m.rf id="m-CairoCiclingCorpus-p17s1w1">
+                        <node id="a-c70-Cairo-p17s1w1">
+                          <m.rf id="m-c70-Cairo-p17s1w1">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p17w1">
+                            <w.rf id="w-c70-Cairo-p17w1">
                               <token>Viņai</token>
                             </w.rf>
                             <form>Viņai</form>
@@ -2240,16 +2240,16 @@
                         </node>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p17s1x3">
+                    <node id="a-c70-Cairo-p17s1x3">
                       <role>crdPart</role>
                       <children>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
-                            <node id="a-CairoCiclingCorpus-p17s1w14">
-                              <m.rf id="m-CairoCiclingCorpus-p17s1w14">
+                            <node id="a-c70-Cairo-p17s1w14">
+                              <m.rf id="m-c70-Cairo-p17s1w14">
                                 <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-CairoCiclingCorpus-p17w14">
+                                <w.rf id="w-c70-Cairo-p17w14">
                                   <token>neizdarīja</token>
                                   <no_space_after>1</no_space_after>
                                 </w.rf>
@@ -2260,17 +2260,17 @@
                               <role>pred</role>
                               <ord>14</ord>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p17s1x5">
+                                <node id="a-c70-Cairo-p17s1x5">
                                   <role>adv</role>
                                   <children>
                                     <xinfo>
                                       <xtype>xPrep</xtype>
                                       <tag>ncmsg0[post]</tag>
                                       <children>
-                                        <node id="a-CairoCiclingCorpus-p17s1w9">
-                                          <m.rf id="m-CairoCiclingCorpus-p17s1w9">
+                                        <node id="a-c70-Cairo-p17s1w9">
+                                          <m.rf id="m-c70-Cairo-p17s1w9">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p17w9">
+                                            <w.rf id="w-c70-Cairo-p17w9">
                                               <token>iemesla</token>
                                             </w.rf>
                                             <form>iemesla</form>
@@ -2280,17 +2280,17 @@
                                           <role>basElem</role>
                                           <ord>9</ord>
                                           <children>
-                                            <node id="a-CairoCiclingCorpus-p17s1x6">
+                                            <node id="a-c70-Cairo-p17s1x6">
                                               <role>attr</role>
                                               <children>
                                                 <xinfo>
                                                   <xtype>xParticle</xtype>
                                                   <tag>pi0msgn[aff]</tag>
                                                   <children>
-                                                    <node id="a-CairoCiclingCorpus-p17s1w7">
-                                                      <m.rf id="m-CairoCiclingCorpus-p17s1w7">
+                                                    <node id="a-c70-Cairo-p17s1w7">
+                                                      <m.rf id="m-c70-Cairo-p17s1w7">
                                                         <src.rf>semi-automatic</src.rf>
-                                                        <w.rf id="w-CairoCiclingCorpus-p17w7">
+                                                        <w.rf id="w-c70-Cairo-p17w7">
                                                           <token>kaut</token>
                                                         </w.rf>
                                                         <form>kaut</form>
@@ -2300,10 +2300,10 @@
                                                       <role>no</role>
                                                       <ord>7</ord>
                                                     </node>
-                                                    <node id="a-CairoCiclingCorpus-p17s1w8">
-                                                      <m.rf id="m-CairoCiclingCorpus-p17s1w8">
+                                                    <node id="a-c70-Cairo-p17s1w8">
+                                                      <m.rf id="m-c70-Cairo-p17s1w8">
                                                         <src.rf>semi-automatic</src.rf>
-                                                        <w.rf id="w-CairoCiclingCorpus-p17w8">
+                                                        <w.rf id="w-c70-Cairo-p17w8">
                                                           <token>kāda</token>
                                                         </w.rf>
                                                         <form>kāda</form>
@@ -2319,10 +2319,10 @@
                                             </node>
                                           </children>
                                         </node>
-                                        <node id="a-CairoCiclingCorpus-p17s1w10">
-                                          <m.rf id="m-CairoCiclingCorpus-p17s1w10">
+                                        <node id="a-c70-Cairo-p17s1w10">
+                                          <m.rf id="m-c70-Cairo-p17s1w10">
                                             <src.rf>semi-automatic</src.rf>
-                                            <w.rf id="w-CairoCiclingCorpus-p17w10">
+                                            <w.rf id="w-c70-Cairo-p17w10">
                                               <token>dēļ</token>
                                             </w.rf>
                                             <form>dēļ</form>
@@ -2336,10 +2336,10 @@
                                     </xinfo>
                                   </children>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p17s1w12">
-                                  <m.rf id="m-CairoCiclingCorpus-p17s1w12">
+                                <node id="a-c70-Cairo-p17s1w12">
+                                  <m.rf id="m-c70-Cairo-p17s1w12">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p17w12">
+                                    <w.rf id="w-c70-Cairo-p17w12">
                                       <token>todien</token>
                                     </w.rf>
                                     <form>todien</form>
@@ -2349,10 +2349,10 @@
                                   <role>adv</role>
                                   <ord>12</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p17s1w13">
-                                  <m.rf id="m-CairoCiclingCorpus-p17s1w13">
+                                <node id="a-c70-Cairo-p17s1w13">
+                                  <m.rf id="m-c70-Cairo-p17s1w13">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p17w13">
+                                    <w.rf id="w-c70-Cairo-p17w13">
                                       <token>to</token>
                                     </w.rf>
                                     <form>to</form>
@@ -2362,10 +2362,10 @@
                                   <role>obj</role>
                                   <ord>13</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p17s1w11">
-                                  <m.rf id="m-CairoCiclingCorpus-p17s1w11">
+                                <node id="a-c70-Cairo-p17s1w11">
+                                  <m.rf id="m-c70-Cairo-p17s1w11">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p17w11">
+                                    <w.rf id="w-c70-Cairo-p17w11">
                                       <token>viņa</token>
                                     </w.rf>
                                     <form>viņa</form>
@@ -2381,10 +2381,10 @@
                         </pmcinfo>
                       </children>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p17s1w5">
-                      <m.rf id="m-CairoCiclingCorpus-p17s1w5">
+                    <node id="a-c70-Cairo-p17s1w5">
+                      <m.rf id="m-c70-Cairo-p17s1w5">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p17w5">
+                        <w.rf id="w-c70-Cairo-p17w5">
                           <token>,</token>
                         </w.rf>
                         <form>,</form>
@@ -2394,10 +2394,10 @@
                       <role>punct</role>
                       <ord>5</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p17s1w6">
-                      <m.rf id="m-CairoCiclingCorpus-p17s1w6">
+                    <node id="a-c70-Cairo-p17s1w6">
+                      <m.rf id="m-c70-Cairo-p17s1w6">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p17w6">
+                        <w.rf id="w-c70-Cairo-p17w6">
                           <token>bet</token>
                         </w.rf>
                         <form>bet</form>
@@ -2411,10 +2411,10 @@
                 </coordinfo>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p17s1w15">
-              <m.rf id="m-CairoCiclingCorpus-p17s1w15">
+            <node id="a-c70-Cairo-p17s1w15">
+              <m.rf id="m-c70-Cairo-p17s1w15">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p17w15">
+                <w.rf id="w-c70-Cairo-p17w15">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -2428,23 +2428,23 @@
         </pmcinfo>
       </children>
     </LM>
-    <LM id="a-CairoCiclingCorpus-p18s1">
-      <s.rf>m#m-CairoCiclingCorpus-p18s1</s.rf>
+    <LM id="a-c70-Cairo-p18s1">
+      <s.rf>m#m-c70-Cairo-p18s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-CairoCiclingCorpus-p18s1x2">
+            <node id="a-c70-Cairo-p18s1x2">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0is0030an[modals00]</tag>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p18s1w2">
-                      <m.rf id="m-CairoCiclingCorpus-p18s1w2">
+                    <node id="a-c70-Cairo-p18s1w2">
+                      <m.rf id="m-c70-Cairo-p18s1w2">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p18w2">
+                        <w.rf id="w-c70-Cairo-p18w2">
                           <token>nevarēju</token>
                         </w.rf>
                         <form>nevarēju</form>
@@ -2454,10 +2454,10 @@
                       <role>mod</role>
                       <ord>2</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p18s1w3">
-                      <m.rf id="m-CairoCiclingCorpus-p18s1w3">
+                    <node id="a-c70-Cairo-p18s1w3">
+                      <m.rf id="m-c70-Cairo-p18s1w3">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p18w3">
+                        <w.rf id="w-c70-Cairo-p18w3">
                           <token>tikt</token>
                         </w.rf>
                         <form>tikt</form>
@@ -2467,17 +2467,17 @@
                       <role>basElem</role>
                       <ord>3</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p18s1x3">
+                        <node id="a-c70-Cairo-p18s1x3">
                           <role>adv</role>
                           <children>
                             <xinfo>
                               <xtype>xPrep</xtype>
                               <tag>pp0msdn[rel]</tag>
                               <children>
-                                <node id="a-CairoCiclingCorpus-p18s1w4">
-                                  <m.rf id="m-CairoCiclingCorpus-p18s1w4">
+                                <node id="a-c70-Cairo-p18s1w4">
+                                  <m.rf id="m-c70-Cairo-p18s1w4">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p18w4">
+                                    <w.rf id="w-c70-Cairo-p18w4">
                                       <token>viņam</token>
                                     </w.rf>
                                     <form>viņam</form>
@@ -2487,10 +2487,10 @@
                                   <role>basElem</role>
                                   <ord>4</ord>
                                 </node>
-                                <node id="a-CairoCiclingCorpus-p18s1w5">
-                                  <m.rf id="m-CairoCiclingCorpus-p18s1w5">
+                                <node id="a-c70-Cairo-p18s1w5">
+                                  <m.rf id="m-c70-Cairo-p18s1w5">
                                     <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-CairoCiclingCorpus-p18w5">
+                                    <w.rf id="w-c70-Cairo-p18w5">
                                       <token>līdzi</token>
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
@@ -2509,10 +2509,10 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-CairoCiclingCorpus-p18s1w1">
-                  <m.rf id="m-CairoCiclingCorpus-p18s1w1">
+                <node id="a-c70-Cairo-p18s1w1">
+                  <m.rf id="m-c70-Cairo-p18s1w1">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p18w1">
+                    <w.rf id="w-c70-Cairo-p18w1">
                       <token>Es</token>
                     </w.rf>
                     <form>Es</form>
@@ -2524,10 +2524,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-CairoCiclingCorpus-p18s1w12">
-              <m.rf id="m-CairoCiclingCorpus-p18s1w12">
+            <node id="a-c70-Cairo-p18s1w12">
+              <m.rf id="m-c70-Cairo-p18s1w12">
                 <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-CairoCiclingCorpus-p18w12">
+                <w.rf id="w-c70-Cairo-p18w12">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
@@ -2539,16 +2539,16 @@
             </node>
           </children>
         </pmcinfo>
-        <node id="a-CairoCiclingCorpus-p18s1x1">
+        <node id="a-c70-Cairo-p18s1x1">
           <role>motivCl</role>
           <children>
             <pmcinfo>
               <pmctype>subrCl</pmctype>
               <children>
-                <node id="a-CairoCiclingCorpus-p18s1w6">
-                  <m.rf id="m-CairoCiclingCorpus-p18s1w6">
+                <node id="a-c70-Cairo-p18s1w6">
+                  <m.rf id="m-c70-Cairo-p18s1w6">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p18w6">
+                    <w.rf id="w-c70-Cairo-p18w6">
                       <token>,</token>
                     </w.rf>
                     <form>,</form>
@@ -2558,10 +2558,10 @@
                   <role>punct</role>
                   <ord>6</ord>
                 </node>
-                <node id="a-CairoCiclingCorpus-p18s1w7">
-                  <m.rf id="m-CairoCiclingCorpus-p18s1w7">
+                <node id="a-c70-Cairo-p18s1w7">
+                  <m.rf id="m-c70-Cairo-p18s1w7">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p18w7">
+                    <w.rf id="w-c70-Cairo-p18w7">
                       <token>jo</token>
                     </w.rf>
                     <form>jo</form>
@@ -2571,10 +2571,10 @@
                   <role>conj</role>
                   <ord>7</ord>
                 </node>
-                <node id="a-CairoCiclingCorpus-p18s1w9">
-                  <m.rf id="m-CairoCiclingCorpus-p18s1w9">
+                <node id="a-c70-Cairo-p18s1w9">
+                  <m.rf id="m-c70-Cairo-p18s1w9">
                     <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-CairoCiclingCorpus-p18w9">
+                    <w.rf id="w-c70-Cairo-p18w9">
                       <token>skrēja</token>
                     </w.rf>
                     <form>skrēja</form>
@@ -2584,10 +2584,10 @@
                   <role>pred</role>
                   <ord>9</ord>
                   <children>
-                    <node id="a-CairoCiclingCorpus-p18s1w8">
-                      <m.rf id="m-CairoCiclingCorpus-p18s1w8">
+                    <node id="a-c70-Cairo-p18s1w8">
+                      <m.rf id="m-c70-Cairo-p18s1w8">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p18w8">
+                        <w.rf id="w-c70-Cairo-p18w8">
                           <token>viņš</token>
                         </w.rf>
                         <form>viņš</form>
@@ -2597,10 +2597,10 @@
                       <role>subj</role>
                       <ord>8</ord>
                     </node>
-                    <node id="a-CairoCiclingCorpus-p18s1w11">
-                      <m.rf id="m-CairoCiclingCorpus-p18s1w11">
+                    <node id="a-c70-Cairo-p18s1w11">
+                      <m.rf id="m-c70-Cairo-p18s1w11">
                         <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-CairoCiclingCorpus-p18w11">
+                        <w.rf id="w-c70-Cairo-p18w11">
                           <token>ātri</token>
                           <no_space_after>1</no_space_after>
                         </w.rf>
@@ -2611,10 +2611,10 @@
                       <role>adv</role>
                       <ord>11</ord>
                       <children>
-                        <node id="a-CairoCiclingCorpus-p18s1w10">
-                          <m.rf id="m-CairoCiclingCorpus-p18s1w10">
+                        <node id="a-c70-Cairo-p18s1w10">
+                          <m.rf id="m-c70-Cairo-p18s1w10">
                             <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-CairoCiclingCorpus-p18w10">
+                            <w.rf id="w-c70-Cairo-p18w10">
                               <token>pārāk</token>
                             </w.rf>
                             <form>pārāk</form>

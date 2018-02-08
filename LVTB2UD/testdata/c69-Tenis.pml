@@ -3,8 +3,8 @@
   <head>
     <schema href="lvaschema.xml" />
     <references>
-      <reffile id="m" name="mdata" href="../tenis.m" />
-      <reffile id="w" name="wdata" href="../tenis.w" />
+      <reffile id="m" name="mdata" href="../c69-Tenis.m" />
+      <reffile id="w" name="wdata" href="../c69-Tenis.w" />
     </references>
   </head>
   <meta>
@@ -13,23 +13,23 @@
     </annotation_info>
   </meta>
   <trees>
-    <LM id="a-tenis-p1s1">
-      <s.rf>m#m-tenis-p1s1</s.rf>
+    <LM id="a-c69-Tenis-p1s1">
+      <s.rf>m#m-c69-Tenis-p1s1</s.rf>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
-            <node id="a-tenis-p1s1x1">
+            <node id="a-c69-Tenis-p1s1x1">
               <role>pred</role>
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
-                  <tag>vmyrp000pan[actpmn]</tag>
+                  <tag>vm0rp000pan[actpmn]</tag>
                   <children>
-                    <node id="a-tenis-p1s1w7">
-                      <m.rf id="m-tenis-p1s1w7">
+                    <node id="a-c69-Tenis-p1s1w7">
+                      <m.rf id="m-c69-Tenis-p1s1w7">
                         <src.rf>experimental</src.rf>
-                        <w.rf id="w-tenis-p1w7">
+                        <w.rf id="w-c69-Tenis-p1w7">
                           <token>esot</token>
                         </w.rf>
                         <form>esot</form>
@@ -39,32 +39,32 @@
                       <role>auxVerb</role>
                       <ord>7</ord>
                     </node>
-                    <node id="a-tenis-p1s1w8">
-                      <m.rf id="m-tenis-p1s1w8">
+                    <node id="a-c69-Tenis-p1s1w8">
+                      <m.rf id="m-c69-Tenis-p1s1w8">
                         <src.rf>experimental</src.rf>
-                        <w.rf id="w-tenis-p1w8">
+                        <w.rf id="w-c69-Tenis-p1w8">
                           <token>ieradušies</token>
                         </w.rf>
                         <form>ieradušies</form>
                         <lemma>ierasties</lemma>
-                        <tag>vmypdmpnasnp</tag>
+                        <tag>vmypdmpnasnpn</tag>
                       </m.rf>
                       <role>basElem</role>
                       <ord>8</ord>
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-tenis-p1s1x2">
+                <node id="a-c69-Tenis-p1s1x2">
                   <role>subj</role>
                   <children>
                     <coordinfo>
                       <coordtype>crdParts</coordtype>
                       <tag>ncmpn0</tag>
                       <children>
-                        <node id="a-tenis-p1s1w1">
-                          <m.rf id="m-tenis-p1s1w1">
+                        <node id="a-c69-Tenis-p1s1w1">
+                          <m.rf id="m-c69-Tenis-p1s1w1">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w1">
+                            <w.rf id="w-c69-Tenis-p1w1">
                               <token>Alfrēds</token>
                             </w.rf>
                             <form>Alfrēds</form>
@@ -74,10 +74,10 @@
                           <role>crdPart</role>
                           <ord>1</ord>
                         </node>
-                        <node id="a-tenis-p1s1w2">
-                          <m.rf id="m-tenis-p1s1w2">
+                        <node id="a-c69-Tenis-p1s1w2">
+                          <m.rf id="m-c69-Tenis-p1s1w2">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w2">
+                            <w.rf id="w-c69-Tenis-p1w2">
                               <token>un</token>
                             </w.rf>
                             <form>un</form>
@@ -87,10 +87,10 @@
                           <role>conj</role>
                           <ord>2</ord>
                         </node>
-                        <node id="a-tenis-p1s1w3">
-                          <m.rf id="m-tenis-p1s1w3">
+                        <node id="a-c69-Tenis-p1s1w3">
+                          <m.rf id="m-c69-Tenis-p1s1w3">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w3">
+                            <w.rf id="w-c69-Tenis-p1w3">
                               <token>Bernards</token>
                             </w.rf>
                             <form>Bernards</form>
@@ -104,17 +104,17 @@
                     </coordinfo>
                   </children>
                 </node>
-                <node id="a-tenis-p1s1x3">
+                <node id="a-c69-Tenis-p1s1x3">
                   <role>adv</role>
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
                       <tag>ncfsa0[pre]</tag>
                       <children>
-                        <node id="a-tenis-p1s1w4">
-                          <m.rf id="m-tenis-p1s1w4">
+                        <node id="a-c69-Tenis-p1s1w4">
+                          <m.rf id="m-c69-Tenis-p1s1w4">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w4">
+                            <w.rf id="w-c69-Tenis-p1w4">
                               <token>uz</token>
                             </w.rf>
                             <form>uz</form>
@@ -124,10 +124,10 @@
                           <role>prep</role>
                           <ord>4</ord>
                         </node>
-                        <node id="a-tenis-p1s1w6">
-                          <m.rf id="m-tenis-p1s1w6">
+                        <node id="a-c69-Tenis-p1s1w6">
+                          <m.rf id="m-c69-Tenis-p1s1w6">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w6">
+                            <w.rf id="w-c69-Tenis-p1w6">
                               <token>konferenci</token>
                             </w.rf>
                             <form>konferenci</form>
@@ -137,10 +137,10 @@
                           <role>basElem</role>
                           <ord>6</ord>
                           <children>
-                            <node id="a-tenis-p1s1w5">
-                              <m.rf id="m-tenis-p1s1w5">
+                            <node id="a-c69-Tenis-p1s1w5">
+                              <m.rf id="m-c69-Tenis-p1s1w5">
                                 <src.rf>experimental</src.rf>
-                                <w.rf id="w-tenis-p1w5">
+                                <w.rf id="w-c69-Tenis-p1w5">
                                   <token>datorlingvistikas</token>
                                 </w.rf>
                                 <form>datorlingvistikas</form>
@@ -156,17 +156,17 @@
                     </xinfo>
                   </children>
                 </node>
-                <node id="a-tenis-p1s1x4">
+                <node id="a-c69-Tenis-p1s1x4">
                   <role>adv</role>
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
                       <tag>ncmsg0[pre]</tag>
                       <children>
-                        <node id="a-tenis-p1s1w9">
-                          <m.rf id="m-tenis-p1s1w9">
+                        <node id="a-c69-Tenis-p1s1w9">
+                          <m.rf id="m-c69-Tenis-p1s1w9">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w9">
+                            <w.rf id="w-c69-Tenis-p1w9">
                               <token>no</token>
                             </w.rf>
                             <form>no</form>
@@ -176,10 +176,10 @@
                           <role>prep</role>
                           <ord>9</ord>
                         </node>
-                        <node id="a-tenis-p1s1w10">
-                          <m.rf id="m-tenis-p1s1w10">
+                        <node id="a-c69-Tenis-p1s1w10">
+                          <m.rf id="m-c69-Tenis-p1s1w10">
                             <src.rf>experimental</src.rf>
-                            <w.rf id="w-tenis-p1w10">
+                            <w.rf id="w-c69-Tenis-p1w10">
                               <token>rīta</token>
                               <no_space_after>1</no_space_after>
                             </w.rf>
@@ -196,10 +196,10 @@
                 </node>
               </children>
             </node>
-            <node id="a-tenis-p1s1w11">
-              <m.rf id="m-tenis-p1s1w11">
+            <node id="a-c69-Tenis-p1s1w11">
+              <m.rf id="m-c69-Tenis-p1s1w11">
                 <src.rf>experimental</src.rf>
-                <w.rf id="w-tenis-p1w11">
+                <w.rf id="w-c69-Tenis-p1w11">
                   <token>.</token>
                 </w.rf>
                 <form>.</form>
