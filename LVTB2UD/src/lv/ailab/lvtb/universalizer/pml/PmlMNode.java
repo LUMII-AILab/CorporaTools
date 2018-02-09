@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.pml;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,17 +30,16 @@ public interface PmlMNode
 	 */
 	public String getForm();
 	/**
-	 * Determine, if final token in this morphological unit has no_space_after
-	 * set.
-	 * @return	true, if there is no space after this unit
-	 */
-	public Boolean getNoSpaceAfter();
-
-	/**
 	 * Get all form_change values.
 	 * @return unordered set of values
 	 */
 	public Set<LvtbFormChange> getFormChange();
+
+	/**
+	 * Get list of all underlying w nodes in the order they occur in the text.
+	 * @return list of w nodes
+	 */
+	public List<PmlWNode> getWs();
 
 	/**
 	 * Reconstruct source string (before error corrections) from underlying w

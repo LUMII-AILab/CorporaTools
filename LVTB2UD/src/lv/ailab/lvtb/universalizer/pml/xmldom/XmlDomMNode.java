@@ -2,11 +2,13 @@ package lv.ailab.lvtb.universalizer.pml.xmldom;
 
 import lv.ailab.lvtb.universalizer.pml.LvtbFormChange;
 import lv.ailab.lvtb.universalizer.pml.PmlMNode;
+import lv.ailab.lvtb.universalizer.pml.PmlWNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class XmlDomMNode implements PmlMNode
@@ -90,12 +92,12 @@ public class XmlDomMNode implements PmlMNode
 		}
 	}
 
-	/**
+	/*
 	 * Determine, if final token in this morphological unit has no_space_after
 	 * set.
 	 * @return	true, if there is no space after this unit
 	 */
-	@Override
+	/*@Override
 	public Boolean getNoSpaceAfter()
 	{
 		if (domNode == null) return null;
@@ -104,6 +106,32 @@ public class XmlDomMNode implements PmlMNode
 			return "1".equals(XPathEngine.get().evaluate(
 					"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", domNode));
 		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}*/
+
+	/**
+	 * Get list of all underlying w nodes in the order they occur in the text.
+	 * @return list of w nodes
+	 */
+	@Override
+	public ArrayList<PmlWNode> getWs()
+	{
+		try
+		{
+			NodeList wNodes = (NodeList) XPathEngine.get().evaluate(
+					"./w.rf/LM", domNode, XPathConstants.NODESET);
+			if (wNodes == null || wNodes.getLength() < 1)
+				wNodes = (NodeList) XPathEngine.get().evaluate(
+						"./w.rf", domNode, XPathConstants.NODESET);
+			if (wNodes == null || wNodes.getLength() < 1) return null;
+			ArrayList<PmlWNode> res = new ArrayList<>();
+			for (int i = 0; i < wNodes.getLength(); i++)
+				res.add(new XmlDomWNode(wNodes.item(i)));
+			return res;
+		}
+		catch (XPathExpressionException e)
 		{
 			throw new IllegalArgumentException(e);
 		}
@@ -148,7 +176,17 @@ public class XmlDomMNode implements PmlMNode
 	 */
 	public String getSourceString()
 	{
-		try
+		ArrayList<PmlWNode> ws = getWs();
+		if (ws == null || ws.isEmpty()) return null;
+		StringBuilder res = new StringBuilder();
+		for (PmlWNode w : ws)
+		{
+			res.append(w.getToken());
+			if (!w.noSpaceAfter()) res.append(" ");
+		}
+		return res.toString().trim();
+		// Old code might be faster, but it also is more fragile for inheritance
+		/*try
 		{
 			NodeList wNodes = (NodeList) XPathEngine.get().evaluate(
 					"./w.rf/LM", domNode, XPathConstants.NODESET);
@@ -170,6 +208,6 @@ public class XmlDomMNode implements PmlMNode
 		} catch (XPathExpressionException e)
 		{
 			throw new IllegalArgumentException(e);
-		}
+		}*/
 	}
 }

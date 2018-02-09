@@ -5,15 +5,14 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbFormChange;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.PmlMNode;
+import lv.ailab.lvtb.universalizer.pml.PmlWNode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
+import lv.ailab.lvtb.universalizer.pml.utils.PmlIdUtils;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,55 +37,55 @@ public class MorphoTransformator {
 	 */
 	public void transformTokens()
 	{
+		// Find all nodes having both morpho and ord fields, and sort them
+		// according to ord.
 		List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
 		tokenNodes = PmlANodeListUtils.asOrderedList(tokenNodes);
-		/*// Selects ord numbers from the tree.
-		NodeList ordNodes = (NodeList) XPathEngine.get().evaluate(".//node[m.rf]/ord",
-				s.pmlTree, XPathConstants.NODESET);
-		List<Integer> ords = new ArrayList<>();
-		for (int i = 0; i < ordNodes.getLength(); i++)
-		{
-			String ordText = ordNodes.item(i).getTextContent();
-			if (ordText != null && ordText.trim().length() > 0)
-				ords.add(Integer.parseInt(ordText.trim()));
-		}
-		ords = ords.stream().sorted().collect(Collectors.toList());//*/
-		// Finds all nodes and makes CoNLL-U tokens from them.
 		Token previousToken = null;
-		String prevMId = null;
+		//String prevMId = null;
+		PmlWNode prevW = null;
 		int prevOrd = Integer.MIN_VALUE;
-		//for (int currentOrd : ords)
+		// Make CoNLL token from each node.
 		for (PmlANode current : tokenNodes)
 		{
 			PmlMNode currentM = current.getM();
+			List<PmlWNode> currentWs = currentM.getWs();
 			Integer currentOrd = current.getOrd();
 			if (currentOrd == null || currentOrd < 1) continue;
-
-			// Find the m node to be processed.
-			//NodeList nodes = (NodeList)XPathEngine.get().evaluate(".//node[m.rf and ord=" + currentOrd + "]",
-			//		s.pmlTree, XPathConstants.NODESET);
 			if (prevOrd == currentOrd)
 			{
-				//warnOut.printf("\"%s\" has several nodes with ord \"%s\", only first used!\n",	s.id, currentOrd);
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" has several nodes with ord \"%s\", arbitrary order used!", s.id, currentOrd));
 			}
 
 			// Determine, if paragraph has border before this token.
 			boolean paragraphChange = false;
-			String mId = currentM.getId();
-			if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
-				mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
-			//else warnOut.println("Node id \"" + mId + "\" does not match paragraph searching pattern!");
-			else logger.doInsentenceWarning(String.format(
-					"Node id \"%s\" does not match paragraph searching pattern!", mId));
-			if (prevMId!= null && !prevMId.equals(mId))
-				paragraphChange = true;
+			if (prevW != null && currentWs != null && !currentWs.isEmpty())
+			{
+				PmlWNode nextW = currentWs.get(0);
+				String prevId = prevW.getId();
+				String nextId = nextW.getId();
+				Boolean tempChange = PmlIdUtils.isParaBorderBetween(prevId, nextId);
+				if (tempChange == null)
+					logger.doInsentenceWarning(String.format(
+							"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
+							prevId, nextId));
+				else paragraphChange = tempChange;
+			}
+			//String mId = currentM.getId();
+			//if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
+			//	mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
+			//else logger.doInsentenceWarning(String.format(
+			//		"Node id \"%s\" does not match paragraph searching pattern!", mId));
+			//if (prevMId!= null && !prevMId.equals(mId))
+			//	paragraphChange = true;
 
 			// Make new token.
 			previousToken = transformCurrentToken(current, previousToken, paragraphChange);
 
-			prevMId = mId;
+			//prevMId = mId;
+			if (currentWs != null && !currentWs.isEmpty())
+				prevW = currentWs.get(currentWs.size() - 1);
 			prevOrd = currentOrd;
 		}
 	}
@@ -94,7 +93,7 @@ public class MorphoTransformator {
 	protected Token makeNewToken(
 			int tokenIdBegin, int tokenIdDecimal, String pmlId,
 			String form, String lemma, String tag,
-			PmlANode placementNode, List<String> miscFlags, boolean representative)
+			PmlANode placementNode, Set<String> miscFlags, boolean representative)
 	{
 		Token resTok = new Token(tokenIdBegin, form, lemma, tag == null ? null : getXpostag(tag, null));
 		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
@@ -112,6 +111,22 @@ public class MorphoTransformator {
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);
 		return resTok;
+	}
+
+	protected boolean hasParaChange(PmlWNode one, PmlWNode other)
+	{
+		String firstId = one.getId();
+		String lastId = other.getId();
+		Boolean innerParaChange = PmlIdUtils.isParaBorderBetween(
+				firstId, lastId);
+		if (innerParaChange == null)
+		{
+			logger.doInsentenceWarning(String.format(
+					"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
+					firstId, lastId));
+			return false;
+		}
+		return innerParaChange;
 	}
 
 	/**
@@ -132,7 +147,9 @@ public class MorphoTransformator {
 		String mLemma = mNode.getLemma();
 		String lvtbTag = mNode.getTag();
 		String lvtbAId = aNode.getId();
-		boolean noSpaceAfter = mNode.getNoSpaceAfter();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
 		// Starting from UD v2 numbers and certain abbrieavations are allowed to
 		// be tokens with spaces.
@@ -143,19 +160,8 @@ public class MorphoTransformator {
 			Set<LvtbFormChange> formChanges = mNode.getFormChange();
 			if (formChanges == null) formChanges = new HashSet<>();
 			String source = mNode.getSourceString();
-			//Gadījumi:
-			//--------- Nav jādala sīkāk
-			// 1) viss sakrīt -- neko nedara
-			// 2) tokens ir ielikts -- liek decimālo tokenu?
-			// 3) tokenā ir tikai druķenes (spell), lieku atstarpju nav -- lieto
-			//--------- Ir jādala sīkāk
-			// 4) oriģinālā ir vairāk atstarpju kā beigās + druķenes? +
-			// 5) tokenam ir pielīmēta pieturzīme
-			//-------- Pārklājas ar nākamo tokenu? die
 
-			// TODO: paragraph change in the middle of union morph!!!!!!!
-
-			ArrayList<String> miscFlags = new ArrayList<>();
+			HashSet<String> miscFlags = new HashSet<>();
 			if (noSpaceAfter) miscFlags.add("SpaceAfter=No");
 			if (paragraphChange) miscFlags.add("NewPar=Yes");
 			if (mForm.equals(source))
@@ -163,7 +169,10 @@ public class MorphoTransformator {
 			//	Add note to misc field if retokenization has been done.
 			{
 				if (formChanges.contains(LvtbFormChange.SPACING))
-					miscFlags.add("CorrectionType=Spacing");
+					miscFlags.add("CorrectionType=Spacing"); // This actually happens?
+				if (wNodes != null && wNodes.size() > 1 &&
+						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+						miscFlags.add("NewPar=Yes");
 				return makeNewToken(
 						previousToken == null ? 1 : previousToken.idBegin + 1,
 						0, lvtbAId, mForm, mLemma, lvtbTag, aNode,
@@ -185,6 +194,9 @@ public class MorphoTransformator {
 							"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
 							lvtbAId, mForm, source));
 					miscFlags.add("CorrectedForm="+mForm);
+					if (wNodes != null && wNodes.size() > 1 &&
+							hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+						miscFlags.add("NewPar=Yes");
 					return makeNewToken(
 							previousToken == null ? 1 : previousToken.idBegin + 1,
 							0, lvtbAId, source, mLemma, lvtbTag,
@@ -196,6 +208,9 @@ public class MorphoTransformator {
 			{
 				miscFlags.add("CorrectedForm="+mForm);
 				miscFlags.add("CorrectionType=Spelling");
+				if (wNodes != null && wNodes.size() > 1 &&
+						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+					miscFlags.add("NewPar=Yes");
 				return makeNewToken(
 						previousToken == null ? 1 : previousToken.idBegin + 1,
 						0, lvtbAId, source, mLemma, lvtbTag, aNode,
@@ -235,6 +250,9 @@ public class MorphoTransformator {
 						previousToken.idBegin + 1, 0, lvtbAId,
 						lastPart, null, null, aNode, null, false);
 				nextToken.misc.add("CorrectionType=RemovedPunctuation");
+				if (wNodes != null && wNodes.size() > 1 &&
+						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+					nextToken.misc.add("NewPar=Yes");
 				nextToken.setParentDeps(
 						previousToken, UDv2Relations.PUNCT, true, true);
 				//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
@@ -262,6 +280,9 @@ public class MorphoTransformator {
 							previousToken.idBegin + 1, 0,
 							lvtbAId, lastPart, null, null, aNode, null, false);
 					nextToken.misc.add("CorrectionType=RemovedPunctuation");
+					if (wNodes != null && wNodes.size() > 1 &&
+							hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+						nextToken.misc.add("NewPar=Yes");
 					nextToken.setParentDeps(previousToken, UDv2Relations.PUNCT, true, true);
 					//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
 					//nextToken.deprel = UDv2Relations.PUNCT;
@@ -276,28 +297,42 @@ public class MorphoTransformator {
 							formChanges.stream().map(LvtbFormChange::toString)
 									.reduce((s1, s2) -> s1 + "\", \"" + s2).orElse("")));
 				}
-
 			}
 			else if (formChanges.contains(LvtbFormChange.UNION) &&
 					formChanges.contains(LvtbFormChange.SPACING) &&
 					(formChanges.size() == 2 ||
 						formChanges.size() == 3 &&
-						formChanges.contains(LvtbFormChange.SPELL)))
+						formChanges.contains(LvtbFormChange.SPELL)) &&
+					wNodes != null && wNodes.size() > 1)
 			// Words that must be written together.
 			{
-				String[] parts = source.split("\\s+");
+				LinkedList<PmlWNode> unprocessedWs = new LinkedList<>();
+				unprocessedWs.addAll(wNodes);
+				LinkedList<PmlWNode> forNexTok = new LinkedList<>();
+				while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
+					forNexTok.push(unprocessedWs.remove());
 				miscFlags.add("CorrectedForm="+mForm);
 				miscFlags.add("CorrectionType=Spacing,Spelling");
+				if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
+					miscFlags.add("NewPar=Yes");
 				previousToken = makeNewToken(
 						previousToken == null ? 1 : previousToken.idBegin + 1,
-						0,	lvtbAId, parts[1], mLemma, lvtbTag, aNode,
-						miscFlags, true);
-				for (int i = 1; i < parts.length; i++)
+						0,	lvtbAId,
+						forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
+						mLemma, lvtbTag, aNode, miscFlags, true);
+				while (!unprocessedWs.isEmpty())
 				{
+					forNexTok = new LinkedList<>();
+					while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
+						forNexTok.push(unprocessedWs.remove());
 					Token nextToken = makeNewToken(
-							previousToken.idBegin + 1, 0,
-							lvtbAId, parts[i], null, null, aNode, null, false);
-					miscFlags.add("CorrectionType=Spacing,Spelling");
+							previousToken.idBegin + 1,
+							0, lvtbAId,
+							forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
+							null, null, aNode, null, false);
+					nextToken.misc.add("CorrectionType=Spacing,Spelling");
+					if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
+						nextToken.misc.add("NewPar=Yes");
 					nextToken.setParentDeps(previousToken, UDv2Relations.GOESWITH, true, true);
 					//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
 					//nextToken.deprel = UDv2Relations.GOESWITH;
@@ -319,81 +354,10 @@ public class MorphoTransformator {
 			throw new IllegalArgumentException(String.format(
 					"Node \"%s\" with form \"%s\" and lemma \"%s\" contains spaces",
 					aNode.getId(), mForm, mLemma));
-			// This obsolete piece of code dealt with "words with spaces" LVTB
-			// used to have in previos versions. However, currently all such
-			// cases should be removed from data.
-			/*
-			int baseOrd = aNode.getOrd();
-			if (baseOrd < 1)
-				throw new IllegalArgumentException(String.format(
-						"Node %s has no ord value", aNode.getId()));
-
-			String[] forms = mForm.split(" ");
-			String[] lemmas = mLemma.split(" ");
-			if (forms.length != lemmas.length)
-				logger.doInsentenceWarning(String.format(
-						"\"%s\" form \"%s\" do not match \"%s\" on spaces!", s.id, mForm, mLemma));
-
-			// First one is different.
-			Token firstTok = new Token(baseOrd + offset, forms[0],
-					lemmas[0], getXpostag(lvtbTag, "_SPLIT_FIRST"));
-			if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
-			{
-				firstTok.misc.add("LvtbNodeId=" + lvtbAId);
-				logger.addIdMapping(s.id, firstTok.getFirstColumn(), lvtbAId);
-			}
-			if (lvtbTag.matches("xf.*"))
-			{
-				//warnOut.printf("Processing unsplit xf \"%s\", check in treebank!", mForm);
-				logger.doInsentenceWarning(String.format(
-						"Processing unsplit xf \"%s\", check in treebank!", mForm));
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
-			}
-			else if (lvtbTag.matches("x[ux].*"))
-			{
-				firstTok.upostag = PosLogic.getUPosTag(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, firstTok.xpostag, aNode, logger);
-			}
-			else
-			{
-				firstTok.upostag = UDv2PosTag.PART;
-				firstTok.feats = FeatsLogic.getUFeats(firstTok.form, firstTok.lemma, "qs", aNode, logger);
-			}
-			if (paragraphChange) firstTok.misc.add("NewPar=Yes");
-			s.conll.add(firstTok);
-			s.pmlaToConll.put(aNode.getId(), firstTok);
-
-			// The rest
-			for (int i = 1; i < forms.length && i < lemmas.length; i++)
-			{
-				offset++;
-				Token nextTok = new Token(baseOrd + offset, forms[i],
-						lemmas[i], getXpostag(lvtbTag, "_SPLIT_PART"));
-				if (params.ADD_NODE_IDS && lvtbAId != null && !lvtbAId.isEmpty())
-				{
-					nextTok.misc.add("LvtbNodeId=" + lvtbAId);
-					logger.addIdMapping(s.id, nextTok.getFirstColumn(), lvtbAId);
-
-				}
-				if (i == forms.length - 1 || i == lemmas.length - 1 || lvtbTag.matches("x.*"))
-				{
-					nextTok.upostag = PosLogic.getUPosTag(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, nextTok.xpostag, aNode, logger);
-				}
-				else
-				{
-					nextTok.upostag = UDv2PosTag.PART;
-					nextTok.feats = FeatsLogic.getUFeats(nextTok.form, nextTok.lemma, "qs", aNode, logger);
-				}
-				nextTok.head = Tuple.of(firstTok.getFirstColumn(), firstTok);
-				if ((i == forms.length - 1 || i == lemmas.length - 1) && noSpaceAfter)
-					nextTok.misc.add("SpaceAfter=No");
-				if (lvtbTag.matches("xf.*")) nextTok.deprel = UDv2Relations.FLAT_FOREIGN;
-				else if (lvtbTag.matches("x[ux].*")) nextTok.deprel = UDv2Relations.GOESWITH;
-				else nextTok.deprel = UDv2Relations.FIXED;
-				s.conll.add(nextTok);
-			} //*/
+			// There was an  obsolete piece of code that separated in multiple
+			// tokens with "words with spaces" LVTB used to have in previos
+			// versions. However, currently all such cases should be removed
+			// from data.
 		}
 	}
 
