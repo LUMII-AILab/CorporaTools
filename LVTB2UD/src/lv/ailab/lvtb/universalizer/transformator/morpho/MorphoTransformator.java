@@ -81,7 +81,7 @@ public class MorphoTransformator {
 			//	paragraphChange = true;
 
 			// Make new token.
-			previousToken = transformCurrentToken(current, previousToken, paragraphChange);
+			previousToken = transformCurrentNode(current, previousToken, paragraphChange);
 
 			//prevMId = mId;
 			if (currentWs != null && !currentWs.isEmpty())
@@ -90,48 +90,9 @@ public class MorphoTransformator {
 		}
 	}
 
-	protected Token makeNewToken(
-			int tokenIdBegin, int tokenIdDecimal, String pmlId,
-			String form, String lemma, String tag,
-			PmlANode placementNode, Set<String> miscFlags, boolean representative)
-	{
-		Token resTok = new Token(tokenIdBegin, form, lemma, tag == null ? null : getXpostag(tag, null));
-		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
-		if (params.ADD_NODE_IDS && pmlId != null && !pmlId.isEmpty())
-		{
-			resTok.misc.add("LvtbNodeId=" + pmlId);
-			logger.addIdMapping(s.id, resTok.getFirstColumn(), pmlId);
-		}
-		if (resTok.xpostag != null)
-		{
-			resTok.upostag = PosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
-			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
-		}
-		if (miscFlags != null) resTok.misc.addAll(miscFlags);
-		s.conll.add(resTok);
-		if (representative) s.pmlaToConll.put(pmlId, resTok);
-		return resTok;
-	}
-
-	protected boolean hasParaChange(PmlWNode one, PmlWNode other)
-	{
-		String firstId = one.getId();
-		String lastId = other.getId();
-		Boolean innerParaChange = PmlIdUtils.isParaBorderBetween(
-				firstId, lastId);
-		if (innerParaChange == null)
-		{
-			logger.doInsentenceWarning(String.format(
-					"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
-					firstId, lastId));
-			return false;
-		}
-		return innerParaChange;
-	}
-
 	/**
-	 * Helper method: Create CoNLL-U table entry for one token, fill in ID,
-	 * FORM, LEMMA, XPOSTAG, UPOSTAG and FEATS fields.
+	 * Helper method: Create necessary CoNLL table entries describing one M
+	 * node, make links between and fill in necessary fields.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
 	 * @param previousToken		the token after which should follow all newmade
@@ -140,7 +101,7 @@ public class MorphoTransformator {
 	 *                          token.
 	 * @return last token made
 	 */
-	protected Token transformCurrentToken(PmlANode aNode, Token previousToken, boolean paragraphChange)
+	protected Token transformCurrentNode(PmlANode aNode, Token previousToken, boolean paragraphChange)
 	{
 		PmlMNode mNode = aNode.getM();
 		String mForm = mNode.getForm();
@@ -169,7 +130,7 @@ public class MorphoTransformator {
 			//	Add note to misc field if retokenization has been done.
 			{
 				if (formChanges.contains(LvtbFormChange.SPACING))
-					miscFlags.add("CorrectionType=Spacing"); // This actually happens?
+					miscFlags.add("CorrectionType=Spacing"); // This happens if word is split between rows.
 				if (wNodes != null && wNodes.size() > 1 &&
 						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
 						miscFlags.add("NewPar=Yes");
@@ -359,6 +320,57 @@ public class MorphoTransformator {
 			// versions. However, currently all such cases should be removed
 			// from data.
 		}
+	}
+
+	/**
+	 * Helper method: make new token and fill in the values.
+	 * @param representative	should it be put in the PML-A -> CoNLL mapping
+	 *                          of the sentence
+	 * @return	newly made token
+	 */
+	protected Token makeNewToken(
+			int tokenIdBegin, int tokenIdDecimal, String pmlId,
+			String form, String lemma, String tag,
+			PmlANode placementNode, Set<String> miscFlags, boolean representative)
+	{
+		Token resTok = new Token(tokenIdBegin, form, lemma, tag == null ? null : getXpostag(tag, null));
+		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
+		if (params.ADD_NODE_IDS && pmlId != null && !pmlId.isEmpty())
+		{
+			resTok.misc.add("LvtbNodeId=" + pmlId);
+			logger.addIdMapping(s.id, resTok.getFirstColumn(), pmlId);
+		}
+		if (resTok.xpostag != null)
+		{
+			resTok.upostag = PosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
+			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
+		}
+		if (miscFlags != null) resTok.misc.addAll(miscFlags);
+		s.conll.add(resTok);
+		if (representative) s.pmlaToConll.put(pmlId, resTok);
+		return resTok;
+	}
+
+	/**
+	 * Helper method : checks if there are paragraph change between two w nodes
+	 * and warns on all problems.
+	 * @return 	either result of PmlIdUtils.isParaBorderBetween() or false in
+	 * 			the case of any problem
+	 */
+	protected boolean hasParaChange(PmlWNode one, PmlWNode other)
+	{
+		String firstId = one.getId();
+		String lastId = other.getId();
+		Boolean innerParaChange = PmlIdUtils.isParaBorderBetween(
+				firstId, lastId);
+		if (innerParaChange == null)
+		{
+			logger.doInsentenceWarning(String.format(
+					"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
+					firstId, lastId));
+			return false;
+		}
+		return innerParaChange;
 	}
 
 	/**
