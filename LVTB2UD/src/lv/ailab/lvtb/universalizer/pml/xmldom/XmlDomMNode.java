@@ -1,8 +1,13 @@
 package lv.ailab.lvtb.universalizer.pml.xmldom;
 
+import lv.ailab.lvtb.universalizer.pml.LvtbFormChange;
 import lv.ailab.lvtb.universalizer.pml.PmlMNode;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import java.util.HashSet;
 
 public class XmlDomMNode implements PmlMNode
 {
@@ -98,6 +103,70 @@ public class XmlDomMNode implements PmlMNode
 		{
 			return "1".equals(XPathEngine.get().evaluate(
 					"./w.rf/no_space_after|./w.rf/LM[last()]/no_space_after", domNode));
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
+	 * Get all form_change values.
+	 * @return unordered set of values
+	 */
+	public HashSet<LvtbFormChange> getFormChange()
+	{
+		if (domNode == null) return null;
+		try
+		{
+			HashSet<LvtbFormChange> res = new HashSet<>();
+			NodeList formChange = (NodeList) XPathEngine.get().evaluate(
+					"./form_change/LM", domNode, XPathConstants.NODESET);
+			if (formChange == null || formChange.getLength() < 1)
+				formChange = (NodeList) XPathEngine.get().evaluate(
+						"./form_change", domNode, XPathConstants.NODESET);
+			if (formChange != null && formChange.getLength() > 0)
+				for (int i = 0; i < formChange.getLength(); i++)
+			{
+				String encoded = formChange.item(i).getTextContent().trim();
+				LvtbFormChange decoded = LvtbFormChange.fromString(encoded);
+				if (decoded != null) res.add(decoded);
+				else if (!encoded.isEmpty())
+					throw new IllegalArgumentException(String.format(
+							"Illegal form_change value \"%s\"", encoded));
+			}
+			if (res.isEmpty()) return null;
+			return res;
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+	/**
+	 * Reconstruct source string (before error corrections) from underlying w
+	 * level tokens.
+	 * @return	source string without leading or trailing whitespace
+	 */
+	public String getSourceString()
+	{
+		try
+		{
+			NodeList wNodes = (NodeList) XPathEngine.get().evaluate(
+					"./w.rf/LM", domNode, XPathConstants.NODESET);
+			if (wNodes == null || wNodes.getLength() < 1)
+				wNodes = (NodeList) XPathEngine.get().evaluate(
+						"./w.rf", domNode, XPathConstants.NODESET);
+			if (wNodes == null || wNodes.getLength() < 1) return null;
+			StringBuilder res = new StringBuilder();
+			for (int i = 0; i < wNodes.getLength(); i++)
+			{
+				res.append(XPathEngine.get().evaluate(
+						"./token", wNodes.item(i)));
+				if (!"1".equals(XPathEngine.get().evaluate(
+						"./no_space_after", wNodes.item(i))))
+					res.append(" ");
+			}
+			return res.toString().trim();
+
 		} catch (XPathExpressionException e)
 		{
 			throw new IllegalArgumentException(e);

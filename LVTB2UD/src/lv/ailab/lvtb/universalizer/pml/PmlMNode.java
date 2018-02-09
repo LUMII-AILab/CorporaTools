@@ -1,5 +1,7 @@
 package lv.ailab.lvtb.universalizer.pml;
 
+import java.util.Set;
+
 /**
  * Simplified PML-M level interface. As of now, this interface do not require
  * node to know which sentence it belongs or who are its siblings
@@ -33,4 +35,16 @@ public interface PmlMNode
 	 */
 	public Boolean getNoSpaceAfter();
 
+	/**
+	 * Get all form_change values.
+	 * @return unordered set of values
+	 */
+	public Set<LvtbFormChange> getFormChange();
+
+	/**
+	 * Reconstruct source string (before error corrections) from underlying w
+	 * level tokens.
+	 * @return	source string without leading or trailing whitespace
+	 */
+	public String getSourceString();
 }

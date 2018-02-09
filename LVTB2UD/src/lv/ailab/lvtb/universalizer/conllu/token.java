@@ -171,6 +171,59 @@ public class Token
 		return res.toString();
 	}
 
+	/**
+	 * Set base and, optionally, enhanced dependency links between two tokens,
+	 * but do not set circular dependencies.
+	 * @param parent		token to make this token's parent
+	 * @param baseDep		label to be used for base dependency
+	 * @param enhancedDep	label to be used for enhanced dependency or null,
+	 *                      if enhanced should not be set
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setParentDeps (Token parent,
+						 UDv2Relations baseDep,
+						 Tuple<UDv2Relations, String> enhancedDep,
+						 boolean setBackbone, boolean cleanOldDeps)
+	{
+		// Set dependencies, but avoid circular dependencies.
+		if (!equals(parent))
+		{
+			// Set base dependency.
+			head = Tuple.of(parent.getFirstColumn(), parent);
+			deprel = baseDep;
+			// Set enhanced dependencie.
+			if (enhancedDep != null)
+			{
+				if (cleanOldDeps) deps.clear();
+				EnhencedDep newDep = new EnhencedDep(parent, enhancedDep.first, enhancedDep.second);
+				deps.add(newDep);
+				if (setBackbone) parent.depsBackbone = newDep;
+			}
+		}
+	}
+
+	/**
+	 * Set base and enhanced dependency links between two tokens, but do not set
+	 * circular dependencies. Assumes base dependency label is the same as
+	 * enhanced. Assumes enhanced label does not need subtype.
+	 * Shortcut method, for more parameters use the other setParentDeps().
+	 * @param parent		token to make this token's parent
+	 * @param dep			label to be used both for base and enhanced
+	 *                      dependency
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setParentDeps (Token parent, UDv2Relations dep,
+							   boolean setBackbone, boolean cleanOldDeps)
+	{
+		setParentDeps(parent, dep, Tuple.of(dep, null), setBackbone, cleanOldDeps);
+	}
+
 /*	public void setSimpleHead(Token token, UDv2Relations role)
 	{
 		head = token.getFirstColumn();
