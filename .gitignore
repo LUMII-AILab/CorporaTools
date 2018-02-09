@@ -8,12 +8,18 @@
 
 /LVTB2UD/out
 /LVTB2UD/lvtb2ud.zip
+/LVTB2UD/.idea/dictionaries
+/LVTB2UD/.idea/workspace.xml
+/LVTB2UD/.idea/tasks.xml
+
+/PmlCorporaTools/.idea/dictionaries
+/PmlCorporaTools/.idea/workspace.xml
+/PmlCorporaTools/.idea/tasks.xml
 
 /PmlCorporaTools/data/
 /PmlCorporaTools/testdata/*/res
 /PmlCorporaTools/testdata/*/logs
 /PmlCorporaTools/testdata/*/warnings
-/PmlCorporaTools/.idea
 /PmlCorporaTools/testdata/Conll2MA/m-a
 /PmlCorporaTools/testdata/SplitTrainDevTest/skip
 /PmlCorporaTools/testdata/SplitTrainDevTest/test
