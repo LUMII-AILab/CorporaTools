@@ -46,23 +46,39 @@ sub processDir
 			if ($output)
 			{
 				my $outFile = "$coreName$ext";
-				eval
+				my $res = eval
 				{
 					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
 					local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
-					local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval warn on die and count it as problem.
+					##local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This is not good.
 					&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
 				};
+				if ($@)
+				{
+					$isBad = 1;
+					print $@;
+				} elsif ($res)
+				{
+					$isBad = 1;
+				}
 			}
 			else
 			{
-				eval
+				my $res = eval
 				{
 					#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
 					local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
-					local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval warn on die and count it as problem.
+					##local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This is not good.
 					&$processFileFunct($dirName, $inFile, @otherPrams);
 				};
+				if ($@)
+				{
+					$isBad = 1;
+					print $@;
+				} elsif ($res)
+				{
+					$isBad = 1;
+				}
 			}
 			$baddies = $baddies + $isBad;
 		}
