@@ -72,13 +72,6 @@ public class MorphoTransformator {
 							prevId, nextId));
 				else paragraphChange = tempChange;
 			}
-			//String mId = currentM.getId();
-			//if (mId.matches("m-.*-p\\d+s\\d+w\\d+"))
-			//	mId = mId.substring(mId.indexOf("-") + 1, mId.lastIndexOf("s"));
-			//else logger.doInsentenceWarning(String.format(
-			//		"Node id \"%s\" does not match paragraph searching pattern!", mId));
-			//if (prevMId!= null && !prevMId.equals(mId))
-			//	paragraphChange = true;
 
 			// Make new token.
 			previousToken = transformCurrentNode(current, previousToken, paragraphChange);
@@ -101,225 +94,448 @@ public class MorphoTransformator {
 	 *                          token.
 	 * @return last token made
 	 */
-	protected Token transformCurrentNode(PmlANode aNode, Token previousToken, boolean paragraphChange)
+	protected Token transformCurrentNode(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
 	{
 		PmlMNode mNode = aNode.getM();
 		String mForm = mNode.getForm();
 		String mLemma = mNode.getLemma();
 		String lvtbTag = mNode.getTag();
 		String lvtbAId = aNode.getId();
-		List<PmlWNode> wNodes = mNode.getWs();
-		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
-				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
 		// Starting from UD v2 numbers and certain abbrieavations are allowed to
 		// be tokens with spaces.
-		if (!(mForm.contains(" ") || mLemma.contains(" ")) ||
-				lvtbTag.matches("x[no].*") ||
-				mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
-		{
-			Set<LvtbFormChange> formChanges = mNode.getFormChange();
-			if (formChanges == null) formChanges = new HashSet<>();
-			String source = mNode.getSourceString();
-
-			HashSet<String> miscFlags = new HashSet<>();
-			if (noSpaceAfter) miscFlags.add("SpaceAfter=No");
-			if (paragraphChange) miscFlags.add("NewPar=Yes");
-			if (mForm.equals(source))
-			// Form matches source - nothing to worry about.
-			//	Add note to misc field if retokenization has been done.
-			{
-				if (formChanges.contains(LvtbFormChange.SPACING))
-					miscFlags.add("CorrectionType=Spacing"); // This happens if word is split between rows.
-				if (wNodes != null && wNodes.size() > 1 &&
-						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-						miscFlags.add("NewPar=Yes");
-				return makeNewToken(
-						previousToken == null ? 1 : previousToken.idBegin + 1,
-						0, lvtbAId, mForm, mLemma, lvtbTag, aNode,
-						miscFlags, true);
-			}
-			else if (formChanges.isEmpty())
-			// Form does not match source, but there is no form_change available
-			{
-				// If source contains spaces, nothing good can be done
-				if (source.matches(".*\\s.*"))
-					throw new IllegalArgumentException(String.format(
-							"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
-							lvtbAId, mForm, source));
-				else
-				// If source contains no spaces, use source as wordform and
-				// add corrected form.
-				{
-					logger.doInsentenceWarning(String.format(
-							"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
-							lvtbAId, mForm, source));
-					miscFlags.add("CorrectedForm="+mForm);
-					if (wNodes != null && wNodes.size() > 1 &&
-							hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-						miscFlags.add("NewPar=Yes");
-					return makeNewToken(
-							previousToken == null ? 1 : previousToken.idBegin + 1,
-							0, lvtbAId, source, mLemma, lvtbTag,
-							aNode, miscFlags, true);
-				}
-			}
-			else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.size() == 1)
-			// If only correction is spelling, add in misc correct form and process as normal
-			{
-				miscFlags.add("CorrectedForm="+mForm);
-				miscFlags.add("CorrectionType=Spelling");
-				if (wNodes != null && wNodes.size() > 1 &&
-						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-					miscFlags.add("NewPar=Yes");
-				return makeNewToken(
-						previousToken == null ? 1 : previousToken.idBegin + 1,
-						0, lvtbAId, source, mLemma, lvtbTag, aNode,
-						miscFlags, true);
-			}
-
-			else if (formChanges.contains(LvtbFormChange.INSERT) && formChanges.contains(LvtbFormChange.PUNCT))
-			// Inserted punctuation
-			{
-				miscFlags.add("CorrectionType=InsertedPunctuation");
-				return makeNewToken(
-						previousToken.idBegin, previousToken.idSub + 1,
-						lvtbAId, source, mLemma, lvtbTag, aNode, miscFlags, true);
-			}
-			else if (formChanges.contains(LvtbFormChange.INSERT))
-			// Some weard inserted thing, shouldn't be there
-			{
-				logger.doInsentenceWarning(String.format(
-						"Node \"%s\" with form \"%s\" has form change \"insert\", but not \"punct\"",
-						aNode.getId(), mForm));
-				miscFlags.add("CorrectionType=Inserted");
-				return makeNewToken(
-						previousToken.idBegin, previousToken.idSub + 1,
-						lvtbAId, source, mLemma, lvtbTag, aNode, miscFlags, true);
-			}
-			else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
-					&& formChanges.size() == 2 && source.startsWith(mForm))
-			// Renmoved punctuation (good case - no other problems)
-			{
-				String lastPart = source.substring(mForm.length());
-				previousToken = makeNewToken(
-						previousToken == null ? 1 : previousToken.idBegin + 1,
-						0, lvtbAId, mForm, mLemma, lvtbTag, aNode,
-						miscFlags, true);
-
-				Token nextToken =  makeNewToken(
-						previousToken.idBegin + 1, 0, lvtbAId,
-						lastPart, null, null, aNode, null, false);
-				nextToken.misc.add("CorrectionType=RemovedPunctuation");
-				if (wNodes != null && wNodes.size() > 1 &&
-						hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-					nextToken.misc.add("NewPar=Yes");
-				nextToken.setParentDeps(
-						previousToken, UDv2Relations.PUNCT, true, true);
-				//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
-				//nextToken.deprel = UDv2Relations.PUNCT;
-				return nextToken;
-			}
-			else if(formChanges.contains(LvtbFormChange.UNION)
-					&& formChanges.contains(LvtbFormChange.PUNCT))
-			// Renmoved punctuation other cases
-			{
-				Matcher m = Pattern.compile("(.*?)([-,.])").matcher(source);
-				if (m.matches() && formChanges.contains(LvtbFormChange.SPELL)
-						&& formChanges.size() == 3)
-				// Together with spelling error
-				{
-					String firstPart = m.group(1);
-					String lastPart = m.group(2);
-					miscFlags.add("CorrectedForm="+mForm);
-					miscFlags.add("CorrectionType=Spelling");
-					previousToken = makeNewToken(
-							previousToken == null ? 1 : previousToken.idBegin + 1,
-							0, lvtbAId, firstPart, mLemma, lvtbTag,
-							aNode, miscFlags, true);
-					Token nextToken = makeNewToken(
-							previousToken.idBegin + 1, 0,
-							lvtbAId, lastPart, null, null, aNode, null, false);
-					nextToken.misc.add("CorrectionType=RemovedPunctuation");
-					if (wNodes != null && wNodes.size() > 1 &&
-							hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-						nextToken.misc.add("NewPar=Yes");
-					nextToken.setParentDeps(previousToken, UDv2Relations.PUNCT, true, true);
-					//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
-					//nextToken.deprel = UDv2Relations.PUNCT;
-					return nextToken;
-				}
-				else
-				// TODO togerther with spacing error
-				{
-					throw new IllegalArgumentException(String.format(
-							"Don't know what to do with node \"%s\" with form \"%s\", w-text \"%s\", and form_change \"%s\"",
-							aNode.getId(), mForm, source,
-							formChanges.stream().map(LvtbFormChange::toString)
-									.reduce((s1, s2) -> s1 + "\", \"" + s2).orElse("")));
-				}
-			}
-			else if (formChanges.contains(LvtbFormChange.UNION) &&
-					formChanges.contains(LvtbFormChange.SPACING) &&
-					(formChanges.size() == 2 ||
-						formChanges.size() == 3 &&
-						formChanges.contains(LvtbFormChange.SPELL)) &&
-					wNodes != null && wNodes.size() > 1)
-			// Words that must be written together.
-			{
-				LinkedList<PmlWNode> unprocessedWs = new LinkedList<>();
-				unprocessedWs.addAll(wNodes);
-				LinkedList<PmlWNode> forNexTok = new LinkedList<>();
-				while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
-					forNexTok.push(unprocessedWs.remove());
-				miscFlags.add("CorrectedForm="+mForm);
-				miscFlags.add("CorrectionType=Spacing,Spelling");
-				if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
-					miscFlags.add("NewPar=Yes");
-				previousToken = makeNewToken(
-						previousToken == null ? 1 : previousToken.idBegin + 1,
-						0,	lvtbAId,
-						forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
-						mLemma, lvtbTag, aNode, miscFlags, true);
-				while (!unprocessedWs.isEmpty())
-				{
-					forNexTok = new LinkedList<>();
-					while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
-						forNexTok.push(unprocessedWs.remove());
-					Token nextToken = makeNewToken(
-							previousToken.idBegin + 1,
-							0, lvtbAId,
-							forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
-							null, null, aNode, null, false);
-					nextToken.misc.add("CorrectionType=Spacing,Spelling");
-					if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
-						nextToken.misc.add("NewPar=Yes");
-					nextToken.setParentDeps(previousToken, UDv2Relations.GOESWITH, true, true);
-					//nextToken.head = Tuple.of(previousToken.getFirstColumn(), previousToken);
-					//nextToken.deprel = UDv2Relations.GOESWITH;
-					previousToken = nextToken;
-				}
-				return previousToken;
-			}
-			else
-			{
-				throw new IllegalArgumentException(String.format(
-						"Don't know what to do with node \"%s\" with form \"%s\", w-text \"%s\", and form_change \"%s\"",
-						aNode.getId(), mForm, source,
-						formChanges.stream().map(LvtbFormChange::toString)
-								.reduce((s1, s2) -> s1 + "\", \"" + s2).orElse("")));
-			}
-		}
-		else
+		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
+				!lvtbTag.matches("x[no].*") &&
+				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 		{
 			throw new IllegalArgumentException(String.format(
 					"Node \"%s\" with form \"%s\" and lemma \"%s\" contains spaces",
-					aNode.getId(), mForm, mLemma));
+					lvtbAId, mForm, mLemma));
 			// There was an  obsolete piece of code that separated in multiple
 			// tokens with "words with spaces" LVTB used to have in previos
 			// versions. However, currently all such cases should be removed
 			// from data.
 		}
+
+		List<PmlWNode> wNodes = mNode.getWs();
+		Set<LvtbFormChange> formChanges = mNode.getFormChange();
+		if (formChanges == null) formChanges = new HashSet<>();
+		String source = mNode.getSourceString();
+
+		// Form matches source - nothing to worry about.
+		if (mForm.equals(source))
+			return transfOnMatch(aNode, previousToken, paragraphChange);
+		// Form does not match source, but there is no form_change available
+		else if (formChanges.isEmpty())
+			return transfOnEmptyFormCh(aNode, previousToken, paragraphChange);
+
+		// If only correction is spelling, add in misc correct form and process as normal
+		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.size() == 1)
+			return transfOnSpellOnly(aNode, previousToken, paragraphChange);
+		// Inserted punctuation
+		else if (formChanges.contains(LvtbFormChange.INSERT) && formChanges.contains(LvtbFormChange.PUNCT)
+				&& formChanges.size() == 2)
+			return transfOnPunctInsert(aNode, previousToken, paragraphChange);
+		// Some weard inserted thing, shouldn't be there
+		else if (formChanges.contains(LvtbFormChange.INSERT))
+			return transfOnOtherInsert(aNode, previousToken, paragraphChange);
+		// Renmoved punctuation (good case - no other problems)
+		else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
+				&& formChanges.size() == 2 && source.startsWith(mForm))
+			return transfOnCleanPunctDel(aNode, previousToken, paragraphChange);
+		// Renmoved punctuation other cases
+		else if(formChanges.contains(LvtbFormChange.UNION)
+				&& formChanges.contains(LvtbFormChange.PUNCT))
+			return transfOnUglyPunctDel(aNode, previousToken, paragraphChange);
+		// Words that must be written together.
+		else if (formChanges.contains(LvtbFormChange.UNION) &&
+				formChanges.contains(LvtbFormChange.SPACING) &&
+				(formChanges.size() == 2 ||
+					formChanges.size() == 3 &&
+					formChanges.contains(LvtbFormChange.SPELL)) &&
+				wNodes != null && wNodes.size() > 1)
+			return transfOnRemovedSpaces(aNode, previousToken, paragraphChange);
+		// Don't know what to do.
+		else
+			throw new IllegalArgumentException(String.format(
+					"Don't know what to do with node \"%s\" with form \"%s\", w-text \"%s\", and form_change \"%s\"",
+					lvtbAId, mForm, source,
+					formChanges.stream().map(LvtbFormChange::toString)
+							.reduce((s1, s2) -> s1 + "\", \"" + s2).orElse("")));
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for mNode where
+	 * source text from w level matches the wordworm.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnMatch(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		Set<LvtbFormChange> formChanges = mNode.getFormChange();
+		if (formChanges == null) formChanges = new HashSet<>();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+
+		Token res = makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId, mForm, mLemma, lvtbTag, aNode, true);
+		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
+		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
+				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+			res.misc.add("NewPar=Yes");
+		//	Add note to misc field if retokenization has been done.
+		if (formChanges.contains(LvtbFormChange.SPACING))
+			res.misc.add("CorrectionType=Spacing"); // This happens if word is split between rows.
+
+		return res;
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for mNode where
+	 * source text from w level does not match the wordworm, but the form_change
+	 * is empty.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnEmptyFormCh(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String source = mNode.getSourceString();
+
+		// If source contains spaces, nothing good can be done
+		if (source.matches(".*\\s.*"))
+			throw new IllegalArgumentException(String.format(
+					"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
+					lvtbAId, mForm, source));
+
+		// If source contains no spaces, use source as wordform and
+		// add corrected form.
+		logger.doInsentenceWarning(String.format(
+				"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
+				lvtbAId, mForm, source));
+
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		Token res =  makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+		res.misc.add("CorrectedForm="+mForm);
+		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
+		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
+				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+			res.misc.add("NewPar=Yes");
+
+		return res;
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for mNode where
+	 * source text from w level does not match the wordworm and the only
+	 * form_change is "spell".
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnSpellOnly(PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		Token res = makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+		res.misc.add("CorrectedForm="+mForm);
+		res.misc.add("CorrectionType=Spelling");
+		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
+		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
+				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+			res.misc.add("NewPar=Yes");
+
+		return res;
+	}
+	/**
+	 * Helper method: Create necessary CoNLL table entries for inserted
+	 * punctuation mNode. Warn, if there are links to w level nodes.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnPunctInsert(PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		List<PmlWNode> wNodes = mNode.getWs();
+
+		if (wNodes != null && !wNodes.isEmpty() )
+			logger.doInsentenceWarning(String.format(
+					"Node \"%s\" has both w.rf and form change \"insert\"",
+					lvtbAId));
+
+		Token res =  makeNewToken(
+				previousToken.idBegin, previousToken.idSub + 1,
+				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+		res.misc.add("CorrectionType=InsertedPunctuation");
+		if (paragraphChange) res.misc.add("NewPar=Yes"); // Chan this really be there?
+		return res;
+
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for inserted mNode
+	 * hat is not punctuation. Warn, as this is not supposed to happen in data.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnOtherInsert(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		List<PmlWNode> wNodes = mNode.getWs();
+
+		if (wNodes != null && !wNodes.isEmpty() )
+			logger.doInsentenceWarning(String.format(
+					"Node \"%s\" has both w.rf and form change \"insert\"",
+					lvtbAId));
+		logger.doInsentenceWarning(String.format(
+				"Node \"%s\" with form \"%s\" has form change \"insert\", but not \"punct\"",
+				lvtbAId, mForm));
+
+		Token res = makeNewToken(
+				previousToken.idBegin, previousToken.idSub + 1,
+				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+		res.misc.add("CorrectionType=Inserted");
+		if (paragraphChange) res.misc.add("NewPar=Yes"); // Chan this really be there?
+		return res;
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for node after which
+	 * unnecessary punctuation is removed. The good case - without spelling
+	 * errors.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnCleanPunctDel(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		// TODO handle better spaces in the middle!
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		String lastPart = source.substring(mForm.length());
+		previousToken = makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId, mForm, mLemma, lvtbTag, aNode, true);
+		if (paragraphChange) previousToken.misc.add("NewPar=Yes");
+		if (!source.contains(" ")) previousToken.misc.add("SpaceAfter=No");
+		else logger.doInsentenceWarning(String.format(
+				"Don't know how to add SpaceAfter for \"%s\"",
+				lvtbAId));
+
+		Token nextToken =  makeNewToken(
+				previousToken.idBegin + 1, 0,
+				lvtbAId, lastPart, null, null, aNode, false);
+		nextToken.misc.add("CorrectionType=RemovedPunctuation");
+		if (noSpaceAfter || wNodes != null && wNodes.size() > 1 &&
+				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+			nextToken.misc.add("SpaceAfter=No");
+		nextToken.setParentDeps(
+				previousToken, UDv2Relations.PUNCT, true, true);
+		return nextToken;
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for node after which
+	 * unnecessary punctuation is removed. The bad case - the undeleted wordform
+	 * is not the prefix of the original string.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnUglyPunctDel(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		// TODO handle better spaces in the middle!
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		Set<LvtbFormChange> formChanges = mNode.getFormChange();
+		if (formChanges == null) formChanges = new HashSet<>();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		Matcher m = Pattern.compile("(.*?)([-,.])").matcher(source);
+		if (m.matches() && formChanges.contains(LvtbFormChange.SPELL)
+				&& formChanges.size() == 3)
+		// Together with spelling error
+		{
+			String firstPart = m.group(1);
+			String lastPart = m.group(2);
+			previousToken = makeNewToken(
+					previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+					lvtbAId, firstPart, mLemma, lvtbTag, aNode, true);
+			previousToken.misc.add("CorrectedForm="+mForm);
+			previousToken.misc.add("CorrectionType=Spelling");
+			if (paragraphChange) previousToken.misc.add("NewPar=Yes");
+			if (!source.contains(" ")) previousToken.misc.add("SpaceAfter=No");
+			else logger.doInsentenceWarning(String.format(
+					"Don't know how to add SpaceAfter for \"%s\"",
+					lvtbAId));
+
+			Token nextToken = makeNewToken(
+					previousToken.idBegin + 1, 0,
+					lvtbAId, lastPart, null, null, aNode, false);
+			nextToken.misc.add("CorrectionType=RemovedPunctuation");
+			if (wNodes != null && wNodes.size() > 1 &&
+					hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+				nextToken.misc.add("NewPar=Yes");
+			if (noSpaceAfter) nextToken.misc.add("SpaceAfter=No");
+			nextToken.setParentDeps(previousToken, UDv2Relations.PUNCT, true, true);
+			return nextToken;
+		}
+		else
+		// TODO togerther with spacing error
+		{
+			throw new IllegalArgumentException(String.format(
+					"Don't know what to do with node \"%s\" with form \"%s\", w-text \"%s\", and form_change \"%s\"",
+					aNode.getId(), mForm, source,
+					formChanges.stream().map(LvtbFormChange::toString)
+							.reduce((s1, s2) -> s1 + "\", \"" + s2).orElse("")));
+		}
+	}
+	/**
+	 * Helper method: Create necessary CoNLL table entries for node which
+	 * consists of multiple wrongly separated (with spaces!!!) tokens.
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnRemovedSpaces(
+			PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		List<PmlWNode> wNodes = mNode.getWs();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		LinkedList<PmlWNode> unprocessedWs = new LinkedList<>();
+		unprocessedWs.addAll(wNodes);
+		LinkedList<PmlWNode> forNexTok = new LinkedList<>();
+		while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
+			forNexTok.push(unprocessedWs.remove());
+
+		previousToken = makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId,
+				forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
+				mLemma, lvtbTag, aNode, true);
+		previousToken.misc.add("CorrectedForm="+mForm);
+		previousToken.misc.add("CorrectionType=Spacing,Spelling");
+		if (paragraphChange ||
+				PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
+			previousToken.misc.add("NewPar=Yes");
+
+		while (!unprocessedWs.isEmpty())
+		{
+			forNexTok = new LinkedList<>();
+			while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
+				forNexTok.push(unprocessedWs.remove());
+			Token nextToken = makeNewToken(
+					previousToken.idBegin + 1, 0, lvtbAId,
+					forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
+					null, null, aNode, false);
+			nextToken.misc.add("CorrectionType=Spacing,Spelling");
+			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
+				nextToken.misc.add("NewPar=Yes");
+			nextToken.setParentDeps(previousToken, UDv2Relations.GOESWITH, true, true);
+			previousToken = nextToken;
+		}
+
+		if (noSpaceAfter) previousToken.misc.add("SpaceAfter=No");
+		return previousToken;
 	}
 
 	/**
@@ -331,7 +547,7 @@ public class MorphoTransformator {
 	protected Token makeNewToken(
 			int tokenIdBegin, int tokenIdDecimal, String pmlId,
 			String form, String lemma, String tag,
-			PmlANode placementNode, Set<String> miscFlags, boolean representative)
+			PmlANode placementNode, boolean representative)
 	{
 		Token resTok = new Token(tokenIdBegin, form, lemma, tag == null ? null : getXpostag(tag, null));
 		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
@@ -345,7 +561,6 @@ public class MorphoTransformator {
 			resTok.upostag = PosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
 			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
 		}
-		if (miscFlags != null) resTok.misc.addAll(miscFlags);
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);
 		return resTok;
@@ -393,13 +608,10 @@ public class MorphoTransformator {
 	 */
 	public void extractSendenceText()
 	{
-		s.text = "";
-		for (Token t : s.conll)
-		{
-			s.text = s.text + t.form;
-			if (t.misc == null || !t.misc.contains("SpaceAfter=No"))
-				s.text = s.text + " ";
-		}
-		s.text = s.text.trim();
+		s.text = s.conll.stream()
+				.map(t -> t.form + ((t.misc != null && t.misc.contains("SpaceAfter=No")) ? "" : " "))
+				.reduce((s1, s2) -> s1 + s2)
+				.orElse("")
+				.trim();
 	}
 }
