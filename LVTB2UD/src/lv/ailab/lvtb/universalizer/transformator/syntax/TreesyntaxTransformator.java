@@ -2,13 +2,10 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.transformator.morpho.*;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
-import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
-import lv.ailab.lvtb.universalizer.transformator.morpho.FeatsLogic;
-import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
-import lv.ailab.lvtb.universalizer.transformator.morpho.PosLogic;
 
 import java.util.List;
 
@@ -193,8 +190,7 @@ public class TreesyntaxTransformator
 			decimalToken.idBegin = newRootToken.idBegin;
 			decimalToken.idSub = s.conll.get(position-1).idSub+1;
 			decimalToken.idEnd = decimalToken.idBegin;
-			decimalToken.xpostag = MorphoTransformator.getXpostag(
-					aNode.getReductionTagPart(), null);
+			decimalToken.xpostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
 			decimalToken.form = aNode.getReductionFormPart();
 			if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
 				//warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n", NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
@@ -206,7 +202,7 @@ public class TreesyntaxTransformator
 				if (decimalToken.form != null && !decimalToken.form.isEmpty())
 					decimalToken.lemma = AnalyzerWrapper.getLemma(
 							decimalToken.form, decimalToken.xpostag, logger);
-				decimalToken.upostag = PosLogic.getUPosTag(decimalToken.form,
+				decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
 						decimalToken.lemma, decimalToken.xpostag, aNode, logger);
 				decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
 						decimalToken.lemma, decimalToken.xpostag, aNode, logger);

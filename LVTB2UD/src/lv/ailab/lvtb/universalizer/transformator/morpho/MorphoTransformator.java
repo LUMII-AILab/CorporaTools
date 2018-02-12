@@ -549,7 +549,8 @@ public class MorphoTransformator {
 			String form, String lemma, String tag,
 			PmlANode placementNode, boolean representative)
 	{
-		Token resTok = new Token(tokenIdBegin, form, lemma, tag == null ? null : getXpostag(tag, null));
+		Token resTok = new Token(tokenIdBegin, form, lemma,
+				tag == null ? null : XPosLogic.getXpostag(tag));
 		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
 		if (params.ADD_NODE_IDS && pmlId != null && !pmlId.isEmpty())
 		{
@@ -558,7 +559,7 @@ public class MorphoTransformator {
 		}
 		if (resTok.xpostag != null)
 		{
-			resTok.upostag = PosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
+			resTok.upostag = UPosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
 			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
 		}
 		s.conll.add(resTok);
@@ -586,20 +587,6 @@ public class MorphoTransformator {
 			return false;
 		}
 		return innerParaChange;
-	}
-
-	/**
-	 * Logic for obtaining XPOSTAG from tag given in LVTB.
-	 * @param lvtbTag	tag given in LVTB
-	 * @param ending	postfix to be added to the tag
-	 * @return XPOSTAG or _ if tag from LVTB is not meaningfull
-	 */
-	public static String getXpostag (String lvtbTag, String ending)
-	{
-		if (lvtbTag == null || lvtbTag.length() < 1 || lvtbTag.matches("N/[Aa]"))
-			return "_";
-		if (ending == null || ending.length() < 1) return lvtbTag.trim();
-		else return (lvtbTag + ending).trim();
 	}
 
 	/**

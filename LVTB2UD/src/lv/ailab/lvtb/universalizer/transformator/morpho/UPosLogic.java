@@ -12,10 +12,9 @@ import java.util.List;
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
  * Created on 2016-04-20.
- *
  * @author Lauma
  */
-public class PosLogic
+public class UPosLogic
 {
 	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.*/
 

@@ -1,6 +1,5 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
-import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
@@ -12,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Logic for obtaining Universal Dependency feature information based on LVTB
+ * information.
  * Created on 2016-04-20.
- *
  * @author Lauma
  */
 public class FeatsLogic
