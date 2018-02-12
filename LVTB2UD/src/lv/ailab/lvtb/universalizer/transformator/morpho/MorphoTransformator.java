@@ -16,6 +16,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is the part of transformation where tokens for CoNLL-U table is created
+ * and information form morphology fields is obtained.
+ * TODO: split pre-syntax and post-syntax moprhology.
+ */
 public class MorphoTransformator {
 	/**
 	 * In this sentence all the transformations are carried out.
