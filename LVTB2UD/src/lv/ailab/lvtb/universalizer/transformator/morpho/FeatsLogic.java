@@ -3,10 +3,6 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
-import lv.ailab.lvtb.universalizer.pml.PmlANode;
-import lv.ailab.lvtb.universalizer.pml.PmlMNode;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 
 import java.util.ArrayList;
@@ -20,89 +16,6 @@ import java.util.List;
  */
 public class FeatsLogic
 {
-	/**
-	 * Use this to obtain FEATS, if syntactic information is available.
-	 * @param logger	Logger object used to collect warnings; if null,
-	 *                  System.out is used
-	 */
-	@Deprecated
-	public static ArrayList<UDv2Feat> getUFeats(
-			String form, String lemma, String xpostag, PmlANode aNode, Logger logger)
-	{
-		ArrayList<UDv2Feat> res = getUFeats(form, lemma, xpostag, logger);
-		String comprLemma = lemma;
-		if (comprLemma == null) comprLemma = ""; // To avoid null pointer exceptions.
-
-		// Lexical features
-		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
-				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-			res.add(UDv2Feat.PRONTYPE_INT);
-		if (xpostag.matches("n.*") && comprLemma.matches("t(ur|ej)iene") &&
-				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-			res.add(UDv2Feat.PRONTYPE_DEM);
-		if (xpostag.matches("n.*") && comprLemma.matches("vis(ur|ad)iene") &&
-				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-			res.add(UDv2Feat.PRONTYPE_TOT);
-		if (xpostag.matches("n.*") && comprLemma.matches("nek(ur|ad)iene") &&
-				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-			res.add(UDv2Feat.PRONTYPE_NEG);
-		if (xpostag.matches("r0.*") &&
-				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
-		{
-			List<PmlANode> siblings = aNode.getParent().getChildren();
-			boolean particleSib = false;
-			for (PmlANode sib : siblings)
-			{
-				PmlMNode sibM = sib.getM();
-				String sibLemma = sibM == null ? "" : sibM.getLemma();
-				String sibTag = sibM == null ? "" : sibM.getTag();
-				if (sibTag.startsWith("q") &&
-						sibLemma.matches("kaut|diez(in)?|nez(in)?"))
-				{
-					particleSib = true;
-					break;
-				}
-			}
-			if (particleSib)
-			{
-				res.add(UDv2Feat.PRONTYPE_IND);
-				res.remove(UDv2Feat.PRONTYPE_INT);
-			}
-		}
-		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
-				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
-		{
-			List<PmlANode> siblings = aNode.getParent().getChildren();
-			boolean particleSib = false;
-			for (PmlANode sib : siblings)
-			{
-				PmlMNode sibM = sib.getM();
-				String sibLemma = sibM == null ? "" : sibM.getLemma();
-				String sibTag = sibM == null ? "" : sibM.getTag();
-				if (sibTag.startsWith("q") &&
-						sibLemma.matches("kaut|diez(in)?|nez(in)?"))
-				{
-					particleSib = true;
-					break;
-				}
-			}
-			PmlANode parent = aNode.getParent();
-			PmlANode grandParent = parent == null ? null : parent.getParent();
-			String gpRole = grandParent == null ? null : grandParent.getRole();
-			PmlANode greatGrandParent = grandParent == null ? null : grandParent.getParent();
-			String ggpPhraseType = greatGrandParent == null ? null : greatGrandParent.getPhraseType();
-			PmlANode.Type ggpNodeType = greatGrandParent == null ? null : greatGrandParent.getNodeType();
-			if (particleSib && LvtbRoles.BASELEM.equals(gpRole)
-					&& PmlANode.Type.X == ggpNodeType
-					&& LvtbXTypes.XPREP.equals(ggpPhraseType))
-			{
-				res.remove(UDv2Feat.PRONTYPE_INT);
-				res.add(UDv2Feat.PRONTYPE_IND);
-			}
-		}
-		return res;
-	}
-
 	/**
 	 * Use this to obtain FEATS, if no syntactic information is available.
 	 * @param logger	Logger object used to collect warnings; if null,

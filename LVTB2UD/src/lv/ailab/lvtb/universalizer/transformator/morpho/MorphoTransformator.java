@@ -47,7 +47,6 @@ public class MorphoTransformator {
 		List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
 		tokenNodes = PmlANodeListUtils.asOrderedList(tokenNodes);
 		Token previousToken = null;
-		//String prevMId = null;
 		PmlWNode prevW = null;
 		int prevOrd = Integer.MIN_VALUE;
 		// Make CoNLL token from each node.
@@ -81,7 +80,6 @@ public class MorphoTransformator {
 			// Make new token.
 			previousToken = transformCurrentNode(current, previousToken, paragraphChange);
 
-			//prevMId = mId;
 			if (currentWs != null && !currentWs.isEmpty())
 				prevW = currentWs.get(currentWs.size() - 1);
 			prevOrd = currentOrd;
@@ -607,6 +605,9 @@ public class MorphoTransformator {
 				.trim();
 	}
 
+	/**
+	 * Update morphology after syntax transformation has been done.
+	 */
 	public void transformPostsyntMorpho()
 	{
 		for (Token t : s.conll)
@@ -614,19 +615,5 @@ public class MorphoTransformator {
 			t.upostag = UPosLogic.getPostsyntUPosTag(t, logger);
 			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll, logger);
 		}
-
-		/*List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
-		tokenNodes = PmlANodeListUtils.asOrderedList(tokenNodes);
-		for (PmlANode node : tokenNodes)
-		{
-			String id = node.getId();
-			Token baseTok = s.pmlaToConll.get(id);
-			baseTok.feats = FeatsLogic.getUFeats(
-					baseTok.form, baseTok.lemma, baseTok.xpostag, node, logger);
-			Token enhTok = s.pmlaToEnhConll.get(id);
-			if (enhTok != null)
-				enhTok.feats = FeatsLogic.getUFeats(
-						baseTok.form, baseTok.lemma, baseTok.xpostag, node, logger);
-		}*/
 	}
 }
