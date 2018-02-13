@@ -198,7 +198,7 @@ public class MorphoTransformator {
 
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
-				lvtbAId, mForm, mLemma, lvtbTag, aNode, true);
+				lvtbAId, mForm, mLemma, lvtbTag, true);
 		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -250,7 +250,7 @@ public class MorphoTransformator {
 
 		Token res =  makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
-				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+				lvtbAId, source, mLemma, lvtbTag, true);
 		res.misc.add("CorrectedForm="+mForm);
 		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
@@ -286,7 +286,7 @@ public class MorphoTransformator {
 
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
-				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+				lvtbAId, source, mLemma, lvtbTag, true);
 		res.misc.add("CorrectedForm="+mForm);
 		res.misc.add("CorrectionType=Spelling");
 		if (noSpaceAfter) res.misc.add("SpaceAfter=No");
@@ -323,7 +323,7 @@ public class MorphoTransformator {
 
 		Token res =  makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
-				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+				lvtbAId, source, mLemma, lvtbTag, true);
 		res.misc.add("CorrectionType=InsertedPunctuation");
 		if (paragraphChange) res.misc.add("NewPar=Yes"); // Chan this really be there?
 		return res;
@@ -362,7 +362,7 @@ public class MorphoTransformator {
 
 		Token res = makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
-				lvtbAId, source, mLemma, lvtbTag, aNode, true);
+				lvtbAId, source, mLemma, lvtbTag, true);
 		res.misc.add("CorrectionType=Inserted");
 		if (paragraphChange) res.misc.add("NewPar=Yes"); // Chan this really be there?
 		return res;
@@ -398,7 +398,7 @@ public class MorphoTransformator {
 
 		previousToken = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
-				lvtbAId, mForm, mLemma, lvtbTag, aNode, true);
+				lvtbAId, mForm, mLemma, lvtbTag, true);
 		if (paragraphChange) previousToken.misc.add("NewPar=Yes");
 		if (!source.contains(" ")) previousToken.misc.add("SpaceAfter=No");
 		else logger.doInsentenceWarning(String.format(
@@ -407,7 +407,7 @@ public class MorphoTransformator {
 
 		Token nextToken =  makeNewToken(
 				previousToken.idBegin + 1, 0,
-				lvtbAId, lastPart, null, "z_", aNode, false);
+				lvtbAId, lastPart, null, "z_", false);
 		nextToken.misc.add("CorrectionType=RemovedPunctuation");
 		if (noSpaceAfter || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -454,7 +454,7 @@ public class MorphoTransformator {
 			String lastPart = m.group(2);
 			previousToken = makeNewToken(
 					previousToken == null ? 1 : previousToken.idBegin + 1, 0,
-					lvtbAId, firstPart, mLemma, lvtbTag, aNode, true);
+					lvtbAId, firstPart, mLemma, lvtbTag, true);
 			previousToken.misc.add("CorrectedForm="+mForm);
 			previousToken.misc.add("CorrectionType=Spelling");
 			if (paragraphChange) previousToken.misc.add("NewPar=Yes");
@@ -465,7 +465,7 @@ public class MorphoTransformator {
 
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0,
-					lvtbAId, lastPart, null, "z_", aNode, false);
+					lvtbAId, lastPart, null, "z_", false);
 			nextToken.misc.add("CorrectionType=RemovedPunctuation");
 			if (wNodes != null && wNodes.size() > 1 &&
 					hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -517,7 +517,7 @@ public class MorphoTransformator {
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId,
 				forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
-				mLemma, lvtbTag, aNode, true);
+				mLemma, lvtbTag, true);
 		previousToken.misc.add("CorrectedForm="+mForm);
 		previousToken.misc.add("CorrectionType=Spacing,Spelling");
 		if (paragraphChange ||
@@ -532,7 +532,7 @@ public class MorphoTransformator {
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0, lvtbAId,
 					forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
-					null, "N/a", aNode, false);
+					null, "N/a", false);
 			nextToken.misc.add("CorrectionType=Spacing,Spelling");
 			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 				nextToken.misc.add("NewPar=Yes");
@@ -552,8 +552,7 @@ public class MorphoTransformator {
 	 */
 	protected Token makeNewToken(
 			int tokenIdBegin, int tokenIdDecimal, String pmlId,
-			String form, String lemma, String tag,
-			PmlANode placementNode, boolean representative)
+			String form, String lemma, String tag, boolean representative)
 	{
 		Token resTok = new Token(tokenIdBegin, form, lemma,
 				tag == null ? null : XPosLogic.getXpostag(tag));
@@ -613,8 +612,10 @@ public class MorphoTransformator {
 		for (Token t : s.conll)
 		{
 			t.upostag = UPosLogic.getPostsyntUPosTag(t, logger);
+			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll, logger);
 		}
-		List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
+
+		/*List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
 		tokenNodes = PmlANodeListUtils.asOrderedList(tokenNodes);
 		for (PmlANode node : tokenNodes)
 		{
@@ -626,6 +627,6 @@ public class MorphoTransformator {
 			if (enhTok != null)
 				enhTok.feats = FeatsLogic.getUFeats(
 						baseTok.form, baseTok.lemma, baseTok.xpostag, node, logger);
-		}
+		}*/
 	}
 }

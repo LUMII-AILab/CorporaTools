@@ -2,11 +2,11 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.PmlMNode;
-import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ public class FeatsLogic
 	 * @param logger	Logger object used to collect warnings; if null,
 	 *                  System.out is used
 	 */
+	@Deprecated
 	public static ArrayList<UDv2Feat> getUFeats(
 			String form, String lemma, String xpostag, PmlANode aNode, Logger logger)
 	{
@@ -36,13 +37,13 @@ public class FeatsLogic
 		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
 			res.add(UDv2Feat.PRONTYPE_INT);
-		if (xpostag.matches("n.*") && comprLemma.equals("t(ur|ej)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.matches("t(ur|ej)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
 			res.add(UDv2Feat.PRONTYPE_DEM);
-		if (xpostag.matches("n.*") && comprLemma.equals("vis(ur|ad)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.matches("vis(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
 			res.add(UDv2Feat.PRONTYPE_TOT);
-		if (xpostag.matches("n.*") && comprLemma.equals("nek(ur|ad)iene") &&
+		if (xpostag.matches("n.*") && comprLemma.matches("nek(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
 			res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("r0.*") &&
@@ -94,7 +95,10 @@ public class FeatsLogic
 			if (particleSib && LvtbRoles.BASELEM.equals(gpRole)
 					&& PmlANode.Type.X == ggpNodeType
 					&& LvtbXTypes.XPREP.equals(ggpPhraseType))
+			{
+				res.remove(UDv2Feat.PRONTYPE_INT);
 				res.add(UDv2Feat.PRONTYPE_IND);
+			}
 		}
 		return res;
 	}
@@ -220,6 +224,68 @@ public class FeatsLogic
 		if (xpostag.matches("y.*")) res.add(UDv2Feat.ABBR_YES);
 		if (xpostag.matches("px.*|v.y.*")) res.add(UDv2Feat.REFLEX_YES); // Currently it is impossible to split out "reflexive particle" of each verb.
 
+		return res;
+	}
+
+	/**
+	 * Use this to obtain FEATS, if syntactic information is available.
+	 * @param sentence	conll table with tokens in this sentence - this will be
+	 *                  used to find children of the given token
+	 * @param logger	Logger object used to collect warnings; if null,
+	 *                  System.out is used
+	 */
+	public static ArrayList<UDv2Feat> getPostsyntUPosTag(
+			Token token, List<Token> sentence, Logger logger)
+	{
+		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag, logger);
+		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
+		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
+		if (!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene")) &&
+				!xpostag.matches("r0.*"))
+			return res;
+		ArrayList<Token> selDiscCh = new ArrayList<>();
+		ArrayList<Token> caseCh = new ArrayList<>();
+		if (sentence != null) for (Token sentTok : sentence)
+		{
+			if (sentTok.head != null && sentTok.head.second != null &&
+					sentTok.head.second.equals(token))
+			{
+				if (sentTok.deprel == UDv2Relations.DISCOURSE
+						&& sentTok.lemma != null
+						&& sentTok.lemma.matches("kaut|diez(in)?|nez(in)?"))
+					selDiscCh.add(sentTok);
+				if (sentTok.deprel == UDv2Relations.CASE)
+					caseCh.add(sentTok);
+			}
+		}
+
+		if (xpostag.matches("r0.*") && !selDiscCh.isEmpty())
+		{
+			res.add(UDv2Feat.PRONTYPE_IND);
+			res.remove(UDv2Feat.PRONTYPE_INT);
+		}
+		else if (xpostag.matches("n.*") && !caseCh.isEmpty())
+		{
+			switch (lemma)
+			{
+				case "kuriene" :
+					if (selDiscCh.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
+					else res.add(UDv2Feat.PRONTYPE_IND);
+					break;
+				case "turiene" :
+				case "tejiene" :
+					res.add(UDv2Feat.PRONTYPE_DEM);
+					break;
+				case "visuriene" :
+				case "visadiene" :
+					res.add(UDv2Feat.PRONTYPE_TOT);
+					break;
+				case "nekuriene":
+				case "nekadiene":
+					res.add(UDv2Feat.PRONTYPE_NEG);
+					break;
+			}
+		}
 		return res;
 	}
 }

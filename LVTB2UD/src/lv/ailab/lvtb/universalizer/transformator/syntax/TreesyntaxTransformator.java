@@ -203,9 +203,13 @@ public class TreesyntaxTransformator
 					decimalToken.lemma = AnalyzerWrapper.getLemma(
 							decimalToken.form, decimalToken.xpostag, logger);
 				decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-						decimalToken.lemma, decimalToken.xpostag, aNode, logger);
+						decimalToken.lemma, decimalToken.xpostag, logger);
 				decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-						decimalToken.lemma, decimalToken.xpostag, aNode, logger);
+						decimalToken.lemma, decimalToken.xpostag, logger);
+				//decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
+				//		decimalToken.lemma, decimalToken.xpostag, aNode, logger);
+				//decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
+				//		decimalToken.lemma, decimalToken.xpostag, aNode, logger);
 			}
 			if (params.ADD_NODE_IDS && nodeId != null && !nodeId.isEmpty())
 			{
