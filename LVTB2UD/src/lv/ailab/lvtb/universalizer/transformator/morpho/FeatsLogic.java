@@ -1,10 +1,12 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
+import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.PmlMNode;
+import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 
 import java.util.ArrayList;
@@ -33,23 +35,18 @@ public class FeatsLogic
 		// Lexical features
 		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_INT);
 		if (xpostag.matches("n.*") && comprLemma.equals("t(ur|ej)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_DEM);
 		if (xpostag.matches("n.*") && comprLemma.equals("vis(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_TOT);
 		if (xpostag.matches("n.*") && comprLemma.equals("nek(ur|ad)iene") &&
 				LvtbXTypes.XPREP.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 			res.add(UDv2Feat.PRONTYPE_NEG);
 		if (xpostag.matches("r0.*") &&
 				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
 			List<PmlANode> siblings = aNode.getParent().getChildren();
 			boolean particleSib = false;
@@ -73,7 +70,6 @@ public class FeatsLogic
 		}
 		if (xpostag.matches("n.*") && comprLemma.equals("kuriene") &&
 				LvtbXTypes.XPARTICLE.equals(aNode.getParent().getPhraseType()))
-				//LvtbXTypes.XPARTICLE.equals(XPathEngine.get().evaluate("../../xtype", aNode)))
 		{
 			List<PmlANode> siblings = aNode.getParent().getChildren();
 			boolean particleSib = false;
@@ -98,11 +94,8 @@ public class FeatsLogic
 			if (particleSib && LvtbRoles.BASELEM.equals(gpRole)
 					&& PmlANode.Type.X == ggpNodeType
 					&& LvtbXTypes.XPREP.equals(ggpPhraseType))
-					//LvtbRoles.BASELEM.equals(XPathEngine.get().evaluate("../../../../role", aNode)) &&
-					//LvtbXTypes.XPREP.equals(XPathEngine.get().evaluate("../../../../../../xtype", aNode)))
 				res.add(UDv2Feat.PRONTYPE_IND);
 		}
-
 		return res;
 	}
 

@@ -60,6 +60,7 @@ public class SentenceTransformEngine
 			enhSyntTransf.transformEnhancedSyntax();
 			logger.flush();
 		}
+		morphoTransf.transformPostsyntMorpho();
 		logger.finishSentenceNormal(s.hasFailed);
 		return !s.hasFailed;
 	}

@@ -1,6 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
+import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
@@ -23,6 +25,7 @@ public class UPosLogic
 	 * @param logger	Logger object used to collect warnings; if null,
 	 *                  System.out is used
 	 */
+	@Deprecated
 	public static UDv2PosTag getUPosTag(
 			String form, String lemma, String xpostag, PmlANode aNode, Logger logger)
 	{
@@ -127,5 +130,37 @@ public class UPosLogic
 			else System.out.println(errorMsg);
 		}
 		return UDv2PosTag.X;
+	}
+
+	/**
+	 * Use this to obtain UPOSTAG, if syntactic information (upostag for
+	 * parameter token) is available.
+	 * @param logger	Logger object used to collect warnings; if null,
+	 *                  System.out is used
+	 */	public static UDv2PosTag getPostsyntUPosTag (Token token, Logger logger)
+	{
+		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
+		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
+		UDv2Relations deprel = token.deprel;
+		if (xpostag.matches("a.*"))
+		{
+			if (lemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
+					lemma.matches("(manējā|tavējā|mūsējā|jūsējā|viņējā|savējā|daudzas|vairākas)"))
+			{
+				if (deprel == UDv2Relations.DET) return UDv2PosTag.DET;
+				else return UDv2PosTag.PRON;
+			}
+			else return UDv2PosTag.ADJ;
+		}
+		else if (xpostag.matches("p[dsiqgr].*"))
+		{
+			if (deprel == UDv2Relations.DET) return UDv2PosTag.DET;
+			else return UDv2PosTag.PRON;
+		}
+		if (token.xpostag == null)
+			System.out.println(token.toConllU());
+		if (token.upostag == null)
+			return getUPosTag(token.form, token.lemma, token.xpostag, logger);
+		return token.upostag;
 	}
 }

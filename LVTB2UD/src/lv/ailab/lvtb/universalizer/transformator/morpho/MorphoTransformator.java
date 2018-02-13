@@ -395,6 +395,7 @@ public class MorphoTransformator {
 				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
 		String lastPart = source.substring(mForm.length());
+
 		previousToken = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, mForm, mLemma, lvtbTag, aNode, true);
@@ -406,7 +407,7 @@ public class MorphoTransformator {
 
 		Token nextToken =  makeNewToken(
 				previousToken.idBegin + 1, 0,
-				lvtbAId, lastPart, null, null, aNode, false);
+				lvtbAId, lastPart, null, "z_", aNode, false);
 		nextToken.misc.add("CorrectionType=RemovedPunctuation");
 		if (noSpaceAfter || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -464,7 +465,7 @@ public class MorphoTransformator {
 
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0,
-					lvtbAId, lastPart, null, null, aNode, false);
+					lvtbAId, lastPart, null, "z_", aNode, false);
 			nextToken.misc.add("CorrectionType=RemovedPunctuation");
 			if (wNodes != null && wNodes.size() > 1 &&
 					hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -531,7 +532,7 @@ public class MorphoTransformator {
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0, lvtbAId,
 					forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
-					null, null, aNode, false);
+					null, "N/a", aNode, false);
 			nextToken.misc.add("CorrectionType=Spacing,Spelling");
 			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 				nextToken.misc.add("NewPar=Yes");
@@ -564,8 +565,8 @@ public class MorphoTransformator {
 		}
 		if (resTok.xpostag != null)
 		{
-			resTok.upostag = UPosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
-			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, placementNode, logger);
+			resTok.upostag = UPosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, logger);
+			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, logger);
 		}
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);
@@ -605,5 +606,26 @@ public class MorphoTransformator {
 				.reduce((s1, s2) -> s1 + s2)
 				.orElse("")
 				.trim();
+	}
+
+	public void transformPostsyntMorpho()
+	{
+		for (Token t : s.conll)
+		{
+			t.upostag = UPosLogic.getPostsyntUPosTag(t, logger);
+		}
+		List<PmlANode> tokenNodes = s.pmlTree.getDescendantsWithOrdAndM();
+		tokenNodes = PmlANodeListUtils.asOrderedList(tokenNodes);
+		for (PmlANode node : tokenNodes)
+		{
+			String id = node.getId();
+			Token baseTok = s.pmlaToConll.get(id);
+			baseTok.feats = FeatsLogic.getUFeats(
+					baseTok.form, baseTok.lemma, baseTok.xpostag, node, logger);
+			Token enhTok = s.pmlaToEnhConll.get(id);
+			if (enhTok != null)
+				enhTok.feats = FeatsLogic.getUFeats(
+						baseTok.form, baseTok.lemma, baseTok.xpostag, node, logger);
+		}
 	}
 }
