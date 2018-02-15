@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
+import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.morpho.*;
@@ -213,7 +214,7 @@ public class TreesyntaxTransformator
 			}
 			if (params.ADD_NODE_IDS && nodeId != null && !nodeId.isEmpty())
 			{
-				decimalToken.misc.add("LvtbNodeId=" + nodeId);
+				decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);//decimalToken.misc.add("LvtbNodeId=" + nodeId);
 				logger.addIdMapping(s.id, decimalToken.getFirstColumn(), nodeId);
 			}
 			s.conll.add(position, decimalToken);

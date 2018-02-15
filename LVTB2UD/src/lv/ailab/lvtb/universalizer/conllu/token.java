@@ -94,7 +94,7 @@ public class Token
 	 * NewPar=Yes
 	 * LvtbNodeId=...
 	 */
-	public HashSet<String> misc = new HashSet<>();
+	public HashMap<MiscKeys, HashSet<String>> misc = new HashMap<>();
 
 	public Token() { }
 
@@ -143,6 +143,30 @@ public class Token
 				677 * (deps == null ? 1 : deps.hashCode()) +
 				17 * (depsBackbone == null ? 1 : depsBackbone.hashCode()) +
 				3 * (misc == null ? 1 : misc.hashCode());
+	}
+
+	/**
+	 * Method to add new attribute-value pari for MISC field. Handles all the
+	 * nulls for you.
+	 */
+	public void addMisc (MiscKeys key, String value)
+	{
+		if (misc == null) misc = new HashMap<>();
+		HashSet<String> values = misc.get(key);
+		if (values == null) values = new HashSet<>();
+		values.add(value);
+		misc.put(key, values);
+	}
+
+	public boolean checkMisc(MiscKeys key)
+	{
+		return misc != null && misc.containsKey(key);
+	}
+	public boolean checkMisc(MiscKeys key, String value)
+	{
+		return checkMisc(key) && misc.get(key) != null
+				&& misc.get(key).contains(value);
+
 	}
 
 	/**
@@ -313,9 +337,17 @@ public class Token
 		else
 		{
 			//res.append(misc);
-			res.append(misc.stream()
-					.sorted(String.CASE_INSENSITIVE_ORDER)
-					.reduce((a, b) -> a + "|" + b).orElse("_"));
+			res.append(misc.keySet().stream()
+					.sorted((k1, k2) -> k1.toString().compareToIgnoreCase(k2.toString()))
+					.filter(k -> misc.get(k) != null && !misc.get(k).isEmpty())
+					.map(k -> k + "=" + misc.get(k).stream()
+							.sorted(String.CASE_INSENSITIVE_ORDER)
+							.reduce((v1, v2) -> v1 + "," + v2).orElse("_"))
+					.reduce((p1, p2) -> p1 + "|" + p2).orElse("_")
+			);
+			//res.append(misc.stream()
+			//		.sorted(String.CASE_INSENSITIVE_ORDER)
+			//		.reduce((a, b) -> a + "|" + b).orElse("_"));
 		}
 		res.append("\n");
 
