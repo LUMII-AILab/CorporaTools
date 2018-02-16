@@ -27,7 +27,7 @@ public class PmlIdUtils
 	{
 		if (firstId == null || secondId == null ||
 				firstId.isEmpty() || secondId.isEmpty()) return null;
-		Pattern p = Pattern.compile(".*?-p(\\d+)(-m\\d+)?(-w\\d+)$");
+		Pattern p = Pattern.compile(".*?-p(\\d+)(m\\d+)?(w\\d+)$");
 		Matcher firstMatcher = p.matcher(firstId);
 		Matcher secondMatcher = p.matcher(secondId);
 		if (!firstMatcher.matches() || !secondMatcher.matches()) return null;

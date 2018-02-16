@@ -515,6 +515,7 @@ public class MorphoTransformator {
 		LinkedList<PmlWNode> forNexTok = new LinkedList<>();
 		while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
 			forNexTok.push(unprocessedWs.remove());
+		if (!unprocessedWs.isEmpty()) forNexTok.push(unprocessedWs.remove());
 
 		previousToken = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
@@ -533,6 +534,8 @@ public class MorphoTransformator {
 			forNexTok = new LinkedList<>();
 			while (!unprocessedWs.isEmpty() && unprocessedWs.peek().noSpaceAfter())
 				forNexTok.push(unprocessedWs.remove());
+			if (!unprocessedWs.isEmpty()) forNexTok.push(unprocessedWs.remove());
+
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0, lvtbAId,
 					forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
