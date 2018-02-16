@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * This is the part of transformation where tokens for CoNLL-U table is created
  * and information form morphology fields is obtained.
- * TODO: split pre-syntax and post-syntax moprhology.
+ * Transformator relies on w level tokens being smaller than m level units.
  */
 public class MorphoTransformator {
 	/**
@@ -161,6 +161,10 @@ public class MorphoTransformator {
 					formChanges.contains(LvtbFormChange.SPELL)) &&
 				wNodes != null && wNodes.size() > 1)
 			return transfOnRemovedSpaces(aNode, previousToken, paragraphChange);
+		else if (formChanges.contains(LvtbFormChange.SPACING) &&
+				!formChanges.contains(LvtbFormChange.UNION) &&
+				!formChanges.contains(LvtbFormChange.PUNCT))
+			return transfOnAddedSpaces(aNode, previousToken, paragraphChange);
 		// Don't know what to do.
 		else
 			throw new IllegalArgumentException(String.format(
@@ -550,6 +554,47 @@ public class MorphoTransformator {
 
 		if (noSpaceAfter) previousToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//previousToken.misc.add("SpaceAfter=No");
 		return previousToken;
+	}
+
+	/**
+	 * Helper method: Create necessary CoNLL table entries for mNode where
+	 * source text from w level does not match the wordworm and the only
+	 * form_change is "spell".
+	 * @param aNode				PML A-level node for which CoNLL entry must be
+	 *                          created
+	 * @param previousToken		the token after which should follow all newmade
+	 *                          tokens
+	 * @param paragraphChange	paragraph border detected right before this
+	 *                          token.
+	 * @return last token made
+	 */
+	protected Token transfOnAddedSpaces(PmlANode aNode, Token previousToken, boolean paragraphChange)
+	{
+		String lvtbAId = aNode.getId();
+		PmlMNode mNode = aNode.getM();
+		String mForm = mNode.getForm();
+		String mLemma = mNode.getLemma();
+		String lvtbTag = mNode.getTag();
+		String source = mNode.getSourceString();
+		List<PmlWNode> wNodes = mNode.getWs();
+		//boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+		//		wNodes.get(wNodes.size() - 1).noSpaceAfter();
+
+		Token res = makeNewToken(
+				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
+				lvtbAId, source, mLemma, lvtbTag, true);
+		if (!mForm.equals(source))
+		{
+			res.addMisc(MiscKeys.CORRECTED_FORM, mForm);//res.misc.add("CorrectedForm="+mForm);
+			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//res.misc.add("CorrectionType=Spelling");
+		}
+		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);
+		//if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
+				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
+			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
+
+		return res;
 	}
 
 	/**
