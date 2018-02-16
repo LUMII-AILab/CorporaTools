@@ -531,7 +531,8 @@ public class DepRelLogic
 	public Tuple<UDv2Relations, String> noToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
-		String lemma = node.getM().getLemma();
+		PmlMNode mNode = node.getM();
+		String lemma = mNode == null ? "" : mNode.getLemma();
 		PmlANode phrase = node.getPhraseNode();
 		String subPmcType = phrase == null || phrase.getNodeType() != PmlANode.Type.PMC
 				? null
