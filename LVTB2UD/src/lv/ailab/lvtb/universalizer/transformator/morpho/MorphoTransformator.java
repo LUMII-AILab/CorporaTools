@@ -577,8 +577,8 @@ public class MorphoTransformator {
 		String lvtbTag = mNode.getTag();
 		String source = mNode.getSourceString();
 		List<PmlWNode> wNodes = mNode.getWs();
-		//boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
-		//		wNodes.get(wNodes.size() - 1).noSpaceAfter();
+		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
+				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
@@ -589,7 +589,7 @@ public class MorphoTransformator {
 			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//res.misc.add("CorrectionType=Spelling");
 		}
 		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);
-		//if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
 			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
