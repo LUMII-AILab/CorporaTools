@@ -466,9 +466,8 @@ public class MorphoTransformator {
 			previousToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING); //previousToken.misc.add("CorrectionType=Spelling");
 			if (paragraphChange) previousToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //previousToken.misc.add("NewPar=Yes");
 			if (!source.contains(" ")) previousToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO); //previousToken.misc.add("SpaceAfter=No");
-			else logger.doInsentenceWarning(String.format(
-					"Don't know how to add SpaceAfter for \"%s\"",
-					lvtbAId));
+			//else logger.doInsentenceWarning(String.format(
+			//		"Don't know how to add SpaceAfter for \"%s\"", lvtbAId));
 
 			Token nextToken = makeNewToken(
 					previousToken.idBegin + 1, 0,
