@@ -163,10 +163,10 @@ public class LvtbToUdUI
 						if (isBool) params.WARN_OMISSIONS = value;
 						else return false;
 						break;
-					case "do_enhanced":
-						if (isBool) params.DO_ENHANCED = value;
-						else return false;
-						break;
+//					case "do_enhanced":
+//						if (isBool) params.DO_ENHANCED = value;
+//						else return false;
+//						break;
 					case "induce_phrase_tags":
 						if (isBool) params.INDUCE_PHRASE_TAGS = value;
 						else return false;
@@ -214,7 +214,7 @@ public class LvtbToUdUI
 				"  debug          [bool, false by default] - print debug message for each node.\n" +
 				"  warn_ellipsis  [bool, false by default] - warn on ellipsis.\n" +
 				"  warn_omissions [bool, true  by default]  - warn if a sentence is omitted.\n" +
-				"  do_enhanced    [bool, true  by default]  - create enhanced dependency graph.\n" +
+//				"  do_enhanced    [bool, true  by default]  - create enhanced dependency graph.\n" +
 				"  induce_phrase_tags [bool, true by default] - for already processed nodes\n" +
 				"                                   without the phrase tag induce a tag based\n" +
 				"                                   on node chosen as substructure root.\n" +

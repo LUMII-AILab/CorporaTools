@@ -18,10 +18,11 @@ public class TransformationParams
 	 * Print warning when a sentence is omitted.
 	 */
 	public Boolean WARN_OMISSIONS = true;
-	/**
+	/*
 	 * Make enhanced graph.
+	 * BUGGED.
 	 */
-	public Boolean DO_ENHANCED = true;
+	//public Boolean DO_ENHANCED = true;
 	/**
 	 * For already processed nodes without tag set the phrase tag based on node
 	 * chosen as substructure root.

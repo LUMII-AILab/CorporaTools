@@ -322,7 +322,7 @@ public class Sentence
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency, but avoid circular dependencies.
-		if (!rootBaseToken.equals(childBaseToken))
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
 		{
 			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
 			childBaseToken.deprel = baseDep;
@@ -374,8 +374,9 @@ public class Sentence
 
 	/**
 	 * Set basic dependency link for tokens coressponding to the given PML
-	 * nodes, but do not set circular dependencies. It is expected that
-	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
+	 * nodes, but do not set circular dependencies and do not set anything as a
+	 * parent to decimal node. It is expected that pmlaToConll contains links
+	 * from given PML nodes's IDs to corresponding
 	 * tokens.
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
@@ -387,7 +388,7 @@ public class Sentence
 		Token childBaseToken = pmlaToConll.get(child.getId());
 
 		// Set base dependency, but avoid circular dependencies.
-		if (!rootBaseToken.equals(childBaseToken))
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
 		{
 			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
 			childBaseToken.deprel = baseDep;
@@ -410,8 +411,11 @@ public class Sentence
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set base dependency.
-		childBaseToken.head = Tuple.of("0", null);;
-		childBaseToken.deprel = UDv2Relations.ROOT;;
+		if (childBaseToken.idSub < 1)
+		{
+			childBaseToken.head = Tuple.of("0", null);
+			childBaseToken.deprel = UDv2Relations.ROOT;
+		}
 
 		// Set enhanced dependencies.
 		if (cleanOldDeps) childEnhToken.deps.clear();

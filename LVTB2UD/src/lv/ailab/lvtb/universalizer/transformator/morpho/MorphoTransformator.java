@@ -316,9 +316,10 @@ public class MorphoTransformator {
 	{
 		String lvtbAId = aNode.getId();
 		PmlMNode mNode = aNode.getM();
+		String mform = mNode.getForm();
 		String mLemma = mNode.getLemma();
 		String lvtbTag = mNode.getTag();
-		String source = mNode.getSourceString();
+		//String source = mNode.getSourceString();
 		List<PmlWNode> wNodes = mNode.getWs();
 
 		if (wNodes != null && !wNodes.isEmpty() )
@@ -328,7 +329,7 @@ public class MorphoTransformator {
 
 		Token res =  makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
-				lvtbAId, source, mLemma, lvtbTag, true);
+				lvtbAId, mform, mLemma, lvtbTag, true);
 		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT);// res.misc.add("CorrectionType=InsertedPunctuation");
 		// Chan this really be there?
 		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
@@ -355,7 +356,7 @@ public class MorphoTransformator {
 		String mForm = mNode.getForm();
 		String mLemma = mNode.getLemma();
 		String lvtbTag = mNode.getTag();
-		String source = mNode.getSourceString();
+		//String source = mNode.getSourceString();
 		List<PmlWNode> wNodes = mNode.getWs();
 
 		if (wNodes != null && !wNodes.isEmpty() )
@@ -368,7 +369,7 @@ public class MorphoTransformator {
 
 		Token res = makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
-				lvtbAId, source, mLemma, lvtbTag, true);
+				lvtbAId, mForm, mLemma, lvtbTag, true);
 		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED); //res.misc.add("CorrectionType=Inserted");
 		// Chan this really be there?
 		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //res.misc.add("NewPar=Yes");
@@ -653,6 +654,7 @@ public class MorphoTransformator {
 	public void extractSendenceText()
 	{
 		s.text = s.conll.stream()
+				.filter(t -> t.idSub <= 0)
 				.map(t -> t.form + (t.checkMisc(MiscKeys.SPACE_AFTER, MiscValues.NO) ? "" : " "))
 				.reduce((s1, s2) -> s1 + s2)
 				.orElse("")
