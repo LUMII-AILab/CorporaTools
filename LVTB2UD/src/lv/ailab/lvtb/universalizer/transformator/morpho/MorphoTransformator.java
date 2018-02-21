@@ -388,6 +388,7 @@ public class MorphoTransformator {
 	 *                          token.
 	 * @return last token made
 	 */
+	// TODO rewrite using w-level tokenization
 	protected Token transfOnCleanPunctDel(
 			PmlANode aNode, Token previousToken, boolean paragraphChange)
 	{
@@ -402,7 +403,7 @@ public class MorphoTransformator {
 		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
 				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
-		String lastPart = source.substring(mForm.length());
+		String lastPart = source.substring(mForm.length()).trim();
 
 		previousToken = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
@@ -437,6 +438,7 @@ public class MorphoTransformator {
 	 *                          token.
 	 * @return last token made
 	 */
+	// TODO rewrite using w-level tokenization
 	protected Token transfOnUglyPunctDel(
 			PmlANode aNode, Token previousToken, boolean paragraphChange)
 	{
@@ -458,8 +460,8 @@ public class MorphoTransformator {
 				&& formChanges.size() == 3)
 		// Together with spelling error
 		{
-			String firstPart = m.group(1);
-			String lastPart = m.group(2);
+			String firstPart = m.group(1).trim();
+			String lastPart = m.group(2).trim();
 			previousToken = makeNewToken(
 					previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 					lvtbAId, firstPart, mLemma, lvtbTag, true);
