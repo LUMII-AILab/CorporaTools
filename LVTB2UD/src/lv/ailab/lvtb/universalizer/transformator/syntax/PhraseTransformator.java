@@ -280,15 +280,16 @@ public class PhraseTransformator
 			if (mNode != null && ";".equals(mNode.getLemma()))
 				semicolons.add(child);
 		}
+		ArrayList<PmlANode> sortedChildren = PmlANodeListUtils.asOrderedList(children);
 
 		// No semicolons => process as ordinary coordination.
 		if (semicolons.size() < 1)
-			return coordPartsChildListToUD(children, coordType, coordTag, logger);
+			return coordPartsChildListToUD(sortedChildren,
+					coordType, coordTag, logger);
 
 		// If semicolon(s) is (are) present, split on semicolon and then process
 		// each part as ordinary coordination.
 		ArrayList<PmlANode> sortedSemicolons = PmlANodeListUtils.asOrderedList(semicolons);
-		ArrayList<PmlANode> sortedChildren = PmlANodeListUtils.asOrderedList(children);
 		int semicOrd = sortedSemicolons.get(0).getOrd();
 		PmlANode newRoot = coordPartsChildListToUD(
 				PmlANodeListUtils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, logger);

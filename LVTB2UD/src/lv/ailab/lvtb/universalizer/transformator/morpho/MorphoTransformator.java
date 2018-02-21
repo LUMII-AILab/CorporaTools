@@ -455,13 +455,13 @@ public class MorphoTransformator {
 		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
 				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
-		Matcher m = Pattern.compile("(.*?)([-,.])").matcher(source);
+		Matcher m = Pattern.compile("(.*?)([-,.]+)").matcher(source);
 		if (m.matches() && formChanges.contains(LvtbFormChange.SPELL)
 				&& formChanges.size() == 3)
 		// Together with spelling error
 		{
 			String firstPart = m.group(1).trim();
-			String lastPart = m.group(2).trim();
+			String lastPart = m.group(2);
 			previousToken = makeNewToken(
 					previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 					lvtbAId, firstPart, mLemma, lvtbTag, true);
