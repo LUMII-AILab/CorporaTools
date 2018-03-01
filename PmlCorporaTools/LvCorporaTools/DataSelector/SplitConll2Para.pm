@@ -41,7 +41,12 @@ Latvian Treebank project, LUMII, 2017, provided under GPL
 END
 		exit 1;
 	}
-
+		#			 pointer to function for processing each file, regular expression
+		#			 filter for selecting files to process, extension/ending for names
+		#			 of result files (no aditional dot is added), pass output file name
+		#			 to file processing function (0/1), strip extension from input file
+		#            name (0/1), data directory, arbitrary list of other parameters to
+		#			 pass to file processing function
 	my $dirName = shift @_;
 	my $failed = LvCorporaTools::GenericUtils::UIWrapper::processDir(
 		\&transformFile, "^.+\\.conllu\$", '', 0, 0, $dirName, @_);
@@ -113,6 +118,7 @@ END
 		}
 	}
 	$out->close() if ($out);
+	0;
 }
 
 1;

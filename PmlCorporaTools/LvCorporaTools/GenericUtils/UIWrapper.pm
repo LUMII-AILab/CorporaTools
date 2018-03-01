@@ -53,14 +53,14 @@ sub processDir
 					##local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This is not good.
 					&$processFileFunct($dirName, $inFile, $outFile, @otherPrams);
 				};
-				if ($@)
+				if ($@ or ! defined $res)
 				{
 					$isBad = 1;
 					print $@;
-				} elsif ($res)
-				{
-					$isBad = 1;
-				}
+				}# elsif ($res)
+				#{
+				#	$isBad = 1;
+				#}
 			}
 			else
 			{
@@ -71,14 +71,15 @@ sub processDir
 					##local $SIG{__DIE__} = sub { $isBad = 1; warn $_[0] }; # This is not good.
 					&$processFileFunct($dirName, $inFile, @otherPrams);
 				};
-				if ($@)
+				if ($@ or ! defined $res)
 				{
 					$isBad = 1;
 					print $@;
-				} elsif ($res)
-				{
-					$isBad = 1;
-				}
+				}# elsif ($res)
+				#{
+				#	print "Res: $res\n";
+				#	$isBad = 1;
+				#}
 			}
 			$baddies = $baddies + $isBad;
 		}
