@@ -137,7 +137,8 @@ public class DepRelLogic
 			case LvtbRoles.PREDCL : return predClToUD(node, parent);
 			case LvtbRoles.SUBJCL : return subjClToUD(node, parent);
 			case LvtbRoles.OBJCL : return Tuple.of(UDv2Relations.CCOMP, null);
-			case LvtbRoles.ATTRCL : return Tuple.of(UDv2Relations.ACL, null);
+			case LvtbRoles.ATTRCL :
+			case LvtbRoles.APPCL : return Tuple.of(UDv2Relations.ACL, null);
 			case LvtbRoles.PLACECL :
 			case LvtbRoles.TIMECL :
 			case LvtbRoles.MANCL :

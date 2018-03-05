@@ -33,6 +33,7 @@ public class LvtbRoles
 	public final static String SUBJCL = "subjCl";
 	public final static String OBJCL = "objCl";
 	public final static String ATTRCL = "attrCl";
+	public final static String APPCL = "appCl";
 
 	public final static String PLACECL = "placeCl";
 	public final static String TIMECL = "timeCl";

@@ -18,9 +18,9 @@ REM Split according to Sembank ignore list.
 ::@move .\data\good\*_r*.conllu .\data\verbPar >nul
 
 REM Call paragraph splitter on the files.
-::@if exist .\data\splitedPar rmdir .\data\splitedPar /Q /S >nul
-::perl -e "use LvCorporaTools::DataSelector::SplitConll2Para qw(processDir); processDir(@ARGV)" data\good
-::@move .\data\good\res .\data\splitedPar >nul
+@if exist .\data\splitedPar rmdir .\data\splitedPar /Q /S >nul
+perl -e "use LvCorporaTools::DataSelector::SplitConll2Para qw(processDir); processDir(@ARGV)" data\good
+@move .\data\good\res .\data\splitedPar >nul
 
 :: If you separated "Verbu rindkopas" earlier, use data both in verbPar and
 :: splitedPar.
