@@ -121,7 +121,7 @@ sub is_wrong_empty_node
 
 sub has_nondep_child
 {
-	return not SyntaxChecker::has_nondep_child(@_);
+	return SyntaxChecker::has_nondep_child(@_);
 }
 
 # Determine wether the given node (xinfo or pmcinfo) is apropriate for it's
