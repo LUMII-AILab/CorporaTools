@@ -141,10 +141,31 @@ public class MorphoTransformator {
 		// Inserted punctuation
 		else if (formChanges.contains(LvtbFormChange.INSERT) && formChanges.contains(LvtbFormChange.PUNCT)
 				&& formChanges.size() == 2)
-			return transfOnPunctInsert(aNode, previousToken, paragraphChange);
+		{
+			Token prevRealTok = previousToken;
+			while (prevRealTok != null && prevRealTok.idSub > 0)
+			{
+				int index = s.conll.indexOf(prevRealTok);
+				prevRealTok = index > 0 ? s.conll.get(index - 1) : null;
+			}
+			if (prevRealTok != null)
+				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT_AFTER);
+			return params.UD_STANDARD_NULLNODES ? null : transfOnPunctInsert(aNode, previousToken, paragraphChange);
+		}
 		// Some weard inserted thing, shouldn't be there
-		else if (formChanges.contains(LvtbFormChange.INSERT))
-			return transfOnOtherInsert(aNode, previousToken, paragraphChange);
+		/*else if (formChanges.contains(LvtbFormChange.INSERT))
+		{
+			Token prevRealTok = previousToken;
+			while (prevRealTok != null && prevRealTok.idSub > 0)
+			{
+				int index = s.conll.indexOf(prevRealTok);
+				prevRealTok = index > 0 ? s.conll.get(index - 1) : null;
+			}
+			if (prevRealTok != null)
+				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED_AFTER);
+			return params.UD_STANDARD_NULLNODES ? null : transfOnOtherInsert(aNode, previousToken, paragraphChange);
+		}//*/
+
 		// Renmoved punctuation (good case - no other problems)
 		else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
 				&& formChanges.size() == 2 && source.startsWith(mForm))
@@ -319,7 +340,6 @@ public class MorphoTransformator {
 		String mform = mNode.getForm();
 		String mLemma = mNode.getLemma();
 		String lvtbTag = mNode.getTag();
-		//String source = mNode.getSourceString();
 		List<PmlWNode> wNodes = mNode.getWs();
 
 		if (wNodes != null && !wNodes.isEmpty() )
@@ -348,6 +368,7 @@ public class MorphoTransformator {
 	 *                          token.
 	 * @return last token made
 	 */
+	@Deprecated
 	protected Token transfOnOtherInsert(
 			PmlANode aNode, Token previousToken, boolean paragraphChange)
 	{

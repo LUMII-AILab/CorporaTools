@@ -41,6 +41,14 @@ public class TransformationParams
 	public Boolean OMIT_WHOLE_FILES = false;
 
 	/**
+	 * To fit UD standard, this must be true. If this is false, enhanced graph
+	 * will contain empty nodes for inserted commas and nonpredicative empty
+	 * nodes.
+	 * TODO: implement this.
+	 */
+	public Boolean UD_STANDARD_NULLNODES = true;
+
+	/**
 	 * Get default parameter set.
 	 */
 	public TransformationParams(){};

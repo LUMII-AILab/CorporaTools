@@ -19,7 +19,11 @@ public class MiscValues
 	 */
 	public static String SPACING = "Spacing";
 	public static String SPELLING = "Spelling";
-	public static String INS_PUNCT = "InsertedPunctuation";
+	public static String INS_PUNCT_AFTER = "InsertedPunctAfter";
+	public static String INS_PUNCT = "InsertedPunct"; // Only for nonstandard UD.
+	@Deprecated
+	public static String INSERTED_AFTER = "InsertedAfter";
+	@Deprecated
 	public static String INSERTED = "Inserted";
 	public static String REM_PUNCT = "RemovedPunctuation";
 }

@@ -301,6 +301,12 @@ public class Sentence
 	 * the given PML nodes, but do not set circular dependencies. It is expected
 	 * that pmlaToEnhConll (if needed) and pmlaToConll contains links from given
 	 * PML nodes's IDs to corresponding tokens.
+	 * Return silently, if there was no token for given child node. Fail, if
+	 * there was no token for given parent node. This asymmetry is done because
+	 * inserted nodes have no corresponding UD token, and childless nodes should
+	 * just be ignored, while missing node in the middle of the tree, is a major
+	 * error.
+	 * TODO Maybe we should keep ignore-node list and check agains that?
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param baseDep		label to be used for base dependency
@@ -320,6 +326,7 @@ public class Sentence
 		Token childBaseToken = pmlaToConll.get(child.getId());
 		Token childEnhToken = pmlaToEnhConll.get(child.getId());
 		if (childEnhToken == null) childEnhToken = childBaseToken;
+		if (childBaseToken == null) return;
 
 		// Set base dependency, but avoid circular dependencies.
 		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
