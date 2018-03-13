@@ -2,6 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
+import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.morpho.*;
 import lv.ailab.lvtb.universalizer.utils.Logger;
@@ -46,15 +47,33 @@ public class TreesyntaxTransformator
 
 	/**
 	 * Remove the ellipsis nodes that can be ignored in latter processing.
+	 * Replace empty xPreds with just ellipsis nodes.
 	 * @return	 true if all ellipsis was removed
 	 */
 	public boolean preprocessEmptyEllipsis()
 	{
 		// Childless, empty reductions are removed.
 		List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
-		if (ellipsisChildren != null)
+		while (ellipsisChildren != null && !ellipsisChildren.isEmpty())
+		{
 			for (PmlANode ellipsisChild : ellipsisChildren)
+			{
+				PmlANode parent = ellipsisChild.getParent();
 				ellipsisChild.delete();
+				if (LvtbXTypes.XPRED.equals(parent.getPhraseType()))
+				{
+					List<PmlANode> children = parent.getChildren();
+					if (children != null && !children.isEmpty()) continue;
+
+					PmlANode grandparent = parent.getParent();
+					String xTag = parent.getPhraseTag();
+					if (xTag.contains("[")) xTag = xTag.substring(0, xTag.indexOf("["));
+					grandparent.setReductionTag(xTag);
+					parent.delete();
+				}
+			}
+			ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
+		}
 
 		// Check if there is other reductions.
 		ellipsisChildren = s.pmlTree.getEllipsisDescendants(false);

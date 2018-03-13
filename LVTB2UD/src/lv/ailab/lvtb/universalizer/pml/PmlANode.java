@@ -227,6 +227,13 @@ public interface PmlANode
 	public boolean setPhraseTag(String tag);
 
 	/**
+	 * Set a reduction tag if there is none, return false otherwise.
+	 * @param tag	tag value to set
+	 * @return	true if tag was set
+	 */
+	public boolean setReductionTag(String tag);
+
+	/**
 	 * Distinguished node types. Logic-wise, ROOT is a subtlype of NODE.
 	 */
 	public static enum Type

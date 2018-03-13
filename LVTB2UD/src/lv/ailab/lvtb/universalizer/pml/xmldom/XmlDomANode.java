@@ -782,6 +782,39 @@ public class XmlDomANode implements PmlANode
 			throw new IllegalArgumentException(e);
 		}
 	}
+
+	/**
+	 * Set a reduction tag, if there is none, return false otherwise.
+	 * @param tag	tag value to set
+	 * @return	true if tag was set
+	 */
+	public boolean setReductionTag(String tag)
+	{
+		String oldRedTag = getReductionTagPart();
+		if (oldRedTag != null && !oldRedTag.trim().isEmpty()) return false;
+		String oldRedForm = getReductionFormPart();
+		String newRedField = tag;
+		if (newRedField == null) newRedField = "";
+		newRedField = newRedField.trim();
+		if (oldRedForm != null) newRedField = newRedField + "(" + oldRedForm + ")";
+		try
+		{
+			Node tagNode = (Node) XPathEngine.get().evaluate(
+					"./reduction", domNode, XPathConstants.NODE);
+			if (tagNode == null) tagNode = domNode.getOwnerDocument().createElement("reduction");
+			while (tagNode.getFirstChild() != null)
+				tagNode.removeChild(tagNode.getFirstChild());
+			if (tag != null && !tag.isEmpty())
+			{
+				tagNode.appendChild(domNode.getOwnerDocument().createTextNode(newRedField));
+				domNode.appendChild(tagNode);
+			}
+			return true;
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
 	//=== Helpers ==============================================================
 
 	/**
