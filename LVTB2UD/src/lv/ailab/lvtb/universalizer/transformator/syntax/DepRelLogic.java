@@ -331,10 +331,24 @@ public class DepRelLogic
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
+			if (preps.isEmpty())
+			{
+				logger.doInsentenceWarning(String.format(
+						"\"%s\" with ID \"%s\" has no \"%s\".",
+						xType, node.getId(), LvtbRoles.PREP));
+				return Tuple.of(UDv2Relations.DEP, null);
+			}
 			if (basElems.size() > 1)
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.BASELEM));
+			if (basElems.isEmpty())
+			{
+				logger.doInsentenceWarning(String.format(
+						"\"%s\" with ID \"%s\" has no \"%s\".",
+						xType, node.getId(), LvtbRoles.BASELEM));
+				return Tuple.of(UDv2Relations.DEP, null);
+			}
 			String baseElemTag = basElems.get(0).getAnyTag();
 			String prepLemma = preps.get(0).getM().getLemma();
 			if ("par".equals(prepLemma)

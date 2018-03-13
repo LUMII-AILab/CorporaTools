@@ -734,6 +734,7 @@ public class XmlDomANode implements PmlANode
 	public boolean isSameNode(PmlANode other)
 	{
 		if (this == other || this.equals(other)) return true;
+		if (other == null) return false;
 		try
 		{
 			XmlDomANode castedOther = (XmlDomANode) other;
@@ -741,7 +742,8 @@ public class XmlDomANode implements PmlANode
 					|| domNode.equals(castedOther.domNode)
 					|| domNode.isSameNode(castedOther.domNode))
 				return true;
-		} catch (ClassCastException e){};
+		}
+		catch (ClassCastException e) {};
 		return false;
 	}
 
