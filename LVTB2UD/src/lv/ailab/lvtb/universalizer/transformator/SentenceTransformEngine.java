@@ -55,11 +55,8 @@ public class SentenceTransformEngine
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		syntTransf.transformBaseSyntax();
 		logger.flush();
-		//if (params.DO_ENHANCED)
-		//{
-			enhSyntTransf.transformEnhancedSyntax();
-			logger.flush();
-		//}
+		enhSyntTransf.transformEnhancedSyntax();
+		logger.flush();
 		morphoTransf.transformPostsyntMorpho();
 		logger.finishSentenceNormal(s.hasFailed);
 		return !s.hasFailed;
