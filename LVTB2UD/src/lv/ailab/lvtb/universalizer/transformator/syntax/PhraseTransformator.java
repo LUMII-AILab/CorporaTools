@@ -480,7 +480,7 @@ public class PhraseTransformator
 				{
 					PmlANode phrase = basElem.getPhraseNode();
 					if (phrase == null || phrase.getNodeType() != PmlANode.Type.X
-							&& !LvtbXTypes.XPREP.equals(phrase.getPhraseType()))
+							|| !LvtbXTypes.XPREP.equals(phrase.getPhraseType()))
 						noPrepBases.add(basElem);
 				}
 

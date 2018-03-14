@@ -350,7 +350,9 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.DEP, null);
 			}
 			String baseElemTag = basElems.get(0).getAnyTag();
-			String prepLemma = preps.get(0).getM().getLemma();
+			PmlMNode prepM = preps.get(0).getM();
+			// prepM is null in the rare cases when prep is coordinated.
+			String prepLemma = prepM == null ? null : prepM.getLemma();
 			if ("par".equals(prepLemma)
 					&& baseElemTag != null && baseElemTag.matches("[nampx].*|y[npa].*")
 					&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
