@@ -773,7 +773,8 @@ public class XmlDomANode implements PmlANode
 		{
 			Node tagNode = (Node) XPathEngine.get().evaluate(
 					"./tag", domNode, XPathConstants.NODE);
-			if (tag == null) tagNode = domNode.getOwnerDocument().createElement("tag");
+			if (tagNode == null)
+				tagNode = domNode.getOwnerDocument().createElement("tag");
 			while (tagNode.getFirstChild() != null)
 				tagNode.removeChild(tagNode.getFirstChild());
 			tagNode.appendChild(domNode.getOwnerDocument().createTextNode(tag));

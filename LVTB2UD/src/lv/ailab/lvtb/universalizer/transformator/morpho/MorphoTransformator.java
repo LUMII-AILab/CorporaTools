@@ -150,7 +150,7 @@ public class MorphoTransformator {
 			}
 			if (prevRealTok != null)
 				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT_AFTER);
-			return params.UD_STANDARD_NULLNODES ? null : transfOnPunctInsert(aNode, previousToken, paragraphChange);
+			return params.UD_STANDARD_NULLNODES ? previousToken : transfOnPunctInsert(aNode, previousToken, paragraphChange);
 		}
 		// Some weard inserted thing, shouldn't be there
 		/*else if (formChanges.contains(LvtbFormChange.INSERT))
@@ -163,7 +163,7 @@ public class MorphoTransformator {
 			}
 			if (prevRealTok != null)
 				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED_AFTER);
-			return params.UD_STANDARD_NULLNODES ? null : transfOnOtherInsert(aNode, previousToken, paragraphChange);
+			return params.UD_STANDARD_NULLNODES ? previousToken : transfOnOtherInsert(aNode, previousToken, paragraphChange);
 		}//*/
 
 		// Renmoved punctuation (good case - no other problems)
