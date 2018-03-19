@@ -9,6 +9,7 @@ sub get_structural_errors
   my $node = shift;
   my $root = shift;
   my @errors = ();
+
   push @errors, 'Root must have one PMC!'
     if ($node eq $root and _count_pmc_child($node) != 1);
   push @errors, 'Only one phrase per dependency node allowed!' 
@@ -16,18 +17,18 @@ sub get_structural_errors
   push @errors, 'Empty field!'
     if (is_unfinished($node));
   push @errors, 'Role unsuitable for this parent!'
-    if (!is_allowed_for_parent($node));
+    unless (is_role_allowed_for_parent($node));
   push @errors, 'Node must have reduction, morphology or phrase!'
-    if (is_wrong_empty_node($node) and not _is_phrase_node($node));
+    unless (is_allowed_to_be_empty($node) or _is_phrase_node($node));
+  push @errors, 'Phrase node must have children!'
+    if (not is_allowed_to_be_empty($node) and _is_phrase_node($node));
   push @errors, 'Phrase are not allowed under node with morphology!'
     if (($node->{'#name'} eq 'xinfo' or $node->{'#name'} eq 'coordinfo' or $node->{'#name'} eq 'pmcinfo')
 	  and ($node->parent)->attr('m/id'));
   push @errors, 'Phrase are not allowed under node with reduction!'
     if (($node->{'#name'} eq 'xinfo' or $node->{'#name'} eq 'coordinfo' or $node->{'#name'} eq 'pmcinfo')
 	  and ($node->parent)->attr('reduction'));
-  push @errors, 'Phrase node must have children!'
-    if (is_wrong_empty_node($node) and _is_phrase_node($node));
-
+  
   if ($node->{'xtype'} eq 'xPred')
   {
     my $basElemCount = _count_children_with_with_role($node, 'basElem');
@@ -109,7 +110,6 @@ sub get_structural_errors
 	push @errors, $node->{'pmctype'}.' must have one basElem!'
       if ($basElemCount != 1);
   }
-  
   return \@errors;
 }
 
@@ -137,6 +137,7 @@ sub is_role_allowed_for_parent
   my $node = shift;
   my $root = shift;
   my $p = $node->parent;
+
   return 1 unless ($node and $p);
   
   # root children.

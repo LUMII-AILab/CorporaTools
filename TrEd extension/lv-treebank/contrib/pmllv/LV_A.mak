@@ -104,25 +104,25 @@ sub get_structural_errors
 	return SyntaxChecker::get_structural_errors(@_, $root);
 }
 
-sub is_unfinished
-{
-	return SyntaxChecker::is_unfinished(@_);
-}
+#sub is_unfinished
+#{
+#	return SyntaxChecker::is_unfinished(@_);
+#}
 
-sub is_allowed_for_parent
-{
-	return SyntaxChecker::is_role_allowed_for_parent(@_, $root);
-}
+#sub is_allowed_for_parent
+#{
+#	return SyntaxChecker::is_role_allowed_for_parent(@_, $root);
+#}
 
-sub is_wrong_empty_node
-{
-	return not SyntaxChecker::is_allowed_to_be_empty(@_);
-}
+#sub is_wrong_empty_node
+#{
+#	return not SyntaxChecker::is_allowed_to_be_empty(@_);
+#}
 
-sub has_nondep_child
-{
-	return SyntaxChecker::has_nondep_child(@_);
-}
+#sub has_nondep_child
+#{
+#	return SyntaxChecker::has_nondep_child(@_);
+#}
 
 # Determine wether the given node (xinfo or pmcinfo) is apropriate for it's
 # children hiding - for dependency-only stylesheet.
