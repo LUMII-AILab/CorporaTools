@@ -351,8 +351,10 @@ public class DepRelLogic
 			}
 			String baseElemTag = basElems.get(0).getAnyTag();
 			PmlMNode prepM = preps.get(0).getM();
+			String prepRed = preps.get(0).getReduction();
 			// prepM is null in the rare cases when prep is coordinated.
 			String prepLemma = prepM == null ? null : prepM.getLemma();
+			if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
 			if ("par".equals(prepLemma)
 					&& baseElemTag != null && baseElemTag.matches("[nampx].*|y[npa].*")
 					&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
@@ -371,6 +373,8 @@ public class DepRelLogic
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.CONJ));
 			String conjLemma = conjs.get(0).getM().getLemma();
+			String conjRed = conjs.get(0).getReduction();
+			if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
 			if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
 				return Tuple.of(UDv2Relations.NMOD, conjLemma);
 			return Tuple.of(UDv2Relations.OBL, conjLemma);
@@ -426,6 +430,8 @@ public class DepRelLogic
 							"\"%s\" with ID \"%s\" has multiple \"%s\".",
 							xType, basElems.get(0).getId(), LvtbRoles.CONJ));
 				String conjLemma = conjs.get(0).getM().getLemma();
+				String conjRed = conjs.get(0).getReduction();
+				if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
 				return Tuple.of(UDv2Relations.ADVCL, conjLemma);
 			}
 			// Participal SPC, adverbs in commas
@@ -502,7 +508,9 @@ public class DepRelLogic
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
 			String prepLemma = preps.get(0).getM().getLemma();
-				return Tuple.of(UDv2Relations.OBL, prepLemma);
+			String prepRed = preps.get(0).getReduction();
+			if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
+			return Tuple.of(UDv2Relations.OBL, prepLemma);
 		}
 		if (tag.matches("n.*|p.*|mo.*"))
 		{
