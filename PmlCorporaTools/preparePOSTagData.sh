@@ -2,6 +2,7 @@
 set -o nounset
 set -o errexit
 
+# FIXME! now nothing is taken from Morphocorpus anymore, but its used as the temporary location for merging all the data...
 if [ $# -ge 1 ]
 then sourceFolder="$1"
 # should come from https://github.com/LUMII-AILab/Morphocorpus
@@ -21,14 +22,10 @@ mkdir $pmlFolder/dev
 mkdir $pmlFolder/test
 mkdir $pmlFolder/train
 
-# This subset of Morphocorpus is double-checked and usable for tagger training
-cp $sourceFolder/Balanseetais/Jaunaakais/*.[m,w] $pmlFolder
-cp $sourceFolder/Latvijas\ Veestnesis/Jaunaakais/*.[m,w] $pmlFolder
-
 # For treebank, we're filtering out files that are marked as not yet finished (AUTO) or needing corrections (FIXME)
 tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
-	if grep -q "<comment>AUTO</comment>" "$treebankFolder/${file%.m}.a"; then
+	if [ $file = *"Verbu_rindkopas"* ] && [ grep -q "<comment>AUTO</comment>" "$treebankFolder/${file%.m}.a" ]; then
 		echo "skipping $file - unfinished"
 	elif grep -q "<comment>FIXME" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - fixme"
@@ -51,20 +48,20 @@ do
 	file=${entry[1]}
 	if [ $type = "dev" ]; then
 		# echo "copying $file to devset"
-		mv "$pmlFolder/res/$file.pml" "$pmlFolder/dev";
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/dev" || true;
 	elif [ $type = "test" ]; then
 		# echo "copying $file to testset"
-		mv "$pmlFolder/res/$file.pml" "$pmlFolder/test";
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/test" || true;
 	elif [ $type = "train" ]; then
 		# echo "copying $file to trainset"
-		mv "$pmlFolder/res/$file.pml" "$pmlFolder/train";
+		mv "$pmlFolder/res/$file.pml" "$pmlFolder/train" || true;
 	elif [ $type = "skip" ]; then
 		echo "skipping $file"
 		rm "$pmlFolder/res/$file.pml"
 	else 
 		echo "$file has bad type"
 	fi
-done < "../Docs/testdevtrain.tsv"
+done < "$treebankFolder/../Datasplits/testdevtrain.tsv"
 
 shopt -s nullglob
 for file in $pmlFolder/res/*.pml; do 
@@ -126,13 +123,13 @@ cp "$pmlFolder/train.txt" "$morphologyFolder/src/main/resources/"
 cp "$pmlFolder/all.txt" "$morphologyFolder/src/test/resources/"
 cp "$pmlFolder/dev.txt" "$morphologyFolder/src/test/resources/"
 cp "$pmlFolder/test.txt" "$morphologyFolder/src/test/resources/"
-cp "$treebankFolder/../Docs/SemTi-Kamols_morphotags.xlsx" "$morphologyFolder/docs/"
+cp "$treebankFolder/../Docs/Annotation how-to/SemTi-Kamols_morphotags.xlsx" "$morphologyFolder/docs/"
 
 cp "$pmlFolder/train.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/train_dev.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/test.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/dev.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/all.txt" "$taggerFolder/MorphoCRF/"
-cp "$treebankFolder/../Docs/SemTi-Kamols_morphotags.xlsx" "$taggerFolder/docs/"
+cp "$treebankFolder/../Docs/Annotation how-to/SemTi-Kamols_morphotags.xlsx" "$taggerFolder/docs/"
 
 echo "Done!"
