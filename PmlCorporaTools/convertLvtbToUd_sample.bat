@@ -8,16 +8,16 @@
 :: Copy all the data from data/knitted to the LVTB2UD data folder
 :: (with default IntelliJ configuration it is CorporaTools/LVTB2UD/out/production/data)
 :: Run runUniversalizer.bat from CorporaTools/LVTB2UD/out/production
-:: Copy results from CorporaTools/LVTB2UD/out/production/data/conll-u to data/complete
+:: Copy results from CorporaTools/LVTB2UD/out/production/data/conll-u to data/conll-u
 
 :: Create data splits in folders data/train, data/test, data/dev
-::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitTDT); splitTDT(@ARGV)" data/complete ../../Treebank/Datasplits/testdevtrain.tsv data
+::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitTDT); splitTDT(@ARGV)" data/conll-u ../../Treebank/Datasplits/testdevtrain.tsv data
 
-:: Fold everything neatly (assumed files are separated in folders "train", "test", "dev" and "complete")
-::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/train --fold p=1 name=lv-ud-train
-::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/test --fold p=1 name=lv-ud-test
-::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/dev --fold p=1 name=lv-ud-dev
-::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/complete --fold p=1 name=lv-ud-full
+:: Fold everything neatly (assumed files are separated in folders "train", "test", "dev")
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/train --fold p=1 name=lv_lvtb-ud-train
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/test --fold p=1 name=lv_lvtb-ud-test
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/dev --fold p=1 name=lv_lvtb-ud-dev
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/complete --fold p=1 name=lv_lvtb-ud-complete
 
 :: Do not forget to convert everything to Linux line endings
 :: Renaming files from .conll to .conllu also might be needed

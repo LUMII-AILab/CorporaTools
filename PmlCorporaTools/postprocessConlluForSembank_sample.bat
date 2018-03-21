@@ -1,11 +1,11 @@
 :: Obtain CoNLL-U files as for UD, but do not fold together in one file.
 :: Use only Treebank's normalizedIds branch.
 
-:: Let's assume all CoNLL-U files are in PmlCorporaTools/data/fullConllu.
+:: Let's assume all CoNLL-U files are in PmlCorporaTools/data/conll-u.
 :: Let's assume Treebank repository is right next to CorporaTools.
 
 REM Split according to Sembank ignore list.
-::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitOnOffList); splitOnOffList(@ARGV)" data\fullConllu ..\..\Treebank\Datasplits\SemBank-ignored.tsv data
+::perl -e "use LvCorporaTools::DataSelector::SplitByList qw(splitOnOffList); splitOnOffList(@ARGV)" data\conll-u ..\..\Treebank\Datasplits\SemBank-ignored.tsv data
 ::@move .\data\on-list .\data\ignore >nul
 ::@move .\data\off-list .\data\good >nul
 
