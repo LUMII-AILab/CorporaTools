@@ -569,7 +569,7 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 			return Tuple.of(UDv2Relations.CONJ, null);
-		if (tag != null && tag.matches("[qi].*|yd.*"))
+		if (tag != null && tag.matches("[qi].*|yd.*|xx.*"))
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
