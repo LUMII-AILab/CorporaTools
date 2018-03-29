@@ -26,6 +26,9 @@ public class PmlXmlFileTransformator
 	public int omitted;
 	private int added;
 	public int all;
+	public boolean hasAuto;
+	public boolean hasFixme;
+	public boolean hasCrashSent;
 
 	public PmlXmlFileTransformator(TransformationParams params)
 	{
@@ -59,6 +62,7 @@ public class PmlXmlFileTransformator
 				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
 				logger.finishFileWithAUTO();
 				omitted = pmlTrees.getLength();
+				hasAuto = true;
 				return;
 			}
 			// Print out information about the start of the new document
@@ -107,6 +111,7 @@ public class PmlXmlFileTransformator
 				System.out.println("A sentence with \"FIXME\" ommited.");
 				logger.finishSentenceWithFIXME();
 				omitted++;
+				hasFixme = true;
 				continue;
 			}
 
@@ -125,6 +130,7 @@ public class PmlXmlFileTransformator
 						treeId);
 				e.printStackTrace();
 				logger.finishSentenceWithException(treeId, e, false);
+				hasCrashSent = true;
 			}
 
 			// Has a new paragraph started?

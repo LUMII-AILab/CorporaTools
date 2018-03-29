@@ -150,7 +150,8 @@ public class Logger
 				"%s#%s\t%s", sentenceID, tokFirstCol, lvtbNodeId));
 	}
 
-	public void finalStatsAndClose(int omittedFiles, int omittedTrees)
+	public void finalStatsAndClose(int omittedFiles, int omittedTrees,
+								   int autoFiles, int fixmeFiles, int crashFiles)
 	{
 		if (omittedFiles == 0 && omittedTrees == 0)
 			statusOut.printf("Everything is finished, nothing was omited.\n");
@@ -161,6 +162,9 @@ public class Logger
 			statusOut.printf(
 					"Everything is finished, %s files and at least %s trees was omited.\n",
 					omittedFiles, omittedTrees);
+		if (autoFiles > 0) statusOut.printf("%s files start with AUTO.\n", autoFiles);
+		if (fixmeFiles > 0) statusOut.printf("%s files have at least one FIXME.\n", fixmeFiles);
+		if (crashFiles > 0) statusOut.printf("%s files have at least one crashing sentence.\n", crashFiles);
 
 		flush();
 		statusOut.close();
