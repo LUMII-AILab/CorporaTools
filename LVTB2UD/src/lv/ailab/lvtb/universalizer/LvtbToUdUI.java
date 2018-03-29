@@ -103,6 +103,7 @@ public class LvtbToUdUI
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
 				logger.finishFileWithBadExt(fileName);
 			}
+
 		}
 		if (omittedFiles == 0 && omittedTrees == 0)
 			System.out.println("Everything is finished, nothing was omited.");

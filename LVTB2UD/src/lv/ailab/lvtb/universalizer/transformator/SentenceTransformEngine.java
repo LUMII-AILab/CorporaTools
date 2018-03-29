@@ -82,21 +82,15 @@ public class SentenceTransformEngine
 			if (res) return t.s.toConllU();
 			if (params.WARN_OMISSIONS)
 				logger.finishSentenceWithOmit(id);
-				//warnOut.printf("Sentence \"%s\" is being omitted.\n", t.s.id);
 		} catch (NullPointerException|IllegalArgumentException e)
 		{
-			//warnOut.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
-			//e.printStackTrace(warnOut);
 			e.printStackTrace();
 			logger.finishSentenceWithException(id, e, false);
-			//throw e;
 		}
 		catch (IllegalStateException e)
 		{
-			//warnOut.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
 			System.err.println("Transforming sentence " + id + " completely failed! Might be algorithmic error.");
-			//e.printStackTrace(warnOut);
 			e.printStackTrace();
 			logger.finishSentenceWithException(id, e, false);
 		}

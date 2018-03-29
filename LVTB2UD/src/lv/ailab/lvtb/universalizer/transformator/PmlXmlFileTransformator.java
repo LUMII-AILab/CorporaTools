@@ -37,6 +37,9 @@ public class PmlXmlFileTransformator
 		omitted = 0;
 		added = 0;
 		all = 0;
+		hasAuto = false;
+		hasFixme = false;
+		hasCrashSent = false;
 	}
 
 	/**
@@ -125,12 +128,12 @@ public class PmlXmlFileTransformator
 			} catch (Exception e)
 			{
 				String treeId = pmlTree.getId();
+				hasCrashSent = true;
 				System.out.printf(
 						"Transforming sentence %s completely failed! Check structure and try again.\n",
 						treeId);
 				e.printStackTrace();
 				logger.finishSentenceWithException(treeId, e, false);
-				hasCrashSent = true;
 			}
 
 			// Has a new paragraph started?
@@ -156,7 +159,11 @@ public class PmlXmlFileTransformator
 				processed.append(conllTree);
 				added++;
 			}
-			else omitted++;
+			else
+			{
+				omitted++;
+				hasCrashSent = true;
+			}
 		}
 	}
 
