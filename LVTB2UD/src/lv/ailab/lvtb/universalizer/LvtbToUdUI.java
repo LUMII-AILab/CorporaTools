@@ -115,11 +115,11 @@ public class LvtbToUdUI
 					"Everything is finished, %s files and %s trees was omited.\n",
 					omittedFiles, omittedTrees);
 		if (autoFiles > 0)
-			System.out.printf("%s files start with AUTO.\n", autoFiles);
+			System.out.printf("%s files have AUTOs.\n", autoFiles);
 		if (fixmeFiles > 0)
-			System.out.printf("%s files have at least one FIXME.\n", fixmeFiles);
+			System.out.printf("%s files have FIXMEs.\n", fixmeFiles);
 		if (crashFiles > 0)
-			System.out.printf("%s files have at least one crashing sentence.\n", crashFiles);
+			System.out.printf("%s files have crashing sentences.\n", crashFiles);
 		logger.finalStatsAndClose(omittedFiles, omittedTrees,
 				autoFiles, fixmeFiles, crashFiles);
 	}

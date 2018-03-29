@@ -162,9 +162,9 @@ public class Logger
 			statusOut.printf(
 					"Everything is finished, %s files and at least %s trees was omited.\n",
 					omittedFiles, omittedTrees);
-		if (autoFiles > 0) statusOut.printf("%s files start with AUTO.\n", autoFiles);
-		if (fixmeFiles > 0) statusOut.printf("%s files have at least one FIXME.\n", fixmeFiles);
-		if (crashFiles > 0) statusOut.printf("%s files have at least one crashing sentence.\n", crashFiles);
+		if (autoFiles > 0) statusOut.printf("%s files have AUTOs.\n", autoFiles);
+		if (fixmeFiles > 0) statusOut.printf("%s files have FIXMEs.\n", fixmeFiles);
+		if (crashFiles > 0) statusOut.printf("%s files have crashing sentences.\n", crashFiles);
 
 		flush();
 		statusOut.close();
