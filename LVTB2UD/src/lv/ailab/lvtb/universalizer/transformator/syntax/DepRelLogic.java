@@ -372,9 +372,16 @@ public class DepRelLogic
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.CONJ));
-			String conjLemma = conjs.get(0).getM().getLemma();
-			String conjRed = conjs.get(0).getReduction();
-			if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
+			String conjLemma = null;
+			if (conjs.size() > 0) // One weird case of reduced conjunction has no conjs.
+			{
+				conjLemma = conjs.get(0).getM().getLemma();
+				String conjRed = conjs.get(0).getReduction();
+				if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
+			}
+			else logger.doInsentenceWarning(String.format(
+					"\"%s\" with ID \"%s\" has no \"%s\".",
+					xType, node.getId(), LvtbRoles.CONJ));
 			if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
 				return Tuple.of(UDv2Relations.NMOD, conjLemma);
 			return Tuple.of(UDv2Relations.OBL, conjLemma);
