@@ -390,7 +390,7 @@ sub getAVPairsFromTagPhrasePart
 	}
 	
 	# Process missing features.
-	for my $i ($featureNumber+1..@$properties-1)
+	for my $i ($featureNumber .. (@$properties - 1))
 	{
 		push(@result, [$properties->[$i][0], $missing]);
 	}
