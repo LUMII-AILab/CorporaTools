@@ -30,3 +30,5 @@
 /PmlCorporaTools/testdata/SplitBinary/on-list
 /PmlCorporaTools/testdata/SplitBinary/off-list
 /PmlCorporaTools/.idea/perl5local.xml
+
+/PmlCorporaTools/* - Copy.bat
