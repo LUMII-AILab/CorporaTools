@@ -60,14 +60,15 @@ public class Sentence
 	/**
 	 * Indication that transformation has failed and the obtained conll data is
 	 * garbage.
+	 * TODO substitute with handled exceptions?
 	 */
-	public boolean hasFailed;
+	//public boolean hasFailed;
 
 	public Sentence(PmlANode pmlTree)
 	{
 		this.pmlTree = pmlTree;
 		id = pmlTree.getId();
-		hasFailed = false;
+		//hasFailed = false;
 	}
 
 	public String toConllU()

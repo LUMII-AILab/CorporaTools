@@ -84,7 +84,8 @@ public class Logger
 	public void finishFileWithException(Exception e)
 	{
 		// It is possible, that last sentence has not ended well.
-		finishSentenceNormal(true);
+		//finishSentenceNormal(true);
+		afterSentenceReset();
 		statusOut.printf("File failed with exception: ");
 		e.printStackTrace(statusOut);
 	}
@@ -99,7 +100,7 @@ public class Logger
 				"File starts with \"AUTO\" comment, everything is ommited!\n");
 	}
 
-	public void finishSentenceNormal(boolean hasFailed)
+	/*public void finishSentenceNormal(boolean hasFailed)
 	{
 		if (!hasFailed && idMappingOut != null)
 		{
@@ -110,6 +111,23 @@ public class Logger
 		warnings = new HashSet<>();
 		idMappingDesc = new ArrayList<>();
 		flush();
+	}//*/
+	protected void afterSentenceReset()
+	{
+		warnings = new HashSet<>();
+		idMappingDesc = new ArrayList<>();
+		flush();
+	}
+
+	public void finishSentenceNormal()
+	{
+		if (idMappingOut != null)
+		{
+			for (String s : idMappingDesc)
+				idMappingOut.println(s);
+			if (!idMappingDesc.isEmpty()) idMappingOut.println();
+		}
+		afterSentenceReset();
 	}
 	public void finishSentenceWithException(String treeId, Exception e, boolean algorithmic)
 	{
@@ -119,17 +137,20 @@ public class Logger
 			statusOut.printf("Transforming sentence %s completely failed! Check structure and try again.\n", treeId);
 		//statusOut.printf("A sentence %s failed with an exception: ", treeId);
 		e.printStackTrace(statusOut);
-		finishSentenceNormal(true);
+		//finishSentenceNormal(true);
+		afterSentenceReset();
 	}
 	public void finishSentenceWithFIXME()
 	{
 		statusOut.printf("A sentence with \"FIXME\" ommited.\n");
-		finishSentenceNormal(true);
+		//finishSentenceNormal(true);
+		afterSentenceReset();
 	}
 	public void finishSentenceWithOmit(String treeId)
 	{
 		statusOut.printf("Sentence %s is being omitted.\n", treeId);
-		finishSentenceNormal(true);
+		//finishSentenceNormal(true);
+		afterSentenceReset();
 	}
 
 	public void warnForAnalyzerException(Exception e)

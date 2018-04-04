@@ -38,11 +38,14 @@ public class SentenceTransformEngine
 
 	/**
 	 * Create CoNLL-U token table, try to fill it in as much as possible.
-	 * @return	true, if tree has no untranformable ellipsis; false if tree
-	 * 			contains untransformable ellipsis and, thus, result data
-	 * 		    has garbage syntax.
+	 * @throws NullPointerException		transformation failure, probably because
+	 * 									of invalid tree structure
+	 * @throws IllegalArgumentException	transformation failure, probably because
+	 *	 								of invalid tree structure
+	 * @throws IllegalStateException	transformation failure, probably because
+	 * 									of algorithmic error
 	 */
-	public boolean transform()
+	public void transform()
 	{
 		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
@@ -58,8 +61,9 @@ public class SentenceTransformEngine
 		enhSyntTransf.transformEnhancedSyntax();
 		logger.flush();
 		morphoTransf.transformPostsyntMorpho();
-		logger.finishSentenceNormal(s.hasFailed);
-		return !s.hasFailed;
+		//logger.finishSentenceNormal(s.hasFailed);
+		logger.finishSentenceNormal();
+		//return !s.hasFailed;
 	}
 
 	/**
@@ -78,10 +82,8 @@ public class SentenceTransformEngine
 		try {
 			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, params, logger);
 			id = t.s.id;
-			boolean res = t.transform();
-			if (res) return t.s.toConllU();
-			if (params.WARN_OMISSIONS)
-				logger.finishSentenceWithOmit(id);
+			t.transform();
+			return t.s.toConllU();
 		} catch (NullPointerException|IllegalArgumentException e)
 		{
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");
