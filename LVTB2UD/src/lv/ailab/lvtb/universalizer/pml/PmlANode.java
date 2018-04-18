@@ -107,12 +107,15 @@ public interface PmlANode
 	 */
 	public Integer getOrd();
 	/**
-	 * Get ord value for given node, if there is one. Otherwise use this
-	 * function on each node's child and return smallest value found.
-	 * @return	ord value, or 0, if ord can't be found (no children with ord
-	 * 			values etc.), or null if node is null
+	 * Get ord value for given node, if there is one. Otherwise, if this node
+	 * has a phrase node (or is a phrase node), use this function on its
+	 * constituents and return the smallest. Other-otherwise, if this node is
+	 * an empty reduction node, use this function on its children and return the
+	 * smallest.
+	 * @return	ord value, or 0, if ord can't be found (no phrase children with
+	 * 			ord values etc.), or null if node is null
 	 */
-	public Integer getDeepOrd ();
+	public Integer getDeepOrd();
 	/**
 	 * Find smallest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an

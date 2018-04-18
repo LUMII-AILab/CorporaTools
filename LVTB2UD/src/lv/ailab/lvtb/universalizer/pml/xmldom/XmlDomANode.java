@@ -220,17 +220,17 @@ public class XmlDomANode implements PmlANode
 					"./children/node[role='" + LvtbRoles.PRED + "']",
 					phraseNode, XPathConstants.NODESET);
 			if (baseParts != null && baseParts.getLength() > 0)
-				return PmlANodeListUtils.getFirstByDescOrd(asList(baseParts)).getAnyTag();
+				return PmlANodeListUtils.getFirstByDeepOrd(asList(baseParts)).getAnyTag();
 			baseParts = (NodeList) XPathEngine.get().evaluate(
 					"./children/node[role='" + LvtbRoles.BASELEM + "']",
 					phraseNode, XPathConstants.NODESET);
 			if (baseParts != null && baseParts.getLength() > 0)
-				return PmlANodeListUtils.getFirstByDescOrd(asList(baseParts)).getAnyTag();
+				return PmlANodeListUtils.getFirstByDeepOrd(asList(baseParts)).getAnyTag();
 			baseParts = (NodeList) XPathEngine.get().evaluate(
 					"./children/node[role='" + LvtbRoles.CRDPART + "']",
 					phraseNode, XPathConstants.NODESET);
 			if (baseParts != null && baseParts.getLength() > 0)
-				return PmlANodeListUtils.getFirstByDescOrd(asList(baseParts)).getAnyTag();
+				return PmlANodeListUtils.getFirstByDeepOrd(asList(baseParts)).getAnyTag();
 		}
 		catch (XPathExpressionException e)
 		{
@@ -361,8 +361,11 @@ public class XmlDomANode implements PmlANode
 		}
 	}
 	/**
-	 * Get ord value for given node, if there is one. Otherwise use this
-	 * function on each node's child and return smallest value found.
+	 * Get ord value for given node, if there is one. Otherwise, if this node
+	 * has a phrase node (or is a phrase node), use this function on its
+	 * constituents and return the smallest. Other-otherwise, if this node is
+	 * an empty reduction node, use this function on its children and return the
+	 * smallest.
 	 * @return	ord value, or 0, if ord can't be found (no children with ord
 	 * 			values etc.), or null if node is null.
 	 */
@@ -372,10 +375,11 @@ public class XmlDomANode implements PmlANode
 		Integer ord = getOrd();
 		if (ord != null && ord > 0) return ord;
 
-		List<PmlANode> children = new ArrayList<PmlANode>();
+		List<PmlANode> children = new ArrayList<>();
 		PmlANode phrase = getPhraseNode();
 		if (phrase != null) children.add(phrase);
-		children.addAll(getChildren());
+		else if (this.isPhraseNode() || this.isPureReductionNode())
+			children.addAll(getChildren());
 		if (children.size() < 1) return 0;
 		int smallestOrd = 0;
 		for (PmlANode child : children)
