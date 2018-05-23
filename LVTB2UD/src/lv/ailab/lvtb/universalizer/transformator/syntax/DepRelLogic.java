@@ -391,7 +391,7 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
 		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y[npa].*"))
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..pd..[adnl].*|x.*|y[npa].*"))
 		{
 			// TODO Optimize to a single match
 			Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
@@ -646,7 +646,7 @@ public class DepRelLogic
 		if (preds!= null && preds.size() > 1)
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED));
-		if (preds != null) return Tuple.of(UDv2Relations.PARATAXIS, null);
+		if (preds != null && !preds.isEmpty()) return Tuple.of(UDv2Relations.PARATAXIS, null);
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
 	}
 
