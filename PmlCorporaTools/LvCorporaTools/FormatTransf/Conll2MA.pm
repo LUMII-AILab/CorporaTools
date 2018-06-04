@@ -41,8 +41,6 @@ our $vers = 0.3;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
-#TODO processDir should somehow show, how many files failed/gave warnings.
-
 sub processDir
 {
 	if (not @_ or @_ < 3)
@@ -280,7 +278,9 @@ sub _endSentence
 	{
 		my $aSentId = &_getASentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
 		my $mSentId = &_getMSentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
-		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);		
+		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);
+		#use Data::Dumper;
+		#print Dumper($nodeMap);
 		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $status->{'isFirstTree'});
 		$status->{'isFirstTree'} = 0;
 	}
@@ -420,14 +420,14 @@ sub _printATreeFromHash
 # &_printARootFromHash(output stream, maping from PML IDs to nodes, ID of the
 #                      tree root (only descendents of this node are printed),
 #                      should the first sentence comment be added?)
-# Print out the subtree assuming it is rooten in the node with type 'root'.
+# Print out the subtree assuming it is PMC in the node with type 'root'.
 sub _printARootFromHash
 {
 	my ($aOut, $nodeMap, $rootId, $isFirst) = @_;
 	my $rootNode = $nodeMap->{$rootId};
-	my $parentType = 0;
-	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
-		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
+	#my $parentType = 0;
+	#$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
+	#	if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
 
 	# 1. Start sentence enclosing part.
 	printASentBegin($aOut, $rootNode->{'aId'}, $rootNode->{'mId'}, $isFirst ? $firstSentComment : 0);
