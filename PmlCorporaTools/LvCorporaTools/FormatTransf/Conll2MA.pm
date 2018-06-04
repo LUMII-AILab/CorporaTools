@@ -71,7 +71,7 @@ Params:
         (any further columns are ignored)
    output directory
 
-Latvian Treebank project, LUMII, 2017, provided under GPL
+Latvian Treebank project, LUMII, 2017-2018, provided under GPL
 END
 		exit 1;
 	}
@@ -82,14 +82,38 @@ END
 	my $wDir = IO::Dir->new($wDirName) or die "$!";
 	mkdir($outDirName);
 
+	my $baddies = 0;
+
 	while (defined(my $inWFile = $wDir->read))
 	{
+		my $isBad = 0;
 		if (! -d "$wDirName/$inWFile")
 		{
 			my $coreName = $inWFile =~ /^(.*)\.w*$/ ? $1 : $inWFile;
-			&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+			#&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+			my $res = eval
+            {
+            	#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+            	local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
+				&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+            };
+            if ($@ or ! defined $res)
+            {
+            	$isBad = 1;
+            	print $@;
+            }
 		}
+		$baddies = $baddies + $isBad;
 	}
+	if ($baddies)
+    {
+    	print "$baddies files failed.\n";
+    }
+    else
+    {
+    	print "All finished.\n";
+    }
+    return $baddies;
 
 }
 
@@ -98,9 +122,10 @@ sub processFileSet
 	if (not @_ or @_ < 2)
 	{
 		print <<END;
-Script for creating PML M and A files, if and w file and (optional) CoNLL file
-are provided. Currently morphology is mandatory, syntax is optional. All input
-files must be UTF-8. Fileset must have the same text in both W and CoNLL file.
+Script for creating PML M and A files, if  w file and (optional) CoNLL file are
+provided. Currently morphology is mandatory, syntax is optional. All input files
+must be UTF-8. Fileset must have the same text in both W and CoNLL file. Tokens
+in W must be either the same or substrings of tokens in CoNLL.
 
 Params:
    w file name
@@ -172,23 +197,32 @@ END
 			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut, $wTok);
 		}
 	}
-	
+
 	# Process unused CoNLL lines in the end of the file and warn
 	my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
 	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($mustEndSentence);
 	#$status{'paraId'}++;
-	while ($line)
-	{
-		&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
-		($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
-		&_endSentence(\%status, $mOut, $aOut, $conllName)
-			if ($mustEndSentence);
-	}
 
-	# Warn about spare w nodes
-	warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
-		if ($status{'unusedTokens'});
+	#if ($line and $status{'unusedTokens'})
+	if ($line or $status{'unusedTokens'})
+	{
+		warn "Can't match ".$status{'unusedTokens'}." from dataset $nameStub with CoNLL! Maybe tokenization is weird?"
+	}
+#	else
+#	{
+#		while ($line)
+#		{
+#			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
+#			($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
+#			&_endSentence(\%status, $mOut, $aOut, $conllName)
+#				if ($mustEndSentence);
+#		}
+#
+#		# Warn about spare w nodes
+#		warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
+#			if ($status{'unusedTokens'});
+#	}
 
 	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($status{'isInsideOfSentence'});
