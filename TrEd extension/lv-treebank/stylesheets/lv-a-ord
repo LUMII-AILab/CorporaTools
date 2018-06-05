@@ -13,7 +13,7 @@ node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}<?
-  ' ' if $${ord} and $${m/form} ?><?
+  ' ' if $${ord} and length($this->attr('m/form')) ?><?
   '#{darkred}(${ord})' if $${ord} ?>
 node:<? '#{darkviolet}reduction' if $${reduction}?>
 
