@@ -25,7 +25,7 @@ mkdir $pmlFolder/train
 # For treebank, we're filtering out files that are marked as not yet finished (AUTO) or needing corrections (FIXME)
 tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
-	if [ $file = *"Verbu_rindkopas"* ] && [ grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a" ]; then
+	if [[ $file =~ .*Verbu_rindkopas.* ]] && grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - unfinished"
 	elif grep -q "<comment>FIXME" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - fixme"
