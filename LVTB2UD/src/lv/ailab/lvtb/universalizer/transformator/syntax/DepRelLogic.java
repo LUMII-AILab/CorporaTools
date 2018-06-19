@@ -372,9 +372,16 @@ public class DepRelLogic
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.CONJ));
-			String conjLemma = conjs.get(0).getM().getLemma();
-			String conjRed = conjs.get(0).getReduction();
-			if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
+			String conjLemma = null;
+			if (conjs.size() > 0) // One weird case of reduced conjunction has no conjs.
+			{
+				conjLemma = conjs.get(0).getM().getLemma();
+				String conjRed = conjs.get(0).getReduction();
+				if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
+			}
+			else logger.doInsentenceWarning(String.format(
+					"\"%s\" with ID \"%s\" has no \"%s\".",
+					xType, node.getId(), LvtbRoles.CONJ));
 			if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
 				return Tuple.of(UDv2Relations.NMOD, conjLemma);
 			return Tuple.of(UDv2Relations.OBL, conjLemma);
@@ -384,7 +391,7 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
 		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..p...[adnl].*|x.*|y[npa].*"))
+		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..pd..[adnl].*|x.*|y[npa].*"))
 		{
 			// TODO Optimize to a single match
 			Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
@@ -569,7 +576,7 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 			return Tuple.of(UDv2Relations.CONJ, null);
-		if (tag != null && tag.matches("[qi].*|yd.*"))
+		if (tag != null && tag.matches("[qi].*|yd.*|xx.*"))
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
@@ -639,7 +646,7 @@ public class DepRelLogic
 		if (preds!= null && preds.size() > 1)
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED));
-		if (preds != null) return Tuple.of(UDv2Relations.PARATAXIS, null);
+		if (preds != null && !preds.isEmpty()) return Tuple.of(UDv2Relations.PARATAXIS, null);
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
 	}
 

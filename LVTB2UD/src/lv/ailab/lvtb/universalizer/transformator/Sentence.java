@@ -60,14 +60,15 @@ public class Sentence
 	/**
 	 * Indication that transformation has failed and the obtained conll data is
 	 * garbage.
+	 * TODO substitute with handled exceptions?
 	 */
-	public boolean hasFailed;
+	//public boolean hasFailed;
 
 	public Sentence(PmlANode pmlTree)
 	{
 		this.pmlTree = pmlTree;
 		id = pmlTree.getId();
-		hasFailed = false;
+		//hasFailed = false;
 	}
 
 	public String toConllU()
@@ -223,14 +224,14 @@ public class Sentence
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
 					phraseType, id, newRootType));
 			//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n", phraseType, id, newRootType);
-		PmlANode newRoot = PmlANodeListUtils.getFirstByDescOrd(potentialRoots);
+		PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(potentialRoots);
 		if (newRoot == null)
 		{
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
 					phraseType, id, newRootType));
 			//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n", phraseType, id, newRootType);
-			newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
+			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
@@ -267,26 +268,22 @@ public class Sentence
 			String newRootBackUpType, Tuple<UDv2Relations, String> childDeprel,
 			boolean warnMoreThanOne, Logger logger)
 	{
-		//NodeList children = (NodeList)XPathEngine.get().evaluate(
-		//		"./children/*", phraseNode, XPathConstants.NODESET);
 		List<PmlANode> children = phraseNode.getChildren();
 		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
 		if (newRootBackUpType != null &&
 				(potentialRoots == null || potentialRoots.size() < 1))
 			potentialRoots = phraseNode.getChildren(newRootBackUpType);
-		PmlANode newRoot = PmlANodeListUtils.getLastByDescOrd(potentialRoots);
+		PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.size() > 1)
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
 					phraseType, id, newRoot.getAnyLabel()));
-			//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n", phraseType, id, NodeFieldUtils.getAnyLabel(newRoot));
 		if (newRoot == null)
 		{
-			//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n", phraseType, id, newRootType);
 			logger.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
 					phraseType, id, newRootType));
-			newRoot = PmlANodeListUtils.getLastByDescOrd(children);
+			newRoot = PmlANodeListUtils.getLastByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(

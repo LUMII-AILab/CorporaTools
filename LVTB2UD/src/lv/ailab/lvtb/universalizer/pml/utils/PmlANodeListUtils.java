@@ -32,6 +32,7 @@ public class PmlANodeListUtils
 		for (PmlANode n : nodes)
 		{
 			int ord = n.getDeepOrd();
+			if (ord == 0) ord = n.getMinDescOrd();
 			if (ord >= begin && ord < end) res.add(n);
 		}
 		return res;
@@ -88,7 +89,7 @@ public class PmlANodeListUtils
 	 * @param nodes list of nodes where to search
 	 * @return	node with largest given ord value
 	 */
-	public static <N extends PmlANode> N getLastByOrd(List<N> nodes)
+	public static <N extends PmlANode> N getLastByDeepOrd(List<N> nodes)
 	{
 		if (nodes == null) return null;
 		if (nodes.size() == 1) return nodes.get(0);
@@ -96,7 +97,7 @@ public class PmlANodeListUtils
 		N bestNode = null;
 		for (N node : nodes)
 		{
-			int ord = node.getOrd();
+			int ord = node.getDeepOrd();
 			if (ord > 0 && ord > biggestOrd)
 			{
 				biggestOrd = ord;
@@ -112,7 +113,7 @@ public class PmlANodeListUtils
 	 * @param nodes list of nodes where to search
 	 * @return	node with largest given ord value
 	 */
-	public static <N extends PmlANode> N getFirstByOrd(List<N> nodes)
+	public static <N extends PmlANode> N getFirstByDeepOrd(List<N> nodes)
 	{
 		if (nodes == null) return null;
 		if (nodes.size() == 1) return nodes.get(0);
@@ -120,7 +121,7 @@ public class PmlANodeListUtils
 		N bestNode = null;
 		for (N node : nodes)
 		{
-			int ord = node.getOrd();
+			int ord = node.getDeepOrd();
 			if (ord > 0 && ord < smallestOrd)
 			{
 				smallestOrd = ord;
@@ -143,6 +144,7 @@ public class PmlANodeListUtils
 		for (PmlANode node : nodes)
 		{
 			int ord = node.getDeepOrd();
+			if (ord == 0) node.getMinDescOrd();
 			if (!semiRes.containsKey(ord)) semiRes.put(ord, new ArrayList<>());
 			semiRes.get(ord).add(node);
 		}

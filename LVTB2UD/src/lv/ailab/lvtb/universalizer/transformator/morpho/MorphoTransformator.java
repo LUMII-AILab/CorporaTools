@@ -59,10 +59,8 @@ public class MorphoTransformator {
 			Integer currentOrd = current.getOrd();
 			if (currentOrd == null || currentOrd < 1) continue;
 			if (prevOrd == currentOrd)
-			{
 				logger.doInsentenceWarning(String.format(
 						"\"%s\" has several nodes with ord \"%s\", arbitrary order used!", s.id, currentOrd));
-			}
 
 			// Determine, if paragraph has border before this token.
 			boolean paragraphChange = false;
@@ -112,16 +110,10 @@ public class MorphoTransformator {
 		// be tokens with spaces.
 		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
 				!lvtbTag.matches("x[no].*") &&
-				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
-		{
+				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.|u\\.t\\.t\\.|(P\\.)+S\\.|N\\.B\\."))
 			throw new IllegalArgumentException(String.format(
 					"Node \"%s\" with form \"%s\" and lemma \"%s\" contains spaces",
-					lvtbAId, mForm, mLemma));
-			// There was an  obsolete piece of code that separated in multiple
-			// tokens with "words with spaces" LVTB used to have in previos
-			// versions. However, currently all such cases should be removed
-			// from data.
-		}
+					lvtbAId, mForm, mLemma)); // UD allowed words with spaces are supposed to be the same as LVTB
 
 		List<PmlWNode> wNodes = mNode.getWs();
 		Set<LvtbFormChange> formChanges = mNode.getFormChange();
@@ -152,20 +144,6 @@ public class MorphoTransformator {
 				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT_AFTER);
 			return params.UD_STANDARD_NULLNODES ? previousToken : transfOnPunctInsert(aNode, previousToken, paragraphChange);
 		}
-		// Some weard inserted thing, shouldn't be there
-		/*else if (formChanges.contains(LvtbFormChange.INSERT))
-		{
-			Token prevRealTok = previousToken;
-			while (prevRealTok != null && prevRealTok.idSub > 0)
-			{
-				int index = s.conll.indexOf(prevRealTok);
-				prevRealTok = index > 0 ? s.conll.get(index - 1) : null;
-			}
-			if (prevRealTok != null)
-				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED_AFTER);
-			return params.UD_STANDARD_NULLNODES ? previousToken : transfOnOtherInsert(aNode, previousToken, paragraphChange);
-		}//*/
-
 		// Renmoved punctuation (good case - no other problems)
 		else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
 				&& formChanges.size() == 2 && source.startsWith(mForm))
@@ -220,18 +198,17 @@ public class MorphoTransformator {
 		boolean noSpaceAfter = wNodes != null && !wNodes.isEmpty() &&
 				wNodes.get(wNodes.size() - 1).noSpaceAfter();
 
-
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, mForm, mLemma, lvtbTag, true);
-		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //res.misc.add("NewPar=Yes");
+			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);;
 		//	Add note to misc field if retokenization has been done.
 		// This happens if word is split between rows.
 		if (formChanges.contains(LvtbFormChange.SPACING))
-			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING); //res.misc.add("CorrectionType=Spacing");
+			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);
 
 		return res;
 	}
@@ -277,11 +254,11 @@ public class MorphoTransformator {
 		Token res =  makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, source, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);//res.misc.add("CorrectedForm="+mForm);
-		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);
+		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
+			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);
 
 		return res;
 	}
@@ -313,12 +290,12 @@ public class MorphoTransformator {
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, source, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);//res.misc.add("CorrectedForm="+mForm);
-		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//res.misc.add("CorrectionType=Spelling");
-		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);
+		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);
+		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
+			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);
 
 		return res;
 	}
@@ -350,9 +327,9 @@ public class MorphoTransformator {
 		Token res =  makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
 				lvtbAId, mform, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT);// res.misc.add("CorrectionType=InsertedPunctuation");
+		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT);
 		// Chan this really be there?
-		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
+		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);
 		return res;
 
 	}
@@ -391,9 +368,9 @@ public class MorphoTransformator {
 		Token res = makeNewToken(
 				previousToken.idBegin, previousToken.idSub + 1,
 				lvtbAId, mForm, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED); //res.misc.add("CorrectionType=Inserted");
+		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INSERTED);
 		// Chan this really be there?
-		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //res.misc.add("NewPar=Yes");
+		if (paragraphChange) res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);
 		return res;
 	}
 

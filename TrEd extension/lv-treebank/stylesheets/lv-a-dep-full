@@ -8,10 +8,10 @@ text:<? $${m/w/token}eq$${m/form} ?
 node: <? '#{black}${comment}' if $${comment}?>
 node:#{darkblue}${role}
 node:${m/form}<?
-  ' ' if $${ord} and $${m/form} ?><?
+  ' ' if $${ord} and length($this->attr('m/form')) ?><?
   '#{darkred}(${ord})' if $${ord} ?>
 node:#{darkgreen}${m/tag}${tag}
-node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
+node:<? length($this->attr('m/lemma')) ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction:' if $${reduction}?>
 node:<? '#{darkviolet}${reduction}' if $${reduction}?>
 node:<? '#{darkorange}marked' if $${marked}?>

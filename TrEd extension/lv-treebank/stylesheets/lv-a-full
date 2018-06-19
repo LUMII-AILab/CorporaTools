@@ -13,10 +13,10 @@ node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}<?
-  ' ' if $${ord} and $${m/form} ?><?
+  ' ' if $${ord} and length($this->attr('m/form')) ?><?
   '#{darkred}(${ord})' if $${ord} ?>
 node:#{darkgreen}${m/tag}${tag}
-node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
+node:<? length($this->attr('m/lemma')) ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction:' if $${reduction}?>
 node:<? '#{darkviolet}${reduction}' if $${reduction}?>
 

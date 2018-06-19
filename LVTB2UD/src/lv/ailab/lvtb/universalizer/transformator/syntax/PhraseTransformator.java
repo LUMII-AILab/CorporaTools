@@ -4,7 +4,6 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
-import lv.ailab.lvtb.universalizer.pml.xmldom.XmlDomANode;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
@@ -117,7 +116,7 @@ public class PhraseTransformator
 		List<PmlANode> children = phraseNode.getChildren();
 		String phraseType = phraseNode.getPhraseType();
 		String phraseTag = phraseNode.getAnyTag();
-		PmlANode newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
+		PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 		s.allAsDependents(newRoot, children, phraseType, phraseTag, null, logger);
 		return newRoot;
 	}
@@ -142,14 +141,14 @@ public class PhraseTransformator
 					s.id, LvtbRoles.PRED, pmcType));
 		if (preds == null || preds.isEmpty())
 			preds = pmcNode.getChildren(LvtbRoles.BASELEM);
-		newRoot = PmlANodeListUtils.getFirstByDescOrd(preds);
+		newRoot = PmlANodeListUtils.getFirstByDeepOrd(preds);
 
 		if (newRoot == null)
 		{
 			logger.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".",
 					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType));
-			newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
+			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
@@ -176,13 +175,13 @@ public class PhraseTransformator
 		List<PmlANode> basElems = pmcNode.getChildren(LvtbRoles.BASELEM);
 		PmlANode newRoot = null;
 		if (basElems != null && basElems.size() > 0)
-			newRoot = PmlANodeListUtils.getFirstByDescOrd(basElems);
+			newRoot = PmlANodeListUtils.getFirstByDeepOrd(basElems);
 		if (newRoot == null)
 		{
 			logger.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has no \"%s\" in \"%s\".",
 					s.id, LvtbRoles.BASELEM, pmcType));
-			newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
+			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
@@ -444,7 +443,7 @@ public class PhraseTransformator
 							"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".",
 							xType, s.id, LvtbRoles.BASELEM));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
-				PmlANode newRoot = PmlANodeListUtils.getLastByOrd(adjs);
+				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(adjs);
 				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
@@ -468,7 +467,7 @@ public class PhraseTransformator
 					logger.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".",
 							xType, s.id, LvtbRoles.BASELEM));
-				PmlANode newRoot = PmlANodeListUtils.getFirstByOrd(prons);
+				PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(prons);
 				s.allAsDependents(newRoot, children, xType, xTag,null, logger);
 				return newRoot;
 			}
@@ -497,7 +496,7 @@ public class PhraseTransformator
 							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
 							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
-				PmlANode newRoot = PmlANodeListUtils.getLastByOrd(noPrepBases);
+				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noPrepBases);
 				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
@@ -524,7 +523,7 @@ public class PhraseTransformator
 					logger.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
 							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
-				PmlANode newRoot = PmlANodeListUtils.getLastByOrd(noSimBases);
+				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noSimBases);
 				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
 				return newRoot;
 			}
@@ -554,7 +553,7 @@ public class PhraseTransformator
 		{
 			//NodeList children = NodeUtils.getAllPMLChildren(xNode);
 			List<PmlANode> children = xNode.getChildren();
-			PmlANode newRoot = PmlANodeListUtils.getFirstByDescOrd(children);
+			PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
 			s.allAsDependents(newRoot, children, xType, xTag,
 					Tuple.of(UDv2Relations.FIXED, null), logger);
@@ -612,13 +611,13 @@ public class PhraseTransformator
 	{
 		// Get basElems and warn if there is none.
 		List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
-		PmlANode basElem = PmlANodeListUtils.getLastByDescOrd(basElems);
+		PmlANode basElem = PmlANodeListUtils.getLastByDeepOrd(basElems);
 		if (basElem == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has no \"basElem\"",
 					xType, s.id));
 		List<PmlANode> auxes = xNode.getChildren(LvtbRoles.AUXVERB);
-		PmlANode lastAux = PmlANodeListUtils.getLastByDescOrd(auxes);
+		PmlANode lastAux = PmlANodeListUtils.getLastByDeepOrd(auxes);
 		if (lastAux == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has neither \"auxVerb\" nor \"mod\"",

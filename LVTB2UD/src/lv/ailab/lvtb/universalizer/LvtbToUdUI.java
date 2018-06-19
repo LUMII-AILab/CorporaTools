@@ -65,6 +65,9 @@ public class LvtbToUdUI
 		File[] listOfFiles = folder.listFiles();
 		int omittedTrees = 0;
 		int omittedFiles = 0;
+		int autoFiles = 0;
+		int fixmeFiles = 0;
+		int crashFiles = 0;
 		for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
@@ -83,12 +86,16 @@ public class LvtbToUdUI
 					omittedTrees = omittedTrees + ft.all;
 					omittedFiles++;
 				}
+				if (ft.hasCrashSent) crashFiles++;
+				if (ft.hasFixme) fixmeFiles++;
+				if (ft.hasAuto) autoFiles++;
 			} catch (Exception e)
 			{
 				System.out.printf("File failed with exception %s.\n", e.toString());
 				logger.finishFileWithException(e);
 				omittedTrees = omittedTrees + ft.all;
 				omittedFiles++;
+				crashFiles++;
 			}
 			else
 			{
@@ -96,6 +103,7 @@ public class LvtbToUdUI
 						"Oops! Unexpected extension for file \"" + fileName + "\"!");
 				logger.finishFileWithBadExt(fileName);
 			}
+
 		}
 		if (omittedFiles == 0 && omittedTrees == 0)
 			System.out.println("Everything is finished, nothing was omited.");
@@ -104,9 +112,16 @@ public class LvtbToUdUI
 					"Everything is finished, %s trees was omited.\n", omittedTrees);
 		else
 			System.out.printf(
-					"Everything is finished, %s files and at least %s trees was omited.\n",
+					"Everything is finished, %s files and %s trees was omited.\n",
 					omittedFiles, omittedTrees);
-		logger.finalStatsAndClose(omittedFiles, omittedTrees);
+		if (autoFiles > 0)
+			System.out.printf("%s files have AUTOs.\n", autoFiles);
+		if (fixmeFiles > 0)
+			System.out.printf("%s files have FIXMEs.\n", fixmeFiles);
+		if (crashFiles > 0)
+			System.out.printf("%s files have crashing sentences.\n", crashFiles);
+		logger.finalStatsAndClose(omittedFiles, omittedTrees,
+				autoFiles, fixmeFiles, crashFiles);
 	}
 
 	/**

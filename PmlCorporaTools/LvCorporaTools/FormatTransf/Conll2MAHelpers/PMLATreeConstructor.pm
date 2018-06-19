@@ -175,6 +175,7 @@ sub buildATreeFromConllArray
 		{
 			$nodeMap{$newId}->{'children'}->{$nodeId} = 'phrase';
 			delete $nodeMap{$aSentId}->{'children'}->{$nodeId};
+			$nodeMap{$nodeId}->{'parent'} = $newId;
 		}
 		$nodeMap{$aSentId}->{'children'}->{$newId} = 'dep';
 		$rootPmc = $newId;
@@ -191,6 +192,7 @@ sub buildATreeFromConllArray
 			delete $nodeMap{$aSentId}->{'children'}->{$nodeId};
 		}
 	}
+
 	return \%nodeMap;
 }
 
@@ -286,6 +288,7 @@ sub _makePhraseFromDepLink
 		my $isParentIncluded = (exists $phrasePattern->{'parentRole'} and $phrasePattern->{'parentRole'});
 		my $isParentRoot = ($parent->{'nodeType'} eq 'root');
 		my $newId = ($isParentIncluded and not $isParentRoot) ?
+		#my $newId = ($isParentIncluded) ?
 			&_makePhrase($parentId, $nodeMap, $phrasePattern, $xIdStub, $conllName) :
 			&_makePhrase($childId, $nodeMap, $phrasePattern, $xIdStub, $conllName);
 

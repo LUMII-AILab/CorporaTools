@@ -41,8 +41,6 @@ our $vers = 0.3;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
-#TODO processDir should somehow show, how many files failed/gave warnings.
-
 sub processDir
 {
 	if (not @_ or @_ < 3)
@@ -71,7 +69,7 @@ Params:
         (any further columns are ignored)
    output directory
 
-Latvian Treebank project, LUMII, 2017, provided under GPL
+Latvian Treebank project, LUMII, 2017-2018, provided under GPL
 END
 		exit 1;
 	}
@@ -82,14 +80,38 @@ END
 	my $wDir = IO::Dir->new($wDirName) or die "$!";
 	mkdir($outDirName);
 
+	my $baddies = 0;
+
 	while (defined(my $inWFile = $wDir->read))
 	{
+		my $isBad = 0;
 		if (! -d "$wDirName/$inWFile")
 		{
 			my $coreName = $inWFile =~ /^(.*)\.w*$/ ? $1 : $inWFile;
-			&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+			#&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+			my $res = eval
+            {
+            	#local $SIG{__WARN__} = sub { die $_[0] }; # This magic makes eval act as if all warnings were fatal.
+            	local $SIG{__WARN__} = sub { $isBad = 1; warn $_[0] }; # This magic makes eval count warnings.
+				&processFileSet("$wDirName/$inWFile", $outDirName, "$morphoDirName/$coreName.conll")
+            };
+            if ($@ or ! defined $res)
+            {
+            	$isBad = 1;
+            	print $@;
+            }
 		}
+		$baddies = $baddies + $isBad;
 	}
+	if ($baddies)
+    {
+    	print "$baddies files failed.\n";
+    }
+    else
+    {
+    	print "All finished.\n";
+    }
+    return $baddies;
 
 }
 
@@ -98,9 +120,10 @@ sub processFileSet
 	if (not @_ or @_ < 2)
 	{
 		print <<END;
-Script for creating PML M and A files, if and w file and (optional) CoNLL file
-are provided. Currently morphology is mandatory, syntax is optional. All input
-files must be UTF-8. Fileset must have the same text in both W and CoNLL file.
+Script for creating PML M and A files, if  w file and (optional) CoNLL file are
+provided. Currently morphology is mandatory, syntax is optional. All input files
+must be UTF-8. Fileset must have the same text in both W and CoNLL file. Tokens
+in W must be either the same or substrings of tokens in CoNLL.
 
 Params:
    w file name
@@ -172,23 +195,32 @@ END
 			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut, $wTok);
 		}
 	}
-	
+
 	# Process unused CoNLL lines in the end of the file and warn
 	my ($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
 	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($mustEndSentence);
 	#$status{'paraId'}++;
-	while ($line)
-	{
-		&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
-		($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
-		&_endSentence(\%status, $mOut, $aOut, $conllName)
-			if ($mustEndSentence);
-	}
 
-	# Warn about spare w nodes
-	warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
-		if ($status{'unusedTokens'});
+	#if ($line and $status{'unusedTokens'})
+	if ($line or $status{'unusedTokens'})
+	{
+		warn "Can't match ".$status{'unusedTokens'}." from dataset $nameStub with CoNLL! Maybe tokenization is weird?"
+	}
+#	else
+#	{
+#		while ($line)
+#		{
+#			&_doOneTokenOrLine(\%status, $line, $nameStub, $mOut);
+#			($line, $mustEndSentence) = &_getNextConllContentLine(\%status, $conllIn);
+#			&_endSentence(\%status, $mOut, $aOut, $conllName)
+#				if ($mustEndSentence);
+#		}
+#
+#		# Warn about spare w nodes
+#		warn "W tokens ".$status{'unusedTokens'}." from dataset $nameStub found unused after the end of paragraph!"
+#			if ($status{'unusedTokens'});
+#	}
 
 	&_endSentence(\%status, $mOut, $aOut, $conllName)
 		if ($status{'isInsideOfSentence'});
@@ -246,7 +278,9 @@ sub _endSentence
 	{
 		my $aSentId = &_getASentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
 		my $mSentId = &_getMSentIdFromStub($status->{'sentIdStub'}, $status->{'sentenceCounter'});
-		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);		
+		my $nodeMap = buildATreeFromConllArray($status->{'unprocessedATokens'}, $aSentId, $mSentId, $conllName);
+		#use Data::Dumper;
+		#print Dumper($nodeMap);
 		&_printATreeFromHash($aOut, $nodeMap, $aSentId, $status->{'isFirstTree'});
 		$status->{'isFirstTree'} = 0;
 	}
@@ -386,14 +420,14 @@ sub _printATreeFromHash
 # &_printARootFromHash(output stream, maping from PML IDs to nodes, ID of the
 #                      tree root (only descendents of this node are printed),
 #                      should the first sentence comment be added?)
-# Print out the subtree assuming it is rooten in the node with type 'root'.
+# Print out the subtree assuming it is PMC in the node with type 'root'.
 sub _printARootFromHash
 {
 	my ($aOut, $nodeMap, $rootId, $isFirst) = @_;
 	my $rootNode = $nodeMap->{$rootId};
-	my $parentType = 0;
-	$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
-		if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
+	#my $parentType = 0;
+	#$parentType = $nodeMap->{$rootNode->{'parent'}}->{'nodeType'}
+	#	if (exists $rootNode->{'parent'} and exists $nodeMap->{$rootNode->{'parent'}});
 
 	# 1. Start sentence enclosing part.
 	printASentBegin($aOut, $rootNode->{'aId'}, $rootNode->{'mId'}, $isFirst ? $firstSentComment : 0);
