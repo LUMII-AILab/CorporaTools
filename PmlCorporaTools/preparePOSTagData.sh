@@ -27,7 +27,7 @@ tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
 	if [ -z "$file" ]; then
 		echo "empty line" 
-	if [[ $file =~ .*Verbu_rindkopas.* ]] && grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a"; then
+	elif [[ $file =~ .*Verbu_rindkopas.* ]] && grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - unfinished"
 	elif grep -q "<comment>FIXME" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - fixme"
