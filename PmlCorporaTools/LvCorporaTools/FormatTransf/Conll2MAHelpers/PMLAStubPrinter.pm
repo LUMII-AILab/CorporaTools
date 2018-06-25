@@ -2,6 +2,7 @@
 package LvCorporaTools::FormatTransf::Conll2MAHelpers::PMLAStubPrinter;
 use strict;
 use warnings;
+use LvCorporaTools::FormatTransf::Plaintext2W qw(escape);
 
 use Exporter();
 our @ISA = qw(Exporter);
@@ -58,8 +59,9 @@ sub printASentBegin
 END
 	if ($comment)
 	{
+		my $escComment = escape($comment);
 		print $output <<END;
-			<comment>$comment</comment>
+			<comment>$escComment</comment>
 END
 	}
 	print $output <<END;
@@ -111,8 +113,9 @@ sub printALeaf
 {
 	my ($output, $aId, $role, $mId, $ord, $token) = @_;
 	$role = 'N/A' unless $role;
+	my $escToken = escape($token);
 	print $output <<END;
-						<node id="$aId">\t<!-- $token -->
+						<node id="$aId">\t<!-- $escToken -->
 							<m.rf>m#$mId</m.rf>
 							<role>$role</role>
 							<ord>$ord</ord>
@@ -125,6 +128,7 @@ sub printANodeStart
 {
 	my ($output, $aId, $role, $mId, $ord, $token) = @_;
 	$role = 'N/A' unless $role;
+	my $escToken = escape($token);
 	print $output <<END;
 						<node id="$aId">
 							<role>$role</role>
@@ -132,7 +136,7 @@ END
 	if ($mId)
 	{
 		print $output <<END;
-							<!-- $token -->
+							<!-- $escToken -->
 							<m.rf>m#$mId</m.rf>
 							<ord>$ord</ord>
 END

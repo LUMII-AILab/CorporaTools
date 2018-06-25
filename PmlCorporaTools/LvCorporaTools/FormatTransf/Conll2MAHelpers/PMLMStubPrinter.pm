@@ -3,6 +3,7 @@ package LvCorporaTools::FormatTransf::Conll2MAHelpers::PMLMStubPrinter;
 
 use strict;
 use warnings;
+use LvCorporaTools::FormatTransf::Plaintext2W qw(escape);
 
 use Exporter();
 our @ISA = qw(Exporter);
@@ -66,6 +67,8 @@ sub printMDataNode
 	my ($output, $mId, $wIds, $token, $lemma, $tag) = @_;
 	$lemma = 'N/A' unless ($lemma and $lemma !~ /^\s*$/);
 	$tag = 'N/A' unless ($tag and $tag !~ /^\s*$/);
+	my $escToken = escape($token);
+	my $escLemma = escape($lemma);
 	my $wIdString = '';
 	if (@$wIds > 1)
 	{
@@ -92,8 +95,8 @@ END
 END
 	}
 	print $output <<END;
-			<form>$token</form>
-			<lemma>$lemma</lemma>
+			<form>$escToken</form>
+			<lemma>$escLemma</lemma>
 			<tag>$tag</tag>
 		</m>
 END

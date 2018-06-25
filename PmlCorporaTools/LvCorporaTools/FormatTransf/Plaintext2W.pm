@@ -7,7 +7,7 @@ use strict;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(transformFile processDir);
+our @EXPORT_OK = qw(transformFile processDir escape);
 
 use IO::File;
 use LvCorporaTools::GenericUtils::UIWrapper;
@@ -155,7 +155,8 @@ END
 			while (m#(\d+|\p{L}+|\.+|!+|\?+|\S)#g)
 			{
 				$tokId++;
-				print $out "\t\t\t<w id=\"w-$sourceId-p${parId}w$tokId\">\n\t\t\t\t<token>$1</token>\n";
+				my $escTok = escape($1);
+				print $out "\t\t\t<w id=\"w-$sourceId-p${parId}w$tokId\">\n\t\t\t\t<token>$escTok</token>\n";
 				print $out "\t\t\t\t<no_space_after>1</no_space_after>\n" if ($' !~ /^\s/);
 				print $out "\t\t\t</w>\n";
 			}
@@ -194,6 +195,18 @@ sub _printFooter
 	</doc>
 </lvwdata>
 END
+}
+
+sub escape
+{
+	my $data = shift @_;
+	if ($data)
+	{
+		$data =~ s/&/&amp;/g;
+		$data =~ s/</&lt;/g;
+		$data =~ s/>/&gt;/g;
+	}
+	return $data;
 }
 
 1;

@@ -37,7 +37,7 @@ our @EXPORT_OK = qw(processDir processFileSet);
 ###############################################################################
 
 
-our $vers = 0.3;
+our $vers = 0.4;
 our $progname = "CoNLL automātiskais konvertors, $vers";
 our $firstSentComment = "AUTO";
 
@@ -159,7 +159,7 @@ END
 		or die "Could not open file $conllName: $!";
 
 	my $mOut = IO::File->new("$outDirName/$nameStub.m", '> :encoding(UTF-8)')
-		or die "Could not initiate $outDirName/$nameStub.m fro writing: $!";
+		or die "Could not initiate $outDirName/$nameStub.m for writing: $!";
 	my $timeNow = localtime time;
 	printMFileBegin($mOut, $nameStub, "$progname,  $timeNow");
 	my $aOut = IO::File->new("$outDirName/$nameStub.a", '> :encoding(UTF-8)');
