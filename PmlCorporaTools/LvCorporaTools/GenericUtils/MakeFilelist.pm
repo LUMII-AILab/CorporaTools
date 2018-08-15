@@ -1,5 +1,7 @@
 package LvCorporaTools::GenericUtils::MakeFilelist;
 
+use strict;
+use warnings;
 use IO::Dir;
 use IO::File;
 
@@ -38,6 +40,7 @@ END
 	my @todoDirs = ();
 	my $current = $dirName;
 	print $out "$listName\n";
+	my @filelist = ();
 		
 	# Traverse subdirectories.
 	while ($current)
@@ -50,7 +53,8 @@ END
 			{
 				my $link = "$current/$item";
 				$link =~ s#^\Q$dirName\E[\\/]*##;
-				print $out "$link\n";
+				push @filelist, $link;
+				#print $out "$link\n";
 			}
 			elsif (-d "$current/$item" and $item !~ /^\.\.?$/)
 			{
@@ -62,6 +66,11 @@ END
 	{
 		$current = shift @todoDirs;
 	}
+	for my $filepath (sort @filelist)
+	{
+		print $out "$filepath\n";
+	}
+
 	$out->close();
 }
 
