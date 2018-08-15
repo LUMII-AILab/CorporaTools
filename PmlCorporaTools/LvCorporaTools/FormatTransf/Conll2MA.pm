@@ -319,8 +319,8 @@ sub _doOneTokenOrLine
 	return unless ($conllLine and $conllLine =~ /^(\d+)\t([\S ]+)\t([\S ]+)\t(\S+)\t(\S+)(?:\t(\S+)\t(\S+)\t(\S+))?\s/);
 
 	my ($conllId, $conllToken, $lemma, $tag, $headId, $role) = ($1, $2, $3, $5, $7, $8);
-	$conllToken =~ s/_/ /g;
-	$lemma =~ s/_/ /g;
+	#$conllToken =~ s/_/ /g;
+	#$lemma =~ s/_/ /g;
 	# This usually happens if at the end of the file something is missing,
 	# or some kind of mismatch has happened.
 	warn "CoNLL token $conllToken from dataset $nameStub found unused after the end of paragraph!"
