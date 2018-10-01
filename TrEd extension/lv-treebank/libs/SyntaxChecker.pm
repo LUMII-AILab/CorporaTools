@@ -3,6 +3,8 @@ package SyntaxChecker;
 use utf8;
 use strict;
 
+use PMLLVHelpers;
+
 # Check on various structural errors
 sub get_structural_errors
 {
@@ -19,9 +21,9 @@ sub get_structural_errors
   push @errors, 'Role unsuitable for this parent!'
     unless (is_role_allowed_for_parent($node));
   push @errors, 'Node must have reduction, morphology or phrase!'
-    unless (is_allowed_to_be_empty($node) or _is_phrase_node($node));
+    unless (is_allowed_to_be_empty($node) or PMLLVHelpers::is_phrase_node($node));
   push @errors, 'Phrase node must have children!'
-    if (not is_allowed_to_be_empty($node) and _is_phrase_node($node));
+    if (not is_allowed_to_be_empty($node) and PMLLVHelpers::is_phrase_node($node));
   push @errors, 'Phrase are not allowed under node with morphology!'
     if (($node->{'#name'} eq 'xinfo' or $node->{'#name'} eq 'coordinfo' or $node->{'#name'} eq 'pmcinfo')
 	  and ($node->parent)->attr('m/id'));
@@ -269,9 +271,9 @@ sub is_role_allowed_for_parent
 sub is_allowed_to_be_empty
 {
   my $node = shift;
-  return 1 if (_is_phrase_node($node) and $node->children);
+  return 1 if (PMLLVHelpers::is_phrase_node($node) and $node->children);
   return 1 if ($node->{'reduction'} or $node->{'m'});
-  return 1 if (has_nondep_child($node));
+  return 1 if (PMLLVHelpers::has_nondep_child($node));
   return 0;
 }
 
@@ -289,30 +291,20 @@ sub _count_children_with_with_role
   return $count;
 }
 
-# Finds, if node has x-node or pmc-node or coord-node as children.
-sub has_nondep_child
-{
-  my $node = shift;
-  foreach my $ch ($node->children)
-  {
-	return $ch if (_is_phrase_node($ch));
-  }
-  return '';
-}
 
-# Finds, if node has x-node or pmc-node or coord-node as children.
+# Count, how many phrase children node has.
 sub _count_nondep_child
 {
   my $node = shift;
   my $count = 0;
   foreach my $ch ($node->children)
   {
-	$count++ if (_is_phrase_node($ch));
+	$count++ if (PMLLVHelpers::is_phrase_node($ch));
   }
   return $count;
 }
 
-# Finds, if node has x-node or pmc-node or coord-node as children.
+# Count, how many PMC children node has.
 sub _count_pmc_child
 {
   my $node = shift;
@@ -322,17 +314,6 @@ sub _count_pmc_child
 	$count++ if ($ch->{'#name'} eq 'pmcinfo');
   }
   return $count;
-}
-
-
-# Finds, if node has x-node or pmc-node or coord-node as children.
-sub _is_phrase_node
-{
-  my $node = shift;
-  return 1 if (($node->{'#name'} eq 'xinfo'
-	 or $node->{'#name'} eq 'pmcinfo'
-	 or $node->{'#name'} eq 'coordinfo'));
-  return 0;
 }
 
 

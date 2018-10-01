@@ -104,6 +104,11 @@ sub get_structural_errors
 	return SyntaxChecker::get_structural_errors(@_, $root);
 }
 
+sub has_nondep_child
+{
+	return PMLLVHelpers::has_nondep_child(@_);
+}
+
 #sub is_unfinished
 #{
 #	return SyntaxChecker::is_unfinished(@_);
@@ -119,10 +124,6 @@ sub get_structural_errors
 #	return not SyntaxChecker::is_allowed_to_be_empty(@_);
 #}
 
-#sub has_nondep_child
-#{
-#	return SyntaxChecker::has_nondep_child(@_);
-#}
 
 # Determine wether the given node (xinfo or pmcinfo) is apropriate for it's
 # children hiding - for dependency-only stylesheet.
