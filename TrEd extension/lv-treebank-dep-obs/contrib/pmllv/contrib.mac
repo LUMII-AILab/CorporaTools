@@ -1,0 +1,11 @@
+#ifndef lv-treebank-dep-obs
+#define lv-treebank-dep-obs
+
+package LVPMLDEP;
+
+#binding-context LV_A_PureDependency
+#include "LV_A_PureDependency.mak"
+
+#endif lv-treebank-dep-obs
+
+1;

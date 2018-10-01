@@ -203,13 +203,6 @@ sub is_lva_file
   return (((PML::SchemaName()||'') eq 'lvadata') ? 1 : 0);
 }
 
-# Check if the current file is Latvian Treebank dependency-only file.
-sub is_lvadep_file
-{
-  return (((PML::SchemaName()||'') eq 'lvadepdata') ? 1 : 0);
-}
-
-
 push @TredMacro::AUTO_CONTEXT_GUESSING, sub
 {
   my ($hook)=@_;
@@ -220,18 +213,13 @@ push @TredMacro::AUTO_CONTEXT_GUESSING, sub
     SetCurrentStylesheet('lv-a') if $resuming;
     return 'LV_A_View';
   }
-  if (LV_A::is_lvadep_file())
-  {
-    SetCurrentStylesheet('lv-a-dep-ord') if $resuming;
-    return 'LV_A_PureDependency';
-  }
   return;
 };
 
 # do not use this annotation mode for other files
 sub allow_switch_context_hook
 {
-  return 'stop' if (not LV_A::is_lva_file and not LV_A::is_lvadep_file);
+  return 'stop' if (not LV_A::is_lva_file);
 }
 
 1;

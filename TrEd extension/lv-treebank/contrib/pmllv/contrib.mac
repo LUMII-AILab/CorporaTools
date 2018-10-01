@@ -9,9 +9,6 @@ package LVPML;
 #binding-context LV_A_Edit
 #include "LV_A_Edit.mak"
 
-#binding-context LV_A_PureDependency
-#include "LV_A_PureDependency.mak"
-
 #binding-context LV_M
 #include "LV_M.mak"
 
