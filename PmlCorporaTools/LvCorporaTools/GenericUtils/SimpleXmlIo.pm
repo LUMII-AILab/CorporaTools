@@ -77,18 +77,16 @@ sub printXml
 		'RootName' => $root,
 #		'OutputFile' => $out,
 		'SuppressEmpty' => 1,
-		'NoSort' => 1,
+#		'NoSort' => 1,
 		'XMLDecl' => $header,
 #		'NoEscape' => 1,
 #		'GroupTags' => {},
 		);
 	# Normalization for TrEd:
 	# for A files
-	$xmlString =~ s#(<trees[ >].*</trees>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
 	# for M files
-	$xmlString =~ s#(<s[ >].*</s>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
 	# for W files
-	$xmlString =~ s#(<doc[ >].*</doc>)(\s*)(<meta>.*</meta>)#$3$2$1#s;
+	$xmlString =~ s#(<doc[ >].*</doc>)(\s*)(<head>.*</head>\s*<meta>.*</meta>)#$3$2$1#s;
 	print $out $xmlString;
 	$out->close();
 }
