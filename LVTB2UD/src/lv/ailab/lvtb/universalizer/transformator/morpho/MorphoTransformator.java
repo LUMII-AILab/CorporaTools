@@ -605,10 +605,11 @@ public class MorphoTransformator {
 	 */
 	protected Token makeNewToken(
 			int tokenIdBegin, int tokenIdDecimal, String pmlId,
-			String form, String lemma, String tag, boolean representative)
+			String form, String lvtbLemma, String lvtbTag, boolean representative)
 	{
-		Token resTok = new Token(tokenIdBegin, form, lemma,
-				tag == null ? null : XPosLogic.getXpostag(tag));
+		String uLemma = LemmaLogic.getULemma(lvtbLemma, lvtbTag, logger);
+		Token resTok = new Token(tokenIdBegin, form, uLemma,
+				lvtbTag == null ? null : XPosLogic.getXpostag(lvtbTag));
 		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
 		if (params.ADD_NODE_IDS && pmlId != null && !pmlId.isEmpty())
 		{
@@ -617,8 +618,8 @@ public class MorphoTransformator {
 		}
 		if (resTok.xpostag != null)
 		{
-			resTok.upostag = UPosLogic.getUPosTag(resTok.form, resTok.lemma, resTok.xpostag, logger);
-			resTok.feats = FeatsLogic.getUFeats(resTok.form, resTok.lemma, resTok.xpostag, logger);
+			resTok.upostag = UPosLogic.getUPosTag(resTok.form, lvtbLemma, resTok.xpostag, logger);
+			resTok.feats = FeatsLogic.getUFeats(resTok.form, lvtbLemma, resTok.xpostag, logger);
 		}
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);

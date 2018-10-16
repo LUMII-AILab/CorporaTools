@@ -227,17 +227,19 @@ public class TreesyntaxTransformator
 							nodeId, aNode.getReduction()));
 				else
 				{
+					String assumedLvtbLemma = null;
 					if (decimalToken.form != null && !decimalToken.form.isEmpty())
-						decimalToken.lemma = AnalyzerWrapper.getLemma(
+						assumedLvtbLemma = AnalyzerWrapper.getLemma(
 								decimalToken.form, decimalToken.xpostag, logger);
 					decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-							decimalToken.lemma, decimalToken.xpostag, logger);
+							assumedLvtbLemma, decimalToken.xpostag, logger);
 					decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-							decimalToken.lemma, decimalToken.xpostag, logger);
+							assumedLvtbLemma, decimalToken.xpostag, logger);
+					decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag, logger);
 					//decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-					//		decimalToken.lemma, decimalToken.xpostag, aNode, logger);
+					//		assumedLvtbLemma, decimalToken.xpostag, aNode, logger);
 					//decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-					//		decimalToken.lemma, decimalToken.xpostag, aNode, logger);
+					//		assumedLvtbLemma, decimalToken.xpostag, aNode, logger);
 				}
 				if (params.ADD_NODE_IDS && nodeId != null && !nodeId.isEmpty())
 				{
