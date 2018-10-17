@@ -9,6 +9,7 @@ package LV_A;
 use strict;
 use MorphoTags;
 use SyntaxChecker;
+use LemmaChecker;
 
 BEGIN { import TredMacro; import PML; }
 
@@ -97,6 +98,11 @@ sub get_extendend_morpho
 sub get_tag_errors
 {
 	return MorphoTags::checkAnyTag(@_);
+}
+
+sub get_lemma_errors
+{
+	return LemmaChecker::checkLemmaByTag(@_);
 }
 
 sub get_structural_errors

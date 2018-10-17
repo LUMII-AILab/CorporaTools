@@ -8,6 +8,7 @@
 package LV_M;
 use strict;
 use MorphoTags;
+use LemmaChecker;
 
 BEGIN { import TredMacro; import PML; }
 
@@ -179,6 +180,11 @@ sub get_extendend_morpho
 sub get_tag_errors
 {
 	return MorphoTags::checkSimpleTag(@_);
+}
+
+sub get_lemma_errors
+{
+	return LemmaChecker::checkLemmaByTag(@_);
 }
 
 
