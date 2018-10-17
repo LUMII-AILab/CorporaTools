@@ -26,6 +26,8 @@ sub checkLemmaByTag
 	# Needed for UD
 	push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..p.{8}y.*/ and $lemma !~ /^ne/);
 	
+	push @errors, 'Lemma must end with \'t\' or \'ties\'!' if ($tag =~ /^v.*/ and $lemma !~ /t(ies)?$/);
+	
 	return \@errors;
 	
 }
