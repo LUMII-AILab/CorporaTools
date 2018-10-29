@@ -28,7 +28,7 @@ sub checkLemmaByTag
 	push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..p.{8}y.*/ and $lemma !~ /^ne/);
 	
 	push @errors, 'Wrong verb lemma ending!' if ($tag =~ /^v.*/ and $lemma !~ /t(ies)?$/);
-	push @errors, 'Wrong adjective lemma ending!' if ($tag =~ /^a.*/ and $lemma !~ /[sšāio]$/);
+	push @errors, 'Wrong adjective lemma ending!' if ($tag =~ /^a.*/ and $lemma !~ /[sšāiou]$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[svp].1.*/ and $lemma !~ /[sš]$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[svp].2.*/ and $lemma !~ /([^aeu]is|(akm|asm|rud|ūd|zib)ens|mēness|uguns|suns|sāls)$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[d].[12].*/ and $lemma !~ /i$/);
