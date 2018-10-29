@@ -16,6 +16,7 @@ node:<?
   '#{red}Tags! ' if (@{ LV_A::get_tag_errors($${m/tag})} > 0
     or @{ LV_A::get_tag_errors($${tag})} > 0 
     or @{ LV_A::get_tag_errors($${reduction})} > 0) ?><?
+  '#{red}Bracket-tags! ' if (@{ LV_A::get_tag_for_xType_errors($${tag}, $${xtype}) } > 0) ?><?
   '#{red}Lemma! ' if (@{ LV_A::get_lemma_errors($${m/lemma}, $${m/tag}) } > 0) ?><?
   '#{red}Struct! ' if (@{ LV_A::get_structural_errors($this)} > 0) ?>
 

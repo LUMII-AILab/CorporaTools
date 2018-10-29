@@ -12,6 +12,7 @@ node:#{red}<? join "\n", @{ LV_A::get_lemma_errors($${m/lemma}, $${m/tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${m/tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>
+node:#{red}<? if ($${#name} eq 'xinfo') { join "\n", @{ LV_A::get_tag_for_xType_errors($${tag},$${xtype}) } }?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}<?
   ' ' if $${ord} and length($this->attr('m/form')) ?><?

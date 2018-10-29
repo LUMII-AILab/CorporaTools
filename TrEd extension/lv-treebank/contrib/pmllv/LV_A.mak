@@ -100,6 +100,11 @@ sub get_tag_errors
 	return MorphoTags::checkAnyTag(@_);
 }
 
+sub get_tag_for_xType_errors
+{
+	return MorphoTags::isSubTagAllowedForPhraseType(@_);
+}
+
 sub get_lemma_errors
 {
 	return LemmaChecker::checkLemmaByTag(@_);

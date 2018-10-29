@@ -295,24 +295,24 @@ my $xSimileHelper = [
 
 our %phraseTags = (
 #xPred table
-'act' => ['Active voice', $xPredHelper],
-'pass' => ['Pasive voice', $xPredHelper],
-'subst' => ['Substantival predicate', $xPredHelper],
-'adj' => ['Adjectival predicate', $xPredHelper],
+'act'    => ['Active voice', $xPredHelper],
+'pass'   => ['Pasive voice', $xPredHelper],
+'subst'  => ['Substantival predicate', $xPredHelper],
+'adj'    => ['Adjectival predicate', $xPredHelper],
 'pronom' => ['Pronominal predicate', $xPredHelper],
-'modal' => ['Modal predicate', $xPredHelper],
-'phase' => ['Phasal predicate', $xPredHelper],
-'expr' => ['Expressional predicate', $xPredHelper],
-'adv' => ['Adverbial predicate', $xPredHelper],
-'inf' => ['Infinitive predicate', $xPredHelper],
-'num' => ['Numeral predicate', $xPredHelper],
+'modal'  => ['Modal predicate', $xPredHelper],
+'phase'  => ['Phasal predicate', $xPredHelper],
+'expr'   => ['Expressional predicate', $xPredHelper],
+'adv'    => ['Adverbial predicate', $xPredHelper],
+'inf'    => ['Infinitive predicate', $xPredHelper],
+'num'    => ['Numeral predicate', $xPredHelper],
 #xSimile table
-'sim' => ['Similative construction', $xSimileHelper],
+'sim'  => ['Similative construction', $xSimileHelper],
 'comp' => ['Comparative construction', $xSimileHelper],
 #xPrep table
-'pre' => ['Preposition', []],
+'pre'  => ['Preposition', []],
 'post' => ['Postposition', []],
-'rel' => ['Relative adverb', []],
+'rel'  => ['Relative adverb', []],
 #xParticle table
 'aff' => ['Affirmative', []],
 'neg' => ['Negative', []],
@@ -320,12 +320,21 @@ our %phraseTags = (
 'agr' => ['Agreed apposition', []],
 'non' => ['Non-agreed apposition', []],
 #subrAnal
-'vv' => ['Pronominal phrase', []],
-'ipv' => ['Pronomen with adjective', []],
-'skv' => ['Pronomen with nominal', []],
-'set' => ['Selection construction', []],
-'sal' => ['Gramaticalized comparative', []],
+'vv'   => ['Pronominal phrase', []],
+'ipv'  => ['Pronomen with adjective', []],
+'skv'  => ['Pronomen with nominal', []],
+'set'  => ['Selection construction', []],
+'sal'  => ['Gramaticalized comparative', []],
 'part' => ['Multiword particle', []],
+);
+
+our %phraseTypes2TagParts = (
+'xPred'     => ['act', 'pass', 'subst', 'adj', 'pronom', 'modal', 'phase', 'expr', 'adv', 'inf', 'num',],
+'xSimile'   => ['sim', 'comp',],
+'xPrep'     => ['pre', 'post', 'rel',],
+'xParticle' => ['aff', 'neg',],
+'xApp'      => ['agr', 'non',],
+'subrAnal'  => ['vv', 'ipv', 'skv', 'set', 'sal', 'part',],
 );
 
 our $notRecognized = 'NOT RECOGNIZED';
@@ -490,5 +499,38 @@ sub checkSimpleTag
 	
 	return \@errors;
 };
+
+sub isSubTagAllowedForPhraseType
+{
+	my $tag = shift;
+	my $xType = shift;
+	return 0 unless $xType;
+	return 0 unless $tag;
+	my @errors = ();
+
+	if ($tag =~ /^([^\[\]\(\)]*)\[([^\[\]\(\)]*)\]$/)
+	{
+		my ($simpleTag, $phraseTag) = ($1, $2);
+		if (defined $phraseTypes2TagParts{$xType})
+		{
+			my $foundPref = 0;
+			for my $pref (@{$phraseTypes2TagParts{$xType}})
+			{
+				$foundPref++ if ($phraseTag =~/^$pref/);
+			}
+			push @errors, 'Wrong bracket-tag!' unless $foundPref;
+		}
+		else
+		{
+			push @errors, 'Unneeded bracket-tag!';
+		}
+		#return [getAVPairsFromSimpleTag($simple), getAVPairsFromTagPhrasePart($phrase)];
+	} else
+	{
+		push @errors, 'Missing bracket-tag!' if (defined $phraseTypes2TagParts{$xType});
+	}
+	
+	return \@errors;
+}
 
 1;
