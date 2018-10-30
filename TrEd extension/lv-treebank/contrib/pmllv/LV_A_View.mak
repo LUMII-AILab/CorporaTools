@@ -16,7 +16,7 @@ sub enable_edit_node_hook { 'stop' };
 
 # set correct stylesheet when entering this annotation mode
 sub switch_context_hook {
-  SetCurrentStylesheet('lv-a-compact-ord');
+  SetCurrentStylesheet('lv-a-full-compact-ord');
   disable_node_menu_items() if GUI();
   Redraw() if GUI();
 }

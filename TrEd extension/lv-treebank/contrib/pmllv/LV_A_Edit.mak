@@ -14,7 +14,7 @@ BEGIN { import LV_A; import PML; }
 # set correct stylesheet when entering this annotation mode
 sub switch_context_hook
 {
-  SetCurrentStylesheet('lv-a-full-ord');
+  SetCurrentStylesheet('lv-a-edit-full-ord');
   Redraw() if GUI();
 }
 
