@@ -6,7 +6,7 @@ use warnings;
 
 use Exporter();
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(processDir collect ord unnest dep red knit conll fold);
+our @EXPORT_OK = qw(processDir collect clean ord unnest dep red knit conll fold);
 
 #use Carp::Always;	# Print stack trace on die.
 
@@ -64,6 +64,9 @@ Params:
                folder - use this if data files are given in some subfolder
                structure (no params)
                NB! unique file names assumed (duplicates will be overwritten)
+    --clean    delete unfinished files - with tree-level comment starting with
+               AUTO and FIXME (no params, but expects .w + .m + .a datasets or
+               .pml files)
 
   Main flow
     --unnest   convert multi-level coordinations to single level
@@ -120,6 +123,9 @@ Params:
     --ord      recalculate 'ord' fields
                params:
                  mode - reordering mode [TOKEN/NODE]
+
+If multiple options provided, executed in order
+   collect, clean, ord, unnest, dep, red, knit, conll, fold.
 
 Latvian Treebank project, LUMII, 2013-1016, provided under GPL
 END
@@ -181,10 +187,12 @@ sub processDir
 	my $source = (keys(%{$params{'--dir'}}))[0];
 		
 	# Collecting data recursively.
-	if ($params{'--collect'})
-	{
-		$source = &collect($source, "$dirPrefix/collected");
-	}
+	$source = &collect($source, "$dirPrefix/collected")
+		if ($params{'--collect'});
+
+	# Pick out only finished (no AUTO or FIXME) data recursively.
+	$source = &clean($source, "$dirPrefix/clean")
+		if ($params{'--clean'});
 	
 	# Recalculating ord fields.
 	$source = &ord($source, "$dirPrefix/ord", $params{'--ord'})
@@ -258,6 +266,90 @@ sub collect
 		
 		print "Found $fileCounter files.\n";
 		return $dest;
+}
+# Collect only files without 'AUTO' and 'FIXME' comments.
+# clean(source data directory, destination directory)
+# return folder with step results.
+sub clean
+{
+	my ($source, $dest) = @_;
+	print "\n==== Picking out only finished files ==========================\n";
+
+	my $goodFileCounter = 0;
+	my $autoFileCounter = 0;
+	my $fixmeFileCounter = 0;
+	my $otherFailCounter = 0;
+	my $current = $source;
+	mkpath ($dest);
+	mkpath ("$dest/AUTO");
+	mkpath ("$dest/FIXME");
+
+	my $dir = IO::Dir->new($current) or die "Can't open folder $!";
+	while (defined(my $item = $dir->read))
+	{
+		# Treebank file
+		if ((-f "$current/$item") and ($item =~ /^(.*)\.(a|pml)$/))
+		{
+			print "Looking on $item: \t";
+			my ($nameStub, $ext) = ($1, $2);
+			my $isAuto = 0;
+			my $isFixme = 0;
+			my $otherFail = 0;
+			my $in = IO::File->new("$current/$item", "< :encoding(UTF-8)")
+				or $otherFail = 1;
+			if ($otherFail)
+			{
+				print "fail.\n";
+				warn "Error while processing $current/$item: $!";
+				$otherFailCounter++;
+				next;
+			}
+
+			while (<$in>)
+			{
+				$isAuto = 1 if /<comment( [^>]*)?>\s*AUTO/;
+				$isFixme = 1 if /<comment( [^>]*)?>\s*FIXME/;
+				last if ($isAuto or $isFixme);
+			}
+			$in->close;
+
+			if ($isAuto)
+			{
+				print "AUTO.\n";
+				$autoFileCounter++;
+			}
+			elsif ($isFixme)
+			{
+				print "FIXME.\n";
+				$fixmeFileCounter++;
+			}
+			elsif ($ext eq "a")
+			{
+				copy("$current/$nameStub.a", $dest);
+				copy("$current/$nameStub.m", $dest);
+				copy("$current/$nameStub.w", $dest);
+				$goodFileCounter++;
+				print "good.\n";
+			}
+			elsif ($ext eq "pml")
+			{
+				copy("$current/$nameStub.pml", $dest);
+				$goodFileCounter++;
+				print "good.\n";
+			}
+			else
+			{
+				print "fail.\n";
+				warn "WTF, why file extension matches (a|pml) but is neither a or pml? $!";
+				$otherFailCounter = 1;
+			}
+		}
+	}
+
+	print "Found $goodFileCounter good files, $autoFileCounter AUTO files, $fixmeFileCounter FIXME files";
+	print ", $otherFailCounter other fails" if ($otherFailCounter);
+	print ".\n";
+	return $dest;
 }
 
 # Recalculate ord fields.
