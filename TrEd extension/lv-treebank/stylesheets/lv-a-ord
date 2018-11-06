@@ -7,9 +7,7 @@ text:<? $${m/w/token}eq$${m/form} ?
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
 
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
-node:${m/form}<?
-  ' ' if $${ord} and length($this->attr('m/form')) ?><?
-  '#{darkred}(${ord})' if $${ord} ?>
+node:${m/form}
 node:<? '#{darkviolet}reduction' if $${reduction}?>
 
 style: #{Node-shape:oval}
