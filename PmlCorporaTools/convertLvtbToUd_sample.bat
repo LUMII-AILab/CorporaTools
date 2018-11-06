@@ -1,6 +1,7 @@
-:: For standard UD release, DO NOT FORGET to remove sample data!
-:: (For standard Sembank release sample files will be handled by ignore list.)
+:: In most releases sample data must be removed like this: 
 ::@if exist .\data\Corpora\Paraugi rmdir .\data\Corpora\Paraugi /Q /S >nul
+:: However, for standard UD release, TDT file handles this.
+:: For standard Sembank release sample files are handled by ignore list.
 
 :: Prepare LVTB data for transforming (your data goes into folder "data")
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data --collect --ord mode=TOKEN --knit
