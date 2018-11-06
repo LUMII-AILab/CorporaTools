@@ -281,8 +281,6 @@ sub clean
 	my $otherFailCounter = 0;
 	my $current = $source;
 	mkpath ($dest);
-	mkpath ("$dest/AUTO");
-	mkpath ("$dest/FIXME");
 
 	my $dir = IO::Dir->new($current) or die "Can't open folder $!";
 	while (defined(my $item = $dir->read))
