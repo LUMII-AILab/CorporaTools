@@ -1,3 +1,5 @@
+REM Step by step sample on how to prepare files for including on Latvian Treebank.
+
 :: To add new file to Latvian Treebank, following things must be done:
 :: * Convert all files to UTF-8 without BOM
 :: * Do PMLUtils::Unite to unite file parts if necessary

@@ -1,3 +1,5 @@
+REM Step by step sample on how to do format check-ups and ID normalization for LVTB.
+
 REM Check if w file matches original text.
 ::perl -e "use LvCorporaTools::PMLUtils::CheckW qw(processDir); processDir(@ARGV)" data\original
 ::@if exist .\data\checkedW rmdir .\data\checkedW /Q /S >nul
