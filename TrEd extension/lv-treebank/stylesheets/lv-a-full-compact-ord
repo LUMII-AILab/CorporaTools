@@ -27,7 +27,7 @@ node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction:' if $${reduction}?>
 node:<? '#{darkviolet}${reduction}' if $${reduction}?>
 style: #{Node-shape:oval}
-       #{Oval-fill:Yellow}
+       #{Oval-fill:yellow}
        #{CurrentOval-width:2}
        #{Line-arrow:first}
        #{Line-width:3}
@@ -41,10 +41,10 @@ style: #{Node-shape:oval}
 	   or ($${#name} eq 'pmcinfo')) {
     '#{Node-hide:1}'
   } elsif ((($this->parent)->attr('#name')eq 'xinfo')) {
-    '#{Oval-fill:Orange}
+    '#{Oval-fill:orange}
      #{Line-fill:DarkGreen}'
   } elsif ((($this->parent)->attr('#name')eq 'coordinfo')) {
-    '#{Oval-fill:Orange}
+    '#{Oval-fill:orange}
      #{Line-fill:blue3}'
   } elsif ((($this->parent)->attr('#name')eq 'pmcinfo')) {
     '#{Oval-fill:orange}

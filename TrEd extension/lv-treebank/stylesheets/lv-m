@@ -15,7 +15,7 @@ node:<? $${#content/lemma} ? '#{dimgray}[${#content/lemma}]' : ''?>
 node:#{darkblue}<? join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${#content/tag}) } ?>
 
 style: #{Node-shape:oval}
-       #{Oval-fill:Yellow}
+       #{Oval-fill:yellow}
        #{CurrentOval-width:2}
        #{Line-width:1}
        #{Node-width:8}
