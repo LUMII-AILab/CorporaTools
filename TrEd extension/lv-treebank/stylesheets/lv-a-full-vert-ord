@@ -14,7 +14,7 @@ node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
 node:<? '#{darkviolet}reduction: ${reduction}' if $${reduction}?>
 
 style: #{Node-shape:oval}
-       #{Oval-fill:Yellow}
+       #{Oval-fill:yellow}
        #{CurrentOval-width:2}
        #{Line-width:3}
        #{Node-width:8}
@@ -36,7 +36,7 @@ style: #{Node-shape:oval}
   } elsif ((($this->parent)->attr('#name') eq 'xinfo' )
         or (($this->parent)->attr('#name') eq 'pmcinfo')
 		or (($this->parent)->attr('#name') eq 'coordinfo')) {
-    '#{Oval-fill:Orange}
+    '#{Oval-fill:orange}
      #{Line-dash:10,3,}
 	 #{Line-arrow:first}'
   } else {
