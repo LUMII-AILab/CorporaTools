@@ -1,13 +1,12 @@
-Latvian Corpora Tools
-=====================
+# Latvian Corpora Tools
 
 Support tools for Latvian Treebank and Latvian morphologically annotated
 corpora. Native data format of the Latvian corpora are adjusted PML.
 Corresponding PML Schemas are available at
 TrEd extension/lv-treebank/resources.
 
-Contents
---------
+
+## Contents
 
 * PmlCorporaTools - perl scripts and xslt-s for varios coprora data processing;
 * LVTB2UD - transformator from native annotation format to Universal
@@ -27,8 +26,9 @@ Some scripts have not been used several years and might be obselote, sorry.
 
 Folder Docs containing datasplits moved to Treebank repo in 2017-12-11.
 
-Prerequisites
--------------
+
+## Prerequisites
+
 For PmlCorporaTools:
 * Perl
 * `XML::Simple`
@@ -39,8 +39,7 @@ For LVTB2UD
 * Morphological https://github.com/PeterisP/morphology
 
 
-Main work-flows
----------------
+## Main work-flows
 
 Files `PmlCorporaTools/*_sample.bat` contains general descriptions and 
 commented-off Windows comand samples for main workflows. To follow through a
@@ -51,8 +50,8 @@ To follow through a workflow on a Unix machine, you have to create similar
 shell script, but it should be relatively easy as the all interesting data
 processing is done in platform independent (hopefully) perl scripts.
 
-Publishing LVTB
-===============
+
+### Publishing LVTB
 
 * `PmlCorporaTools/prepareForLvtbPublication_sample.bat` - create dataset for publishing LVTB
   in the native hybrid/PML format.
@@ -62,8 +61,7 @@ Publishing LVTB
 * `PmlCorporaTools/postprocessConlluForSembank_sample.bat` - create UD data
   for FullStack project Sembank.
 
-Others
-======
+### Others
 
 * `PmlCorporaTools/checkNormalizeSembankIds_sample.bat` - ID verification
   before including treebank files into SemBank - this is what is done in
@@ -82,8 +80,7 @@ Others
   [LVTagger](https://github.com/PeterisP/LVTagger)
 
 
-License
--------
+## License
 
 (c) Institute of Mathematics and Computer Science, University of Latvia, 2010-2017
 
