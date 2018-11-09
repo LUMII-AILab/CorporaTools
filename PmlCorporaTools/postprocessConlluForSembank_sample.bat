@@ -1,4 +1,6 @@
-:: Obtain CoNLL-U files as for UD, but do not fold together in one file.
+REM Step by step sample on how prepare UD data for Sembank.
+
+:: Obtain CoNLL-U files as for UD, but do not split TDT and do not fold together in one file.
 :: Use only Treebank's normalizedIds branch.
 
 :: Let's assume all CoNLL-U files are in PmlCorporaTools/data/conll-u.

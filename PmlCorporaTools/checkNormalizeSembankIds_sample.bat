@@ -1,4 +1,6 @@
 REM Step by step sample on how to do format check-ups and ID normalization for LVTB.
+:: This sample assumes that data to check is flattly (no subfolders!) coppied in folder .\data\original
+:: Results are given in the data\normalizedIds.
 
 REM Check if w file matches original text.
 ::perl -e "use LvCorporaTools::PMLUtils::CheckW qw(processDir); processDir(@ARGV)" data\original
@@ -31,5 +33,10 @@ REM Recheck that nothing is broken.
 ::perl -e "use LvCorporaTools::PMLUtils::CheckLvPml qw(processDir); processDir(@ARGV)" data\normalizedIds A
 
 REM MANUAL: have you checked ALL error messages in the middle?
+
+:: Copy results (.a + .m + .w files) from data\normalizedIds to appropriate place in ../../Treebank/Corpora
+:: If you need to track ID changes (for SemBank), collect the .log files also.
+:: When everything in ../../Treebank/Corpora has been checked, results must be pushed in Treebank repository branch normalizedIds.
+:: Only such states where whole Treebank is checked should be pushed to normalizedIds branch!!!
 
 pause

@@ -14,8 +14,9 @@ Contents
 Dependencies;
 * TrEd extension - development snapshot for lv-treebank module for TrEd tool
 (this enables TrEd to operate with lv-PML files);
-* MorphoVerificator - java written tool implementing various heuristics for
-searching human errors in morphological corpora (obselote).
+* MorphoVerificator - *obselote* - java written tool implementing various heuristics for
+searching human errors in morphological corpora;
+* ParserTools - *obselote* - tools used for preUD parser experiments.
 
 For each script in PmlCorporaTools there is a .bat file showing invocation
 sample on dummy data located in PmlCorporaTools/testdata. Also, it is possible
@@ -30,36 +31,56 @@ Prerequisites
 -------------
 For PmlCorporaTools:
 * Perl
+* `XML::Simple`
 * XSLT module (on Ubuntu, run 'sudo apt-get install libxml-libxslt-perl')
 
 For LVTB2UD
 * Java
-* https://github.com/PeterisP/morphology
+* Morphological https://github.com/PeterisP/morphology
 
 
 Main work-flows
 ---------------
 
-* For converting teebank to UD, consult comments in
-  PmlCorporaTools/convertLvtbToUd_sample.bat
-* For converting treebank to old dependency formats used before UD, consult
-  comments in PmlCorporaTools/aTreeTransformator_sample.bat
-* For ID verification before including treebank files into SemBank, consult
-  PmlCorporaTools/checkNormalizeSembankIds_sample.bat (Unite might be needed
-  beforehand)
-* For splitting whole-document CoNLL-U files to single-paragraph CoNLL-U files,
-  consult PmlCorporaTools/postprocessConlluForSembank_sample.bat
+Files `PmlCorporaTools/*_sample.bat` contains general descriptions and 
+commented-off Windows comand samples for main workflows. To follow through a
+workflow on Windows machine, create a copy of the necassary `sample.bat` and
+update it accordign to your needs. For convenience of Windows users
+`.gitignore` blocks of scripts named `/PmlCorporaTools/* - Copy.bat` :wink:
+To follow through a workflow on a Unix machine, you have to create similar
+shell script, but it should be relatively easy as the all interesting data
+processing is done in platform independent (hopefully) perl scripts.
+
+Publishing LVTB
+===============
+
+* `PmlCorporaTools/prepareForLvtbPublication_sample.bat` - create dataset for publishing LVTB
+  in the native hybrid/PML format.
+* `PmlCorporaTools/convertLvtbToUd_sample.bat` - converting teebank to UD \&
+  conllu. Also, this contains notes on what checkups and preparation steps
+  should be done for an UD release.
+* `PmlCorporaTools/postprocessConlluForSembank_sample.bat` - create UD data
+  for FullStack project Sembank.
+
+Others
+======
+
+* `PmlCorporaTools/checkNormalizeSembankIds_sample.bat` - ID verification
+  before including treebank files into SemBank - this is what is done in
+  _Treebank moratorium_.
+* `PmlCorporaTools/PmlCorporaTools/aTreeTransformator_sample.bat` - convert
+  treebank to old dependency formats used before UD.
 * For parameter specifics to create a PML fileset accordingly to current
-  naming conventions see PmlCorporaTools/LVK2LVTB-PML.readme.md
-* Converting treebank to TigerXML is done as follows: Unite (if needed),
-  TreeTransformatorUI with step --ord TOKEN, apply lvpml2tiger.xsl
-* Preprocessing morphocorpus files before putting in repository: CheckLvPml
-  with param M
-* Preparing morphologically tagged data for training the LVTagger system:
-  1.	download morphocorpus data from https://github.com/LUMII-AILab/Morphocorpus	
-  2.	download treebank from https://github.com/LUMII-AILab/Treebank
-  3.	run ./preparePOSTagData.sh
-  4.	the results will be placed at ../Morphocorpus/Corpora/Merged/*.txt
+  naming conventions see `PmlCorporaTools/LVK2LVTB-PML.readme.md`
+* `PmlCorporaTools/prepareForLvtbInclusion_sample.bat` - to add completely
+  new, hand annotated file to LVTB.
+* Converting treebank to TigerXML is done as follows: `Unite` (if needed),
+  TreeTransformatorUI with step `--ord TOKEN`, apply `lvpml2tiger.xsl`
+* Preprocessing morphocorpus files before putting in repository: `CheckLvPml`
+  with param `M` (currently not used).
+* `./preparePOSTagData.sh` is used for preparing morfological data for
+  [LVTagger](https://github.com/PeterisP/LVTagger)
+
 
 License
 -------
