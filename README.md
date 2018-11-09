@@ -45,7 +45,7 @@ Files `PmlCorporaTools/*_sample.bat` contains general descriptions and
 commented-off Windows comand samples for main workflows. To follow through a
 workflow on Windows machine, create a copy of the necassary `sample.bat` and
 update it accordign to your needs. For convenience of Windows users
-`.gitignore` blocks of scripts named `/PmlCorporaTools/* - Copy.bat` :wink:
+`.gitignore` blocks scripts named `/PmlCorporaTools/* - Copy.bat` :wink:
 To follow through a workflow on a Unix machine, you have to create similar
 shell script, but it should be relatively easy as the all interesting data
 processing is done in platform independent (hopefully) perl scripts.
