@@ -70,7 +70,7 @@ sub swich_styles_full
 	$st =~ s/-full//;
   } else
   {
-	$st =~ s/^lv-a/lv-a-full/;
+	$st =~ s/^(lv-a(-edit)?)/$1-full/;
   }
   SetCurrentStylesheet($st) if StylesheetExists($st);
 }
