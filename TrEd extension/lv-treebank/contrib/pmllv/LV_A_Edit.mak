@@ -45,12 +45,14 @@ sub normalize_m_ords_all_trees
 {
   print 'Recalculating token ords for all trees... ';
   my $tree = CurrentTreeNumber;
+  my $node = $this;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
     GotoTree($i);
 	&normalize_m_ords;
   }
   GotoTree($tree + 1);
+  $this = $node;
   print "Finished!\n"
 }
 
@@ -65,12 +67,14 @@ sub normalize_n_ords_all_trees
 {
   print 'Recalculating node ords for all trees... ';
   my $tree = CurrentTreeNumber;
+  my $node = $this;
   for (my $i = 1; $i <= GetTrees(); $i++)
   {
     GotoTree($i);
 	&normalize_n_ords;
   }
   GotoTree($tree + 1);
+  $this = $node;
   print "Finished!\n"
 }
 
@@ -636,6 +640,47 @@ sub remove_single_child_x
   InfoMessage($mes);
 }
 
+# Set 'FIXME' for this tree.
+sub set_fixme
+{
+  my $oldComent = $root->attr('comment');
+  return if ($oldComent =~ '^FIXME');
+  unless ($oldComent)
+  {
+    $root->{'comment'} = 'FIXME';
+  }
+  elsif ($oldComent =~ '^AUTO')
+  {
+    $root->{'comment'} = "$oldComent FIXME";
+  }
+  else
+  {
+    $root->{'comment'} = "FIXME $oldComent";
+  }
+}
+
+# Set 'AUTO' for this file.
+sub set_auto
+{
+  my $tree = CurrentTreeNumber;
+  my $node = $this;
+  GotoTree(1);
+  my $oldComent = $root->attr('comment');
+  unless ($oldComent =~ '^AUTO')
+  {
+    if ($oldComent)
+    {
+      $root->{'comment'} = "AUTO $oldComent";
+    }
+    else
+    {
+      $root->{'comment'} = 'AUTO';
+    }
+  }
+  GotoTree($tree + 1);
+  $this = $node;
+}
+
 #binding-context LV_A_Edit
 
 #bind new_xinfo_node to x menu New X-word Node
@@ -645,21 +690,23 @@ sub remove_single_child_x
 #insert new_m_node menu New Node with Morphology (forces save, can't be undone)
 #bind new_coordcl_struct to C menu New Coordination Construction
 
+#bind set_fixme to f menu Add "FIXME"
+#bind set_auto to a menu Add "AUTO"
+
 #bind incorp_in_parent to Ctrl+Up menu Incorporate in Parent
 #bind delete_node to Delete menu Delete Leaf Node
 
 #bind normalize_m_ords to Ctrl+w menu Recalculate Word Order (delete empty nodes' ords)
-#bind normalize_m_ords_all_trees to Ctrl+Alt+w menu Recalculate Word Order for All Trees (might take some time)
+#bind normalize_m_ords_all_trees to Ctrl+W menu Recalculate Word Order for All Trees (might take some time)
 #bind normalize_n_ords to Ctrl+n menu Recalculate Node Order (give ords for empty nodes)
-#bind normalize_n_ords_all_trees to Ctrl+Alt+n menu Recalculate Node Order for All Trees (might take some time)
+#bind normalize_n_ords_all_trees to Ctrl+N menu Recalculate Node Order for All Trees (might take some time)
 
 #bind Save to Ctrl+s menu Save
 
-#bind Redraw_All to Alt+r menu Redraw
-#bind swich_styles_vert to Alt+v menu Switch On/Off Vertical Layout
-#bind swich_styles_full to Alt+f menu Switch On/Off Full-info Layout
-#bind swich_styles_ord to Alt+o menu Switch On/Off Ordered Layout
-#bind switch_mode to Alt+m menu Switch to View Mode
+#bind Redraw_All to Ctrl+r menu Redraw
+#bind switch_mode to Ctrl+m menu Switch to View Mode
+#bind swich_styles_full to Ctrl+t menu Switch on/off Tags
+#bind swich_styles_ord to Ctrl+o menu Switch on/off Ordered Layout
 
 #insert passive_subj_to_obj menu Change Passive Voice subj to obj
 #insert remove_single_child_x menu Remove Single-childed namedEnt and phrasElem
