@@ -6,7 +6,7 @@
   <pkgname>lv-treebank-dep-obs</pkgname>
   <repository href="http://eksperimenti.ailab.lv/tred/rep/"/>
   <title>Latvian Treebank dependency-only PML Viewing (OBSELOTE)</title>
-  <version>0.1</version>
+  <version>0.2</version>
   <copyright year="2012-2018">Lauma Pretkalniņa, AILab, IMCS UL</copyright>
   <description>Provides support for viewing Latvian
 	TreeBank PMLs transformed to dependency-only structures, used for preUD

@@ -3,12 +3,9 @@
 #ifndef LV_A_PureDependency
 #define LV_A_PureDependency
 
-#include "LV_A.mak"
-
 package LV_A_PureDependency;
 use strict;
-
-#binding-context LV_A_PureDependency
+use Treex::PML;
 
 BEGIN { import TredMacro; import LV_A; }
 
@@ -56,10 +53,10 @@ sub allow_switch_context_hook
   return 'stop' if (not LV_A_PureDependency::is_lvadep_file);
 }
 
+#binding-context LV_A_PureDependency
 
-#bind Redraw_All to Alt+r menu Redraw
-#bind swich_styles_full to Alt+f menu Switch On/Off Full-info Layout
-#bind swich_styles_ord to Alt+o menu Switch On/Off Ordered Layout
+#bind Redraw_All to Ctrl+r menu Redraw
+#bind swich_styles_full to Ctrl+t menu Switch on/off Tags
 
 1;
 
