@@ -191,7 +191,7 @@ sub get_lemma_errors
 #binding-context LV_M
 
 #bind Save to Ctrl+s menu Save
-#bind Redraw_All to Alt+r menu Redraw
+#bind Redraw_All to Ctrl+r menu Redraw
 
 #bind new_brother_after to a menu New Node After Current
 #bind new_brother_before to b menu New Node Before Current
