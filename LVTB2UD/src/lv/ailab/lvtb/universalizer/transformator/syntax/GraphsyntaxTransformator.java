@@ -74,9 +74,7 @@ public class GraphsyntaxTransformator
 	{
 		// Find all nodes consisting of xPred with dependant subj.
 		List<PmlANode> xPredList = s.pmlTree.getDescendants(LvtbXTypes.XPRED);
-		//NodeList xPredList = (NodeList) XPathEngine.get().evaluate(
-		//		".//node[children/xinfo/xtype/text()='xPred']",
-		//		s.pmlTree, XPathConstants.NODESET);
+		
 		if (xPredList != null)
 			for (PmlANode xPredPhrase : xPredList)
 		{

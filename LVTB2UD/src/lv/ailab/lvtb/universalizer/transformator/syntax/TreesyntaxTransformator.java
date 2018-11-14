@@ -89,14 +89,9 @@ public class TreesyntaxTransformator
 		if (pmlPmc == null || pmlPmc.getNodeType() != PmlANode.Type.PMC)
 			throw new IllegalArgumentException(String.format(
 					"Sentence %s has no root PMC.", s.id));
-		//{
-		//	s.hasFailed = true;
-		//	return;
-		//}
+
 		transformDepSubtrees(s.pmlTree);
-		//if (s.hasFailed) return;
 		transformPhraseParts(pmlPmc);
-		//if (s.hasFailed) return;
 
 		PmlANode newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null)
@@ -117,14 +112,10 @@ public class TreesyntaxTransformator
 	 */
 	protected void transformDepSubtrees(PmlANode parentANode)
 	{
-		//if (s.hasFailed) return;
 		List<PmlANode> pmlDependents = parentANode.getChildren();
 		if (pmlDependents == null || pmlDependents.isEmpty()) return;
 		for (PmlANode pmlDependent : pmlDependents)
-		{
 			transformSubtree(pmlDependent);
-			//if (s.hasFailed) return;
-		}
 	}
 
 	/**
@@ -133,14 +124,10 @@ public class TreesyntaxTransformator
 	 */
 	protected void transformPhraseParts(PmlANode phraseInfoNode)
 	{
-		//if (s.hasFailed) return;
 		List<PmlANode> parts = phraseInfoNode.getChildren();
 		if (parts == null || parts.isEmpty()) return;
 		for (PmlANode part : parts)
-		{
 			transformSubtree(part);
-			//if (s.hasFailed) return;
-		}
 	}
 
 	/**
@@ -150,7 +137,6 @@ public class TreesyntaxTransformator
 	 */
 	protected void transformSubtree (PmlANode aNode)
 	{
-		//if (s.hasFailed) return;
 		if (params.DEBUG)
 			System.out.printf("Working on node \"%s\".\n", aNode.getId());
 
@@ -160,7 +146,6 @@ public class TreesyntaxTransformator
 			return;
 
 		transformDepSubtrees(aNode);
-		//if (s.hasFailed) return;
 
 		PmlANode newBasicRoot = aNode;
 		PmlANode newEnhancedRoot = aNode;
@@ -170,7 +155,6 @@ public class TreesyntaxTransformator
 		if (phraseNode != null)
 		{
 			transformPhraseParts(phraseNode);
-			//if (s.hasFailed) return;
 			newBasicRoot = pTransf.anyPhraseToUD(phraseNode);
 			newEnhancedRoot = newBasicRoot;
 			if (newBasicRoot == null)
@@ -198,10 +182,7 @@ public class TreesyntaxTransformator
 			if (redRoot == null)
 				throw new IllegalArgumentException(String.format(
 						"No child was raised for ellipsis node %s.", nodeId));
-			//{
-			//	s.hasFailed = true;
-			//	return;
-			//}
+
 			newBasicRoot = redRoot;
 
 			String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
@@ -221,7 +202,6 @@ public class TreesyntaxTransformator
 				decimalToken.xpostag = redXPostag;
 				decimalToken.form = aNode.getReductionFormPart();
 				if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
-					//warnOut.printf("Ellipsis node %s with reduction field \"%s\" has no tag.\n", NodeFieldUtils.getId(aNode), NodeFieldUtils.getReduction(aNode));
 					logger.doInsentenceWarning(String.format(
 							"Ellipsis node %s with reduction field \"%s\" has no tag.",
 							nodeId, aNode.getReduction()));
@@ -250,8 +230,6 @@ public class TreesyntaxTransformator
 				s.pmlaToEnhConll.put(nodeId, decimalToken);
 			}
 
-			//if (s.hasFailed) return;
-
 			transformSubtree(newBasicRoot);
 		}
 
@@ -278,17 +256,13 @@ public class TreesyntaxTransformator
 	protected void relinkDependents(
 			PmlANode parentANode, PmlANode newBaseDepRoot, PmlANode newEnhDepRoot)
 	{
-		//if (s.hasFailed) return;
 		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
 		if (s.pmlaToConll.get(newBaseDepRoot.getId()) != s.pmlaToConll.get(parentANode.getId()) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
-		//{
-			throw new IllegalArgumentException(String.format(
-					"Can't relink dependents from %s to %s!",
-					parentANode.getId(), newBaseDepRoot.getId()));
-			//s.hasFailed = true;
-			//return;
-		//}
+
+		throw new IllegalArgumentException(String.format(
+				"Can't relink dependents from %s to %s!",
+				parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
 		if (pmlDependents != null && pmlDependents.size() > 0)
