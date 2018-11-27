@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
@@ -58,25 +59,20 @@ public class Sentence
 	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
 
 	/**
-	 * Indication that transformation has failed and the obtained conll data is
-	 * garbage.
-	 * TODO substitute with handled exceptions?
+	 * Mapping from node ID to IDs of nodes that are subjects for this node.
 	 */
-	//public boolean hasFailed;
+	public HashMap<String, HashSet<String>> subjects = new HashMap<>();
 
 	public Sentence(PmlANode pmlTree)
 	{
 		this.pmlTree = pmlTree;
 		id = pmlTree.getId();
-		//hasFailed = false;
 	}
 
 	public String toConllU()
 	{
 		StringBuilder res = new StringBuilder();
 		res.append("# sent_id = ");
-		//if (params.CHANGE_IDS) res.append(id.replace("LETA", "newswire"));
-		//else
 		res.append(id);
 		res.append("\n");
 		res.append("# text = ");
@@ -88,6 +84,51 @@ public class Sentence
 		return res.toString();
 	}
 
+	public void populateXPredSubjs()
+	{
+		subjects = new HashMap<>();
+		populateXPredSubjs(pmlTree);
+	}
+
+	protected void populateXPredSubjs(PmlANode aNode)
+	{
+		if (aNode == null) return;
+		String id = aNode.getId();
+
+		// Update coresponding subject list with dependant subjects.
+		HashSet<String> collectedSubjs = subjects.get(id);
+		if (collectedSubjs == null) collectedSubjs = new HashSet<>();
+		List<PmlANode> subjs = aNode.getChildren(LvtbRoles.SUBJ);
+		if (subjs != null) for (PmlANode s : subjs)
+			collectedSubjs.add(s.getId());
+		subjects.put(id, collectedSubjs);
+
+		// Fid xPred and update their parts' subject lists.
+		PmlANode phrase = aNode.getPhraseNode();
+		List<PmlANode> phraseParts = null;
+		if (phrase != null)
+		{
+			phraseParts = phrase.getChildren();
+			if (LvtbXTypes.XPRED.equals(phrase.getPhraseType()))
+				for (PmlANode phrasePart : phraseParts)
+			{
+				String partId = phrasePart.getId();
+				HashSet<String> collectedPartSubjs = subjects.get(partId);
+				if (collectedPartSubjs == null)
+					collectedPartSubjs = new HashSet<>();
+				collectedPartSubjs.addAll(collectedSubjs);
+				subjects.put(partId, collectedPartSubjs);
+			}
+		}
+
+		// Posprocess children.
+		List<PmlANode> dependants = aNode.getChildren();
+		if (dependants != null) for (PmlANode dependant : dependants)
+			populateXPredSubjs(dependant);
+		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
+			populateXPredSubjs(phrasePart);
+	}
+
 	public void populateCoordPartsUnder()
 	{
 		coordPartsUnder = new HashMap<>();
@@ -96,6 +137,7 @@ public class Sentence
 
 	protected void populateCoordPartsUnder(PmlANode aNode)
 	{
+		// Preprocess children.
 		if (aNode == null) return;
 		List<PmlANode> dependants = aNode.getChildren();
 		if (dependants != null) for (PmlANode dependant : dependants)
@@ -106,6 +148,7 @@ public class Sentence
 		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
 			populateCoordPartsUnder(phrasePart);
 
+		// Add coordinated subparts for this node.
 		String id = aNode.getId();
 		if (phrase.getNodeType() == PmlANode.Type.COORD)
 		{
