@@ -109,6 +109,19 @@
     <LM id="a-c70-Cairo-p2s1">
       <s.rf>m#m-c70-Cairo-p2s1</s.rf>
       <children>
+        <node id="a-c70-Cairo-p2s1w1">
+          <m.rf id="m-c70-Cairo-p2s1w1">
+            <src.rf>semi-automatic</src.rf>
+            <w.rf id="w-c70-Cairo-p2w1">
+              <token>Man</token>
+            </w.rf>
+            <form>Man</form>
+            <lemma>es</lemma>
+            <tag>pp10sdn</tag>
+          </m.rf>
+          <role>det</role>
+          <ord>1</ord>
+        </node>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
@@ -208,19 +221,6 @@
             </node>
           </children>
         </pmcinfo>
-        <node id="a-c70-Cairo-p2s1w1">
-          <m.rf id="m-c70-Cairo-p2s1w1">
-            <src.rf>semi-automatic</src.rf>
-            <w.rf id="w-c70-Cairo-p2w1">
-              <token>Man</token>
-            </w.rf>
-            <form>Man</form>
-            <lemma>es</lemma>
-            <tag>pp10sdn</tag>
-          </m.rf>
-          <role>det</role>
-          <ord>1</ord>
-        </node>
       </children>
     </LM>
     <LM id="a-c70-Cairo-p3s1">
@@ -232,6 +232,19 @@
             <node id="a-c70-Cairo-p3s1x1">
               <role>pred</role>
               <children>
+                <node id="a-c70-Cairo-p3s1w1">
+                  <m.rf id="m-c70-Cairo-p3s1w1">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p3w1">
+                      <token>Viņš</token>
+                    </w.rf>
+                    <form>Viņš</form>
+                    <lemma>viņš</lemma>
+                    <tag>pp3msnn</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>1</ord>
+                </node>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0is0030an[modals00]</tag>
@@ -244,7 +257,7 @@
                         </w.rf>
                         <form>centās</form>
                         <lemma>censties</lemma>
-                        <tag>voyist130an</tag>
+                        <tag>voyisi130an</tag>
                       </m.rf>
                       <role>mod</role>
                       <ord>2</ord>
@@ -316,19 +329,6 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-c70-Cairo-p3s1w1">
-                  <m.rf id="m-c70-Cairo-p3s1w1">
-                    <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-c70-Cairo-p3w1">
-                      <token>Viņš</token>
-                    </w.rf>
-                    <form>Viņš</form>
-                    <lemma>viņš</lemma>
-                    <tag>pp3msnn</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>1</ord>
-                </node>
               </children>
             </node>
             <node id="a-c70-Cairo-p3s1w7">
@@ -357,6 +357,19 @@
             <node id="a-c70-Cairo-p4s1x1">
               <role>pred</role>
               <children>
+                <node id="a-c70-Cairo-p4s1w2">
+                  <m.rf id="m-c70-Cairo-p4s1w2">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p4w2">
+                      <token>tu</token>
+                    </w.rf>
+                    <form>tu</form>
+                    <lemma>tu</lemma>
+                    <tag>pp20snn</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>2</ord>
+                </node>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip002san[modals00]</tag>
@@ -369,7 +382,7 @@
                         </w.rf>
                         <form>gribi</form>
                         <lemma>gribēt</lemma>
-                        <tag>vonipt32san</tag>
+                        <tag>vonipi32san</tag>
                       </m.rf>
                       <role>mod</role>
                       <ord>3</ord>
@@ -390,19 +403,6 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-c70-Cairo-p4s1w2">
-                  <m.rf id="m-c70-Cairo-p4s1w2">
-                    <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-c70-Cairo-p4w2">
-                      <token>tu</token>
-                    </w.rf>
-                    <form>tu</form>
-                    <lemma>tu</lemma>
-                    <tag>pp20snn</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>2</ord>
-                </node>
               </children>
             </node>
             <node id="a-c70-Cairo-p4s1w1">
@@ -672,7 +672,7 @@
                           <token>sarkanā</token>
                         </w.rf>
                         <form>sarkanā</form>
-                        <lemma>sarkana</lemma>
+                        <lemma>sarkans</lemma>
                         <tag>affslnp</tag>
                       </m.rf>
                       <role>attr</role>
@@ -762,6 +762,34 @@
             <node id="a-c70-Cairo-p8s1x1">
               <role>pred</role>
               <children>
+                <node id="a-c70-Cairo-p8s1w2">
+                  <m.rf id="m-c70-Cairo-p8s1w2">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p8w2">
+                      <token>tētis</token>
+                    </w.rf>
+                    <form>tētis</form>
+                    <lemma>tētis</lemma>
+                    <tag>ncmsn2</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-c70-Cairo-p8s1w1">
+                      <m.rf id="m-c70-Cairo-p8s1w1">
+                        <src.rf>semi-automatic</src.rf>
+                        <w.rf id="w-c70-Cairo-p8w1">
+                          <token>Mans</token>
+                        </w.rf>
+                        <form>Mans</form>
+                        <lemma>mans</lemma>
+                        <tag>ps0msnn</tag>
+                      </m.rf>
+                      <role>attr</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip003san[adjsmn]</tag>
@@ -807,8 +835,8 @@
                                       <no_space_after>1</no_space_after>
                                     </w.rf>
                                     <form>tavējais</form>
-                                    <lemma>tavējais</lemma>
-                                    <tag>ps0msnn</tag>
+                                    <lemma>tavējs</lemma>
+                                    <tag>armsnyp</tag>
                                   </m.rf>
                                   <role>basElem</role>
                                   <ord>6</ord>
@@ -834,34 +862,6 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-c70-Cairo-p8s1w2">
-                  <m.rf id="m-c70-Cairo-p8s1w2">
-                    <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-c70-Cairo-p8w2">
-                      <token>tētis</token>
-                    </w.rf>
-                    <form>tētis</form>
-                    <lemma>tētis</lemma>
-                    <tag>ncmsn2</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>2</ord>
-                  <children>
-                    <node id="a-c70-Cairo-p8s1w1">
-                      <m.rf id="m-c70-Cairo-p8s1w1">
-                        <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-c70-Cairo-p8w1">
-                          <token>Mans</token>
-                        </w.rf>
-                        <form>Mans</form>
-                        <lemma>mans</lemma>
-                        <tag>ps0msnn</tag>
-                      </m.rf>
-                      <role>attr</role>
-                      <ord>1</ord>
-                    </node>
-                  </children>
-                </node>
               </children>
             </node>
           </children>
@@ -1133,6 +1133,19 @@
             <node id="a-c70-Cairo-p10s1x1">
               <role>pred</role>
               <children>
+                <node id="a-c70-Cairo-p10s1w2">
+                  <m.rf id="m-c70-Cairo-p10s1w2">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p10w2">
+                      <token>Igvasu</token>
+                    </w.rf>
+                    <form>Igvasu</form>
+                    <lemma>Igvasu</lemma>
+                    <tag>np0000</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>2</ord>
+                </node>
                 <xinfo>
                   <xtype>xPred</xtype>
                   <tag>vm0ip0030an[substsfn]</tag>
@@ -1177,7 +1190,7 @@
                                       <token>liela</token>
                                     </w.rf>
                                     <form>liela</form>
-                                    <lemma>liela</lemma>
+                                    <lemma>liels</lemma>
                                     <tag>affsnnp</tag>
                                   </m.rf>
                                   <role>crdPart</role>
@@ -1203,7 +1216,7 @@
                                       <token>maza</token>
                                     </w.rf>
                                     <form>maza</form>
-                                    <lemma>maza</lemma>
+                                    <lemma>mazs</lemma>
                                     <tag>affsnnp</tag>
                                   </m.rf>
                                   <role>crdPart</role>
@@ -1217,19 +1230,6 @@
                     </node>
                   </children>
                 </xinfo>
-                <node id="a-c70-Cairo-p10s1w2">
-                  <m.rf id="m-c70-Cairo-p10s1w2">
-                    <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-c70-Cairo-p10w2">
-                      <token>Igvasu</token>
-                    </w.rf>
-                    <form>Igvasu</form>
-                    <lemma>Igvasu</lemma>
-                    <tag>np0000</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>2</ord>
-                </node>
               </children>
             </node>
           </children>
@@ -1410,7 +1410,7 @@
                         </w.rf>
                         <form>Nevarēja</form>
                         <lemma>nevarēt</lemma>
-                        <tag>vonist330an</tag>
+                        <tag>vonisi330ay</tag>
                       </m.rf>
                       <role>mod</role>
                       <ord>1</ord>
@@ -1426,6 +1426,19 @@
     <LM id="a-c70-Cairo-p12s1">
       <s.rf>m#m-c70-Cairo-p12s1</s.rf>
       <children>
+        <node id="a-c70-Cairo-p12s1w1">
+          <m.rf id="m-c70-Cairo-p12s1w1">
+            <src.rf>semi-automatic</src.rf>
+            <w.rf id="w-c70-Cairo-p12w1">
+              <token>Viņiem</token>
+            </w.rf>
+            <form>Viņiem</form>
+            <lemma>viņš</lemma>
+            <tag>pp3mpdn</tag>
+          </m.rf>
+          <role>det</role>
+          <ord>1</ord>
+        </node>
         <pmcinfo>
           <pmctype>sent</pmctype>
           <children>
@@ -1450,7 +1463,7 @@
                 </w.rf>
                 <form>nav</form>
                 <lemma>nebūt</lemma>
-                <tag>vgnipii30ay</tag>
+                <tag>vmnipii30ay</tag>
               </m.rf>
               <role>pred</role>
               <ord>2</ord>
@@ -1458,39 +1471,6 @@
                 <node id="a-c70-Cairo-p12s1x1">
                   <role>subj</role>
                   <children>
-                    <xinfo>
-                      <xtype>xParticle</xtype>
-                      <tag>ncfsg0[neg]</tag>
-                      <children>
-                        <node id="a-c70-Cairo-p12s1w3">
-                          <m.rf id="m-c70-Cairo-p12s1w3">
-                            <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-c70-Cairo-p12w3">
-                              <token>ne</token>
-                            </w.rf>
-                            <form>ne</form>
-                            <lemma>ne</lemma>
-                            <tag>q</tag>
-                          </m.rf>
-                          <role>no</role>
-                          <ord>3</ord>
-                        </node>
-                        <node id="a-c70-Cairo-p12s1w4">
-                          <m.rf id="m-c70-Cairo-p12s1w4">
-                            <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-c70-Cairo-p12w4">
-                              <token>jausmas</token>
-                              <no_space_after>1</no_space_after>
-                            </w.rf>
-                            <form>jausmas</form>
-                            <lemma>jausma</lemma>
-                            <tag>ncfsg4</tag>
-                          </m.rf>
-                          <role>basElem</role>
-                          <ord>4</ord>
-                        </node>
-                      </children>
-                    </xinfo>
                     <node id="a-c70-Cairo-p12s1x2">
                       <role>attrCl</role>
                       <children>
@@ -1532,7 +1512,7 @@
                                     </w.rf>
                                     <form>to</form>
                                     <lemma>tas</lemma>
-                                    <tag>pd0msan</tag>
+                                    <tag>pd3msan</tag>
                                   </m.rf>
                                   <role>obj</role>
                                   <ord>7</ord>
@@ -1556,25 +1536,45 @@
                         </pmcinfo>
                       </children>
                     </node>
+                    <xinfo>
+                      <xtype>xParticle</xtype>
+                      <tag>ncfsg0[neg]</tag>
+                      <children>
+                        <node id="a-c70-Cairo-p12s1w3">
+                          <m.rf id="m-c70-Cairo-p12s1w3">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c70-Cairo-p12w3">
+                              <token>ne</token>
+                            </w.rf>
+                            <form>ne</form>
+                            <lemma>ne</lemma>
+                            <tag>q</tag>
+                          </m.rf>
+                          <role>no</role>
+                          <ord>3</ord>
+                        </node>
+                        <node id="a-c70-Cairo-p12s1w4">
+                          <m.rf id="m-c70-Cairo-p12s1w4">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c70-Cairo-p12w4">
+                              <token>jausmas</token>
+                              <no_space_after>1</no_space_after>
+                            </w.rf>
+                            <form>jausmas</form>
+                            <lemma>jausma</lemma>
+                            <tag>ncfsg4</tag>
+                          </m.rf>
+                          <role>basElem</role>
+                          <ord>4</ord>
+                        </node>
+                      </children>
+                    </xinfo>
                   </children>
                 </node>
               </children>
             </node>
           </children>
         </pmcinfo>
-        <node id="a-c70-Cairo-p12s1w1">
-          <m.rf id="m-c70-Cairo-p12s1w1">
-            <src.rf>semi-automatic</src.rf>
-            <w.rf id="w-c70-Cairo-p12w1">
-              <token>Viņiem</token>
-            </w.rf>
-            <form>Viņiem</form>
-            <lemma>viņš</lemma>
-            <tag>pp3mpdn</tag>
-          </m.rf>
-          <role>det</role>
-          <ord>1</ord>
-        </node>
       </children>
     </LM>
     <LM id="a-c70-Cairo-p13s1">
@@ -1721,39 +1721,6 @@
                         <node id="a-c70-Cairo-p14s1x2">
                           <role>pred</role>
                           <children>
-                            <xinfo>
-                              <xtype>xPred</xtype>
-                              <tag>vm0if002san[modals00]</tag>
-                              <children>
-                                <node id="a-c70-Cairo-p14s1w7">
-                                  <m.rf id="m-c70-Cairo-p14s1w7">
-                                    <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-c70-Cairo-p14w7">
-                                      <token>varēsi</token>
-                                    </w.rf>
-                                    <form>varēsi</form>
-                                    <lemma>varēt</lemma>
-                                    <tag>vonift32san</tag>
-                                  </m.rf>
-                                  <role>mod</role>
-                                  <ord>7</ord>
-                                </node>
-                                <node id="a-c70-Cairo-p14s1w8">
-                                  <m.rf id="m-c70-Cairo-p14s1w8">
-                                    <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-c70-Cairo-p14w8">
-                                      <token>atnākt</token>
-                                      <no_space_after>1</no_space_after>
-                                    </w.rf>
-                                    <form>atnākt</form>
-                                    <lemma>atnākt</lemma>
-                                    <tag>vmnn0i1000n</tag>
-                                  </m.rf>
-                                  <role>basElem</role>
-                                  <ord>8</ord>
-                                </node>
-                              </children>
-                            </xinfo>
                             <node id="a-c70-Cairo-p14s1w5">
                               <m.rf id="m-c70-Cairo-p14s1w5">
                                 <src.rf>semi-automatic</src.rf>
@@ -1780,6 +1747,39 @@
                               <role>subj</role>
                               <ord>6</ord>
                             </node>
+                            <xinfo>
+                              <xtype>xPred</xtype>
+                              <tag>vm0if002san[modals00]</tag>
+                              <children>
+                                <node id="a-c70-Cairo-p14s1w7">
+                                  <m.rf id="m-c70-Cairo-p14s1w7">
+                                    <src.rf>semi-automatic</src.rf>
+                                    <w.rf id="w-c70-Cairo-p14w7">
+                                      <token>varēsi</token>
+                                    </w.rf>
+                                    <form>varēsi</form>
+                                    <lemma>varēt</lemma>
+                                    <tag>vonifi32san</tag>
+                                  </m.rf>
+                                  <role>mod</role>
+                                  <ord>7</ord>
+                                </node>
+                                <node id="a-c70-Cairo-p14s1w8">
+                                  <m.rf id="m-c70-Cairo-p14s1w8">
+                                    <src.rf>semi-automatic</src.rf>
+                                    <w.rf id="w-c70-Cairo-p14w8">
+                                      <token>atnākt</token>
+                                      <no_space_after>1</no_space_after>
+                                    </w.rf>
+                                    <form>atnākt</form>
+                                    <lemma>atnākt</lemma>
+                                    <tag>vmnn0i1000n</tag>
+                                  </m.rf>
+                                  <role>basElem</role>
+                                  <ord>8</ord>
+                                </node>
+                              </children>
+                            </xinfo>
                           </children>
                         </node>
                         <node id="a-c70-Cairo-p14s1w4">
@@ -2167,6 +2167,19 @@
                     <node id="a-c70-Cairo-p17s1x2">
                       <role>crdPart</role>
                       <children>
+                        <node id="a-c70-Cairo-p17s1w1">
+                          <m.rf id="m-c70-Cairo-p17s1w1">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c70-Cairo-p17w1">
+                              <token>Viņai</token>
+                            </w.rf>
+                            <form>Viņai</form>
+                            <lemma>viņa</lemma>
+                            <tag>pp3fsdn</tag>
+                          </m.rf>
+                          <role>det</role>
+                          <ord>1</ord>
+                        </node>
                         <pmcinfo>
                           <pmctype>mainCl</pmctype>
                           <children>
@@ -2185,7 +2198,7 @@
                                         </w.rf>
                                         <form>vajadzēja</form>
                                         <lemma>vajadzēt</lemma>
-                                        <tag>vonist330an</tag>
+                                        <tag>vonisi330an</tag>
                                       </m.rf>
                                       <role>mod</role>
                                       <ord>2</ord>
@@ -2225,19 +2238,6 @@
                             </node>
                           </children>
                         </pmcinfo>
-                        <node id="a-c70-Cairo-p17s1w1">
-                          <m.rf id="m-c70-Cairo-p17s1w1">
-                            <src.rf>semi-automatic</src.rf>
-                            <w.rf id="w-c70-Cairo-p17w1">
-                              <token>Viņai</token>
-                            </w.rf>
-                            <form>Viņai</form>
-                            <lemma>viņa</lemma>
-                            <tag>pp3fsdn</tag>
-                          </m.rf>
-                          <role>det</role>
-                          <ord>1</ord>
-                        </node>
                       </children>
                     </node>
                     <node id="a-c70-Cairo-p17s1x3">
@@ -2357,7 +2357,7 @@
                                     </w.rf>
                                     <form>to</form>
                                     <lemma>tas</lemma>
-                                    <tag>pd0msan</tag>
+                                    <tag>pd3msan</tag>
                                   </m.rf>
                                   <role>obj</role>
                                   <ord>13</ord>
@@ -2431,114 +2431,6 @@
     <LM id="a-c70-Cairo-p18s1">
       <s.rf>m#m-c70-Cairo-p18s1</s.rf>
       <children>
-        <pmcinfo>
-          <pmctype>sent</pmctype>
-          <children>
-            <node id="a-c70-Cairo-p18s1x2">
-              <role>pred</role>
-              <children>
-                <xinfo>
-                  <xtype>xPred</xtype>
-                  <tag>vm0is0030an[modals00]</tag>
-                  <children>
-                    <node id="a-c70-Cairo-p18s1w2">
-                      <m.rf id="m-c70-Cairo-p18s1w2">
-                        <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-c70-Cairo-p18w2">
-                          <token>nevarēju</token>
-                        </w.rf>
-                        <form>nevarēju</form>
-                        <lemma>nevarēt</lemma>
-                        <tag>vonist31say</tag>
-                      </m.rf>
-                      <role>mod</role>
-                      <ord>2</ord>
-                    </node>
-                    <node id="a-c70-Cairo-p18s1w3">
-                      <m.rf id="m-c70-Cairo-p18s1w3">
-                        <src.rf>semi-automatic</src.rf>
-                        <w.rf id="w-c70-Cairo-p18w3">
-                          <token>tikt</token>
-                        </w.rf>
-                        <form>tikt</form>
-                        <lemma>tikt</lemma>
-                        <tag>vtnn0i1000n</tag>
-                      </m.rf>
-                      <role>basElem</role>
-                      <ord>3</ord>
-                      <children>
-                        <node id="a-c70-Cairo-p18s1x3">
-                          <role>adv</role>
-                          <children>
-                            <xinfo>
-                              <xtype>xPrep</xtype>
-                              <tag>pp0msdn[rel]</tag>
-                              <children>
-                                <node id="a-c70-Cairo-p18s1w4">
-                                  <m.rf id="m-c70-Cairo-p18s1w4">
-                                    <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-c70-Cairo-p18w4">
-                                      <token>viņam</token>
-                                    </w.rf>
-                                    <form>viņam</form>
-                                    <lemma>viņš</lemma>
-                                    <tag>pp3msdn</tag>
-                                  </m.rf>
-                                  <role>basElem</role>
-                                  <ord>4</ord>
-                                </node>
-                                <node id="a-c70-Cairo-p18s1w5">
-                                  <m.rf id="m-c70-Cairo-p18s1w5">
-                                    <src.rf>semi-automatic</src.rf>
-                                    <w.rf id="w-c70-Cairo-p18w5">
-                                      <token>līdzi</token>
-                                      <no_space_after>1</no_space_after>
-                                    </w.rf>
-                                    <form>līdzi</form>
-                                    <lemma>līdzi</lemma>
-                                    <tag>rrp</tag>
-                                  </m.rf>
-                                  <role>prep</role>
-                                  <ord>5</ord>
-                                </node>
-                              </children>
-                            </xinfo>
-                          </children>
-                        </node>
-                      </children>
-                    </node>
-                  </children>
-                </xinfo>
-                <node id="a-c70-Cairo-p18s1w1">
-                  <m.rf id="m-c70-Cairo-p18s1w1">
-                    <src.rf>semi-automatic</src.rf>
-                    <w.rf id="w-c70-Cairo-p18w1">
-                      <token>Es</token>
-                    </w.rf>
-                    <form>Es</form>
-                    <lemma>es</lemma>
-                    <tag>pp10snn</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>1</ord>
-                </node>
-              </children>
-            </node>
-            <node id="a-c70-Cairo-p18s1w12">
-              <m.rf id="m-c70-Cairo-p18s1w12">
-                <src.rf>semi-automatic</src.rf>
-                <w.rf id="w-c70-Cairo-p18w12">
-                  <token>.</token>
-                </w.rf>
-                <form>.</form>
-                <lemma>.</lemma>
-                <tag>zs</tag>
-              </m.rf>
-              <role>punct</role>
-              <ord>12</ord>
-            </node>
-          </children>
-        </pmcinfo>
         <node id="a-c70-Cairo-p18s1x1">
           <role>motivCl</role>
           <children>
@@ -2632,6 +2524,114 @@
             </pmcinfo>
           </children>
         </node>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-c70-Cairo-p18s1x2">
+              <role>pred</role>
+              <children>
+                <node id="a-c70-Cairo-p18s1w1">
+                  <m.rf id="m-c70-Cairo-p18s1w1">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p18w1">
+                      <token>Es</token>
+                    </w.rf>
+                    <form>Es</form>
+                    <lemma>es</lemma>
+                    <tag>pp10snn</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>1</ord>
+                </node>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vm0is0030an[modals00]</tag>
+                  <children>
+                    <node id="a-c70-Cairo-p18s1w2">
+                      <m.rf id="m-c70-Cairo-p18s1w2">
+                        <src.rf>semi-automatic</src.rf>
+                        <w.rf id="w-c70-Cairo-p18w2">
+                          <token>nevarēju</token>
+                        </w.rf>
+                        <form>nevarēju</form>
+                        <lemma>nevarēt</lemma>
+                        <tag>vonisi31say</tag>
+                      </m.rf>
+                      <role>mod</role>
+                      <ord>2</ord>
+                    </node>
+                    <node id="a-c70-Cairo-p18s1w3">
+                      <m.rf id="m-c70-Cairo-p18s1w3">
+                        <src.rf>semi-automatic</src.rf>
+                        <w.rf id="w-c70-Cairo-p18w3">
+                          <token>tikt</token>
+                        </w.rf>
+                        <form>tikt</form>
+                        <lemma>tikt</lemma>
+                        <tag>vmnn0i1000n</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>3</ord>
+                      <children>
+                        <node id="a-c70-Cairo-p18s1x3">
+                          <role>adv</role>
+                          <children>
+                            <xinfo>
+                              <xtype>xPrep</xtype>
+                              <tag>pp0msdn[rel]</tag>
+                              <children>
+                                <node id="a-c70-Cairo-p18s1w4">
+                                  <m.rf id="m-c70-Cairo-p18s1w4">
+                                    <src.rf>semi-automatic</src.rf>
+                                    <w.rf id="w-c70-Cairo-p18w4">
+                                      <token>viņam</token>
+                                    </w.rf>
+                                    <form>viņam</form>
+                                    <lemma>viņš</lemma>
+                                    <tag>pp3msdn</tag>
+                                  </m.rf>
+                                  <role>basElem</role>
+                                  <ord>4</ord>
+                                </node>
+                                <node id="a-c70-Cairo-p18s1w5">
+                                  <m.rf id="m-c70-Cairo-p18s1w5">
+                                    <src.rf>semi-automatic</src.rf>
+                                    <w.rf id="w-c70-Cairo-p18w5">
+                                      <token>līdzi</token>
+                                      <no_space_after>1</no_space_after>
+                                    </w.rf>
+                                    <form>līdzi</form>
+                                    <lemma>līdzi</lemma>
+                                    <tag>rrp</tag>
+                                  </m.rf>
+                                  <role>prep</role>
+                                  <ord>5</ord>
+                                </node>
+                              </children>
+                            </xinfo>
+                          </children>
+                        </node>
+                      </children>
+                    </node>
+                  </children>
+                </xinfo>
+              </children>
+            </node>
+            <node id="a-c70-Cairo-p18s1w12">
+              <m.rf id="m-c70-Cairo-p18s1w12">
+                <src.rf>semi-automatic</src.rf>
+                <w.rf id="w-c70-Cairo-p18w12">
+                  <token>.</token>
+                </w.rf>
+                <form>.</form>
+                <lemma>.</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>12</ord>
+            </node>
+          </children>
+        </pmcinfo>
       </children>
     </LM>
   </trees>

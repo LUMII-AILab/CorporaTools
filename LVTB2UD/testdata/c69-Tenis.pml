@@ -22,38 +22,6 @@
             <node id="a-c69-Tenis-p1s1x1">
               <role>pred</role>
               <children>
-                <xinfo>
-                  <xtype>xPred</xtype>
-                  <tag>vm0rp000pan[actpmn]</tag>
-                  <children>
-                    <node id="a-c69-Tenis-p1s1w7">
-                      <m.rf id="m-c69-Tenis-p1s1w7">
-                        <src.rf>experimental</src.rf>
-                        <w.rf id="w-c69-Tenis-p1w7">
-                          <token>esot</token>
-                        </w.rf>
-                        <form>esot</form>
-                        <lemma>būt</lemma>
-                        <tag>vcnrpii00an</tag>
-                      </m.rf>
-                      <role>auxVerb</role>
-                      <ord>7</ord>
-                    </node>
-                    <node id="a-c69-Tenis-p1s1w8">
-                      <m.rf id="m-c69-Tenis-p1s1w8">
-                        <src.rf>experimental</src.rf>
-                        <w.rf id="w-c69-Tenis-p1w8">
-                          <token>ieradušies</token>
-                        </w.rf>
-                        <form>ieradušies</form>
-                        <lemma>ierasties</lemma>
-                        <tag>vmypdmpnasnpn</tag>
-                      </m.rf>
-                      <role>basElem</role>
-                      <ord>8</ord>
-                    </node>
-                  </children>
-                </xinfo>
                 <node id="a-c69-Tenis-p1s1x2">
                   <role>subj</role>
                   <children>
@@ -194,6 +162,38 @@
                     </xinfo>
                   </children>
                 </node>
+                <xinfo>
+                  <xtype>xPred</xtype>
+                  <tag>vm0rp000pan[actpmn]</tag>
+                  <children>
+                    <node id="a-c69-Tenis-p1s1w7">
+                      <m.rf id="m-c69-Tenis-p1s1w7">
+                        <src.rf>experimental</src.rf>
+                        <w.rf id="w-c69-Tenis-p1w7">
+                          <token>esot</token>
+                        </w.rf>
+                        <form>esot</form>
+                        <lemma>būt</lemma>
+                        <tag>vcnrpii00an</tag>
+                      </m.rf>
+                      <role>auxVerb</role>
+                      <ord>7</ord>
+                    </node>
+                    <node id="a-c69-Tenis-p1s1w8">
+                      <m.rf id="m-c69-Tenis-p1s1w8">
+                        <src.rf>experimental</src.rf>
+                        <w.rf id="w-c69-Tenis-p1w8">
+                          <token>ieradušies</token>
+                        </w.rf>
+                        <form>ieradušies</form>
+                        <lemma>ierasties</lemma>
+                        <tag>vmypdmpnasnpn</tag>
+                      </m.rf>
+                      <role>basElem</role>
+                      <ord>8</ord>
+                    </node>
+                  </children>
+                </xinfo>
               </children>
             </node>
             <node id="a-c69-Tenis-p1s1w11">
