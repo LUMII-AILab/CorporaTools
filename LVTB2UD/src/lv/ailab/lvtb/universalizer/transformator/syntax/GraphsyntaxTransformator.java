@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class GraphsyntaxTransformator
 {
+	public static Boolean ADD_CONTROL_SUBJ = false;
+	public static Boolean PROPAGATE_CONJUNCTS = true;
 	/**
 	 * In this sentence all the transformations are carried out.
 	 */
@@ -33,7 +35,6 @@ public class GraphsyntaxTransformator
 	 * Stream for warnings and other logs.
 	 */
 	protected Logger logger;
-
 
 
 	public GraphsyntaxTransformator(Sentence sent, Logger logger)
@@ -58,8 +59,8 @@ public class GraphsyntaxTransformator
 	public void transformEnhancedSyntax()
 	{
 		s.populateCoordPartsUnder();
-		propagateConjuncts();
-		addControlledSubjects();
+		if (PROPAGATE_CONJUNCTS) propagateConjuncts();
+		if (ADD_CONTROL_SUBJ) addControlledSubjects();
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class GraphsyntaxTransformator
 	{
 		// Find all nodes consisting of xPred with dependant subj.
 		List<PmlANode> xPredList = s.pmlTree.getDescendants(LvtbXTypes.XPRED);
-		
+
 		if (xPredList != null)
 			for (PmlANode xPredPhrase : xPredList)
 		{
@@ -167,6 +168,14 @@ public class GraphsyntaxTransformator
 		}
 	}
 
+	/**
+	 * Add enhanced coordination related dependencies for given coordinated
+	 * part.
+	 * @param coordPartNode		coordination node, which contains common
+	 *                          dependants
+	 * @param wholeCoordANode	coordinated part, for which comon dependants
+	 *                          must be linked
+	 */
 	protected void processSingleConjunct(PmlANode coordPartNode, PmlANode wholeCoordANode)
 	{
 		// This is the "empty" PML node that represents a coordination as a
