@@ -136,12 +136,14 @@
   
   <type name="a-xtype.type">
     <choice>
-      <value>xPrep</value>
-      <value>xSimile</value>
-	  <value>xParticle</value>
+
       <value>xPred</value>
       <value>xNum</value>
       <value>xApp</value>
+      <value>xSimile</value>
+      <value>xPrep</value>
+	  <value>xParticle</value>
+	  <value>xFunctor</value>
       <value>namedEnt</value>	<!-- named entity -->
 	  <value>subrAnal</value>	<!-- analogue of subordinate word-group* -->
 	  <value>coordAnal</value>	<!-- analogue of coordinative word-group* -->
@@ -170,6 +172,7 @@
       <value>sit</value>	<!-- situant* -->
 	  <value>det</value>	<!-- determinant -->
 	  <value>no</value>		<!-- particles, addresses, etc** -->
+	  <value>repeat</value>	<!-- ungrammatical repeatition** -->
 
 	  <value>ins</value>		<!-- insertion, parenthesis -->
 	  <value>dirSp</value>		<!-- direct speech -->

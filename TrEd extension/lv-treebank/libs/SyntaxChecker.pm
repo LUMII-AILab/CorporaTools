@@ -75,9 +75,9 @@ sub get_structural_errors
   }
   
   if ($node->{'xtype'} eq 'xNum' or $node->{'xtype'} eq 'xApp'
-    or $node->{'xtype'} eq 'namedEnt' or $node->{'xtype'} eq 'unstruct'
-    or $node->{'xtype'} eq 'subrAnal' or $node->{'xtype'} eq 'coordAnal'
-    or $node->{'xtype'} eq 'phrasElem')
+    or $node->{'xtype'} eq 'xFunctor' or $node->{'xtype'} eq 'unstruct'
+    or $node->{'xtype'} eq 'namedEnt' or $node->{'xtype'} eq 'phrasElem'
+    or $node->{'xtype'} eq 'subrAnal' or $node->{'xtype'} eq 'coordAnal')
   {
     my $basElemCount = _count_children_with_with_role($node, 'basElem');
 	push @errors, 'Why would '.$node->{'xtype'}.' have so few basElem?'
@@ -246,7 +246,7 @@ sub is_role_allowed_for_parent
 	}
   }
   # insertions, determinants and situants must be in dependency
-  foreach (@detRoles) 
+  foreach (@detRoles, 'repeat') 
   {
 	if ($node->{'role'} eq $_)
 	{
