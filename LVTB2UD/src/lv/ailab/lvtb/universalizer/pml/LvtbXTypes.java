@@ -13,6 +13,7 @@ public class LvtbXTypes
 	public final static String XPREP = "xPrep";
 	public final static String XSIMILE = "xSimile";
 	public final static String XPARTICLE = "xParticle";
+	public final static String XFUNCTOR = "xFunctor";
 
 	public final static String XAPP = "xApp";
 	public final static String XNUM = "xNum";

@@ -78,7 +78,8 @@ public class PhraseTransformator
 			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, false, logger);
 
 		// Multiple basElem, root is the first.
-		if (phraseType.equals(LvtbXTypes.PHRASELEM) ||
+		if (phraseType.equals(LvtbXTypes.XFUNCTOR) ||
+				phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.NAMEDENT) ||
 				phraseType.equals(LvtbXTypes.COORDANAL))
 			return s.allUnderFirst(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null, false, logger);

@@ -112,6 +112,9 @@ public class PhrasePartDepLogic
 				phraseType.equals(LvtbXTypes.COORDANAL)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.COMPOUND, null);
+		if (phraseType.equals(LvtbXTypes.XFUNCTOR) &&
+				lvtbRole.equals(LvtbRoles.BASELEM))
+			return Tuple.of(UDv2Relations.FIXED, null);
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.UNSTRUCT) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ) ||
