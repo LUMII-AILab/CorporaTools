@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class GraphsyntaxTransformator
 {
-	public static Boolean ADD_CONTROL_SUBJ = false;
+	public static Boolean ADD_CONTROL_SUBJ = true;
 	public static Boolean PROPAGATE_CONJUNCTS = true;
 	/**
 	 * In this sentence all the transformations are carried out.

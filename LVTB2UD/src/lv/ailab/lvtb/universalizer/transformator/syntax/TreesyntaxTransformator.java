@@ -46,41 +46,6 @@ public class TreesyntaxTransformator
 	}
 
 	/**
-	 * Remove the ellipsis nodes that can be ignored in latter processing.
-	 * Replace empty xPreds with just ellipsis nodes.
-	 * @return	 true if all ellipsis was removed
-	 */
-	public boolean preprocessEmptyEllipsis()
-	{
-		// Childless, empty reductions are removed.
-		List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
-		while (ellipsisChildren != null && !ellipsisChildren.isEmpty())
-		{
-			for (PmlANode ellipsisChild : ellipsisChildren)
-			{
-				PmlANode parent = ellipsisChild.getParent();
-				ellipsisChild.delete();
-				if (LvtbXTypes.XPRED.equals(parent.getPhraseType()))
-				{
-					List<PmlANode> children = parent.getChildren();
-					if (children != null && !children.isEmpty()) continue;
-
-					PmlANode grandparent = parent.getParent();
-					String xTag = parent.getPhraseTag();
-					if (xTag.contains("[")) xTag = xTag.substring(0, xTag.indexOf("["));
-					grandparent.setReductionTag(xTag);
-					parent.delete();
-				}
-			}
-			ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
-		}
-
-		// Check if there is other reductions.
-		ellipsisChildren = s.pmlTree.getEllipsisDescendants(false);
-		return ellipsisChildren == null || ellipsisChildren.size() <= 0;
-	}
-
-	/**
 	 * Fill in DEPREL and HEAD fields in CoNLL-U table.
 	 */
 	public void transformBaseSyntax()

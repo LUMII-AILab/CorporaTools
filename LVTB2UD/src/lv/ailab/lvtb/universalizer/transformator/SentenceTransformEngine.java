@@ -20,6 +20,7 @@ public class SentenceTransformEngine
 {
 	public Sentence s;
 	protected MorphoTransformator morphoTransf;
+	protected EllipsisPreprocessor ellipPreproc;
 	protected TreesyntaxTransformator syntTransf;
 	protected GraphsyntaxTransformator enhSyntTransf;
 	protected Logger logger;
@@ -31,6 +32,7 @@ public class SentenceTransformEngine
 		s = new Sentence(pmlTree);
 		this.logger = logger;
 		this.params = params;
+		ellipPreproc = new EllipsisPreprocessor(s, logger);
 		morphoTransf = new MorphoTransformator(s, params, logger);
 		syntTransf = new TreesyntaxTransformator(s, params, logger);
 		enhSyntTransf = new GraphsyntaxTransformator(s, logger);
@@ -53,7 +55,7 @@ public class SentenceTransformEngine
 		logger.flush();
 		morphoTransf.extractSendenceText();
 		logger.flush();
-		boolean noMoreEllipsis = syntTransf.preprocessEmptyEllipsis();
+		boolean noMoreEllipsis = ellipPreproc.removeAllChildlessEllipsis();
 		if (params.WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		syntTransf.transformBaseSyntax();
