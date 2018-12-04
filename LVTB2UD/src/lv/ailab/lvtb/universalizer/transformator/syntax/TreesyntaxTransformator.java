@@ -1,10 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
-import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
-import lv.ailab.lvtb.universalizer.transformator.morpho.*;
+import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
@@ -147,53 +144,14 @@ public class TreesyntaxTransformator
 			if (redRoot == null)
 				throw new IllegalArgumentException(String.format(
 						"No child was raised for ellipsis node %s.", nodeId));
-
+			String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
 			newBasicRoot = redRoot;
 
-			String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
+			// Make new token for ellipsis.
 			// TODO more precise restriction?
 			if (redXPostag.matches("v..([^p].*|p[du].*)") || ! params.UD_STANDARD_NULLNODES)
-			{
-				// Make new token for ellipsis.
-				// Decimal token (reduction node) must be inserted after newRootToken.
-				Token newRootToken = s.pmlaToConll.get(newBasicRoot.getId());
-				int position = s.conll.indexOf(newRootToken) + 1;
-				while (position < s.conll.size() && newRootToken.idBegin == s.conll.get(position).idBegin)
-					position++;
-				Token decimalToken = new Token();
-				decimalToken.idBegin = newRootToken.idBegin;
-				decimalToken.idSub = s.conll.get(position-1).idSub+1;
-				decimalToken.idEnd = decimalToken.idBegin;
-				decimalToken.xpostag = redXPostag;
-				decimalToken.form = aNode.getReductionFormPart();
-				if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
-					logger.doInsentenceWarning(String.format(
-							"Ellipsis node %s with reduction field \"%s\" has no tag.",
-							nodeId, aNode.getReduction()));
-				else
-				{
-					String assumedLvtbLemma = null;
-					if (decimalToken.form != null && !decimalToken.form.isEmpty())
-						assumedLvtbLemma = AnalyzerWrapper.getLemma(
-								decimalToken.form, decimalToken.xpostag, logger);
-					decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-							assumedLvtbLemma, decimalToken.xpostag, logger);
-					decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-							assumedLvtbLemma, decimalToken.xpostag, logger);
-					decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag, logger);
-					//decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-					//		assumedLvtbLemma, decimalToken.xpostag, aNode, logger);
-					//decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-					//		assumedLvtbLemma, decimalToken.xpostag, aNode, logger);
-				}
-				if (params.ADD_NODE_IDS && nodeId != null && !nodeId.isEmpty())
-				{
-					decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);//decimalToken.misc.add("LvtbNodeId=" + nodeId);
-					logger.addIdMapping(s.id, decimalToken.getFirstColumn(), nodeId);
-				}
-				s.conll.add(position, decimalToken);
-				s.pmlaToEnhConll.put(nodeId, decimalToken);
-			}
+				s.createNewEnhEllipsisNode(aNode, newBasicRoot.getId(), params.ADD_NODE_IDS, logger);
+
 
 			transformSubtree(newBasicRoot);
 		}

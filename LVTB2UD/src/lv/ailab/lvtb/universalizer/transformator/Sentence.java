@@ -1,12 +1,14 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
 import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
+import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
+import lv.ailab.lvtb.universalizer.transformator.morpho.*;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
@@ -549,6 +551,62 @@ public class Sentence
 	public HashSet<String> getCoordPartsUnderOrNode (PmlANode aNode)
 	{
 		return getCoordPartsUnderOrNode(aNode.getId());
+	}
+
+	/**
+	 * Create "empty" token for ellipsis.
+	 * @param aNode			PML A node, for which respective ellipsis token must
+	 *                      be made.
+	 * @param baseTokenId	ID for token after which the new token must be
+	 *                      inserted.
+	 * @param addNodeId		should the ID of the aNode be added to the MISC
+	 *                      field of the new token?
+	 * @param logger		where all the warnings goes
+	 */
+	public void createNewEnhEllipsisNode(
+			PmlANode aNode, String baseTokenId, boolean addNodeId, Logger logger)
+	{
+		String nodeId = aNode.getId();
+		String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
+
+		// Decimal token (reduction node) must be inserted after newRootToken.
+		Token newRootToken = pmlaToConll.get(baseTokenId);
+		int position = conll.indexOf(newRootToken) + 1;
+		while (position < conll.size() && newRootToken.idBegin == conll.get(position).idBegin)
+			position++;
+
+		// Fill the fields for the new token.
+		Token decimalToken = new Token();
+		decimalToken.idBegin = newRootToken.idBegin;
+		decimalToken.idSub = conll.get(position-1).idSub+1;
+		decimalToken.idEnd = decimalToken.idBegin;
+		decimalToken.xpostag = redXPostag;
+		decimalToken.form = aNode.getReductionFormPart();
+		if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
+			logger.doInsentenceWarning(String.format(
+					"Ellipsis node %s with reduction field \"%s\" has no tag.",
+					nodeId, aNode.getReduction()));
+		else
+		{
+			String assumedLvtbLemma = null;
+			if (decimalToken.form != null && !decimalToken.form.isEmpty())
+				assumedLvtbLemma = AnalyzerWrapper.getLemma(
+						decimalToken.form, decimalToken.xpostag, logger);
+			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
+					assumedLvtbLemma, decimalToken.xpostag, logger);
+			decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
+					assumedLvtbLemma, decimalToken.xpostag, logger);
+			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag, logger);
+		}
+		if (addNodeId && nodeId != null && !nodeId.isEmpty())
+		{
+			decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);
+			logger.addIdMapping(id, decimalToken.getFirstColumn(), nodeId);
+		}
+
+		// Add the new token to the sentence data structures.
+		conll.add(position, decimalToken);
+		pmlaToEnhConll.put(nodeId, decimalToken);
 	}
 
 }
