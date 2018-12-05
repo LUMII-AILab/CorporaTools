@@ -2398,7 +2398,7 @@
                                                     </w.rf>
                                                     <form>gan</form>
                                                     <lemma>gan</lemma>
-                                                    <tag>q</tag>
+                                                    <tag>cs</tag>
                                                   </m.rf>
                                                   <role>basElem</role>
                                                   <ord>14</ord>
@@ -5021,7 +5021,7 @@
                                           <children>
                                             <xinfo>
                                               <xtype>xParticle</xtype>
-                                              <tag>rcq</tag>
+                                              <tag>rcq[neg]</tag>
                                               <children>
                                                 <node id="a-c68-zeeni-p24s1w4">
                                                   <m.rf id="m-c68-zeeni-p24s1w4">
@@ -6423,7 +6423,7 @@
                   <children>
                     <coordinfo>
                       <coordtype>crdParts</coordtype>
-                      <tag>vmnpu0000000</tag>
+                      <tag>vmnpu0000000n</tag>
                       <children>
                         <node id="a-c68-zeeni-p31s1x3">
                           <role>crdPart</role>
@@ -9390,7 +9390,7 @@
                                     </w.rf>
                                     <form>arī</form>
                                     <lemma>arī</lemma>
-                                    <tag>q</tag>
+                                    <tag>cs</tag>
                                   </m.rf>
                                   <role>basElem</role>
                                   <ord>2</ord>

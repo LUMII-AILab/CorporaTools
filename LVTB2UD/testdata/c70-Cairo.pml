@@ -1260,7 +1260,7 @@
               <children>
                 <xinfo>
                   <xtype>xPred</xtype>
-                  <tag>vm0is0030an[modals00]</tag>
+                  <tag>vm0is0030ay[modals00]</tag>
                   <children>
                     <node id="a-c70-Cairo-p11s1w2">
                       <m.rf id="m-c70-Cairo-p11s1w2">
@@ -1615,7 +1615,7 @@
                   <children>
                     <xinfo>
                       <xtype>xPrep</xtype>
-                      <tag>pr000an</tag>
+                      <tag>pr000an[pre]</tag>
                       <children>
                         <node id="a-c70-Cairo-p13s1w2">
                           <m.rf id="m-c70-Cairo-p13s1w2">
@@ -2545,7 +2545,7 @@
                 </node>
                 <xinfo>
                   <xtype>xPred</xtype>
-                  <tag>vm0is0030an[modals00]</tag>
+                  <tag>vm0is0030ay[modals00]</tag>
                   <children>
                     <node id="a-c70-Cairo-p18s1w2">
                       <m.rf id="m-c70-Cairo-p18s1w2">
