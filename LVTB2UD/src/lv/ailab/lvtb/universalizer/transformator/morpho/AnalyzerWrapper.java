@@ -10,7 +10,7 @@ public class AnalyzerWrapper
 {
 	protected static Analyzer morphoEngineSing;
 
-	public static Analyzer getMorpho() throws Exception
+	protected static Analyzer getMorpho() throws Exception
 	{
 		if (morphoEngineSing == null) morphoEngineSing = new Analyzer();
 		morphoEngineSing.enableGuessing = true;
@@ -18,35 +18,39 @@ public class AnalyzerWrapper
 		return morphoEngineSing;
 	}
 
+	/**
+	 * Get attribute-value pairs for given wordform disambiguated by morphotag.
+	 */
 	public static Wordform getAVPairs(String form, String postag, Logger logger)
 	{
 		try
 		{
 			Word analysis = getMorpho().analyze(form);
 			String tag = postag.contains("_") ? postag.substring(0, postag.indexOf('_')) : postag;
-			return analysis.getMatchingWordform(tag, false);
 			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			return analysis.getMatchingWordform(tag, false);
 		} catch (Exception e)
 		{
 			logger.warnForAnalyzerException(e);
-			//warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
 			return null;
 		}
 
 	}
 
+	/**
+	 * Get lemma for given wordform disambiguated by morphotag.
+	 */
 	public static String getLemma(String form, String postag, Logger logger)
 	{
 		try
 		{
 			Word w = getMorpho().analyze(form);
 			Wordform wf = w.getMatchingWordform(postag, false);
-			return wf.getValue(AttributeNames.i_Lemma);
 			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			return wf.getValue(AttributeNames.i_Lemma);
 		} catch (Exception e)
 		{
 			logger.warnForAnalyzerException(e);
-			//warnOut.print("Analyzer failed, probably while reading lexicon:\n" + e.getMessage());
 			return null;
 		}
 	}
