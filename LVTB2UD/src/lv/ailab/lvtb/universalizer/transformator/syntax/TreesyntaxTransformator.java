@@ -170,6 +170,8 @@ public class TreesyntaxTransformator
 	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for PML
 	 * dependency children of the given node. If the newRoot is one of the
 	 * dependents, then it must be processed before invoking this method.
+	 * To use this function, previous should have set that conllu tokens who
+	 * correspond old and new parent are the same.
 	 * @param parentANode		node whose dependency children will be processed
 	 * @param newBaseDepRoot	node that will be the root of the coresponding
 	 *                  		base UD structure
@@ -180,12 +182,14 @@ public class TreesyntaxTransformator
 			PmlANode parentANode, PmlANode newBaseDepRoot, PmlANode newEnhDepRoot)
 	{
 		if (newEnhDepRoot == null) newEnhDepRoot = newBaseDepRoot;
+
+		// To use this function, previous should have set that conllu tokens
+		// who correspond old and new parent are the same.
 		if (s.pmlaToConll.get(newBaseDepRoot.getId()) != s.pmlaToConll.get(parentANode.getId()) ||
 				!s.getEnhancedOrBaseToken(newEnhDepRoot).equals(s.getEnhancedOrBaseToken(parentANode)))
-
-		throw new IllegalArgumentException(String.format(
-				"Can't relink dependents from %s to %s!",
-				parentANode.getId(), newBaseDepRoot.getId()));
+			throw new IllegalArgumentException(String.format(
+					"Can't relink dependents from %s to %s!",
+					parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
 		if (pmlDependents != null && pmlDependents.size() > 0)
