@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Logic for obtaining Universal Dependency feature information based on LVTB
  * information.
+ * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
  * Created on 2016-04-20.
  * @author Lauma
  */
@@ -18,11 +19,9 @@ public class FeatsLogic
 {
 	/**
 	 * Use this to obtain FEATS, if no syntactic information is available.
-	 * @param logger	Logger object used to collect warnings; if null,
-	 *                  System.out is used
 	 */
 	public static ArrayList<UDv2Feat> getUFeats(
-			String form, String lemma, String xpostag, Logger logger)
+			String form, String lemma, String xpostag)
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
@@ -147,13 +146,11 @@ public class FeatsLogic
 	 * Use this to obtain FEATS, if syntactic information is available.
 	 * @param sentence	conll table with tokens in this sentence - this will be
 	 *                  used to find children of the given token
-	 * @param logger	Logger object used to collect warnings; if null,
-	 *                  System.out is used
 	 */
 	public static ArrayList<UDv2Feat> getPostsyntUPosTag(
-			Token token, List<Token> sentence, Logger logger)
+			Token token, List<Token> sentence)
 	{
-		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag, logger);
+		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
 		if (!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene")) &&

@@ -1,15 +1,16 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
-import lv.ailab.lvtb.universalizer.utils.Logger;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 
 /**
  * Logic on obtaining Universal lemmas from Latvian Treebank lemmas.
  * Created on 2018-10-16.
+ * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
  * @author Lauma
  */
 public class LemmaLogic
 {
-	public static String getULemma(String lemma, String xpostag, Logger logger)
+	public static String getULemma(String lemma, String xpostag)
 	{
 		if (xpostag == null || xpostag.isEmpty() || xpostag.equals("N/A")
 			|| lemma == null || lemma.isEmpty())
@@ -22,8 +23,8 @@ public class LemmaLogic
 			{
 				String errorMsg = String.format(
 						"Can't remove negative prefix from lemma \"%s\" with XPOSTAG \"%s\".", lemma, xpostag);
-				if (logger != null)
-					logger.doInsentenceWarning(errorMsg);
+				if (StandardLogger.l != null)
+					StandardLogger.l.doInsentenceWarning(errorMsg);
 			}
 		}
 		if (xpostag.matches("^(s|rr).*"))
@@ -33,8 +34,8 @@ public class LemmaLogic
 			{
 				String errorMsg = String.format(
 						"Had to lower-case lemma \"%s\" for XPOSTAG \"%s\".", lemma, xpostag);
-				if (logger != null)
-					logger.doInsentenceWarning(errorMsg);
+				if (StandardLogger.l != null)
+					StandardLogger.l.doInsentenceWarning(errorMsg);
 				lemma = lcLemma;
 			}
 		}

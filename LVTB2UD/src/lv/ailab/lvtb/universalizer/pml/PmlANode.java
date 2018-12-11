@@ -1,6 +1,5 @@
 package lv.ailab.lvtb.universalizer.pml;
 
-import lv.ailab.lvtb.universalizer.utils.Logger;
 import java.util.List;
 
 /**
@@ -97,10 +96,9 @@ public interface PmlANode
 	/**
 	 * Find reduction field value, split in tag and lemma, and then induce lemma
 	 * with the help of morphological analyzer.
-	 * @param logger	where to print errors
 	 * @return	reduction lemma
 	 */
-	public String getReductionLemma(Logger logger);
+	public String getReductionLemma();
 	/**
 	 * Find ord value for this node, if there is one.
 	 * @return	ord value, or 0, if no ord found, or null if node is null

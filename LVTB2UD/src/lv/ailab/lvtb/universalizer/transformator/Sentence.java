@@ -9,8 +9,8 @@ import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.morpho.*;
+import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.ArrayList;
@@ -56,7 +56,8 @@ public class Sentence
 
 	/**
 	 * Mapping from node ID to IDs of coordinated parts that are direct or
-	 * indirect part of this node.
+	 * indirect part of this node. After populating this structure, each set
+	 * contains at least node itself.
 	 */
 	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
 
@@ -135,40 +136,47 @@ public class Sentence
 	{
 		coordPartsUnder = new HashMap<>();
 		populateCoordPartsUnder(pmlTree);
+		/*System.out.println(
+			coordPartsUnder.keySet().stream().sorted()
+				.filter(k -> coordPartsUnder.containsKey(k))
+				.filter(k -> coordPartsUnder.get(k) != null)
+				.map(k -> k + " -> " + coordPartsUnder.get(k).stream().sorted().reduce((a, b) -> a + ", " + b).orElse("NULL"))
+				.reduce((k1, k2) -> k1 + System.lineSeparator() + k2).orElse("NULL"));
+				//*/
 	}
 
 	protected void populateCoordPartsUnder(PmlANode aNode)
 	{
-		// Preprocess children.
 		if (aNode == null) return;
+		String id = aNode.getId();
+		HashSet<String> eqs = new HashSet<String>(){{add(id);}};
+
+		// Preprocess dependency children.
 		List<PmlANode> dependants = aNode.getChildren();
 		if (dependants != null) for (PmlANode dependant : dependants)
 			populateCoordPartsUnder(dependant);
-		PmlANode phrase = aNode.getPhraseNode();
-		if (phrase == null) return;
-		List<PmlANode> phraseParts = phrase.getChildren();
-		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
-			populateCoordPartsUnder(phrasePart);
 
-		// Add coordinated subparts for this node.
-		String id = aNode.getId();
-		if (phrase.getNodeType() == PmlANode.Type.COORD)
+		PmlANode phrase = aNode.getPhraseNode();
+		if (phrase != null)
 		{
-			HashSet<String> eqs = coordPartsUnder.get(id);
-			if (eqs == null) eqs = new HashSet<>();
+			// Preprocess phrase parts.
+			List<PmlANode> phraseParts = phrase.getChildren();
 			if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
+				populateCoordPartsUnder(phrasePart);
+
+			// Add coordinated subparts for this node.
+			if (phrase.getNodeType() == PmlANode.Type.COORD)
 			{
-				String partId = phrasePart.getId();
-				String role = phrasePart.getRole();
-				if (LvtbRoles.CRDPART.equals(role))
+				List<PmlANode> importantParts = phrase.getChildren(LvtbRoles.CRDPART);
+				if (importantParts != null) for (PmlANode phrasePart : importantParts)
 				{
+					String partId = phrasePart.getId();
 					if (coordPartsUnder.containsKey(partId))
 						eqs.addAll(coordPartsUnder.get(partId));
-					else eqs.add(partId);
 				}
 			}
-			coordPartsUnder.put(id, eqs);
 		}
+		coordPartsUnder.put(id, eqs);
 	}
 
 	/**
@@ -176,113 +184,89 @@ public class Sentence
 	 * deprel, deps and deps backbone for each child. If designated parent is
 	 * included in child list node, circular dependency is not made, role is not
 	 * set.
+	 * Use for relinking phrasal constituents.
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
-	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param phraseTag     phrase tag from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param childDeprel	dependency role + enhanced dependencies postfix to
-	 *                      be used for DEPREL field and enhanced backbone for
-	 *                      child nodes, or null, if
-	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info
-	 * @param logger 		where all the warnings goes
+	 * @param phraseNode    phrase data node from PML data, used for obtaining
+	 *                      correct UD role for children
+	 * @param addCoordPropCrosslinks    should also coordination propagation be
+	 *                                  done?
 	 */
-	public void allAsDependents(
-			PmlANode newRoot, List<PmlANode> children, String phraseType, String phraseTag,
-			Tuple<UDv2Relations, String> childDeprel, Logger logger)
+	public void relinkAllConstituents(
+			PmlANode newRoot, List<PmlANode> children, PmlANode phraseNode,
+			boolean addCoordPropCrosslinks)
 	{
 		if (children == null || children.isEmpty()) return;
 
 		// Process children.
 		for (PmlANode child : children)
-		{
-			addAsDependent(newRoot, child, phraseType, phraseTag, childDeprel, logger);
-		}
+			relinkSingleConstituent(newRoot, child, phraseNode, addCoordPropCrosslinks);
 	}
+
 	/**
 	 * Make a given node a child of the designated parent. Set UD role for the
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
+	 * Use for relinking phrasal constituents.
 	 * @param parent		designated parent
 	 * @param child			designated child
-	 * @param phraseType    phrase type from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param phraseTag     phrase tag from PML data, used for obtaining
-	 *                      correct UD role for children; can be null, if
-	 *                      childDeprel is given
-	 * @param childDeprel	dependency role + enhanced dependencies postfix to
-	 *                      be used for DEPREL field and enhanced backbone for
-	 *                      child nodes, or null, if
-	 *                      DepRelLogic.phrasePartRoleToUD() should be used to
-	 *                      get this info
-	 * @param logger 		where all the warnings goes
+	 * @param phraseNode    phrase data node from PML data, used for obtaining
+	 *                      correct UD role for children
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
 	 */
-	public void addAsDependent (
-			PmlANode parent, PmlANode child, String phraseType, String phraseTag,
-			Tuple<UDv2Relations, String> childDeprel, Logger logger)
+	public void relinkSingleConstituent(
+			PmlANode parent, PmlANode child, PmlANode phraseNode,
+			boolean addCoordPropCrosslinks)
 	{
 		if (child == null || child.isSameNode(parent)) return;
 
-		if (childDeprel == null) childDeprel =
-				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseType, phraseTag, logger);
+		Tuple<UDv2Relations, String> childDeprel =
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
 		setLink(parent, child, childDeprel.first, childDeprel, true,true);
+		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(childDeprel.first))
+			addPhrasalConjunctCrosslinks(parent, child, phraseNode);
 	}
 
 	/**
 	 * For the given node find first children of the given type and make all
 	 * other children depend on it. Set UD deprel and enhanced backbone for each
 	 * child.
-	 * @param phraseNode		node whose children must be processed
-	 * @param phraseType    	phrase type from PML data, used for obtaining
-	 *                      	correct UD role for children
-	 * @param phraseTag	    	phrase tag from PML data, used for obtaining
-	 *                      	correct UD role for children
-	 * @param newRootType		rubroot for new UD structure will be searched
+	 * Use for relinking phrasal constituents.
+	 * @param phraseNode		node whose children must be processed, and whose
+	 *                          type and tag is used, if needed, to obtain
+	 *                          correct UD role for children
+	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
-	 * @param childDeprel		dependency role + enhanced dependencies postfix
-	 *                          to be used for DEPREL field and enhanced
-	 *                          backbone for child nodes, or null, if
-	 *                      	DepRelLogic.phrasePartRoleToUD() should be used
-	 *                      	to get this info.
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
-	 * @param logger 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
 	 */
-	public PmlANode allUnderFirst(
-			PmlANode phraseNode, String phraseType, String phraseTag, String newRootType,
-			Tuple<UDv2Relations, String> childDeprel, boolean warnMoreThanOne,
-			Logger logger)
+	public PmlANode allUnderFirstConstituent(
+			PmlANode phraseNode, String newRootType, boolean addCoordPropCrosslinks,
+			boolean warnMoreThanOne)
 	{
-
-		//NodeList children = (NodeList)XPathEngine.get().evaluate(
-		//		"./children/*", phraseNode, XPathConstants.NODESET);
 		List<PmlANode> children = phraseNode.getChildren();
 		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.size() > 1)
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
-					phraseType, id, newRootType));
-			//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\".\n", phraseType, id, newRootType);
+					phraseNode.getPhraseType(), id, newRootType));
 		PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(potentialRoots);
 		if (newRoot == null)
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
-					phraseType, id, newRootType));
-			//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\".\n", phraseType, id, newRootType);
+					phraseNode.getPhraseType(), id, newRootType));
 			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" seems to be empty.\n",
-					phraseType, id));
-		allAsDependents(newRoot, children, phraseType, phraseTag, childDeprel, logger);
+					phraseNode.getPhraseType(), id));
+		relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks);
 		return newRoot;
 	}
 
@@ -290,28 +274,22 @@ public class Sentence
 	 * For the given node find first children of the given type and make all
 	 * other children depend on it. Set UD deprel and enhanced backbone for each
 	 * child.
-	 * @param phraseNode		node whose children must be processed
-	 * @param phraseType    	phrase type from PML data, used for obtaining
-	 *                      	correct UD role for children
-	 * @param phraseTag	    	phrase tag from PML data, used for obtaining
-	 *                      	correct UD role for children
+	 * Use for relinking phrasal constituents.
+	 * @param phraseNode        node whose children must be processed, and whose
+	 *                          type and tag is used, if needed, to obtain
+	 *                          correct UD role for children
 	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param newRootBackUpType backUpRole, if no nodes of newRootType is found
-	 * @param childDeprel		dependency role + enhanced dependencies postfix
-	 *                          to be used for DEPREL field and enhanced
-	 *                          backbone for child nodes, or null, if
-	 *                      	DepRelLogic.phrasePartRoleToUD() should be used
-	 *                      	to get this info.
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
-	 * @param logger 			where all the warnings goes
 	 * @return root of the corresponding dependency structure
 	 */
-	public PmlANode allUnderLast(
-			PmlANode phraseNode, String phraseType, String phraseTag, String newRootType,
-			String newRootBackUpType, Tuple<UDv2Relations, String> childDeprel,
-			boolean warnMoreThanOne, Logger logger)
+	public PmlANode allUnderLastConstituent(
+			PmlANode phraseNode, String newRootType, String newRootBackUpType,
+			boolean addCoordPropCrosslinks, boolean warnMoreThanOne)
 	{
 		List<PmlANode> children = phraseNode.getChildren();
 		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
@@ -320,21 +298,21 @@ public class Sentence
 			potentialRoots = phraseNode.getChildren(newRootBackUpType);
 		PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(potentialRoots);
 		if (warnMoreThanOne && potentialRoots != null && potentialRoots.size() > 1)
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has more than one \"%s\".",
-					phraseType, id, newRoot.getAnyLabel()));
+					phraseNode.getPhraseType(), id, newRoot.getAnyLabel()));
 		if (newRoot == null)
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" in sentence \"%s\" has no \"%s\".",
-					phraseType, id, newRootType));
+					phraseNode.getPhraseType(), id, newRootType));
 			newRoot = PmlANodeListUtils.getLastByDeepOrd(children);
 		}
 		if (newRoot == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" seems to be empty.\n",
-					phraseType, id));
-		allAsDependents(newRoot, children, phraseType, phraseTag, childDeprel, logger);
+					phraseNode.getPhraseType(), id));
+		relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks);
 		return newRoot;
 	}
 
@@ -385,6 +363,31 @@ public class Sentence
 			childEnhToken.deps.add(newDep);
 			if (setBackbone) childEnhToken.depsBackbone = newDep;
 		}
+	}
+
+	/**
+	 * setLink() + sets coordination propagation crosslinks from parent's
+	 * coordinated equivalents to child's coordinated equivalents. Can be used
+	 * only if all crosslinks have the same role as main enhanced dependency
+	 * link.
+	 * Use for relinking phrasal constituents.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep		label to be used for base dependency
+	 * @param enhancedDep	label to be used for enhanced dependency and for
+	 *                      crosslinks
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setLinkAndCorsslinksPhrasal(
+			PmlANode parent, PmlANode child, UDv2Relations baseDep,
+			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
+			boolean cleanOldDeps)
+	{
+		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps);
+		addPhrasalConjunctCrosslinks(parent, child, enhancedDep);
 	}
 
 	/**
@@ -561,10 +564,9 @@ public class Sentence
 	 *                      inserted.
 	 * @param addNodeId		should the ID of the aNode be added to the MISC
 	 *                      field of the new token?
-	 * @param logger		where all the warnings goes
 	 */
 	public void createNewEnhEllipsisNode(
-			PmlANode aNode, String baseTokenId, boolean addNodeId, Logger logger)
+			PmlANode aNode, String baseTokenId, boolean addNodeId)
 	{
 		String nodeId = aNode.getId();
 		String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
@@ -583,7 +585,7 @@ public class Sentence
 		decimalToken.xpostag = redXPostag;
 		decimalToken.form = aNode.getReductionFormPart();
 		if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Ellipsis node %s with reduction field \"%s\" has no tag.",
 					nodeId, aNode.getReduction()));
 		else
@@ -591,22 +593,163 @@ public class Sentence
 			String assumedLvtbLemma = null;
 			if (decimalToken.form != null && !decimalToken.form.isEmpty())
 				assumedLvtbLemma = AnalyzerWrapper.getLemma(
-						decimalToken.form, decimalToken.xpostag, logger);
+						decimalToken.form, decimalToken.xpostag);
 			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag, logger);
+					assumedLvtbLemma, decimalToken.xpostag);
 			decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag, logger);
-			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag, logger);
+					assumedLvtbLemma, decimalToken.xpostag);
+			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag);
 		}
 		if (addNodeId && nodeId != null && !nodeId.isEmpty())
 		{
 			decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);
-			logger.addIdMapping(id, decimalToken.getFirstColumn(), nodeId);
+			StandardLogger.l.addIdMapping(id, decimalToken.getFirstColumn(), nodeId);
 		}
 
 		// Add the new token to the sentence data structures.
 		conll.add(position, decimalToken);
 		pmlaToEnhConll.put(nodeId, decimalToken);
+	}
+
+	// ===== Dependency related. ===============================================
+
+	/**
+	 * Utility function for dependency transformation. When dependency link
+	 * between two nodes is transformed to UD, this can be used to add enhanced
+	 * links (conjunct propagation) between nodes that are coordinated with
+	 * parent or child.
+	 * Uses UDv2Relations.canPropagateAftercheck() to determine if role should
+	 * be made.
+	 * Use for relinking dependencies.
+	 * @param parent		phrase part to become dependency parent
+	 * @param child			phrase part to become dependency child
+	 */
+	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
+	{
+		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
+		{
+			PmlANode altParent = null;
+			if (pmlTree.getId().equals(altParentKey)) altParent = pmlTree;
+			else altParent = pmlTree.getDescendant(altParentKey);
+			PmlANode altChild = pmlTree.getDescendant(altChildKey);
+			// Role for ehnanced link is obtained by actual parent,
+			// actual child, but by "place-holder" role obtained
+			// from the original child.
+			Tuple<UDv2Relations, String> childDeprel =
+					DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
+			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
+				setEnhLink(altParent, altChild, childDeprel,false, false);
+		}
+	}
+
+	/**
+	 * Make a given node a child of the designated parent. Set UD role for the
+	 * child. Set enhanced dependency and deps backbone. If designated parent is
+	 * the same as child node, circular dependency is not made, role is not set.
+	 * Use for relinking depdenencies.
+	 * @param parent		designated parent
+	 * @param child			designated child
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
+	 */
+	public void relinkSingleDependant(PmlANode parent, PmlANode child,
+									  boolean addCoordPropCrosslinks)
+	{
+		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
+		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
+		setBaseLink(parent, child, baseRole);
+		setEnhLink(parent, child, enhRole, true, true);
+
+		// To propagate conjuncts we need to travel through both
+		// coordinated alternatives of child and the new parent.
+		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
+			addDependencyCrosslinks(parent, child);
+	}
+
+	/**
+	 * Make a list of given nodes children of the designated parent. Set UD
+	 * deprel, deps and deps backbone for each child. If designated parent is
+	 * included in child list node, circular dependency is not made, role is not
+	 * set.
+	 * Use for relinking depdenencies.
+	 * @param newRoot		designated parent
+	 * @param children		list of child nodes
+	 * @param addCoordPropCrosslinks    should also coordination propagation be
+	 *                                  done?
+	 */
+	public void relinkAllDependants(
+			PmlANode newRoot, List<PmlANode> children,
+			boolean addCoordPropCrosslinks)
+	{
+		if (children == null || children.isEmpty()) return;
+		// Process children.
+		for (PmlANode child : children)
+			relinkSingleDependant(newRoot, child, addCoordPropCrosslinks);
+	}
+
+	// ===== Constituency related. =============================================
+
+	/**
+	 * Utility function for phrase transformation. When phrase phrase is
+	 * transformed to UD and a dependency link between two constituents is
+	 * established, this can be used to add enhanced links (conjunct propagation)
+	 * between nodes that are coordinated with parent or child.
+	 * Uses UDv2Relations.canPropagateAftercheck() to determine if role should
+	 * be made.
+	 * Use for relinking phrasal constituents.
+	 * @param parent		phrase part to become dependency parent
+	 * @param child			phrase part to become dependency child
+	 * @param phraseNode	phrase information by which role will be determined
+	 */
+	protected void addPhrasalConjunctCrosslinks (
+			PmlANode parent, PmlANode child, PmlANode phraseNode)
+	{
+		if (parent == null || child == null) return;
+		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		for (String altParentKey : altParentKeys)
+			for (String altChildKey : altChildKeys)
+			{
+				PmlANode altParent = pmlTree.getDescendant(altParentKey);
+				PmlANode altChild = pmlTree.getDescendant(altChildKey);
+				Tuple<UDv2Relations, String> childDeprel =
+						PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
+				if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
+					setEnhLink(altParent, altChild, childDeprel,false, false);
+			}
+	}
+
+	/**
+	 * Utility function for phrase transformation. When phrase phrase is
+	 * transformed to UD and a dependency link between two constituents is
+	 * established, this can be used to add enhanced links (conjunct propagation)
+	 * between nodes that are coordinated with parent or child.
+	 * NB. Use this sparingly as this function assumes that all crosslinks have the
+	 * same role!
+	 * Uses both UDv2Relations.canPropagatePrecheck() and
+	 * UDv2Relations.canPropagateAftercheck() to determine if role should be
+	 * made.
+	 * Use for relinking phrasal constituents.
+	 * @param parent		phrase part to become dependency parent
+	 * @param child			phrase part to become dependency child
+	 * @param childDeprel	fixed role for all crosslinx
+	 */
+	protected void addPhrasalConjunctCrosslinks (
+			PmlANode parent, PmlANode child, Tuple<UDv2Relations, String> childDeprel)
+	{
+		if (parent == null || child == null) return;
+		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
+		if (!UDv2Relations.canPropagateAftercheck(childDeprel.first)) return;
+		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
+		{
+			PmlANode altParent = pmlTree.getDescendant(altParentKey);
+			PmlANode altChild = pmlTree.getDescendant(altChildKey);
+			setEnhLink(altParent, altChild, childDeprel,false, false);
+		}
 	}
 
 }

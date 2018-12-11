@@ -1,9 +1,11 @@
 package lv.ailab.lvtb.universalizer.pml.xmldom;
 
-import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
+import lv.ailab.lvtb.universalizer.pml.LvtbHelperRoles;
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
+import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -325,17 +327,16 @@ public class XmlDomANode implements PmlANode
 	/**
 	 * Find reduction field value, split in tag and lemma, and then induce lemma
 	 * with the help of morphological analyzer.
-	 * @param logger	where to print errors
 	 * @return	reduction lemma
 	 */
 	@Override
-	public String getReductionLemma(Logger logger)
+	public String getReductionLemma()
 	{
 		String tag = getReductionTagPart();
 		String form = getReductionFormPart();
 		if (tag == null || form == null || tag.isEmpty() || form.isEmpty())
 			return null;
-		return AnalyzerWrapper.getLemma(form, tag, logger);
+		return AnalyzerWrapper.getLemma(form, tag);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import lv.ailab.lvtb.universalizer.pml.PmlMNode;
 import lv.ailab.lvtb.universalizer.pml.PmlWNode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlIdUtils;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
@@ -29,12 +30,10 @@ public class MorphoTransformator {
 	 */
 	public Sentence s;
 	protected TransformationParams params;
-	protected Logger logger;
 
-	public MorphoTransformator(Sentence sent, TransformationParams params, Logger logger)
+	public MorphoTransformator(Sentence sent, TransformationParams params)
 	{
 		s = sent;
-		this.logger = logger;
 		this.params = params;
 	}
 
@@ -59,7 +58,7 @@ public class MorphoTransformator {
 			Integer currentOrd = current.getOrd();
 			if (currentOrd == null || currentOrd < 1) continue;
 			if (prevOrd == currentOrd)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" has several nodes with ord \"%s\", arbitrary order used!", s.id, currentOrd));
 
 			// Determine, if paragraph has border before this token.
@@ -71,7 +70,7 @@ public class MorphoTransformator {
 				String nextId = nextW.getId();
 				Boolean tempChange = PmlIdUtils.isParaBorderBetween(prevId, nextId);
 				if (tempChange == null)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
 							prevId, nextId));
 				else paragraphChange = tempChange;
@@ -241,7 +240,7 @@ public class MorphoTransformator {
 
 		// If source contains no spaces, use source as wordform and
 		// add corrected form.
-		logger.doInsentenceWarning(String.format(
+		StandardLogger.l.doInsentenceWarning(String.format(
 				"Node \"%s\" with form \"%s\" has non-matching w-text \"%s\", but no form change",
 				lvtbAId, mForm, source));
 
@@ -320,7 +319,7 @@ public class MorphoTransformator {
 		List<PmlWNode> wNodes = mNode.getWs();
 
 		if (wNodes != null && !wNodes.isEmpty() )
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Node \"%s\" has both w.rf and form change \"insert\"",
 					lvtbAId));
 
@@ -358,10 +357,10 @@ public class MorphoTransformator {
 		List<PmlWNode> wNodes = mNode.getWs();
 
 		if (wNodes != null && !wNodes.isEmpty() )
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Node \"%s\" has both w.rf and form change \"insert\"",
 					lvtbAId));
-		logger.doInsentenceWarning(String.format(
+		StandardLogger.l.doInsentenceWarning(String.format(
 				"Node \"%s\" with form \"%s\" has form change \"insert\", but not \"punct\"",
 				lvtbAId, mForm));
 
@@ -408,7 +407,7 @@ public class MorphoTransformator {
 				lvtbAId, mForm, mLemma, lvtbTag, true);
 		if (paragraphChange) previousToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //previousToken.misc.add("NewPar=Yes");
 		if (!source.contains(" ")) previousToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO); //previousToken.misc.add("SpaceAfter=No");
-		else logger.doInsentenceWarning(String.format(
+		else StandardLogger.l.doInsentenceWarning(String.format(
 				"Don't know how to add SpaceAfter for \"%s\"",
 				lvtbAId));
 
@@ -607,19 +606,19 @@ public class MorphoTransformator {
 			int tokenIdBegin, int tokenIdDecimal, String pmlId,
 			String form, String lvtbLemma, String lvtbTag, boolean representative)
 	{
-		String uLemma = LemmaLogic.getULemma(lvtbLemma, lvtbTag, logger);
+		String uLemma = LemmaLogic.getULemma(lvtbLemma, lvtbTag);
 		Token resTok = new Token(tokenIdBegin, form, uLemma,
 				lvtbTag == null ? null : XPosLogic.getXpostag(lvtbTag));
 		if (tokenIdDecimal > 0) resTok.idSub = tokenIdDecimal;
 		if (params.ADD_NODE_IDS && pmlId != null && !pmlId.isEmpty())
 		{
 			resTok.addMisc(MiscKeys.LVTB_NODE_ID, pmlId);//resTok.misc.add("LvtbNodeId=" + pmlId);
-			logger.addIdMapping(s.id, resTok.getFirstColumn(), pmlId);
+			StandardLogger.l.addIdMapping(s.id, resTok.getFirstColumn(), pmlId);
 		}
 		if (resTok.xpostag != null)
 		{
-			resTok.upostag = UPosLogic.getUPosTag(resTok.form, lvtbLemma, resTok.xpostag, logger);
-			resTok.feats = FeatsLogic.getUFeats(resTok.form, lvtbLemma, resTok.xpostag, logger);
+			resTok.upostag = UPosLogic.getUPosTag(resTok.form, lvtbLemma, resTok.xpostag);
+			resTok.feats = FeatsLogic.getUFeats(resTok.form, lvtbLemma, resTok.xpostag);
 		}
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);
@@ -640,7 +639,7 @@ public class MorphoTransformator {
 				firstId, lastId);
 		if (innerParaChange == null)
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Node id \"%s\" or \"%s\" does not match paragraph searching pattern!",
 					firstId, lastId));
 			return false;
@@ -669,8 +668,8 @@ public class MorphoTransformator {
 	{
 		for (Token t : s.conll)
 		{
-			t.upostag = UPosLogic.getPostsyntUPosTag(t, logger);
-			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll, logger);
+			t.upostag = UPosLogic.getPostsyntUPosTag(t);
+			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll);
 		}
 	}
 }

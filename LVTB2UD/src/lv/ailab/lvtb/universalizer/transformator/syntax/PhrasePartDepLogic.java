@@ -2,7 +2,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
-import lv.ailab.lvtb.universalizer.utils.Logger;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 import java.util.List;
 
@@ -27,19 +27,19 @@ public class PhrasePartDepLogic
 	 * PhraseTransform class.
 	 * All specific cases with xPred are handled in PhraseTransform class.
 	 * @param aNode			node for which the DEPREL must be obtained
-	 * @param phraseType	type of phrase in relation to which DEPREL must be
-	 *                      chosen
-	 * @param phraseTag		tag of phrase in relation to which DEPREL must be
-	 *                      chosen (can/should be null for pmc nodes)
-	 * @param logger 		where all the warnings goes
+	 * @param phraseNode	phrase in relation to which DEPREL must be
+	 *                      chosen (also used, if information about phrase's
+	 *                      ancestors is needed)
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
-			PmlANode aNode, String phraseType, String phraseTag, Logger logger)
+			PmlANode aNode, PmlANode phraseNode)
 	{
 		String nodeId = aNode.getId();
 		String lvtbRole = aNode.getRole();
+		String phraseType = phraseNode.getPhraseType();
+		String phraseTag = phraseNode.getPhraseTag();
 		String subTag = phraseTag != null && phraseTag.contains("[")
 				? phraseTag.substring(phraseTag.indexOf("[") + 1)
 				: "";
@@ -116,11 +116,18 @@ public class PhrasePartDepLogic
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.FIXED, null);
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
-				phraseType.equals(LvtbXTypes.UNSTRUCT) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.FLAT, null);
+
+		if (phraseType.equals(LvtbXTypes.UNSTRUCT) &&
+				lvtbRole.equals(LvtbRoles.BASELEM))
+		{
+			if (phraseTag != null && phraseTag.matches("xf.*"))
+				return Tuple.of(UDv2Relations.FLAT_FOREIGN, null);
+			else return Tuple.of(UDv2Relations.FLAT, null);
+		}
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.FLAT_NAME, null);
@@ -129,7 +136,6 @@ public class PhrasePartDepLogic
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
 
-			//String subXType = XPathEngine.get().evaluate("./children/xinfo/xtype", aNode);
 			PmlANode subPhrase = aNode.getPhraseNode();
 			String subXType =  subPhrase == null ? null
 					: aNode.getPhraseNode().getAnyLabel();
@@ -141,14 +147,10 @@ public class PhrasePartDepLogic
 				{
 					List<? extends  PmlANode> preps =
 							subPhrase.getChildren(LvtbRoles.PREP);
-					//NodeList preps = (NodeList)XPathEngine.get().evaluate(
-					//		"./children/xinfo/children/node[role='" + LvtbRoles.PREP + "']",
-					//		aNode, XPathConstants.NODESET);
 					if (preps.size() > 1)
-						logger.doInsentenceWarning(String.format(
+						StandardLogger.l.doInsentenceWarning(String.format(
 								"\"%s\" with ID \"%s\" has multiple \"%s\".",
 								subXType, aNode.getId(), LvtbRoles.PREP));
-						//warnOut.printf("\"%s\" with ID \"%s\" has multiple \"%s\"\n.", subXType, NodeFieldUtils.getId(aNode), LvtbRoles.PREP);
 					String prepLemma = preps.get(0).getM().getLemma();
 					return Tuple.of(UDv2Relations.NMOD, prepLemma);
 				}
@@ -165,8 +167,8 @@ public class PhrasePartDepLogic
 				return Tuple.of(UDv2Relations.DET, null);
 			else if (tag.matches("(mc|xn).*") && subTag.startsWith("skv"))
 				return Tuple.of(UDv2Relations.NUMMOD, null);
-			else if (tag.matches("q.*") && subTag.startsWith("part"))
-				return Tuple.of(UDv2Relations.FLAT, null);
+			//else if (tag.matches("q.*") && subTag.startsWith("part"))
+			//	return Tuple.of(UDv2Relations.FLAT, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPREP) &&
@@ -177,11 +179,16 @@ public class PhrasePartDepLogic
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
+				subTag.matches("(sim|comp)y.*"))
+			return Tuple.of(UDv2Relations.FIXED, null);
+
+		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
 				lvtbRole.equals(LvtbRoles.CONJ))
 		{
 			// For now let us assume, that conjunction can't be coordinated.
 			// Then parent in this situation is the xSimile itself.
-			PmlANode firstAncestor = aNode.getParent().getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
+			// TODO FIXME what happens if coordination somewhre?
+			PmlANode firstAncestor = phraseNode.getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
 			PmlANode secondAncestor = firstAncestor.getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
 			String firstAncType = firstAncestor.getAnyLabel();
 			String secondAncType = secondAncestor.getAnyLabel();
@@ -210,8 +217,7 @@ public class PhrasePartDepLogic
 
 			// What to do ith this? Do we even need it?
 			//if (LvtbRoles.SPC.equals(effAncLabel))
-			if (LvtbPmcTypes.SPCPMC.equals(effAncLabel)
-					|| LvtbPmcTypes.SPCPMC.equals(effAncLabel))
+			if (LvtbPmcTypes.SPCPMC.equals(effAncLabel))
 				return Tuple.of(UDv2Relations.MARK, null);
 
 			// NO adv + xSimile instances in data! Is this old?
@@ -222,13 +228,39 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.XPRED))
 		{
 			if (lvtbRole.equals(LvtbRoles.AUXVERB))
-				return Tuple.of(UDv2Relations.AUX, null);
-			if (lvtbRole.equals(LvtbRoles.BASELEM) ||
-					lvtbRole.equals(LvtbRoles.MOD))
+			{
+				// Determine properties of this AUXVERB: is it standard aux or no,
+				// is in pasive construction and is it in nominal construction.
+				PmlMNode morfo = aNode.getM();
+				String lemma = morfo == null ? null : morfo.getLemma();
+				String redLemma = aNode.getReductionLemma();
+				boolean ultimateAux = lemma != null && lemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
+						redLemma != null && redLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
+				boolean nominal = false;
+				boolean passive = false;
+				if (subTag.startsWith("pass"))
+					passive = true;
+				else if (subTag.startsWith("subst") || subTag.startsWith("adj") ||
+						subTag.startsWith("pronom") || subTag.startsWith("adv") ||
+						subTag.startsWith("inf") || subTag.startsWith("num"))
+						nominal = true;
+				else if (!subTag.startsWith("act"))
+					StandardLogger.l.doInsentenceWarning(String.format(
+							"xPred \"%s\" has a problematic tag \"%s\".",
+							phraseNode.getParent().getId(), phraseTag));
+
+				if (passive && ultimateAux)
+					return Tuple.of(UDv2Relations.AUX_PASS, null);
+				else if (nominal && ultimateAux)
+					return Tuple.of(UDv2Relations.COP, null);
+				else if (ultimateAux) return Tuple.of(UDv2Relations.AUX, null);
+			}
+
+			if (lvtbRole.equals(LvtbRoles.BASELEM)) //|| lvtbRole.equals(LvtbRoles.MOD))
 				return Tuple.of(UDv2Relations.XCOMP, null);
 		}
 
-		logger.doInsentenceWarning(String.format(
+		StandardLogger.l.doInsentenceWarning(String.format(
 				"\"%s\" (%s) in \"%s\" has no UD label.",
 				lvtbRole, nodeId, phraseType));
 		//warnOut.printf("\"%s\" (%s) in \"%s\" has no UD label.\n", lvtbRole, nodeId, phraseType);

@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
-import lv.ailab.lvtb.universalizer.utils.Logger;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
+
 import lv.semti.morphology.analyzer.Analyzer;
 import lv.semti.morphology.analyzer.Word;
 import lv.semti.morphology.analyzer.Wordform;
@@ -21,7 +22,7 @@ public class AnalyzerWrapper
 	/**
 	 * Get attribute-value pairs for given wordform disambiguated by morphotag.
 	 */
-	public static Wordform getAVPairs(String form, String postag, Logger logger)
+	public static Wordform getAVPairs(String form, String postag)
 	{
 		try
 		{
@@ -31,7 +32,7 @@ public class AnalyzerWrapper
 			return analysis.getMatchingWordform(tag, false);
 		} catch (Exception e)
 		{
-			logger.warnForAnalyzerException(e);
+			StandardLogger.l.warnForAnalyzerException(e);
 			return null;
 		}
 
@@ -40,7 +41,7 @@ public class AnalyzerWrapper
 	/**
 	 * Get lemma for given wordform disambiguated by morphotag.
 	 */
-	public static String getLemma(String form, String postag, Logger logger)
+	public static String getLemma(String form, String postag)
 	{
 		try
 		{
@@ -50,7 +51,7 @@ public class AnalyzerWrapper
 			return wf.getValue(AttributeNames.i_Lemma);
 		} catch (Exception e)
 		{
-			logger.warnForAnalyzerException(e);
+			StandardLogger.l.warnForAnalyzerException(e);
 			return null;
 		}
 	}

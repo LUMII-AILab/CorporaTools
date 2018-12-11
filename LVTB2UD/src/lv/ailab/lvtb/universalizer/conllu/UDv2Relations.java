@@ -173,4 +173,33 @@ public enum UDv2Relations
 	{
 		return strRep;
 	}
+
+	/**
+	 * Checks, if the given role (UD relation type) can be added to enhanced
+	 * dependency liks obtained during conjunct propagation.
+	 * @param role	role to check
+	 * @return	true, if the propagated link with such role can be made
+	 */
+	public static boolean canPropagateAftercheck(UDv2Relations role)
+	{
+		return role != ROOT &&
+				role != PUNCT &&
+				role != CC;
+	}
+
+	/**
+	 * Checks, if it should be tried to propagate UD dependency link with the
+	 * given role (UD relation type) during conjunct propagation for enhanced
+	 * dependencies. Can be used to speed up conjunct propagation.
+	 * @param role	role to check
+	 * @return	true, if conjunct propagation can give valid links
+	 * 			(canPropagateAftercheck() must be done afterwards)
+	 */
+	public static boolean canPropagatePrecheck(UDv2Relations role)
+	{
+		return role != ROOT &&
+				role != PUNCT &&
+				role != CC &&
+				role != CONJ;
+	}
 }

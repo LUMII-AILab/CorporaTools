@@ -14,15 +14,10 @@ public class EllipsisPreprocessor
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
-	/**
-	 * Stream for warnings and other logs.
-	 */
-	protected Logger logger;
 
-	public EllipsisPreprocessor(Sentence sent, Logger logger)
+	public EllipsisPreprocessor(Sentence sent)
 	{
 		s = sent;
-		this.logger = logger;
 	}
 
 	/**

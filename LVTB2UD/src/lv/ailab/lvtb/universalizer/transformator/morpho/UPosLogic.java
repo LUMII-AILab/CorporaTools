@@ -3,11 +3,13 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Logger;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
  * Created on 2016-04-20.
+ * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
  * @author Lauma
  */
 public class UPosLogic
@@ -16,11 +18,9 @@ public class UPosLogic
 
 	/**
 	 * Use this to obtain UPOSTAG, if no syntactic information is available.
-	 * @param logger	Logger object used to collect warnings; if null,
-	 *                  System.out is used
 	 */
 	public static UDv2PosTag getUPosTag(
-			String form, String lemma, String xpostag, Logger logger)
+			String form, String lemma, String xpostag)
 	{
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
@@ -65,8 +65,8 @@ public class UPosLogic
 		{
 			String errorMsg = String.format(
 					"Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".", lemma, xpostag);
-			if (logger != null)
-				logger.doInsentenceWarning(errorMsg);
+			if (StandardLogger.l != null)
+				StandardLogger.l.doInsentenceWarning(errorMsg);
 			else System.out.println(errorMsg);
 		}
 		return UDv2PosTag.X;
@@ -75,9 +75,7 @@ public class UPosLogic
 	/**
 	 * Use this to obtain UPOSTAG, if syntactic information (upostag for
 	 * parameter token) is available.
-	 * @param logger	Logger object used to collect warnings; if null,
-	 *                  System.out is used
-	 */	public static UDv2PosTag getPostsyntUPosTag (Token token, Logger logger)
+	 */	public static UDv2PosTag getPostsyntUPosTag (Token token)
 	{
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
@@ -100,7 +98,7 @@ public class UPosLogic
 		if (token.xpostag == null)
 			System.out.println(token.toConllU());
 		if (token.upostag == null)
-			return getUPosTag(token.form, token.lemma, token.xpostag, logger);
+			return getUPosTag(token.form, token.lemma, token.xpostag);
 		return token.upostag;
 	}
 }

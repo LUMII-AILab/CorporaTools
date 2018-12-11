@@ -3,7 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
-import lv.ailab.lvtb.universalizer.utils.Logger;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.List;
@@ -19,40 +19,13 @@ import java.util.regex.Pattern;
 public class DepRelLogic
 {
 	/**
-	 * Where all warnings goes.
-	 */
-	protected Logger logger;
-
-	public DepRelLogic(Logger logger)
-	{
-		this.logger = logger;
-	}
-
-	/*
-	 * Generic relation between LVTB dependency roles and UD DEPREL.
-	 * @param aNode		node for which UD DEPREL should be obtained
-	 * @param enhanced  true, if role for enhanced dependency tree is needed
-	 * @param warnOut	where all warnings goes
-	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
-	 * 			representing a core argument).
-	 * @throws XPathExpressionException	unsuccessfull XPathevaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	/*public UDv2Relations depToUD(Node aNode, boolean enhanced, PrintWriter warnOut)
-			throws XPathExpressionException
-	{
-		return depToUD(aNode, aNode, enhanced, warnOut);
-	}//*/
-
-	/**
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param node		node for which UD DEPREL should be obtained (use this
 	 *                  node's placement, role, tag and lemma)
 	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
 	 * 			representing a core argument).
 	 */
-	public UDv2Relations depToUDBase(PmlANode node)
+	public static UDv2Relations depToUDBase(PmlANode node)
 	{
 		PmlANode pmlParent = node.getParent();
 		String lvtbRole = node.getRole();
@@ -82,7 +55,7 @@ public class DepRelLogic
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
 	 */
-	public Tuple<UDv2Relations, String> depToUDEnhanced(PmlANode node)
+	public static Tuple<UDv2Relations, String> depToUDEnhanced(PmlANode node)
 	{
 		return depToUDEnhanced(
 				node, node.getParent(), node.getRole());
@@ -98,7 +71,7 @@ public class DepRelLogic
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
 	 */
-	public Tuple<UDv2Relations, String> depToUDEnhanced(
+	public static Tuple<UDv2Relations, String> depToUDEnhanced(
 			PmlANode node, PmlANode parent, String lvtbRole)
 	{
 		Tuple<UDv2Relations, String> res = depToUDLogic(node, parent, lvtbRole);
@@ -117,7 +90,7 @@ public class DepRelLogic
 	 * @return	UD dependency role and enhanced depency role postfix, if such is
 	 * 			needed.
 	 */
-	public Tuple<UDv2Relations, String> depToUDLogic(
+	public static Tuple<UDv2Relations, String> depToUDLogic(
 			PmlANode node, PmlANode parent, String lvtbRole)
 	{
 		// Simple dependencies.
@@ -164,7 +137,7 @@ public class DepRelLogic
 		}
 	}
 
-	public Tuple<UDv2Relations, String> subjToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> subjToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		// Nominal++ subject
@@ -276,7 +249,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> objToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> objToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		String parentTag = parent.getAnyTag();
@@ -293,7 +266,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.IOBJ, null);
 	}
 
-	public Tuple<UDv2Relations, String> spcToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> spcToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		String parentTag = parent.getAnyTag();
@@ -332,23 +305,23 @@ public class DepRelLogic
 
 			// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
 			if (preps.size() > 1)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
 			if (preps.isEmpty())
 			{
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has no \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
 				return Tuple.of(UDv2Relations.DEP, null);
 			}
 			if (basElems.size() > 1)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.BASELEM));
 			if (basElems.isEmpty())
 			{
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has no \"%s\".",
 						xType, node.getId(), LvtbRoles.BASELEM));
 				return Tuple.of(UDv2Relations.DEP, null);
@@ -373,7 +346,7 @@ public class DepRelLogic
 		{
 			List<PmlANode> conjs = phrase.getChildren(LvtbRoles.CONJ);
 			if (conjs.size() > 1)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.CONJ));
 			String conjLemma = null;
@@ -383,7 +356,7 @@ public class DepRelLogic
 				String conjRed = conjs.get(0).getReduction();
 				if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
 			}
-			else logger.doInsentenceWarning(String.format(
+			else StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" with ID \"%s\" has no \"%s\".",
 					xType, node.getId(), LvtbRoles.CONJ));
 			if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
@@ -422,7 +395,7 @@ public class DepRelLogic
 		{
 			List<PmlANode> basElems = phrase.getChildren(LvtbRoles.BASELEM);
 			if (basElems.size() > 1)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" has multiple \"%s\".", pmcType, LvtbRoles.BASELEM));
 			String basElemTag = basElems.get(0).getAnyTag();
 			// TODO test this bugfix
@@ -437,7 +410,7 @@ public class DepRelLogic
 			{
 				List<PmlANode> conjs = basElemPhrase.getChildren(LvtbRoles.CONJ);
 				if (conjs.size() > 1)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" with ID \"%s\" has multiple \"%s\".",
 							xType, basElems.get(0).getId(), LvtbRoles.CONJ));
 				String conjLemma = conjs.get(0).getM().getLemma();
@@ -459,7 +432,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> attrToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> attrToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		PmlMNode mNode = node.getM();
@@ -500,7 +473,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> advSitToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> advSitToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		if (tag.matches("mc.*|xn.*"))
@@ -515,7 +488,7 @@ public class DepRelLogic
 		{
 			List<PmlANode> preps = phrase.getChildren(LvtbRoles.PREP);
 			if (preps.size() > 1)
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
 			String prepLemma = preps.get(0).getM().getLemma();
@@ -548,7 +521,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> detToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> detToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
@@ -564,7 +537,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> noToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> noToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
 		PmlMNode mNode = node.getM();
@@ -586,7 +559,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> predClToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> predClToUD(PmlANode node, PmlANode parent)
 	{
 		String parentType = parent.getAnyLabel();
 
@@ -601,7 +574,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> subjClToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> subjClToUD(PmlANode node, PmlANode parent)
 	{
 		// Effective ancestor is predicate
 		if (LvtbRoles.PRED.equals(parent.getEffectiveLabel()))
@@ -640,7 +613,7 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-	public Tuple<UDv2Relations, String> insToUD(PmlANode node, PmlANode parent)
+	public static Tuple<UDv2Relations, String> insToUD(PmlANode node, PmlANode parent)
 	{
 		PmlANode phrase = node.getPhraseNode();
 		if (phrase == null || phrase.getNodeType() != PmlANode.Type.PMC)
@@ -648,7 +621,7 @@ public class DepRelLogic
 
 		List<PmlANode> preds = phrase.getChildren(LvtbRoles.PRED);
 		if (preds!= null && preds.size() > 1)
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED));
 		if (preds != null && !preds.isEmpty()) return Tuple.of(UDv2Relations.PARATAXIS, null);
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
@@ -662,14 +635,14 @@ public class DepRelLogic
 	 *                  node to be labeled
 	 * @param enhanced  true, if role for enhanced dependency tree is being made
 	 */
-	protected void warnOnRole(
+	protected static void warnOnRole(
 			PmlANode node, PmlANode parent, String lvtbRole, boolean enhanced)
 	{
 		String prefix = enhanced ? "Enhanced role" : "Role";
 		String warning = String.format(
 				"%s \"%s\" for node \"%s\" with respect to parent \"%s\" was not transformed.",
 				prefix, lvtbRole, node.getId(), parent.getId());
-		logger.doInsentenceWarning(warning);
+		StandardLogger.l.doInsentenceWarning(warning);
 	}
 
 

@@ -1,11 +1,10 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.ArrayList;
@@ -27,19 +26,17 @@ public class PhraseTransformator
 	 * In this sentence all the transformations are carried out.
 	 */
 	public Sentence s;
-	protected Logger logger;
 
-	public PhraseTransformator(Sentence sent, Logger logger)
+	public PhraseTransformator(Sentence sent)
 	{
 		s = sent;
-		this.logger = logger;
 	}
 
 	/**
 	 * Transform phrase to the UD structure.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode anyPhraseToUD(PmlANode phraseNode)
+	public PmlANode anyPhraseToUD(PmlANode phraseNode, boolean addCoordPropCrosslinks)
 	{
 		String phraseType = phraseNode.getPhraseType();
 		String phraseTag = phraseNode.getAnyTag();
@@ -49,61 +46,66 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
 				phraseType.equals(LvtbPmcTypes.INSPMC))
-			return sentencyToUD(phraseNode, phraseType);
+			return sentencyToUD(phraseNode, addCoordPropCrosslinks);
 		if (phraseType.equals(LvtbPmcTypes.UTTER))
-			return utterToUD(phraseNode, phraseType);
+			return utterToUD(phraseNode, addCoordPropCrosslinks);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.PRED, null, true, logger);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.PRED, addCoordPropCrosslinks, true);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, true, logger);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, addCoordPropCrosslinks, true);
 		if (phraseType.equals(LvtbPmcTypes.INTERJ) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE))
-			return s.allUnderFirst(phraseNode, phraseType, null, LvtbRoles.BASELEM, null, false, logger);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, addCoordPropCrosslinks, false);
 
 		//======= COORD ========================================================
 
 		if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
-			return crdPartsToUD(phraseNode, phraseType, phraseTag);
+			return crdPartsToUD(phraseNode, addCoordPropCrosslinks);
 		if (phraseType.equals(LvtbCoordTypes.CRDCLAUSES))
-			return crdClausesToUD(phraseNode, phraseType, phraseTag);
+			return crdClausesToUD(phraseNode, addCoordPropCrosslinks);
 
 		//======= X-WORD =======================================================
 
 		// Multiple basElem, root is the last.
 		if (phraseType.equals(LvtbXTypes.XAPP) ||
 				phraseType.equals(LvtbXTypes.XNUM))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, false, logger);
+			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, null,
+					addCoordPropCrosslinks, false);
 
 		// Multiple basElem, root is the first.
 		if (phraseType.equals(LvtbXTypes.XFUNCTOR) ||
 				phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.NAMEDENT) ||
 				phraseType.equals(LvtbXTypes.COORDANAL))
-			return s.allUnderFirst(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null, false, logger);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, addCoordPropCrosslinks,false);
 
 		// Only one basElem
 		if (phraseType.equals(LvtbXTypes.XPARTICLE))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, null,null, true, logger);
+			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, null,
+					addCoordPropCrosslinks, true);
 		if (phraseType.equals(LvtbXTypes.XPREP))
-			return s.allUnderLast(phraseNode, phraseType, phraseTag, LvtbRoles.BASELEM, LvtbRoles.PREP, null, true, logger);
+			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, LvtbRoles.PREP,
+					addCoordPropCrosslinks, true);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
-			return xSimileToUD(phraseNode, phraseType, phraseTag);
+			return xSimileToUD(phraseNode, addCoordPropCrosslinks);
+		if (phraseType.equals(LvtbXTypes.UNSTRUCT))
+			//return unstructToUd(phraseNode);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM,
+					addCoordPropCrosslinks,false);
 
 		// Specific.
-		if (phraseType.equals(LvtbXTypes.UNSTRUCT))
-			return unstructToUd(phraseNode, phraseType, phraseTag);
 		if (phraseType.equals(LvtbXTypes.SUBRANAL))
-			return subrAnalToUD(phraseNode, phraseType, phraseTag);
+			return subrAnalToUD(phraseNode, addCoordPropCrosslinks);
 		if (phraseType.equals(LvtbXTypes.XPRED))
-			return xPredToUD(phraseNode, phraseType, phraseTag);
+			return xPredToUD(phraseNode, addCoordPropCrosslinks);
 
-		logger.doInsentenceWarning(String.format(
+		StandardLogger.l.doInsentenceWarning(String.format(
 				"Sentence \"%s\" has unrecognized \"%s\".", s.id, phraseType));
 		//warnOut.printf("Sentence \"%s\" has unrecognized \"%s\".\n", s.id, phraseType);
-		return missingTransform(phraseNode);
+		return missingTransform(phraseNode, addCoordPropCrosslinks);
 	}
 
 	/**
@@ -111,14 +113,11 @@ public class PhraseTransformator
 	 * is defined.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode missingTransform(PmlANode phraseNode)
+	public PmlANode missingTransform(PmlANode phraseNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(phraseNode);
 		List<PmlANode> children = phraseNode.getChildren();
-		String phraseType = phraseNode.getPhraseType();
-		String phraseTag = phraseNode.getAnyTag();
 		PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
-		s.allAsDependents(newRoot, children, phraseType, phraseTag, null, logger);
+		s.relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks);
 		return newRoot;
 	}
 
@@ -128,16 +127,16 @@ public class PhraseTransformator
 	 * pred.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode sentencyToUD(PmlANode pmcNode, String pmcType)
+	protected PmlANode sentencyToUD(PmlANode pmcNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(pmcNode);
+		String pmcType = pmcNode.getPhraseType();
 		List<PmlANode> children = pmcNode.getChildren();
 
 		// Find the structure root.
 		List<PmlANode> preds = pmcNode.getChildren(LvtbRoles.PRED);
 		PmlANode newRoot = null;
 		if (preds != null && preds.size() > 1)
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has more than one \"%s\" in \"%s\".",
 					s.id, LvtbRoles.PRED, pmcType));
 		if (preds == null || preds.isEmpty())
@@ -146,7 +145,7 @@ public class PhraseTransformator
 
 		if (newRoot == null)
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has no \"%s\", \"%s\" in \"%s\".",
 					s.id, LvtbRoles.PRED, LvtbRoles.BASELEM, pmcType));
 			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
@@ -156,7 +155,7 @@ public class PhraseTransformator
 					"Sentence \"%s\" seems to be empty", s.id));
 
 		// Create dependency structure in conll table.
-		s.allAsDependents(newRoot, children, pmcType, null, null, logger);
+		s.relinkAllConstituents(newRoot, children, pmcNode, addCoordPropCrosslinks);
 
 		return newRoot;
 	}
@@ -167,9 +166,9 @@ public class PhraseTransformator
 	 * pred.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode utterToUD(PmlANode pmcNode, String pmcType)
+	protected PmlANode utterToUD(PmlANode pmcNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(pmcNode);
+		String pmcType = pmcNode.getPhraseType();
 		List<PmlANode> children = pmcNode.getChildren();
 
 		// Find the structure root.
@@ -179,7 +178,7 @@ public class PhraseTransformator
 			newRoot = PmlANodeListUtils.getFirstByDeepOrd(basElems);
 		if (newRoot == null)
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has no \"%s\" in \"%s\".",
 					s.id, LvtbRoles.BASELEM, pmcType));
 			newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
@@ -218,10 +217,9 @@ public class PhraseTransformator
 				else break;
 			}
 			rootChildren.addAll(lastPunct);
-			s.allAsDependents(newRoot, rootChildren, pmcType, null, null, logger);
+			s.relinkAllConstituents(newRoot, rootChildren, pmcNode, addCoordPropCrosslinks);
 
 			// now let's process what is left
-			Token rootTok = s.pmlaToConll.get(newRoot.getId());
 			while (sortedChildren.size() > 0)
 			{
 				ArrayList<PmlANode> nextPart = new ArrayList<>();
@@ -239,27 +237,32 @@ public class PhraseTransformator
 				}
 
 				// process found part
-				s.allAsDependents(subroot, nextPart, pmcType, null, null, logger);
-				s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
+				s.relinkAllConstituents(subroot, nextPart, pmcNode, addCoordPropCrosslinks);
+
+				// Is this really safe that all crosslinks have the same role???
+				if (addCoordPropCrosslinks)
+					s.setLinkAndCorsslinksPhrasal(newRoot, subroot, UDv2Relations.PARATAXIS,
+							Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+				else s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
 						Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 			}
 		}
-		else s.allAsDependents(newRoot, children, pmcType, null, null, logger);
+		else s.relinkAllConstituents(newRoot, children, pmcNode, addCoordPropCrosslinks);
 
 		return newRoot;
 	}
 
 
 	/**
-	 * Transformation for coordinated clauses - first coordinated part is used
+	 * Transformation for coordinated parts - first coordinated part is used
 	 * as root.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode crdPartsToUD(PmlANode coordNode, String coordType, String coordTag)
+	public PmlANode crdPartsToUD(PmlANode coordNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(coordNode);
 		List<PmlANode> children = coordNode.getChildren();
-		return coordPartsChildListToUD(PmlANodeListUtils.asOrderedList(children), coordType, coordTag, logger);
+		return coordPartsChildListToUD(
+				PmlANodeListUtils.asOrderedList(children), coordNode, addCoordPropCrosslinks);
 	}
 
 	/**
@@ -267,7 +270,7 @@ public class PhraseTransformator
 	 * parataxis, otherwise the same as coordinated parts.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode crdClausesToUD (PmlANode coordNode, String coordType, String coordTag)
+	public PmlANode crdClausesToUD (PmlANode coordNode, boolean addCoordPropCrosslinks)
 	{
 		// Get all the children.
 		//NodeList children = NodeUtils.getAllPMLChildren(coordNode);
@@ -284,28 +287,36 @@ public class PhraseTransformator
 
 		// No semicolons => process as ordinary coordination.
 		if (semicolons.size() < 1)
-			return coordPartsChildListToUD(sortedChildren,
-					coordType, coordTag, logger);
+			return coordPartsChildListToUD(sortedChildren, coordNode, addCoordPropCrosslinks);
 
 		// If semicolon(s) is (are) present, split on semicolon and then process
 		// each part as ordinary coordination.
 		ArrayList<PmlANode> sortedSemicolons = PmlANodeListUtils.asOrderedList(semicolons);
 		int semicOrd = sortedSemicolons.get(0).getOrd();
 		PmlANode newRoot = coordPartsChildListToUD(
-				PmlANodeListUtils.ordSplice(sortedChildren, 0, semicOrd), coordType, coordTag, logger);
+				PmlANodeListUtils.ordSplice(sortedChildren, 0, semicOrd),
+				coordNode, addCoordPropCrosslinks);
 		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
 			int nextSemicOrd = sortedSemicolons.get(i).getOrd();
 			PmlANode newSubroot = coordPartsChildListToUD(
-					PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd), coordType, coordTag, logger);
-			s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+					PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd),
+					coordNode, addCoordPropCrosslinks);
+			if (addCoordPropCrosslinks)
+				s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+						Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+			else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 			semicOrd = nextSemicOrd;
 		}
 		// last
 		PmlANode newSubroot = coordPartsChildListToUD(
-				PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE), coordType, coordTag, logger);
-		s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+				PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE),
+				coordNode, addCoordPropCrosslinks);
+		if (addCoordPropCrosslinks)
+			s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+		else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 				Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
 		return newRoot;
 	}
@@ -318,8 +329,8 @@ public class PhraseTransformator
 	 * under the following crdPart.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode coordPartsChildListToUD(
-			List<PmlANode> sortedNodes, String coordType, String coordTag, Logger logger)
+	protected PmlANode coordPartsChildListToUD(List<PmlANode> sortedNodes,
+		   PmlANode coordNode, boolean addCoordPropCrosslinks)
 	{
 		// Find the structure root.
 		PmlANode newRoot = null;
@@ -330,12 +341,12 @@ public class PhraseTransformator
 		{
 			if (LvtbRoles.CRDPART.equals(n.getRole()))
 			{
-				s.allAsDependents(n, postponed, coordType, coordTag, null, logger);
+				s.relinkAllConstituents(n, postponed, coordNode, addCoordPropCrosslinks);
 				lastSubroot = n;
 				if (newRoot == null)
 					newRoot = n;
 				else
-					s.addAsDependent(newRoot, n, coordType, coordTag, null, logger);
+					s.relinkSingleConstituent(newRoot, n, coordNode, addCoordPropCrosslinks);
 				postponed = new ArrayList<>();
 			} else postponed.add(n);
 		}
@@ -343,33 +354,34 @@ public class PhraseTransformator
 		if (!postponed.isEmpty())
 		{
 			if (lastSubroot != null)
-				s.allAsDependents(lastSubroot, postponed, coordType, coordTag, null, logger);
+				s.relinkAllConstituents(lastSubroot, postponed, coordNode, addCoordPropCrosslinks);
 			else
 			{
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"Sentence \"%s\" has no \"%s\" in \"%s\".",
-						s.id, LvtbRoles.CRDPART, coordType));
+						s.id, LvtbRoles.CRDPART, coordNode.getPhraseType()));
 				if (sortedNodes.get(0) != null )
 				{
 					newRoot = sortedNodes.get(0);
-					s.allAsDependents(newRoot, sortedNodes, coordType, coordTag, null, logger);
+					s.relinkAllConstituents(newRoot, sortedNodes, coordNode, addCoordPropCrosslinks);
 				}
 				else throw new IllegalArgumentException(String.format(
 						"\"%s\" in sentence \"%s\" seems to be empty",
-						coordType, s.id));
+						coordNode.getPhraseType(), s.id));
 			}
 		}
 		return newRoot;
 	}
 
-	/**
+	/*
 	 * Transformation for unstruct x-word - if all parts are tagged as xf,
 	 * DEPREL is foreign, else mwe.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode unstructToUd(PmlANode xNode, String xType, String xTag)
+/*	@Deprecated
+	public PmlANode unstructToUd(PmlANode xNode)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(xNode);
+		// Deprecated as currently foreign unstructs are annotated as xf.
 		List<PmlANode> children = xNode.getChildren();
 		List<PmlANode> foreigns = new ArrayList<>();
 		List<PmlANode> punct = new ArrayList<>();
@@ -384,45 +396,46 @@ public class PhraseTransformator
 
 		if (children.size() == foreigns.size()
 			|| foreigns.size() > 0 && children.size() == foreigns.size() + punct.size())
-			return s.allUnderFirst(xNode, xType, xTag, LvtbRoles.BASELEM,
+			return s.allUnderFirstConstituent(xNode, LvtbRoles.BASELEM,
 					Tuple.of(UDv2Relations.FLAT_FOREIGN, null), false, logger);
-		else return s.allUnderFirst(xNode, xType, xTag, LvtbRoles.BASELEM,
-				null, false, logger);
-	}
+		else return s.allUnderFirstConstituent(xNode, LvtbRoles.BASELEM, null,
+				false, logger);
+	}//*/
 
 	/**
 	 * Transformation for subrAnal, based on subtag.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode subrAnalToUD(PmlANode xNode, String xType, String xTag)
+	public PmlANode subrAnalToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(xNode);
+		String xTag = xNode.getPhraseTag();
 		List<PmlANode> children = xNode.getChildren();
 		if (xTag == null || xTag.isEmpty())
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
-					s.id, xType, xTag));
-			return missingTransform(xNode);
+					s.id, xNode.getPhraseType(), xTag));
+			return missingTransform(xNode, addCoordPropCrosslinks);
 		}
-		Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal|part).*")
+		//Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal|part).*").matcher(xTag);
+		Matcher subTypeMatcher = Pattern.compile("[^\\[]*\\[(vv|ipv|skv|set|sal).*")
 				.matcher(xTag);
 		if (!subTypeMatcher.matches())
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
-					s.id, xType, xTag));
-			return missingTransform(xNode);
+					s.id, xNode.getPhraseType(), xTag));
+			return missingTransform(xNode, addCoordPropCrosslinks);
 		}
 
 		String subType = subTypeMatcher.group(1);
 		switch (subType)
 		{
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
-			case "vv" : return s.allUnderFirst(
-					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, logger);
-			case "part" : return s.allUnderFirst(
-					xNode, xType, xTag, LvtbRoles.BASELEM, null, false, logger);
+			case "vv" : return s.allUnderFirstConstituent(
+					xNode, LvtbRoles.BASELEM, addCoordPropCrosslinks, false);
+			case "part" : return s.allUnderFirstConstituent(
+					xNode, LvtbRoles.BASELEM, addCoordPropCrosslinks, false);
 			case "ipv" :
 			{
 				List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
@@ -434,18 +447,18 @@ public class PhraseTransformator
 				}
 				if (adjs.size() < 1)
 				{
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has no adjective \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 					adjs = children;
 				}
 				else if (adjs.size() > 1)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one adjective \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(adjs);
-				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
+				s.relinkAllConstituents(newRoot, children, xNode, addCoordPropCrosslinks);
 				return newRoot;
 			}
 			case "skv" :
@@ -459,17 +472,17 @@ public class PhraseTransformator
 				}
 				if (prons.size() < 1)
 				{
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has no pronominal \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 					prons = children;
 				}
 				else if (prons.size() > 1)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 				PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(prons);
-				s.allAsDependents(newRoot, children, xType, xTag,null, logger);
+				s.relinkAllConstituents(newRoot, children, xNode,addCoordPropCrosslinks);
 				return newRoot;
 			}
 			case "set" :
@@ -486,19 +499,19 @@ public class PhraseTransformator
 
 				if (noPrepBases.size() < 1)
 				{
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 					noPrepBases = children;
 				}
 				else if (noPrepBases.size() > 1)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noPrepBases);
-				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
+				s.relinkAllConstituents(newRoot, children, xNode, addCoordPropCrosslinks);
 				return newRoot;
 			}
 			case "sal" :
@@ -515,24 +528,24 @@ public class PhraseTransformator
 
 				if (noSimBases.size() < 1)
 				{
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has no \"%s\" without \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
 					noSimBases = children;
 				}
 				else if (noSimBases.size() > 1)
-					logger.doInsentenceWarning(String.format(
+					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
-							xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
+							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noSimBases);
-				s.allAsDependents(newRoot, children, xType, xTag, null, logger);
+				s.relinkAllConstituents(newRoot, children, xNode, addCoordPropCrosslinks);
 				return newRoot;
 			}
 		}
-		logger.doInsentenceWarning(String.format(
+		StandardLogger.l.doInsentenceWarning(String.format(
 				"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
-				s.id, xType, xTag));
-		return missingTransform(xNode);
+				s.id, xNode.getPhraseType(), xTag));
+		return missingTransform(xNode, addCoordPropCrosslinks);
 	}
 
 	/**
@@ -540,14 +553,15 @@ public class PhraseTransformator
 	 * xTag is required for successful transformation.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode xSimileToUD(PmlANode xNode, String xType, String xTag)
+	public PmlANode xSimileToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
+		String xTag = xNode.getPhraseTag();
 		if (xTag == null || xTag.isEmpty() || !xTag.matches("[^\\[]*\\[(sim|comp)[yn].*"))
 		{
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has \"%s\" with incomplete xTag \"%s\".",
-					s.id, xType, xTag));
-			return missingTransform(xNode);
+					s.id, xNode.getPhraseType(), xTag));
+			return missingTransform(xNode, addCoordPropCrosslinks);
 		}
 		boolean gramzed = xTag.matches("[^\\[]*\\[(sim|comp)y.*");
 		if (gramzed)
@@ -555,13 +569,11 @@ public class PhraseTransformator
 			//NodeList children = NodeUtils.getAllPMLChildren(xNode);
 			List<PmlANode> children = xNode.getChildren();
 			PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
-			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
-			s.allAsDependents(newRoot, children, xType, xTag,
-					Tuple.of(UDv2Relations.FIXED, null), logger);
+			s.relinkAllConstituents(newRoot, children, xNode, true);
 			return newRoot;
 		}
-		return s.allUnderLast(xNode, xType, xTag, LvtbRoles.BASELEM,
-				null,null, true, logger);
+		return s.allUnderLastConstituent(xNode, LvtbRoles.BASELEM, null,
+				addCoordPropCrosslinks, true);
 	}
 
 	/**
@@ -570,15 +582,14 @@ public class PhraseTransformator
 	 * baseElem is attached as xcomp to it. Otherwise, noModXPredUD() are used.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	public PmlANode xPredToUD(PmlANode xNode, String xType, String xTag)
+	public PmlANode xPredToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
-		//NodeList children = NodeUtils.getAllPMLChildren(xNode);
 		List<PmlANode> children = xNode.getChildren();
 		if (children.size() == 1) return children.get(0);
 		List<PmlANode> mods = xNode.getChildren(LvtbRoles.MOD);
 		if (mods == null || mods.size() < 1)
-			return noModXPredToUD(xNode, xType, xTag);
-		else return modXPredToUD(xNode, xType, xTag);
+			return noModXPredToUD(xNode, addCoordPropCrosslinks);
+		else return modXPredToUD(xNode, addCoordPropCrosslinks);
 	}
 
 	/**
@@ -586,20 +597,20 @@ public class PhraseTransformator
 	 * split out from xPred processing.
 	 * @return	PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode modXPredToUD(
-			PmlANode xNode, String xType, String xTag)
+	protected PmlANode modXPredToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
 		// Check if the tag is appropriate.
+		String xTag = xNode.getPhraseTag();
 		String subtag = (xTag != null && xTag.contains("[") ?
 				xTag.substring(xTag.indexOf("[") + 1) : "");
 		if (!subtag.startsWith("modal") && !subtag.startsWith("expr")
 				&& !subtag.startsWith("phase"))
-			logger.doInsentenceWarning(String.format(
+			StandardLogger.l.doInsentenceWarning(String.format(
 					"xPred \"%s\" has a problematic tag \"%s\".",
 					xNode.getParent().getId(), xTag));
 		// Just put basElem under mod.
-		return s.allUnderLast(xNode, xType, xTag,
-				LvtbRoles.MOD, LvtbRoles.BASELEM, null, true, logger);
+		return s.allUnderLastConstituent(xNode, LvtbRoles.MOD, LvtbRoles.BASELEM,
+				addCoordPropCrosslinks, true);
 	}
 
 	/**
@@ -607,8 +618,7 @@ public class PhraseTransformator
 	 * out from xPred processing.
 	 * @return	PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode noModXPredToUD(
-			PmlANode xNode, String xType, String xTag)
+	protected PmlANode noModXPredToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
 		// Get basElems and warn if there is none.
 		List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
@@ -616,65 +626,44 @@ public class PhraseTransformator
 		if (basElem == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has no \"basElem\"",
-					xType, s.id));
+					xNode.getPhraseType(), s.id));
 		List<PmlANode> auxes = xNode.getChildren(LvtbRoles.AUXVERB);
 		PmlANode lastAux = PmlANodeListUtils.getLastByDeepOrd(auxes);
 		if (lastAux == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has neither \"auxVerb\" nor \"mod\"",
-					xType, s.id));
+					xNode.getPhraseType(), s.id));
 		if (auxes.size() > 1) for (int i = 0; i < auxes.size(); i++)
 		{
 			String auxLemma = lastAux.getM().getLemma();
-			String auxRedLemma = lastAux.getReductionLemma(logger);
+			String auxRedLemma = lastAux.getReductionLemma();
 			if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
 			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)") &&
 					!auxRedLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
-				logger.doInsentenceWarning(String.format(
+				StandardLogger.l.doInsentenceWarning(String.format(
 						"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
 						xNode.getParent().getId(), auxLemma));
 		}
 
 		PmlMNode lastAuxM = lastAux.getM();
 		String auxLemma = lastAuxM == null ? null : lastAuxM.getLemma();
-		String auxRedLemma = lastAux.getReductionLemma(logger);
-		if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
+		String auxRedLemma = lastAux.getReductionLemma();
 		boolean ultimateAux =
 				auxLemma != null && auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
 				auxRedLemma != null && auxRedLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
-		String basElemTag = basElem.getAnyTag();
-
-		boolean nominal = false;
-		boolean passive = false;
-		if (xTag != null && xTag.contains("["))
-		{
-			String subtag = xTag.substring(xTag.indexOf("[") + 1);
-			if (subtag.startsWith("pass"))
-				passive = true;
-			else if (subtag.startsWith("subst") || subtag.startsWith("adj") ||
-					subtag.startsWith("pronom") || subtag.startsWith("adv") ||
-					subtag.startsWith("inf") || subtag.startsWith("num"))
-				nominal = true;
-			else if (!subtag.startsWith("act"))
-				logger.doInsentenceWarning(String.format(
-						"xPred \"%s\" has a problematic tag \"%s\".",
-						xNode.getParent().getId(), xTag));
-		}
-		else if (basElemTag != null)
-			logger.doInsentenceWarning(String.format(
-					"xPred \"%s\" has a problematic tag \"%s\".",
-					xNode.getParent().getId(), xTag));
 
 		PmlANode newRoot = basElem;
 		if (!ultimateAux) newRoot = lastAux;
 		List<PmlANode> children = xNode.getChildren();
-		s.allAsDependents(newRoot, children, xType, xTag, null, logger);
+		s.relinkAllConstituents(newRoot, children, xNode, addCoordPropCrosslinks);
+
+		/* //Not needed as s.relinkAllConstituents() should set the correct roles.
 		if (passive && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
 					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);
 		if (nominal && ultimateAux)
 			s.setLink(newRoot, lastAux, UDv2Relations.COP,
-					Tuple.of(UDv2Relations.COP, null), true, true);
+					Tuple.of(UDv2Relations.COP, null), true, true);*/
 		return newRoot;
 	}
 }

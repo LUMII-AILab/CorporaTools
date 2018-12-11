@@ -47,6 +47,10 @@ public class TransformationParams
 	 */
 	public Boolean UD_STANDARD_NULLNODES = true;
 
+	//== Enhanced.
+	public Boolean ADD_CONTROL_SUBJ = false;
+	public Boolean PROPAGATE_CONJUNCTS = true;
+
 	/**
 	 * Get default parameter set.
 	 */
