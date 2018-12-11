@@ -184,7 +184,9 @@ public class NewTransformator
 					parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
-		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS);
+		// TODO Pašlaik novelk enh linkus no vecās un jaunās saknes, bet ja nu pa vidu arī kaut kas ir?
+		// Ko darīt ar tiem?
+		s.relinkAllDependants(parentANode, newBaseDepRoot, pmlDependents, params.PROPAGATE_CONJUNCTS);
 	}
 
 }

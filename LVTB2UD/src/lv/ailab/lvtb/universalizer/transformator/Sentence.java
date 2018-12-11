@@ -649,23 +649,31 @@ public class Sentence
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
 	 * Use for relinking depdenencies.
-	 * @param parent		designated parent
+	 * @param oldParent		previous parent (must have the same corresponding
+	 *                      tokens as newParent)
+	 * @param newParent		designated parent (must have the same corresponding
+	 *                      tokens as oldParent)
 	 * @param child			designated child
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
 	 */
-	public void relinkSingleDependant(PmlANode parent, PmlANode child,
-									  boolean addCoordPropCrosslinks)
+	public void relinkSingleDependant(
+			PmlANode oldParent, PmlANode newParent, PmlANode child,
+			boolean addCoordPropCrosslinks)
 	{
 		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
 		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
-		setBaseLink(parent, child, baseRole);
-		setEnhLink(parent, child, enhRole, true, true);
+		setBaseLink(newParent, child, baseRole);
+		setEnhLink(newParent, child, enhRole, true, true);
 
 		// To propagate conjuncts we need to travel through both
 		// coordinated alternatives of child and the new parent.
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-			addDependencyCrosslinks(parent, child);
+		{
+			if (!oldParent.isSameNode(newParent))
+				addDependencyCrosslinks(oldParent, child);
+			addDependencyCrosslinks(newParent, child);
+		}
 	}
 
 	/**
@@ -680,13 +688,13 @@ public class Sentence
 	 *                                  done?
 	 */
 	public void relinkAllDependants(
-			PmlANode newRoot, List<PmlANode> children,
+			PmlANode oldRoot, PmlANode newRoot, List<PmlANode> children,
 			boolean addCoordPropCrosslinks)
 	{
 		if (children == null || children.isEmpty()) return;
 		// Process children.
 		for (PmlANode child : children)
-			relinkSingleDependant(newRoot, child, addCoordPropCrosslinks);
+			relinkSingleDependant(oldRoot, newRoot, child, addCoordPropCrosslinks);
 	}
 
 	// ===== Constituency related. =============================================
