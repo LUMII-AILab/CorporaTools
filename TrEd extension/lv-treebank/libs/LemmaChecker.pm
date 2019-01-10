@@ -8,8 +8,8 @@ sub checkLemmaByTag
 {
 	my $lemma = shift;
 	my $tag = shift;
-	return 0 unless ($tag and $lemma);
-	return 0 if ($tag =~ m#^[Nn]/[Aa]$#);
+	return [] unless ($tag and $lemma);
+	return [] if ($tag =~ m#^[Nn]/[Aa]$#);
 	my @errors = ();
 	
 	# TODO update accordingly linguist feedback.
