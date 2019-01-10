@@ -360,15 +360,17 @@ sub new_m_node
   EditAttribute($this, 'ord');
   my $ordnr = $this->{'ord'};
   # Increase order numbers for nodes after the newly created node.
+  my $incrementIds = 1;
   my $bro = 0;
   for (my $i = @old_nodes - 1; $i >= 0; $i--)
   {
 	if ($old_nodes[$i]->{'ord'} < $ordnr)
 	{
+	  $incrementIds = 0;
 	  $bro = $old_nodes[$i]->{'m'}{'id'};
-	  last;
+	  last if ($bro);
 	}
-	$old_nodes[$i]->{'ord'} = $old_nodes[$i]->{'ord'} + 1;
+	$old_nodes[$i]->{'ord'} = $old_nodes[$i]->{'ord'} + 1 if ($incrementIds);
   }
   
   # Save changes without questions.
@@ -428,8 +430,9 @@ sub _write_new_m
   my $ref_id = $a_file->referenceNameHash->{'mdata'};
   my $ref_file = $a_file->referenceURLHash->{$ref_id};
   print "Opening $ref_id, $ref_file.\n";
-  #my $m_file = Open($ref_file, ('-keep' => 1)); #Doesn't work for TrEd 2.x
-  my $m_file = Open($ref_file);
+  #my $m_file = Open($ref_file, {'-keep' => 1}); #Doesn't work for TrEd 2.x?
+  my $m_file = Open($ref_file, {'-keep' => 0});
+  #my $m_file = Open($ref_file);
   GotoTree(1);
   print "Serching $m_sent_id...\n";
   print "Looking at ".$root->attr('id').".\n";
@@ -484,9 +487,11 @@ sub _write_new_m
   # of this function.
   #SaveAs({update_refs => 'nooooooo', update_filelist => 'noooo'});
   CurrentFile()->save(FileName());
-  CloseFile($m_file);
+  #use TrEd::FileLock qw(remove_lock);
+  #TrEd::FileLock::remove_lock($m_file, $ref_file, 1);
   print "Switching back to a.\n";
   ResumeFile($a_file);
+  CloseFile($m_file); # It is important to switch and then close, otherewise the m file dangles in the memory and voids the editions done through a file.
   # Return newly created node's ID.
   return $m_id;
 }
