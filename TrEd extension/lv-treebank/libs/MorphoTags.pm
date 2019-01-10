@@ -479,6 +479,7 @@ sub getAVPairsFromAnyTag
 sub checkAnyTag
 {
 	my $tag = shift;
+	return [] unless ($tag);
 	my @avPairs = map {@$_} @{ getAVPairsFromAnyTag($tag) };
 	my @errors = ();
 	

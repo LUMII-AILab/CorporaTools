@@ -137,22 +137,26 @@ sub is_unfinished
 sub is_role_allowed_for_parent
 {
   my $node = shift;
-  my $root = shift;
+  #my $root = shift;
   my $p = $node->parent;
 
   return 1 unless ($node and $p);
+  #return 1 if ($node eq $root);
+  
   
   # root children.
   if ($node->{'pmctype'} eq 'sent' or
       $node->{'pmctype'} eq 'utter')
   {
-    return 1 if ($p eq $root);
+    #return 1 if ($p eq $root);
+	return 1 unless ($p->parent);
 	return 1 if ($p->parent->{'pmctype'} eq 'dirSpPmc');
 	return 1 if ($p->parent->{'pmctype'} eq 'quot');
 	return 0;
   }
   
-  if ($p eq $root)
+  #if ($p eq $root)
+  unless ($p->parent)
   {
 	return 1 if ($node->{'pmctype'} eq 'sent' or
                  $node->{'pmctype'} eq 'utter' or
@@ -206,7 +210,8 @@ sub is_role_allowed_for_parent
   # punctuation must be below coordination or pmc or used for reduction.
   if ($node->{'role'} eq 'punct')
   {
-    return 0 if ($p eq $root);
+    #return 0 if ($p eq $root);
+    return 0 unless ($p->parent);
     return 1 if ($p->{'#name'} eq 'coordinfo' or
 				 $p->{'#name'} eq 'pmcinfo' or
 				 $node->{'reduction'});

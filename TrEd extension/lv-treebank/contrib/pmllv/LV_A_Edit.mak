@@ -707,6 +707,8 @@ sub set_auto
 #bind normalize_n_ords_all_trees to Ctrl+N menu Recalculate Node Order for All Trees (might take some time)
 
 #bind Save to Ctrl+s menu Save
+#bind PerlSearch to Ctrl+h menu Perl-Search
+#bind PerlSearchNext to Ctrl+H menu Perl-Search Next
 
 #bind Redraw_All to Ctrl+r menu Redraw
 #bind switch_mode to Ctrl+m menu Switch to View Mode
