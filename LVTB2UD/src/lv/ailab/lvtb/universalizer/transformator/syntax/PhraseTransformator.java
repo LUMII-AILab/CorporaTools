@@ -31,15 +31,26 @@ public class PhraseTransformator
 	{
 		s = sent;
 	}
-
 	/**
-	 * Transform phrase to the UD structure.
+	 * Transform phrase to the UD structure and updates Sentence.phraseRoots
+	 * variable.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
 	public PmlANode anyPhraseToUD(PmlANode phraseNode, boolean addCoordPropCrosslinks)
 	{
+		PmlANode result = anyPhraseToUDLogic(phraseNode, addCoordPropCrosslinks);
+		String phraseId = phraseNode.getParent().getId();
+		String resultId = result.getId();
+		s.phraseRoots.put(phraseId, resultId);
+		return result;
+	}
+	/**
+	 * Transform phrase to the UD structure.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 */
+	public PmlANode anyPhraseToUDLogic(PmlANode phraseNode, boolean addCoordPropCrosslinks)
+	{
 		String phraseType = phraseNode.getPhraseType();
-		String phraseTag = phraseNode.getAnyTag();
 
 		//======= PMC ==========================================================
 

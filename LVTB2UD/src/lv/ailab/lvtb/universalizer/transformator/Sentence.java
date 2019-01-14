@@ -62,6 +62,12 @@ public class Sentence
 	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
 
 	/**
+	 * Mapping from PML phrase node ID to constituent node ID that is root foor
+	 * corresponding dependency subtree. Populated during transformation.
+	 */
+	public HashMap<String, String> phraseRoots = new HashMap<>();
+
+	/**
 	 * Mapping from node ID to IDs of nodes that are subjects for this node.
 	 */
 	public HashMap<String, HashSet<String>> subjects = new HashMap<>();
@@ -715,6 +721,7 @@ public class Sentence
 			PmlANode parent, PmlANode child, PmlANode phraseNode)
 	{
 		if (parent == null || child == null) return;
+
 		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys)
