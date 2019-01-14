@@ -93,6 +93,8 @@ public class Sentence
 		return res.toString();
 	}
 
+	// ===== Pre-transformation preparations. ==================================
+
 	public void populateXPredSubjs()
 	{
 		subjects = new HashMap<>();
@@ -185,54 +187,402 @@ public class Sentence
 		coordPartsUnder.put(id, eqs);
 	}
 
+	// ===== Getters and elaborated getters. ===================================
+
+	/**
+	 * Get the enhanced token assigned for this node. If there is no enhanced
+	 * token assigned, return assigned base token.
+	 * @param aNode	node whose token must be found
+	 * @return	enhanced token or base token, or null (in that order)
+	 */
+	public Token getEnhancedOrBaseToken(PmlANode aNode)
+	{
+		if (aNode == null) return null;
+		String id = aNode.getId();
+		if (id == null) return null;
+		Token resToken = pmlaToEnhConll.get(id);
+		if (resToken == null) resToken = pmlaToConll.get(id);
+		return resToken;
+	}
+
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNodeId	Id of node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
+	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
+	{
+		if (aNodeId == null) return null;
+		HashSet<String> res = new HashSet<>();
+		if (coordPartsUnder.containsKey(aNodeId))
+			res.addAll(coordPartsUnder.get(aNodeId));
+		else res.add(aNodeId);
+		return res;
+	}
+
+	/**
+	 * For a given node either return IDs of the coordinated parts this node
+	 * represents (if this node is coordination) or node's ID otherwise. In case
+	 * a part is a coordination itself, its coordinated parts are included in
+	 * the result instead of part itself.
+	 * @param aNode	node whose coordination parts are needed
+	 * @return	IDs of coordinated parts or node itself
+	 */
+	public HashSet<String> getCoordPartsUnderOrNode (PmlANode aNode)
+	{
+		return getCoordPartsUnderOrNode(aNode.getId());
+	}
+
+
+	// ===== Making new nodes. =================================================
+
+	/**
+	 * Create "empty" token for ellipsis.
+	 * @param aNode			PML A node, for which respective ellipsis token must
+	 *                      be made.
+	 * @param baseTokenId	ID for token after which the new token must be
+	 *                      inserted.
+	 * @param addNodeId		should the ID of the aNode be added to the MISC
+	 *                      field of the new token?
+	 */
+	public void createNewEnhEllipsisNode(
+			PmlANode aNode, String baseTokenId, boolean addNodeId)
+	{
+		String nodeId = aNode.getId();
+		String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
+
+		// Decimal token (reduction node) must be inserted after newRootToken.
+		Token newRootToken = pmlaToConll.get(baseTokenId);
+		int position = conll.indexOf(newRootToken) + 1;
+		while (position < conll.size() && newRootToken.idBegin == conll.get(position).idBegin)
+			position++;
+
+		// Fill the fields for the new token.
+		Token decimalToken = new Token();
+		decimalToken.idBegin = newRootToken.idBegin;
+		decimalToken.idSub = conll.get(position-1).idSub+1;
+		decimalToken.idEnd = decimalToken.idBegin;
+		decimalToken.xpostag = redXPostag;
+		decimalToken.form = aNode.getReductionFormPart();
+		if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
+			StandardLogger.l.doInsentenceWarning(String.format(
+					"Ellipsis node %s with reduction field \"%s\" has no tag.",
+					nodeId, aNode.getReduction()));
+		else
+		{
+			String assumedLvtbLemma = null;
+			if (decimalToken.form != null && !decimalToken.form.isEmpty())
+				assumedLvtbLemma = AnalyzerWrapper.getLemma(
+						decimalToken.form, decimalToken.xpostag);
+			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
+					assumedLvtbLemma, decimalToken.xpostag);
+			decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
+					assumedLvtbLemma, decimalToken.xpostag);
+			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag);
+		}
+		if (addNodeId && nodeId != null && !nodeId.isEmpty())
+		{
+			decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);
+			StandardLogger.l.addIdMapping(id, decimalToken.getFirstColumn(), nodeId);
+		}
+
+		// Add the new token to the sentence data structures.
+		conll.add(position, decimalToken);
+		pmlaToEnhConll.put(nodeId, decimalToken);
+	}
+
+
+	// ===== Simple link setting. ==============================================
+
+	/**
+	 * Set both base and enhanced dependency links for tokens coressponding to
+	 * the given PML nodes, but do not set circular dependencies. It is expected
+	 * that pmlaToEnhConll (if needed) and pmlaToConll contains links from given
+	 * PML nodes's IDs to corresponding tokens.
+	 * Return silently, if there was no token for given child node. Fail, if
+	 * there was no token for given parent node. This asymmetry is done because
+	 * inserted nodes have no corresponding UD token, and childless nodes should
+	 * just be ignored, while missing node in the middle of the tree, is a major
+	 * error.
+	 * TODO Maybe we should keep ignore-node list and check agains that?
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep		label to be used for base dependency
+	 * @param enhancedDep	label to be used for enhanced dependency
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setLink (PmlANode parent, PmlANode child, UDv2Relations baseDep,
+						 Tuple<UDv2Relations, String> enhancedDep,
+						 boolean setBackbone, boolean cleanOldDeps)
+	{
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+		if (childBaseToken == null) return;
+
+		// Set base dependency, but avoid circular dependencies.
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
+		{
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+			childBaseToken.deprel = baseDep;
+		}
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken))
+		{
+			if (cleanOldDeps) childEnhToken.deps.clear();
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
+			childEnhToken.deps.add(newDep);
+			if (setBackbone) childEnhToken.depsBackbone = newDep;
+		}
+	}
+
+	/**
+	 * Set enhanced dependency link for tokens coressponding to the given PML
+	 * nodes, but do not set circular dependencies. It is expected that
+	 * pmlaToEnhConll (if needed) and pmlaToConll contains links from given
+	 * PML nodes's IDs to corresponding tokens.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param enhancedDep	label to be used for enhanced dependency
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setEnhLink (PmlANode parent, PmlANode child,
+							Tuple<UDv2Relations, String> enhancedDep,
+							boolean setBackbone, boolean cleanOldDeps)
+	{
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken))
+		{
+			if (cleanOldDeps) childEnhToken.deps.clear();
+			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
+			childEnhToken.deps.add(newDep);
+			if (setBackbone) childEnhToken.depsBackbone = newDep;
+		}
+	}
+
+	/**
+	 * Set basic dependency link for tokens coressponding to the given PML
+	 * nodes, but do not set circular dependencies and do not set anything as a
+	 * parent to decimal node. It is expected that pmlaToConll contains links
+	 * from given PML nodes's IDs to corresponding
+	 * tokens.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep	label to be used for enhanced dependency
+	 */
+	public void setBaseLink (PmlANode parent, PmlANode child, UDv2Relations baseDep)
+	{
+		Token rootBaseToken = pmlaToConll.get(parent.getId());
+		Token childBaseToken = pmlaToConll.get(child.getId());
+
+		// Set base dependency, but avoid circular dependencies.
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
+		{
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+			childBaseToken.deprel = baseDep;
+		}
+	}
+
+	/**
+	 * setLink() + sets coordination propagation crosslinks from parent's
+	 * coordinated equivalents to child's coordinated equivalents. Can be used
+	 * only if all crosslinks have the same role as main enhanced dependency
+	 * link.
+	 * Use for relinking phrasal constituents.
+	 * @param parent 		PML node describing parent
+	 * @param child			PML node describing child
+	 * @param baseDep		label to be used for base dependency
+	 * @param enhancedDep	label to be used for enhanced dependency and for
+	 *                      crosslinks
+	 * @param setBackbone	if enhanced dependency is made, should it be set as
+	 *                      backbone for child node
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setLinkAndCorsslinksPhrasal(
+			PmlANode parent, PmlANode child, UDv2Relations baseDep,
+			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
+			boolean cleanOldDeps)
+	{
+		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps);
+		addPhrasalConjunctCrosslinks(parent, child, enhancedDep);
+	}
+
+	/**
+	 * Set both base and enhanced dependency links as root for token(s)
+	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
+	 * (if needed) and pmlaToConll contains links from given PML nodes's IDs to
+	 * corresponding tokens. This dependency is set as backbone by default.
+	 * @param node 			PML node to be made root
+	 * @param cleanOldDeps	whether previous contents from deps field should be
+	 *                      removed
+	 */
+	public void setRoot (PmlANode node, boolean cleanOldDeps)
+	{
+		Token childBaseToken = pmlaToConll.get(node.getId());
+		Token childEnhToken = pmlaToEnhConll.get(node.getId());
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set base dependency.
+		if (childBaseToken.idSub < 1)
+		{
+			childBaseToken.head = Tuple.of("0", null);
+			childBaseToken.deprel = UDv2Relations.ROOT;
+		}
+
+		// Set enhanced dependencies.
+		if (cleanOldDeps) childEnhToken.deps.clear();
+		EnhencedDep newDep = EnhencedDep.root();
+		childEnhToken.deps.add(newDep);
+		childEnhToken.depsBackbone = newDep;
+	}
+
+
+	// ===== Simple relinking. =================================================
+
+	/**
+	 * Changes the heads for all dependencies set (both base and enhanced) for
+	 * given childnode. It is expected that pmlaToEnhConll (if needed) and
+	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
+	 * tokens.
+	 * @param newParent	new parent
+	 * @param child		child node whose attachment should be changed
+	 */
+	public void changeHead (PmlANode newParent, PmlANode child)
+	{
+		Token rootBaseToken = pmlaToConll.get(newParent.getId());
+		Token rootEnhToken = pmlaToEnhConll.get(newParent.getId());
+		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
+		Token childBaseToken = pmlaToConll.get(child.getId());
+		Token childEnhToken = pmlaToEnhConll.get(child.getId());
+		if (childEnhToken == null) childEnhToken = childBaseToken;
+
+		// Set base dependency, but avoid circular dependencies.
+		// FIXME is "childBaseToken.head != null" ok?
+		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.head != null)
+			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
+
+		// Set enhanced dependencies, but avoid circular.
+		if (!childEnhToken.equals(rootEnhToken) && !childEnhToken.deps.isEmpty())
+		{
+			HashSet<EnhencedDep> newDeps = new HashSet<>();
+			for (EnhencedDep ed : childEnhToken.deps)
+				newDeps.add(new EnhencedDep(rootEnhToken, ed.role));
+			childEnhToken.deps = newDeps;
+			if (childEnhToken.depsBackbone != null)childEnhToken.depsBackbone =
+					new EnhencedDep(rootEnhToken, childEnhToken.depsBackbone.role);
+		}
+	}
+
+
+	// ===== Dependency related linking and relinking. =========================
+
 	/**
 	 * Make a list of given nodes children of the designated parent. Set UD
 	 * deprel, deps and deps backbone for each child. If designated parent is
 	 * included in child list node, circular dependency is not made, role is not
 	 * set.
-	 * Use for relinking phrasal constituents.
+	 * Use for relinking depdenencies.
 	 * @param newRoot		designated parent
 	 * @param children		list of child nodes
-	 * @param phraseNode    phrase data node from PML data, used for obtaining
-	 *                      correct UD role for children
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 *                                  done?
 	 */
-	public void relinkAllConstituents(
-			PmlANode newRoot, List<PmlANode> children, PmlANode phraseNode,
+	public void relinkAllDependants(
+			PmlANode oldRoot, PmlANode newRoot, List<PmlANode> children,
 			boolean addCoordPropCrosslinks)
 	{
 		if (children == null || children.isEmpty()) return;
-
 		// Process children.
 		for (PmlANode child : children)
-			relinkSingleConstituent(newRoot, child, phraseNode, addCoordPropCrosslinks);
+			relinkSingleDependant(oldRoot, newRoot, child, addCoordPropCrosslinks);
 	}
 
 	/**
 	 * Make a given node a child of the designated parent. Set UD role for the
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
-	 * Use for relinking phrasal constituents.
-	 * @param parent		designated parent
+	 * Use for relinking depdenencies.
+	 * @param oldParent		previous parent (must have the same corresponding
+	 *                      tokens as newParent)
+	 * @param newParent		designated parent (must have the same corresponding
+	 *                      tokens as oldParent)
 	 * @param child			designated child
-	 * @param phraseNode    phrase data node from PML data, used for obtaining
-	 *                      correct UD role for children
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
 	 */
-	public void relinkSingleConstituent(
-			PmlANode parent, PmlANode child, PmlANode phraseNode,
+	public void relinkSingleDependant(
+			PmlANode oldParent, PmlANode newParent, PmlANode child,
 			boolean addCoordPropCrosslinks)
 	{
-		if (child == null || child.isSameNode(parent)) return;
+		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
+		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
+		setBaseLink(newParent, child, baseRole);
+		setEnhLink(newParent, child, enhRole, true, true);
 
-		Tuple<UDv2Relations, String> childDeprel =
-				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
-		setLink(parent, child, childDeprel.first, childDeprel, true,true);
-		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(childDeprel.first))
-			addPhrasalConjunctCrosslinks(parent, child, phraseNode);
+		// To propagate conjuncts we need to travel through both
+		// coordinated alternatives of child and the new parent.
+		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
+		{
+			if (!oldParent.isSameNode(newParent))
+				addDependencyCrosslinks(oldParent, child);
+			addDependencyCrosslinks(newParent, child);
+		}
 	}
+
+	/**
+	 * Utility function for dependency transformation. When dependency link
+	 * between two nodes is transformed to UD, this can be used to add enhanced
+	 * links (conjunct propagation) between nodes that are coordinated with
+	 * parent or child.
+	 * Uses UDv2Relations.canPropagateAftercheck() to determine if role should
+	 * be made.
+	 * Use for relinking dependencies.
+	 * @param parent		phrase part to become dependency parent
+	 * @param child			phrase part to become dependency child
+	 */
+	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
+	{
+		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
+		{
+			PmlANode altParent = null;
+			if (pmlTree.getId().equals(altParentKey)) altParent = pmlTree;
+			else altParent = pmlTree.getDescendant(altParentKey);
+			PmlANode altChild = pmlTree.getDescendant(altChildKey);
+			// Role for ehnanced link is obtained by actual parent,
+			// actual child, but by "place-holder" role obtained
+			// from the original child.
+			Tuple<UDv2Relations, String> childDeprel =
+					DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
+			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
+				setEnhLink(altParent, altChild, childDeprel,false, false);
+		}
+	}
+
+
+	// ===== Constituency related linking & relinking. =========================
 
 	/**
 	 * For the given node find first children of the given type and make all
@@ -323,387 +673,53 @@ public class Sentence
 	}
 
 	/**
-	 * Set both base and enhanced dependency links for tokens coressponding to
-	 * the given PML nodes, but do not set circular dependencies. It is expected
-	 * that pmlaToEnhConll (if needed) and pmlaToConll contains links from given
-	 * PML nodes's IDs to corresponding tokens.
-	 * Return silently, if there was no token for given child node. Fail, if
-	 * there was no token for given parent node. This asymmetry is done because
-	 * inserted nodes have no corresponding UD token, and childless nodes should
-	 * just be ignored, while missing node in the middle of the tree, is a major
-	 * error.
-	 * TODO Maybe we should keep ignore-node list and check agains that?
-	 * @param parent 		PML node describing parent
-	 * @param child			PML node describing child
-	 * @param baseDep		label to be used for base dependency
-	 * @param enhancedDep	label to be used for enhanced dependency
-	 * @param setBackbone	if enhanced dependency is made, should it be set as
-	 *                      backbone for child node
-	 * @param cleanOldDeps	whether previous contents from deps field should be
-	 *                      removed
-	 */
-	public void setLink (PmlANode parent, PmlANode child, UDv2Relations baseDep,
-						 Tuple<UDv2Relations, String> enhancedDep,
-						 boolean setBackbone, boolean cleanOldDeps)
-	{
-		Token rootBaseToken = pmlaToConll.get(parent.getId());
-		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
-		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(child.getId());
-		Token childEnhToken = pmlaToEnhConll.get(child.getId());
-		if (childEnhToken == null) childEnhToken = childBaseToken;
-		if (childBaseToken == null) return;
-
-		// Set base dependency, but avoid circular dependencies.
-		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
-		{
-			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
-			childBaseToken.deprel = baseDep;
-		}
-
-		// Set enhanced dependencies, but avoid circular.
-		if (!childEnhToken.equals(rootEnhToken))
-		{
-			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
-			childEnhToken.deps.add(newDep);
-			if (setBackbone) childEnhToken.depsBackbone = newDep;
-		}
-	}
-
-	/**
-	 * setLink() + sets coordination propagation crosslinks from parent's
-	 * coordinated equivalents to child's coordinated equivalents. Can be used
-	 * only if all crosslinks have the same role as main enhanced dependency
-	 * link.
+	 * Make a list of given nodes children of the designated parent. Set UD
+	 * deprel, deps and deps backbone for each child. If designated parent is
+	 * included in child list node, circular dependency is not made, role is not
+	 * set.
 	 * Use for relinking phrasal constituents.
-	 * @param parent 		PML node describing parent
-	 * @param child			PML node describing child
-	 * @param baseDep		label to be used for base dependency
-	 * @param enhancedDep	label to be used for enhanced dependency and for
-	 *                      crosslinks
-	 * @param setBackbone	if enhanced dependency is made, should it be set as
-	 *                      backbone for child node
-	 * @param cleanOldDeps	whether previous contents from deps field should be
-	 *                      removed
+	 * @param newRoot		designated parent
+	 * @param children		list of child nodes
+	 * @param phraseNode    phrase data node from PML data, used for obtaining
+	 *                      correct UD role for children
+	 * @param addCoordPropCrosslinks    should also coordination propagation be
+	 *                                  done?
 	 */
-	public void setLinkAndCorsslinksPhrasal(
-			PmlANode parent, PmlANode child, UDv2Relations baseDep,
-			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
-			boolean cleanOldDeps)
+	public void relinkAllConstituents(
+			PmlANode newRoot, List<PmlANode> children, PmlANode phraseNode,
+			boolean addCoordPropCrosslinks)
 	{
-		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps);
-		addPhrasalConjunctCrosslinks(parent, child, enhancedDep);
-	}
+		if (children == null || children.isEmpty()) return;
 
-	/**
-	 * Set enhanced dependency link for tokens coressponding to the given PML
-	 * nodes, but do not set circular dependencies. It is expected that
-	 * pmlaToEnhConll (if needed) and pmlaToConll contains links from given
-	 * PML nodes's IDs to corresponding tokens.
-	 * @param parent 		PML node describing parent
-	 * @param child			PML node describing child
-	 * @param enhancedDep	label to be used for enhanced dependency
-	 * @param setBackbone	if enhanced dependency is made, should it be set as
-	 *                      backbone for child node
-	 * @param cleanOldDeps	whether previous contents from deps field should be
-	 *                      removed
-	 */
-	public void setEnhLink (PmlANode parent, PmlANode child,
-							Tuple<UDv2Relations, String> enhancedDep,
-						    boolean setBackbone, boolean cleanOldDeps)
-	{
-		Token rootBaseToken = pmlaToConll.get(parent.getId());
-		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
-		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(child.getId());
-		Token childEnhToken = pmlaToEnhConll.get(child.getId());
-		if (childEnhToken == null) childEnhToken = childBaseToken;
-
-		// Set enhanced dependencies, but avoid circular.
-		if (!childEnhToken.equals(rootEnhToken))
-		{
-			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
-			childEnhToken.deps.add(newDep);
-			if (setBackbone) childEnhToken.depsBackbone = newDep;
-		}
-	}
-
-	/**
-	 * Set basic dependency link for tokens coressponding to the given PML
-	 * nodes, but do not set circular dependencies and do not set anything as a
-	 * parent to decimal node. It is expected that pmlaToConll contains links
-	 * from given PML nodes's IDs to corresponding
-	 * tokens.
-	 * @param parent 		PML node describing parent
-	 * @param child			PML node describing child
-	 * @param baseDep	label to be used for enhanced dependency
-	 */
-	public void setBaseLink (PmlANode parent, PmlANode child, UDv2Relations baseDep)
-	{
-		Token rootBaseToken = pmlaToConll.get(parent.getId());
-		Token childBaseToken = pmlaToConll.get(child.getId());
-
-		// Set base dependency, but avoid circular dependencies.
-		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.idSub < 1)
-		{
-			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
-			childBaseToken.deprel = baseDep;
-		}
-	}
-
-	/**
-	 * Set both base and enhanced dependency links as root for token(s)
-	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
-	 * (if needed) and pmlaToConll contains links from given PML nodes's IDs to
-	 * corresponding tokens. This dependency is set as backbone by default.
-	 * @param node 			PML node to be made root
-	 * @param cleanOldDeps	whether previous contents from deps field should be
-	 *                      removed
-	 */
-	public void setRoot (PmlANode node, boolean cleanOldDeps)
-	{
-		Token childBaseToken = pmlaToConll.get(node.getId());
-		Token childEnhToken = pmlaToEnhConll.get(node.getId());
-		if (childEnhToken == null) childEnhToken = childBaseToken;
-
-		// Set base dependency.
-		if (childBaseToken.idSub < 1)
-		{
-			childBaseToken.head = Tuple.of("0", null);
-			childBaseToken.deprel = UDv2Relations.ROOT;
-		}
-
-		// Set enhanced dependencies.
-		if (cleanOldDeps) childEnhToken.deps.clear();
-		EnhencedDep newDep = EnhencedDep.root();
-		childEnhToken.deps.add(newDep);
-		childEnhToken.depsBackbone = newDep;
-	}
-	/**
-	 * Changes the heads for all dependencies set (both base and enhanced) for
-	 * given childnode. It is expected that pmlaToEnhConll (if needed) and
-	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
-	 * tokens.
-	 * @param newParent	new parent
-	 * @param child		child node whose attachment should be changed
-	 */
-	public void changeHead (PmlANode newParent, PmlANode child)
-	{
-		Token rootBaseToken = pmlaToConll.get(newParent.getId());
-		Token rootEnhToken = pmlaToEnhConll.get(newParent.getId());
-		if (rootEnhToken == null) rootEnhToken = rootBaseToken;
-		Token childBaseToken = pmlaToConll.get(child.getId());
-		Token childEnhToken = pmlaToEnhConll.get(child.getId());
-		if (childEnhToken == null) childEnhToken = childBaseToken;
-
-		// Set base dependency, but avoid circular dependencies.
-		// FIXME is "childBaseToken.head != null" ok?
-		if (!rootBaseToken.equals(childBaseToken) && childBaseToken.head != null)
-			childBaseToken.head = Tuple.of(rootBaseToken.getFirstColumn(), rootBaseToken);
-
-		// Set enhanced dependencies, but avoid circular.
-		if (!childEnhToken.equals(rootEnhToken) && !childEnhToken.deps.isEmpty())
-		{
-			HashSet<EnhencedDep> newDeps = new HashSet<>();
-			for (EnhencedDep ed : childEnhToken.deps)
-				newDeps.add(new EnhencedDep(rootEnhToken, ed.role));
-			childEnhToken.deps = newDeps;
-			if (childEnhToken.depsBackbone != null)childEnhToken.depsBackbone =
-					new EnhencedDep(rootEnhToken, childEnhToken.depsBackbone.role);
-		}
-	}
-
-	/**
-	 * Get the enhanced token assigned for this node. If there is no enhanced
-	 * token assigned, return assigned base token.
-	 * @param aNode	node whose token must be found
-	 * @return	enhanced token or base token, or null (in that order)
-	 */
-	public Token getEnhancedOrBaseToken(PmlANode aNode)
-	{
-		if (aNode == null) return null;
-		String id = aNode.getId();
-		if (id == null) return null;
-		Token resToken = pmlaToEnhConll.get(id);
-		if (resToken == null) resToken = pmlaToConll.get(id);
-		return resToken;
-	}
-
-	/**
-	 * For a given node either return IDs of the coordinated parts this node
-	 * represents (if this node is coordination) or node's ID otherwise. In case
-	 * a part is a coordination itself, its coordinated parts are included in
-	 * the result instead of part itself.
-	 * @param aNodeId	Id of node whose coordination parts are needed
-	 * @return	IDs of coordinated parts or node itself
-	 */
-	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
-	{
-		if (aNodeId == null) return null;
-		HashSet<String> res = new HashSet<>();
-		if (coordPartsUnder.containsKey(aNodeId))
-			res.addAll(coordPartsUnder.get(aNodeId));
-		else res.add(aNodeId);
-		return res;
-	}
-
-	/**
-	 * For a given node either return IDs of the coordinated parts this node
-	 * represents (if this node is coordination) or node's ID otherwise. In case
-	 * a part is a coordination itself, its coordinated parts are included in
-	 * the result instead of part itself.
-	 * @param aNode	node whose coordination parts are needed
-	 * @return	IDs of coordinated parts or node itself
-	 */
-	public HashSet<String> getCoordPartsUnderOrNode (PmlANode aNode)
-	{
-		return getCoordPartsUnderOrNode(aNode.getId());
-	}
-
-	/**
-	 * Create "empty" token for ellipsis.
-	 * @param aNode			PML A node, for which respective ellipsis token must
-	 *                      be made.
-	 * @param baseTokenId	ID for token after which the new token must be
-	 *                      inserted.
-	 * @param addNodeId		should the ID of the aNode be added to the MISC
-	 *                      field of the new token?
-	 */
-	public void createNewEnhEllipsisNode(
-			PmlANode aNode, String baseTokenId, boolean addNodeId)
-	{
-		String nodeId = aNode.getId();
-		String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
-
-		// Decimal token (reduction node) must be inserted after newRootToken.
-		Token newRootToken = pmlaToConll.get(baseTokenId);
-		int position = conll.indexOf(newRootToken) + 1;
-		while (position < conll.size() && newRootToken.idBegin == conll.get(position).idBegin)
-			position++;
-
-		// Fill the fields for the new token.
-		Token decimalToken = new Token();
-		decimalToken.idBegin = newRootToken.idBegin;
-		decimalToken.idSub = conll.get(position-1).idSub+1;
-		decimalToken.idEnd = decimalToken.idBegin;
-		decimalToken.xpostag = redXPostag;
-		decimalToken.form = aNode.getReductionFormPart();
-		if (decimalToken.xpostag == null || decimalToken.xpostag.isEmpty() || decimalToken.xpostag.equals("_"))
-			StandardLogger.l.doInsentenceWarning(String.format(
-					"Ellipsis node %s with reduction field \"%s\" has no tag.",
-					nodeId, aNode.getReduction()));
-		else
-		{
-			String assumedLvtbLemma = null;
-			if (decimalToken.form != null && !decimalToken.form.isEmpty())
-				assumedLvtbLemma = AnalyzerWrapper.getLemma(
-						decimalToken.form, decimalToken.xpostag);
-			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag);
-			decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag);
-			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag);
-		}
-		if (addNodeId && nodeId != null && !nodeId.isEmpty())
-		{
-			decimalToken.addMisc(MiscKeys.LVTB_NODE_ID, nodeId);
-			StandardLogger.l.addIdMapping(id, decimalToken.getFirstColumn(), nodeId);
-		}
-
-		// Add the new token to the sentence data structures.
-		conll.add(position, decimalToken);
-		pmlaToEnhConll.put(nodeId, decimalToken);
-	}
-
-	// ===== Dependency related. ===============================================
-
-	/**
-	 * Utility function for dependency transformation. When dependency link
-	 * between two nodes is transformed to UD, this can be used to add enhanced
-	 * links (conjunct propagation) between nodes that are coordinated with
-	 * parent or child.
-	 * Uses UDv2Relations.canPropagateAftercheck() to determine if role should
-	 * be made.
-	 * Use for relinking dependencies.
-	 * @param parent		phrase part to become dependency parent
-	 * @param child			phrase part to become dependency child
-	 */
-	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
-	{
-		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
-		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
-		{
-			PmlANode altParent = null;
-			if (pmlTree.getId().equals(altParentKey)) altParent = pmlTree;
-			else altParent = pmlTree.getDescendant(altParentKey);
-			PmlANode altChild = pmlTree.getDescendant(altChildKey);
-			// Role for ehnanced link is obtained by actual parent,
-			// actual child, but by "place-holder" role obtained
-			// from the original child.
-			Tuple<UDv2Relations, String> childDeprel =
-					DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
-			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
-				setEnhLink(altParent, altChild, childDeprel,false, false);
-		}
+		// Process children.
+		for (PmlANode child : children)
+			relinkSingleConstituent(newRoot, child, phraseNode, addCoordPropCrosslinks);
 	}
 
 	/**
 	 * Make a given node a child of the designated parent. Set UD role for the
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
-	 * Use for relinking depdenencies.
-	 * @param oldParent		previous parent (must have the same corresponding
-	 *                      tokens as newParent)
-	 * @param newParent		designated parent (must have the same corresponding
-	 *                      tokens as oldParent)
+	 * Use for relinking phrasal constituents.
+	 * @param parent		designated parent
 	 * @param child			designated child
+	 * @param phraseNode    phrase data node from PML data, used for obtaining
+	 *                      correct UD role for children
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
 	 */
-	public void relinkSingleDependant(
-			PmlANode oldParent, PmlANode newParent, PmlANode child,
+	public void relinkSingleConstituent(
+			PmlANode parent, PmlANode child, PmlANode phraseNode,
 			boolean addCoordPropCrosslinks)
 	{
-		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
-		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
-		setBaseLink(newParent, child, baseRole);
-		setEnhLink(newParent, child, enhRole, true, true);
+		if (child == null || child.isSameNode(parent)) return;
 
-		// To propagate conjuncts we need to travel through both
-		// coordinated alternatives of child and the new parent.
-		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-		{
-			if (!oldParent.isSameNode(newParent))
-				addDependencyCrosslinks(oldParent, child);
-			addDependencyCrosslinks(newParent, child);
-		}
+		Tuple<UDv2Relations, String> childDeprel =
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
+		setLink(parent, child, childDeprel.first, childDeprel, true,true);
+		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(childDeprel.first))
+			addPhrasalConjunctCrosslinks(parent, child, phraseNode);
 	}
-
-	/**
-	 * Make a list of given nodes children of the designated parent. Set UD
-	 * deprel, deps and deps backbone for each child. If designated parent is
-	 * included in child list node, circular dependency is not made, role is not
-	 * set.
-	 * Use for relinking depdenencies.
-	 * @param newRoot		designated parent
-	 * @param children		list of child nodes
-	 * @param addCoordPropCrosslinks    should also coordination propagation be
-	 *                                  done?
-	 */
-	public void relinkAllDependants(
-			PmlANode oldRoot, PmlANode newRoot, List<PmlANode> children,
-			boolean addCoordPropCrosslinks)
-	{
-		if (children == null || children.isEmpty()) return;
-		// Process children.
-		for (PmlANode child : children)
-			relinkSingleDependant(oldRoot, newRoot, child, addCoordPropCrosslinks);
-	}
-
-	// ===== Constituency related. =============================================
 
 	/**
 	 * Utility function for phrase transformation. When phrase phrase is
