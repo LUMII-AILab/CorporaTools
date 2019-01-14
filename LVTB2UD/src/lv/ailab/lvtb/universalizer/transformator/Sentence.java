@@ -63,9 +63,10 @@ public class Sentence
 
 	/**
 	 * Mapping from PML phrase node ID to constituent node ID that is root foor
-	 * corresponding dependency subtree. Populated during transformation.
+	 * corresponding dependency subtree (head constituent). Populated during
+	 * transformation.
 	 */
-	public HashMap<String, String> phraseRoots = new HashMap<>();
+	public HashMap<String, String> phraseHeadConstituents = new HashMap<>();
 
 	/**
 	 * Mapping from node ID to IDs of nodes that are subjects for this node.
@@ -236,6 +237,27 @@ public class Sentence
 		return getCoordPartsUnderOrNode(aNode.getId());
 	}
 
+	/**
+	 * For a certain node ID find if it is a phrase with known head constituent.
+	 * If it is, repeat the same with the found constituent node. Return a list
+	 * with the first given node and then all head constituents further found.
+	 * @param aNodeId	node whose head constituent (or constituent list) should
+	 *                  be found
+	 * @return	null, if argument is null; other wise list with given node, its
+	 * 			head constituent, its head constituent etc...
+	 */
+	public ArrayList<String> getHeadConstituentList(String aNodeId)
+	{
+		if (aNodeId == null) return null;
+		ArrayList<String> result = new ArrayList<>();
+		result.add(aNodeId);
+		while (phraseHeadConstituents.containsKey(aNodeId))
+		{
+			aNodeId = phraseHeadConstituents.get(aNodeId);
+			result.add(aNodeId);
+		}
+		return result;
+	}
 
 	// ===== Making new nodes. =================================================
 
@@ -563,8 +585,20 @@ public class Sentence
 	 */
 	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
 	{
-		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		// Get everything coordinated with parent.
+		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
+		HashSet<String> altParentKeys = new HashSet<>();
+		for (String tmpId : parentHeadConstitSeq)
+			altParentKeys.addAll(coordPartsUnder.get(tmpId));
+
+		// Get everything coordinated with child.
+		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
+		HashSet<String> altChildKeys = new HashSet<>();
+		for (String tmpId : childHeadConstitSeq)
+			altChildKeys.addAll(coordPartsUnder.get(tmpId));
+
+		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
 		{
 			PmlANode altParent = null;
@@ -738,8 +772,20 @@ public class Sentence
 	{
 		if (parent == null || child == null) return;
 
-		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		// Get everything coordinated with parent.
+		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
+		HashSet<String> altParentKeys = new HashSet<>();
+		for (String tmpId : parentHeadConstitSeq)
+			altParentKeys.addAll(coordPartsUnder.get(tmpId));
+
+		// Get everything coordinated with child.
+		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
+		HashSet<String> altChildKeys = new HashSet<>();
+		for (String tmpId : childHeadConstitSeq)
+			altChildKeys.addAll(coordPartsUnder.get(tmpId));
+
+		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys)
 			for (String altChildKey : altChildKeys)
 			{
@@ -773,8 +819,21 @@ public class Sentence
 		if (parent == null || child == null) return;
 		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
 		if (!UDv2Relations.canPropagateAftercheck(childDeprel.first)) return;
-		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+
+		// Get everything coordinated with parent.
+		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
+		HashSet<String> altParentKeys = new HashSet<>();
+		for (String tmpId : parentHeadConstitSeq)
+			altParentKeys.addAll(coordPartsUnder.get(tmpId));
+
+		// Get everything coordinated with child.
+		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
+		HashSet<String> altChildKeys = new HashSet<>();
+		for (String tmpId : childHeadConstitSeq)
+			altChildKeys.addAll(coordPartsUnder.get(tmpId));
+
+		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
 		{
 			PmlANode altParent = pmlTree.getDescendant(altParentKey);

@@ -32,7 +32,7 @@ public class PhraseTransformator
 		s = sent;
 	}
 	/**
-	 * Transform phrase to the UD structure and updates Sentence.phraseRoots
+	 * Transform phrase to the UD structure and updates Sentence.phraseHeadConstituents
 	 * variable.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
@@ -41,7 +41,7 @@ public class PhraseTransformator
 		PmlANode result = anyPhraseToUDLogic(phraseNode, addCoordPropCrosslinks);
 		String phraseId = phraseNode.getParent().getId();
 		String resultId = result.getId();
-		s.phraseRoots.put(phraseId, resultId);
+		s.phraseHeadConstituents.put(phraseId, resultId);
 		return result;
 	}
 	/**
