@@ -7,6 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lv.ailab.morphology:morphology:Release" level="project" />
+    <orderEntry type="library" name="morphology-2.1.1-SNAPSHOT" level="project" />
   </component>
 </module>
