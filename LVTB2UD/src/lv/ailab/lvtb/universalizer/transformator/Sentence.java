@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Sentence data and some generic often used UD subtree construction routines.
@@ -186,6 +187,24 @@ public class Sentence
 			}
 		}
 		coordPartsUnder.put(id, eqs);
+	}
+
+
+	// ===== After-transformation clean-ups. ===================================
+
+	public void removeDuplicateDeps()
+	{
+		for (Token t : conll)
+		{
+			HashSet<String> goodEnhDepHeads = new HashSet<>(t.deps.stream()
+					.filter(d -> (d.role != UDv2Relations.DEP))
+					.map(d -> d.headID).collect(Collectors.toSet()));
+			HashSet<EnhencedDep> noRoleEnhDepsToDelete = new HashSet<>(t.deps.stream()
+					.filter(d -> (d.role == UDv2Relations.DEP && goodEnhDepHeads.contains(d.headID)
+							&& (d.rolePostfix == null || d.rolePostfix.isEmpty())))
+					.collect(Collectors.toSet()));
+			t.deps.removeAll(noRoleEnhDepsToDelete);
+		}
 	}
 
 	// ===== Getters and elaborated getters. ===================================

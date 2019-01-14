@@ -48,8 +48,10 @@ public class TransformationParams
 	public Boolean UD_STANDARD_NULLNODES = true;
 
 	//== Enhanced.
+	// NB! Check this before each UD release!
 	public Boolean ADD_CONTROL_SUBJ = false;
 	public Boolean PROPAGATE_CONJUNCTS = true;
+	public Boolean CLEANUP_DUPLICATED_DEPS = false;
 
 	/**
 	 * Get default parameter set.

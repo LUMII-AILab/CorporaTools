@@ -31,7 +31,6 @@ public class NewTransformator
 		s.populateXPredSubjs();
 	}
 
-
 	public void transform()
 	{
 		PmlANode pmlPmc = s.pmlTree.getPhraseNode();
@@ -53,6 +52,13 @@ public class NewTransformator
 		s.setRoot(newRoot, true);
 		relinkDependents(s.pmlTree, newRoot, newRoot);
 	}
+
+	public void aftercare()
+	{
+		if (params.CLEANUP_DUPLICATED_DEPS) s.removeDuplicateDeps();
+	}
+
+	//=== Transformation details. ==============================================
 
 	protected void transformSubtree(PmlANode aNode)
 	{
