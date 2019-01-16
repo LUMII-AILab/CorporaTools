@@ -5,6 +5,7 @@ import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
+import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.ArrayList;
@@ -648,9 +649,8 @@ public class PhraseTransformator
 		{
 			String auxLemma = lastAux.getM().getLemma();
 			String auxRedLemma = lastAux.getReductionLemma();
-			if (auxRedLemma == null) auxRedLemma = ""; // So regexp matching would not fail.
-			if (!auxLemma.matches("(ne)?(būt|tikt|tapt|kļūt)") &&
-					!auxRedLemma.matches("(ne)?(būt|tikt|tapt|kļūt)"))
+			if (!MorphoTransformator.isTrueAux(auxLemma) &&
+					!MorphoTransformator.isTrueAux(auxRedLemma))
 				StandardLogger.l.doInsentenceWarning(String.format(
 						"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
 						xNode.getParent().getId(), auxLemma));
@@ -659,22 +659,13 @@ public class PhraseTransformator
 		PmlMNode lastAuxM = lastAux.getM();
 		String auxLemma = lastAuxM == null ? null : lastAuxM.getLemma();
 		String auxRedLemma = lastAux.getReductionLemma();
-		boolean ultimateAux =
-				auxLemma != null && auxLemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
-				auxRedLemma != null && auxRedLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
+		boolean ultimateAux = MorphoTransformator.isTrueAux(auxLemma)
+				|| MorphoTransformator.isTrueAux(auxRedLemma);
 
 		PmlANode newRoot = basElem;
 		if (!ultimateAux) newRoot = lastAux;
 		List<PmlANode> children = xNode.getChildren();
 		s.relinkAllConstituents(newRoot, children, xNode, addCoordPropCrosslinks);
-
-		/* //Not needed as s.relinkAllConstituents() should set the correct roles.
-		if (passive && ultimateAux)
-			s.setLink(newRoot, lastAux, UDv2Relations.AUX_PASS,
-					Tuple.of(UDv2Relations.AUX_PASS, null), true, true);
-		if (nominal && ultimateAux)
-			s.setLink(newRoot, lastAux, UDv2Relations.COP,
-					Tuple.of(UDv2Relations.COP, null), true, true);*/
 		return newRoot;
 	}
 }

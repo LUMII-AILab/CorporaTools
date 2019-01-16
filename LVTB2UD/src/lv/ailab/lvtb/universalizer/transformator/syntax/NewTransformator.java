@@ -28,7 +28,18 @@ public class NewTransformator
 	public void prepare()
 	{
 		s.populateCoordPartsUnder();
-		s.populateXPredSubjs();
+		s.populateSubjectMap();
+		if (params.DEBUG)
+		{
+			System.out.println("Subject map: ");
+			System.out.println(s.subj2gov.keySet().stream().sorted()
+					.map(id -> "\t" + id + " -> " + s.subj2gov.get(id).stream().sorted().reduce((a, b) -> a + ", " + b).orElse("NULL"))
+					.reduce((a, b) -> a + "\n" + b).orElse("EMPTY"));
+			System.out.println("Coordination map: ");
+			System.out.println(s.coordPartsUnder.keySet().stream().sorted()
+					.map(id -> "\t" + id + " -> " + s.coordPartsUnder.get(id).stream().sorted().reduce((a, b) -> a + ", " + b).orElse("NULL"))
+					.reduce((a, b) -> a + "\n" + b).orElse("EMPTY"));
+		}
 	}
 
 	public void transform()
@@ -135,6 +146,9 @@ public class NewTransformator
 		//// Process dependants (except the newRoot).
 		relinkDependents(aNode, newBasicRoot, newEnhancedRoot);
 
+		// TODO: where?
+		//if (params.ADD_CONTROL_SUBJ) s.???(???, params.PROPAGATE_CONJUNCTS);
+
 	}
 
 	/**
@@ -188,7 +202,9 @@ public class NewTransformator
 					parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
-		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS);
+		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS, params.ADD_CONTROL_SUBJ);
+
+		//if (params.ADD_CONTROL_SUBJ) s.???(???, params.PROPAGATE_CONJUNCTS);
 	}
 
 }

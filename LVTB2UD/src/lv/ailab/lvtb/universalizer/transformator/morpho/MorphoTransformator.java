@@ -4,18 +4,17 @@ import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.MiscValues;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.pml.LvtbFormChange;
-import lv.ailab.lvtb.universalizer.pml.PmlANode;
-import lv.ailab.lvtb.universalizer.pml.PmlMNode;
-import lv.ailab.lvtb.universalizer.pml.PmlWNode;
+import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlIdUtils;
-import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -671,5 +670,15 @@ public class MorphoTransformator {
 			t.upostag = UPosLogic.getPostsyntUPosTag(t);
 			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll);
 		}
+	}
+
+	/**
+	 * Return true if lemma matches one of for "standard" auxiliary verbs:
+	 * būt, tikt, tapt, kļūt. For legacy reasons also mach negated lemmas.
+	 */
+	public static boolean isTrueAux (String lemma)
+	{
+		if (lemma == null) return false;
+		return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)");
 	}
 }

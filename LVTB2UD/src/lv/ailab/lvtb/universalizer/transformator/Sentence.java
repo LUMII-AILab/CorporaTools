@@ -70,9 +70,10 @@ public class Sentence
 	public HashMap<String, String> phraseHeadConstituents = new HashMap<>();
 
 	/**
-	 * Mapping from node ID to IDs of nodes that are subjects for this node.
+	 * Mapping from subject node ID to IDs of nodes that are their enhanced
+	 * predicates.
 	 */
-	public HashMap<String, HashSet<String>> subjects = new HashMap<>();
+	public HashMap<String, HashSet<String>> subj2gov = new HashMap<>();
 
 	public Sentence(PmlANode pmlTree)
 	{
@@ -97,26 +98,33 @@ public class Sentence
 
 	// ===== Pre-transformation preparations. ==================================
 
-	public void populateXPredSubjs()
+	public void populateSubjectMap()
 	{
-		subjects = new HashMap<>();
-		populateXPredSubjs(pmlTree);
+		HashMap<String, HashSet<String>> gov2subj = getGov2subj(pmlTree);
+		for (String node : gov2subj.keySet()) for (String subj : gov2subj.get(node))
+		{
+			HashSet<String> tmp = subj2gov.get(subj);
+			if (tmp == null) tmp = new HashSet<>();
+			tmp.add(node);
+			subj2gov.put(subj, tmp);
+		}
 	}
 
-	protected void populateXPredSubjs(PmlANode aNode)
+	protected HashMap<String, HashSet<String>> getGov2subj(PmlANode aNode)
 	{
-		if (aNode == null) return;
+		if (aNode == null) return null;
 		String id = aNode.getId();
+		HashMap<String, HashSet<String>> result = new HashMap<>();
 
 		// Update coresponding subject list with dependant subjects.
-		HashSet<String> collectedSubjs = subjects.get(id);
+		HashSet<String> collectedSubjs = result.get(id);
 		if (collectedSubjs == null) collectedSubjs = new HashSet<>();
 		List<PmlANode> subjs = aNode.getChildren(LvtbRoles.SUBJ);
 		if (subjs != null) for (PmlANode s : subjs)
 			collectedSubjs.add(s.getId());
-		subjects.put(id, collectedSubjs);
+		if (!collectedSubjs.isEmpty()) result.put(id, collectedSubjs);
 
-		// Fid xPred and update their parts' subject lists.
+		// Find xPred and update their parts' subject lists.
 		PmlANode phrase = aNode.getPhraseNode();
 		List<PmlANode> phraseParts = null;
 		if (phrase != null)
@@ -125,21 +133,28 @@ public class Sentence
 			if (LvtbXTypes.XPRED.equals(phrase.getPhraseType()))
 				for (PmlANode phrasePart : phraseParts)
 			{
+				String partRole = phrasePart.getRole();
+				if (LvtbRoles.AUXVERB.equals(partRole)
+						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(phrasePart.getM().getLemma()))
+							|| MorphoTransformator.isTrueAux(phrasePart.getReductionLemma())))
+					continue;
+
 				String partId = phrasePart.getId();
-				HashSet<String> collectedPartSubjs = subjects.get(partId);
+				HashSet<String> collectedPartSubjs = result.get(partId);
 				if (collectedPartSubjs == null)
 					collectedPartSubjs = new HashSet<>();
 				collectedPartSubjs.addAll(collectedSubjs);
-				subjects.put(partId, collectedPartSubjs);
+				if (!collectedPartSubjs.isEmpty()) result.put(partId, collectedPartSubjs);
 			}
 		}
 
 		// Posprocess children.
 		List<PmlANode> dependants = aNode.getChildren();
 		if (dependants != null) for (PmlANode dependant : dependants)
-			populateXPredSubjs(dependant);
+			getGov2subj(dependant);
 		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
-			populateXPredSubjs(phrasePart);
+			getGov2subj(phrasePart);
+		return result;
 	}
 
 	public void populateCoordPartsUnder()
@@ -517,7 +532,7 @@ public class Sentence
 			boolean cleanOldDeps)
 	{
 		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps);
-		addPhrasalConjunctCrosslinks(parent, child, enhancedDep);
+		addFixedRoleCrosslinks(parent, child, enhancedDep);
 	}
 
 	/**
@@ -603,12 +618,42 @@ public class Sentence
 	 */
 	public void relinkAllDependants(
 			PmlANode parent, List<PmlANode> children,
-			boolean addCoordPropCrosslinks)
+			boolean addCoordPropCrosslinks, boolean addControledSubjects)
 	{
 		if (children == null || children.isEmpty()) return;
 		// Process children.
 		for (PmlANode child : children)
+		{
 			relinkSingleDependant(parent, child, addCoordPropCrosslinks);
+			if (addControledSubjects)
+				addSubjectsControlers(child, addCoordPropCrosslinks);
+		}
+	}
+
+	/**
+	 * Based on previously populated subject map add propagated subjects
+	 * for given node.
+	 * @param subject		subject node from which controll links sould be made
+	 * @param addCoordPropCrosslinks    should also coordination propagation be
+	 * 	 *                              done?
+	 */
+	public void addSubjectsControlers(
+			PmlANode subject, boolean addCoordPropCrosslinks)
+	{
+		if (subject == null) return;
+		String subjectId = subject.getId();
+		HashSet <String> parentIds = subj2gov.get(subjectId);
+		if (parentIds == null || parentIds.isEmpty()) return;
+
+		for (String parentId : parentIds)
+		{
+			PmlANode parent = pmlTree.getDescendant(parentId);
+			Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(
+					subject, parent, LvtbRoles.SUBJ);
+			setEnhLink(parent, subject, enhRole, false, false);
+			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
+				addFixedRoleCrosslinks(parent, subject, enhRole);
+		}
 	}
 
 	/**
@@ -622,7 +667,7 @@ public class Sentence
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
 	 */
-	public void relinkSingleDependant(
+	protected void relinkSingleDependant(
 			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks)
 	{
 		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
@@ -675,7 +720,6 @@ public class Sentence
 			}
 		}
 	}
-
 
 	// ===== Constituency related linking & relinking. =========================
 
@@ -849,22 +893,23 @@ public class Sentence
 			}
 	}
 
+	// ===== Utility for both donstituency and dependency related linking &
+	// relinking. ==============================================================
+
 	/**
-	 * Utility function for phrase transformation. When phrase phrase is
-	 * transformed to UD and a dependency link between two constituents is
-	 * established, this can be used to add enhanced links (conjunct propagation)
-	 * between nodes that are coordinated with parent or child.
+	 * Utility function for either phrase or dependency transformation - this
+	 * can be used to add enhanced links (conjunct propagation) between nodes
+	 * that are coordinated with parent or child.
 	 * NB. Use this sparingly as this function assumes that all crosslinks have the
 	 * same role!
 	 * Uses both UDv2Relations.canPropagatePrecheck() and
 	 * UDv2Relations.canPropagateAftercheck() to determine if role should be
 	 * made.
-	 * Use for relinking phrasal constituents.
-	 * @param parent		phrase part to become dependency parent
-	 * @param child			phrase part to become dependency child
-	 * @param childDeprel	fixed role for all crosslinx
+	 * @param parent		node to become dependency parent
+	 * @param child			node to become dependency child
+	 * @param childDeprel	fixed role for all crosslinks
 	 */
-	protected void addPhrasalConjunctCrosslinks (
+	protected void addFixedRoleCrosslinks(
 			PmlANode parent, PmlANode child, Tuple<UDv2Relations, String> childDeprel)
 	{
 		if (parent == null || child == null) return;
@@ -881,5 +926,4 @@ public class Sentence
 			setEnhLink(altParent, altChild, childDeprel,false, false);
 		}
 	}
-
 }
