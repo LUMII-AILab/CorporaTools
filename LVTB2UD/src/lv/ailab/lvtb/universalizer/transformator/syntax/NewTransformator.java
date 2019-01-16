@@ -125,8 +125,6 @@ public class NewTransformator
 			if (redXPostag.matches("v..([^p].*|p[du].*)") || ! params.UD_STANDARD_NULLNODES)
 				s.createNewEnhEllipsisNode(aNode, newBasicRoot.getId(), params.ADD_NODE_IDS);
 
-			// TODO: isn't this repetative?
-			//transformSubtree(newBasicRoot);
 		}
 
 		//// Add information about new subroot in the result structure.
@@ -166,7 +164,7 @@ public class NewTransformator
 
 	/**
 	 * Helper method: fill in DEPREL and HEAD fields in CoNLL-U table for PML
-	 * dependency children of the given node. If the newRoot is one of the
+	 * dependency children of the given node. If the UD root is one of the
 	 * dependents, then it must be processed before invoking this method.
 	 * To use this function, previous should have set that conllu tokens who
 	 * correspond old and new parent are the same.
@@ -190,9 +188,7 @@ public class NewTransformator
 					parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
-		// TODO Pašlaik novelk enh linkus no vecās un jaunās saknes, bet ja nu pa vidu arī kaut kas ir?
-		// Ko darīt ar tiem?
-		s.relinkAllDependants(parentANode, newBaseDepRoot, pmlDependents, params.PROPAGATE_CONJUNCTS);
+		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS);
 	}
 
 }

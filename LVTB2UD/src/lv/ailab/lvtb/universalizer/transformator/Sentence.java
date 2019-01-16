@@ -192,6 +192,7 @@ public class Sentence
 
 	// ===== After-transformation clean-ups. ===================================
 
+	@Deprecated // Properly constructed algorithm should not make those.
 	public void removeDuplicateDeps()
 	{
 		for (Token t : conll)
@@ -254,6 +255,56 @@ public class Sentence
 	public HashSet<String> getCoordPartsUnderOrNode (PmlANode aNode)
 	{
 		return getCoordPartsUnderOrNode(aNode.getId());
+	}
+
+	/**
+	 * For a certain node ID find its head constituent list and then find all
+	 * coordinated parts for each node in that list. Iterate this process
+	 * until nothing new can be found.
+	 * @param aNodeId				node ID to indicate node
+	 * @param includeSelfCoordParts	should the result include coordPartsUnder
+	 *                              for given node?
+	 * @return
+	 */
+	public HashSet<String> getAllAlternatives(String aNodeId, boolean includeSelfCoordParts)
+	{
+		if (aNodeId == null) return null;
+		HashSet<String> result = getCoordPartsUnderHeadConstits1Lvl(aNodeId, includeSelfCoordParts);
+		if (!includeSelfCoordParts)
+			result.remove(aNodeId);
+		int oldSize = 1;
+		while (oldSize < result.size())
+		{
+			oldSize = result.size();
+			HashSet<String> newResult = new HashSet<>();
+			for (String tmpId : result)
+				newResult.addAll(getCoordPartsUnderHeadConstits1Lvl(tmpId, true));
+			result = newResult;
+		}
+		result.add(aNodeId);
+		return result;
+	}
+
+	/**
+	 * For a certain node ID find its head constituent list and then find all
+	 * coordinated parts for each node in that list. Do not include coordinated
+	 * analogues of the given node.
+	 * @param aNodeId				node ID to indicate node
+	 * @param includeSelfCoordParts	should the result include coordPartsUnder
+	 *                              for given node?
+	 * @return
+	 */
+	protected HashSet<String> getCoordPartsUnderHeadConstits1Lvl(
+			String aNodeId, boolean includeSelfCoordParts)
+	{
+		if (aNodeId == null) return null;
+		ArrayList<String> headConstituentList = this.getHeadConstituentList(aNodeId);
+		HashSet<String> result = new HashSet<>();
+		result.add(aNodeId);
+		if (!includeSelfCoordParts) headConstituentList.remove(aNodeId);
+		for (String headConstituent : headConstituentList)
+			result.addAll(getCoordPartsUnderOrNode(headConstituent));
+		return result;
 	}
 
 	/**
@@ -539,24 +590,25 @@ public class Sentence
 	// ===== Dependency related linking and relinking. =========================
 
 	/**
-	 * Make a list of given nodes children of the designated parent. Set UD
+	 * Make a list of given nodes UD dependents of the designated parent. Set UD
 	 * deprel, deps and deps backbone for each child. If designated parent is
 	 * included in child list node, circular dependency is not made, role is not
 	 * set.
 	 * Use for relinking depdenencies.
-	 * @param newRoot		designated parent
-	 * @param children		list of child nodes
+	 * @param parent	PML parent node in the hybrid tree (in case of
+	 * 	 *              phrase nodes, corresponding tokens must be set correctly)
+	 * @param children	list of child nodes
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 *                                  done?
 	 */
 	public void relinkAllDependants(
-			PmlANode oldRoot, PmlANode newRoot, List<PmlANode> children,
+			PmlANode parent, List<PmlANode> children,
 			boolean addCoordPropCrosslinks)
 	{
 		if (children == null || children.isEmpty()) return;
 		// Process children.
 		for (PmlANode child : children)
-			relinkSingleDependant(oldRoot, newRoot, child, addCoordPropCrosslinks);
+			relinkSingleDependant(parent, child, addCoordPropCrosslinks);
 	}
 
 	/**
@@ -564,31 +616,21 @@ public class Sentence
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
 	 * Use for relinking depdenencies.
-	 * @param oldParent		previous parent (must have the same corresponding
-	 *                      tokens as newParent)
-	 * @param newParent		designated parent (must have the same corresponding
-	 *                      tokens as oldParent)
-	 * @param child			designated child
+	 * @param parent	PML parent node in the hybrid tree (in case of
+	 *                  phrase nodes, corresponding tokens must be set correctly)
+	 * @param child		designated child
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
 	 */
 	public void relinkSingleDependant(
-			PmlANode oldParent, PmlANode newParent, PmlANode child,
-			boolean addCoordPropCrosslinks)
+			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks)
 	{
 		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
 		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
-		setBaseLink(newParent, child, baseRole);
-		setEnhLink(newParent, child, enhRole, true, true);
-
-		// To propagate conjuncts we need to travel through both
-		// coordinated alternatives of child and the new parent.
+		setBaseLink(parent, child, baseRole);
+		setEnhLink(parent, child, enhRole, true, true);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-		{
-			if (!oldParent.isSameNode(newParent))
-				addDependencyCrosslinks(oldParent, child);
-			addDependencyCrosslinks(newParent, child);
-		}
+			addDependencyCrosslinks(parent, child);
 	}
 
 	/**
@@ -604,20 +646,8 @@ public class Sentence
 	 */
 	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
 	{
-		// Get everything coordinated with parent.
-		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
-		HashSet<String> altParentKeys = new HashSet<>();
-		for (String tmpId : parentHeadConstitSeq)
-			altParentKeys.addAll(coordPartsUnder.get(tmpId));
-
-		// Get everything coordinated with child.
-		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
-		HashSet<String> altChildKeys = new HashSet<>();
-		for (String tmpId : childHeadConstitSeq)
-			altChildKeys.addAll(coordPartsUnder.get(tmpId));
-
-		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
+		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
+		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
 		{
 			PmlANode altParent = null;
@@ -630,7 +660,19 @@ public class Sentence
 			Tuple<UDv2Relations, String> childDeprel =
 					DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
 			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
-				setEnhLink(altParent, altChild, childDeprel,false, false);
+			{
+				HashSet<String> altParentKeys2 = getAllAlternatives(altParentKey, false);
+				HashSet<String> altChildKeys2 = getAllAlternatives(altChildKey, false);
+				for (String altParentKey2 : altParentKeys2) for (String altChildKey2 : altChildKeys2)
+				{
+					PmlANode altParent2 = null;
+					if (pmlTree.getId().equals(altParentKey2))
+						altParent2 = pmlTree;
+					else altParent2 = pmlTree.getDescendant(altParentKey2);
+					PmlANode altChild2 = pmlTree.getDescendant(altChildKey2);
+					setEnhLink(altParent2, altChild2, childDeprel, false, false);
+				}
+			}
 		}
 	}
 
@@ -790,30 +832,20 @@ public class Sentence
 			PmlANode parent, PmlANode child, PmlANode phraseNode)
 	{
 		if (parent == null || child == null) return;
+		Tuple<UDv2Relations, String> childDeprel =
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
+		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
+		if (!UDv2Relations.canPropagateAftercheck(childDeprel.first)) return;
 
-		// Get everything coordinated with parent.
-		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
-		HashSet<String> altParentKeys = new HashSet<>();
-		for (String tmpId : parentHeadConstitSeq)
-			altParentKeys.addAll(coordPartsUnder.get(tmpId));
+		HashSet<String> altParentKeys = getAllAlternatives(parent.getId(), true);
+		HashSet<String> altChildKeys = getAllAlternatives(child.getId(), true);
 
-		// Get everything coordinated with child.
-		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
-		HashSet<String> altChildKeys = new HashSet<>();
-		for (String tmpId : childHeadConstitSeq)
-			altChildKeys.addAll(coordPartsUnder.get(tmpId));
-
-		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys)
 			for (String altChildKey : altChildKeys)
 			{
 				PmlANode altParent = pmlTree.getDescendant(altParentKey);
 				PmlANode altChild = pmlTree.getDescendant(altChildKey);
-				Tuple<UDv2Relations, String> childDeprel =
-						PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
-				if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
-					setEnhLink(altParent, altChild, childDeprel,false, false);
+				setEnhLink(altParent, altChild, childDeprel, false, false);
 			}
 	}
 
@@ -839,20 +871,9 @@ public class Sentence
 		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
 		if (!UDv2Relations.canPropagateAftercheck(childDeprel.first)) return;
 
-		// Get everything coordinated with parent.
-		ArrayList<String> parentHeadConstitSeq = getHeadConstituentList(parent.getId());
-		HashSet<String> altParentKeys = new HashSet<>();
-		for (String tmpId : parentHeadConstitSeq)
-			altParentKeys.addAll(coordPartsUnder.get(tmpId));
+		HashSet<String> altParentKeys = getAllAlternatives(parent.getId(), true);
+		HashSet<String> altChildKeys = getAllAlternatives(child.getId(), true);
 
-		// Get everything coordinated with child.
-		ArrayList<String> childHeadConstitSeq = getHeadConstituentList(child.getId());
-		HashSet<String> altChildKeys = new HashSet<>();
-		for (String tmpId : childHeadConstitSeq)
-			altChildKeys.addAll(coordPartsUnder.get(tmpId));
-
-		//HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
-		//HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
 		{
 			PmlANode altParent = pmlTree.getDescendant(altParentKey);
