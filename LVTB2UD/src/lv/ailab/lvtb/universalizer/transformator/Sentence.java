@@ -100,7 +100,8 @@ public class Sentence
 
 	public void populateSubjectMap()
 	{
-		HashMap<String, HashSet<String>> gov2subj = getGov2subj(pmlTree);
+		HashMap<String, HashSet<String>> gov2subj = new HashMap<>();
+		gov2subj = getGov2subj(pmlTree, gov2subj);
 		for (String node : gov2subj.keySet()) for (String subj : gov2subj.get(node))
 		{
 			HashSet<String> tmp = subj2gov.get(subj);
@@ -110,19 +111,19 @@ public class Sentence
 		}
 	}
 
-	protected HashMap<String, HashSet<String>> getGov2subj(PmlANode aNode)
+	protected HashMap<String, HashSet<String>> getGov2subj(PmlANode aNode, HashMap<String, HashSet<String>> resultAccumulator)
 	{
 		if (aNode == null) return null;
+		if (resultAccumulator == null) resultAccumulator = new HashMap<>();
 		String id = aNode.getId();
-		HashMap<String, HashSet<String>> result = new HashMap<>();
 
 		// Update coresponding subject list with dependant subjects.
-		HashSet<String> collectedSubjs = result.get(id);
+		HashSet<String> collectedSubjs = resultAccumulator.get(id);
 		if (collectedSubjs == null) collectedSubjs = new HashSet<>();
 		List<PmlANode> subjs = aNode.getChildren(LvtbRoles.SUBJ);
 		if (subjs != null) for (PmlANode s : subjs)
 			collectedSubjs.add(s.getId());
-		if (!collectedSubjs.isEmpty()) result.put(id, collectedSubjs);
+		if (!collectedSubjs.isEmpty()) resultAccumulator.put(id, collectedSubjs);
 
 		// Find xPred and update their parts' subject lists.
 		PmlANode phrase = aNode.getPhraseNode();
@@ -140,21 +141,21 @@ public class Sentence
 					continue;
 
 				String partId = phrasePart.getId();
-				HashSet<String> collectedPartSubjs = result.get(partId);
+				HashSet<String> collectedPartSubjs = resultAccumulator.get(partId);
 				if (collectedPartSubjs == null)
 					collectedPartSubjs = new HashSet<>();
 				collectedPartSubjs.addAll(collectedSubjs);
-				if (!collectedPartSubjs.isEmpty()) result.put(partId, collectedPartSubjs);
+				if (!collectedPartSubjs.isEmpty()) resultAccumulator.put(partId, collectedPartSubjs);
 			}
 		}
 
 		// Posprocess children.
 		List<PmlANode> dependants = aNode.getChildren();
 		if (dependants != null) for (PmlANode dependant : dependants)
-			getGov2subj(dependant);
+			getGov2subj(dependant, resultAccumulator);
 		if (phraseParts != null) for (PmlANode phrasePart : phraseParts)
-			getGov2subj(phrasePart);
-		return result;
+			getGov2subj(phrasePart, resultAccumulator);
+		return resultAccumulator;
 	}
 
 	public void populateCoordPartsUnder()
