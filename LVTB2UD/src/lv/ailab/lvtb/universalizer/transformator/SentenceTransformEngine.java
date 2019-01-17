@@ -3,7 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.syntax.EllipsisPreprocessor;
-import lv.ailab.lvtb.universalizer.transformator.syntax.NewTransformator;
+import lv.ailab.lvtb.universalizer.transformator.syntax.NewSyntaxTransformator;
 
 /**
  * Logic for transforming LVTB sentence annotations to UD.
@@ -21,7 +21,7 @@ public class SentenceTransformEngine
 	public Sentence s;
 	protected MorphoTransformator morphoTransf;
 	protected EllipsisPreprocessor ellipPreproc;
-	protected NewTransformator syntTransf;
+	protected NewSyntaxTransformator syntTransf;
 	protected TransformationParams params;
 
 	public SentenceTransformEngine(
@@ -31,7 +31,7 @@ public class SentenceTransformEngine
 		this.params = params;
 		ellipPreproc = new EllipsisPreprocessor(s);
 		morphoTransf = new MorphoTransformator(s, params);
-		syntTransf = new NewTransformator(s, params);
+		syntTransf = new NewSyntaxTransformator(s, params);
 	}
 
 	/**

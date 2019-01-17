@@ -7,7 +7,7 @@ import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
 
 import java.util.List;
 
-public class NewTransformator
+public class NewSyntaxTransformator
 {
 	/**
 	 * In this sentence all the transformations are carried out.
@@ -18,7 +18,7 @@ public class NewTransformator
 	protected PhraseTransformator pTransf;
 
 
-	public NewTransformator(Sentence sent, TransformationParams params)
+	public NewSyntaxTransformator(Sentence sent, TransformationParams params)
 	{
 		s = sent;
 		this.params = params;

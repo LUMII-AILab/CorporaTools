@@ -50,7 +50,7 @@ public class TransformationParams
 	//== Enhanced.
 	// NB! Check this before each UD release!
 	public Boolean ADD_CONTROL_SUBJ = true;
-	public Boolean PROPAGATE_CONJUNCTS = false;
+	public Boolean PROPAGATE_CONJUNCTS = true;
 	@Deprecated // Properly constructed algorithm should not make those.
 	public Boolean CLEANUP_DUPLICATED_DEPS = false;
 
