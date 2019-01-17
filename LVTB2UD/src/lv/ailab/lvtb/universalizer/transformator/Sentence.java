@@ -70,8 +70,10 @@ public class Sentence
 	public HashMap<String, String> phraseHeadConstituents = new HashMap<>();
 
 	/**
-	 * Mapping from subject node ID to IDs of nodes that are their enhanced
-	 * predicates.
+	 * Mapping (multimap) between controled and rised subjects and nodes they
+	 * should be linked to. Indexed by subject node IDs. Does not include
+	 * standard subject links, i.e. cases when subject is directly dependent
+	 * from the node. This structure is updated also during transformation.
 	 */
 	public HashMap<String, HashSet<String>> subj2gov = new HashMap<>();
 
@@ -98,6 +100,11 @@ public class Sentence
 
 	// ===== Pre-transformation preparations. ==================================
 
+	/**
+	 * This populates subj2gov map by collecting controlled subjects that are
+	 * not direct dependents of predicate. Also links to auxVerb labeled xPred
+	 * parts with true auxiliary verb lemma not collected.
+	 */
 	public void populateSubjectMap()
 	{
 		HashMap<String, HashSet<String>> gov2subj = new HashMap<>();
@@ -106,11 +113,20 @@ public class Sentence
 		{
 			HashSet<String> tmp = subj2gov.get(subj);
 			if (tmp == null) tmp = new HashSet<>();
-			tmp.add(node);
-			subj2gov.put(subj, tmp);
+			if (!node.equals(pmlTree.getDescendant(subj).getParent().getId()))
+				tmp.add(node);
+			if (!tmp.isEmpty()) subj2gov.put(subj, tmp);
 		}
 	}
 
+	/**
+	 * This collects everything like controlled or direct subject, excluding
+	 * links to auxVerb labeled xPred parts with true auxiliary verb lemma.
+	 * @param aNode				node whose subtree should be surveyed
+	 * @param resultAccumulator	result accumulator for recursive function
+	 * @return	multimapping from potential subject parent node IDs to subject
+	 * 			node IDs.
+	 */
 	protected HashMap<String, HashSet<String>> getGov2subj(PmlANode aNode, HashMap<String, HashSet<String>> resultAccumulator)
 	{
 		if (aNode == null) return null;
@@ -134,6 +150,7 @@ public class Sentence
 			if (LvtbXTypes.XPRED.equals(phrase.getPhraseType()))
 				for (PmlANode phrasePart : phraseParts)
 			{
+				// Do not add standard auxiliaries used as aux.
 				String partRole = phrasePart.getRole();
 				if (LvtbRoles.AUXVERB.equals(partRole)
 						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(phrasePart.getM().getLemma()))
@@ -926,5 +943,33 @@ public class Sentence
 			PmlANode altChild = pmlTree.getDescendant(altChildKey);
 			setEnhLink(altParent, altChild, childDeprel,false, false);
 		}
+	}
+
+	// ===== Other. ============================================================
+
+	public boolean removeFromSubjectMap(String subjectId, String governorId)
+	{
+		if (!subj2gov.containsKey(subjectId)) return false;
+		HashSet<String> tmp = subj2gov.get(subjectId);
+		if (!tmp.contains(governorId)) return false;
+		tmp.remove(governorId);
+		if (tmp.isEmpty()) subj2gov.remove(subjectId);
+		else subj2gov.put(subjectId, tmp);
+		return true;
+	}
+
+	public boolean removeGovFromSubjectMap(String governorId)
+	{
+		int removed = 0;
+		for (String subjectId : subj2gov.keySet())
+		{
+			HashSet<String> tmp = subj2gov.get(subjectId);
+			if (!tmp.contains(governorId)) continue;
+			tmp.remove(governorId);
+			if (tmp.isEmpty()) subj2gov.remove(subjectId);
+			else subj2gov.put(subjectId, tmp);
+			removed++;
+		}
+		return removed > 0;
 	}
 }

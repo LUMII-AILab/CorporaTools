@@ -592,16 +592,25 @@ public class PhraseTransformator
 	 * Transformation for complex predicates. Predicates are expected to have
 	 * only one basElem and either one mod or some aux'es. In case of mod,
 	 * baseElem is attached as xcomp to it. Otherwise, noModXPredUD() are used.
+	 * Removes the result constituent as potential governor from sentence's
+	 * subject mapping to avoid double linking when adding controled subject
+	 * links.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
 	public PmlANode xPredToUD(PmlANode xNode, boolean addCoordPropCrosslinks)
 	{
 		List<PmlANode> children = xNode.getChildren();
-		if (children.size() == 1) return children.get(0);
-		List<PmlANode> mods = xNode.getChildren(LvtbRoles.MOD);
-		if (mods == null || mods.size() < 1)
-			return noModXPredToUD(xNode, addCoordPropCrosslinks);
-		else return modXPredToUD(xNode, addCoordPropCrosslinks);
+		PmlANode result = null;
+		if (children.size() == 1) result = children.get(0);
+		else
+		{
+			List<PmlANode> mods = xNode.getChildren(LvtbRoles.MOD);
+			if (mods == null || mods.size() < 1)
+				result = noModXPredToUD(xNode, addCoordPropCrosslinks);
+			else result = modXPredToUD(xNode, addCoordPropCrosslinks);
+		}
+		s.removeGovFromSubjectMap(result.getId());
+		return result;
 	}
 
 	/**
