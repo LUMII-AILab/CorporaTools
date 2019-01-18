@@ -142,19 +142,19 @@
     </m>
   </s>
   <s id="m-zeens-p5s1">
-    <m id="m-zeens-p5s1w1">
-      <src.rf>experimental</src.rf>
-      <w.rf>w#w-zeens-p5w1</w.rf>
-      <form>Zēns</form>
-      <lemma>zēns</lemma>
-      <tag>ncmsn1</tag>
-    </m>
     <m id="m-zeens-p5s1w2">
       <src.rf>experimental</src.rf>
       <w.rf>w#w-zeens-p5w2</w.rf>
       <form>ātri</form>
       <lemma>ātri</lemma>
       <tag>rpt</tag>
+    </m>
+    <m id="m-zeens-p5s1w1">
+      <src.rf>experimental</src.rf>
+      <w.rf>w#w-zeens-p5w1</w.rf>
+      <form>Zēns</form>
+      <lemma>zēns</lemma>
+      <tag>ncmsn1</tag>
     </m>
     <m id="m-zeens-p5s1w3">
       <src.rf>experimental</src.rf>

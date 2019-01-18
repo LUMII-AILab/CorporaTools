@@ -26,11 +26,13 @@ use LvCorporaTools::GenericUtils::SimpleXmlIo
 #	* IDs from a file linking to non-existing IDs or elements marked for
 #	  deletion in m file;
 #	* trees in a file not corresponding to single sentence in m file;
+#	* (WIP) m-level token order must be the same as a-level;
+#	* inserted punctuation must have "form_change" "punct";
 #	* multi-token m has "form_change" "union";
 #	* m with no reference to w has "form_change" "insert";
 #	* m with form different from what described in w has at least one more
 #	  "form_change";
-#   * multiple m refering to single w has "form_change" "spacing".
+#   * multiple m refering to single w is error.
 # Refferences to multiple files not supported. ID duplication are not checked
 # (TODO).
 #
@@ -59,12 +61,14 @@ the given folder) for following erorrs:
 * IDs from m file linking to non-existing IDs in w file;
 * IDs from a file linking to non-existing IDs in m file;
 * trees in a file not corresponding to single sentence in m file;
+* (WIP) m-level token order must be the same as a-level;
+* inserted punctuation must have "form_change" "punct";
 * multi-token m having no "form_change" "union";
 * m with no reference to w having no "form_change" "insert";
 * m with form different from what described in w must have at least one more
   "form_change";
 * IDs should not be duplicated (TODO: represent it properly in the logfile);
-* multiple m refering to single w must have "form_change" "spacing".
+* multiple m refering to single w are considered to be error.
 
 
 Params:
@@ -133,12 +137,14 @@ following erorrs:
 * IDs from m file linking to non-existing IDs in w file;
 * IDs from a file linking to non-existing IDs in m file;
 * trees in a file not corresponding to single sentence in m file;
+* (WIP) m-level token order must be the same as a-level;
+* inserted punctuation must have "form_change" "punct";
 * multi-token m having no "form_change" "union";
 * m with no reference to w having no "form_change" "insert";
 * m with form different from what described in w must have at least one more
   "form_change";
 * duplicate IDs (onscreen warning only);
-* (TODO) multiple m refering to single w must have "form_change" "spacing".
+* multiple m refering to single w are considered to be error.
 
 Params:
    directory prefix
@@ -321,6 +327,8 @@ sub _testAM
 
 # _loadW (source directory, file name without extension)
 # returns hash refernece:
+#		'wSeq' => array with w IDs in the order as they appear in source XML
+#				 (source: w layer),
 #		'w2token' => hash from w IDs to tokens and spaces (source: w layer).
 # see &loadXML
 sub _loadW
@@ -330,29 +338,36 @@ sub _loadW
 	my $inputName = shift @_;
 
 	# Load w-file.
-	my $w = loadXml ("$dirPrefix\\$inputName.w", \@FORCE_ARRAY_W, \@LOAD_AS_ID);
-	
-	# Map token IDs to tokens.
-	my %wIds = ();
-	for my $para (values %{$w->{'xml'}->{'doc'}->{'para'}})
+	my $w = loadXml ("$dirPrefix\\$inputName.w", \@FORCE_ARRAY_W,);
+	#print Dumper($w->{'xml'}->{'doc'});
+
+	# Token IDs by order;
+	my @wIdOrder = ();
+	# Maping from token IDs to tokens.
+	my %wIdsTokens = ();
+	for my $para ( @{$w->{'xml'}->{'doc'}->{'para'}})
 	{
-		%wIds = (%wIds, map {
-			my $tmpw = $para->{'w'}->{$_};
-			my $tok = $tmpw->{'token'}->{'content'};
-			$tok .= ' ' unless ($tmpw->{'no_space_after'}->{'content'});
-			$_ => $tok} (keys %{$para->{'w'}}));
+		%wIdsTokens = (%wIdsTokens, map {
+			my $tok = $_->{'token'}->{'content'};
+			$tok .= ' ' unless ($_->{'no_space_after'}->{'content'});
+			$_->{'id'} => $tok} (@{$para->{'w'}}));
+		@wIdOrder = (@wIdOrder, map {$_->{'id'}} (@{$para->{'w'}}));
 	}
 	return {
-		'w2token' => \%wIds,
+		'wSeq' => \@wIdOrder,
+		'w2token' => \%wIdsTokens,
 	};
 }
 
 # _loadM (source directory, file name without extension)
 # returns hash refernece:
+#		'sentSeq' => array with sentence IDs in the order as they appear in
+#					 source XML (source: m layer),
 #		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
 #				 of form changes (source: m layer),
 #		'w2m' => hash from w IDs to lists of m IDs (source: m layer),
-#		'sent2m' => hash from sentence IDs to lists of m IDs (source: m layer),
+#		'sent2m' => hash from sentence IDs to lists of m IDs ordered in the
+#					order they appear in source XML (source: m layer),
 #		'm2sent' => hash from m IDs to sentence IDs (source: m layer).
 # see &loadXML
 sub _loadM
@@ -362,14 +377,18 @@ sub _loadM
 	my $inputName = shift @_;
 
 	# Load m-file.
-	my $m = loadXml ("$dirPrefix\\$inputName.m", \@FORCE_ARRAY_M, \@LOAD_AS_ID);
-	
+	my $m = loadXml ("$dirPrefix\\$inputName.m", \@FORCE_ARRAY_M);
+
 	# Map sentence IDs to lists of morpheme IDs.
-	my %mSent2morpho = map
+	my %mSent2morpho = ();
+	# Array showing sentence order.
+	my @mSentSeq = ();
+	for my $sent (@{$m->{'xml'}->{'s'}})
 	{
-		my @valArr = keys %{$m->{'xml'}->{'s'}->{$_}->{'m'}};
-		$_ => \@valArr;
-	} (keys %{$m->{'xml'}->{'s'}});
+		my @valArr = map {$_->{'id'}} (@{$sent->{'m'}});
+		%mSent2morpho = (%mSent2morpho, $sent->{'id'} => \@valArr);
+		@mSentSeq = (@mSentSeq, $sent->{'id'});
+	}
 	
 	# Map morpheme IDs to sentence IDs.
 	my %morpho2mSent = ();
@@ -382,11 +401,10 @@ sub _loadM
 	
 	# Map morpheme IDs to fom changes and lists of token IDs.
 	my %m2w = ();
-	for my $sent (values %{$m->{'xml'}->{'s'}})
+	for my $sent (@{$m->{'xml'}->{'s'}})
 	{
-		%m2w = (%m2w, map
+		for my $thisM (@{$sent->{'m'}})
 		{
-			my $thisM = $sent->{'m'}->{$_};
 			my @ref = ();
 			@ref = ($thisM->{'w.rf'}->{'content'})
 				if (defined $thisM->{'w.rf'}->{'content'});
@@ -401,14 +419,15 @@ sub _loadM
 			my $del = undef;
 			$del = $thisM->{'deleted'}->{'content'}
 				if (defined $thisM->{'deleted'}->{'content'});
-			$_ => {
-				'rf' => @ref ? \@ref : undef,
-				'deleted' => $del,
-				'form_change' => @change ? \@change : undef,
-				'form' => $thisM->{'form'}->{'content'},
-				'tag' => $thisM->{'tag'}->{'content'},
-			};
-		} (keys %{$sent->{'m'}}));
+			%m2w = (%m2w,
+				$thisM->{'id'} => {
+					'rf' => @ref ? \@ref : undef,
+					'deleted' => $del,
+					'form_change' => @change ? \@change : undef,
+					'form' => $thisM->{'form'}->{'content'},
+					'tag' => $thisM->{'tag'}->{'content'},
+				});
+		}
 	}
 
 	# Map token IDs to morpheme IDs.	
@@ -419,8 +438,9 @@ sub _loadM
 		%w2m = (%w2m, map {$_ => [$w2m{$_} ? @{$w2m{$_}} : (), $morpho]} @$refs)
 			if (defined $refs);
 	}
-	
+
 	return {
+		'sentSeq' => \@mSentSeq,
 		'm2w' => \%m2w,
 		'w2m' => \%w2m,
 		'sent2m' => \%mSent2morpho,
@@ -431,12 +451,15 @@ sub _loadM
 
 # _loadA (source directory, file name without extension)
 # returns hash refernece:
+#		'treeSeq' => array with tree IDs in the order as they appear in source
+#					 XML (source: a layer),
 #		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
 #		'node2tree' => hash from node IDs to tree IDs (source: a layer),
 #		'tree2sent' => hash from tree IDs to sentence IDs (source: a layer),
 #		'sent2tree' => hash from sentence IDs to tree IDs (source: a layer),
 #		'node2m' => hash from node IDs to m IDs (source: a layer),
-#		'm2node' => has from m IDs to node IDs (source: a layer).
+#		'm2node' => hash from m IDs to node IDs (source: a layer),
+#		'node2ord' => hash from node IDs to node ord value (source: a layer).
 # see &loadXML
 sub _loadA
 {
@@ -445,63 +468,66 @@ sub _loadA
 	my $inputName = shift @_;
 
 	# Load the a-file.
-	my $a = loadXml ("$dirPrefix\\$inputName.a", \@FORCE_ARRAY_A, \@LOAD_AS_ID);
+	my $a = loadXml ("$dirPrefix\\$inputName.a", \@FORCE_ARRAY_A,);
+
+	my @treeSeq = ();
 	my %tree2node = ();
 	my %tree2mSent = ();
 	my %node2morpho = ();
+	my %node2ord = ();
 	# Process each tree.
-	for my $treeId (keys %{$a->{'xml'}->{'trees'}->{'LM'}})
+	for my $tree (@{$a->{'xml'}->{'trees'}->{'LM'}})
 	{
-		# Shortcut: current tree.
-		my $tree = $a->{'xml'}->{'trees'}->{'LM'}->{$treeId};
-		#print Dumper ($tree);
-		
+		# Shortcut: current tree's ID.
+		my $treeId = $tree->{'id'};
+		@treeSeq = (@treeSeq, $treeId);
+
 		# Map tree ID to sentence ID.
 		$tree->{'s.rf'}->{'content'} =~ /^m#(.*)$/;
 		$tree2mSent{$treeId} = $1;
 		
 		# Traverse tree and collect all nodes with links to morphology.
-		my %todoNodes = ();
-		%todoNodes = %{$tree->{'children'}->{'node'}} if ($tree->{'children'}->{'node'});
-		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
+		my @todoNodes = ();
+		@todoNodes = @{$tree->{'children'}->{'node'}} if ($tree->{'children'}->{'node'});
+		@todoNodes = (@todoNodes, @{$tree->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
 			if ($tree->{'children'}->{'pmcinfo'});
-		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
+		@todoNodes = (@todoNodes, @{$tree->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
 			if ($tree->{'children'}->{'coordinfo'});
-		%todoNodes = (%todoNodes, %{$tree->{'children'}->{'xinfo'}->{'children'}->{'node'}})
+		@todoNodes = (@todoNodes, %{$tree->{'children'}->{'xinfo'}->{'children'}->{'node'}})
 			if ($tree->{'children'}->{'xinfo'});
 		
-		while (%todoNodes)
+		while (@todoNodes)
 		{
-			my $someKey = (keys %todoNodes)[0]; # Change to tied, if BFS is necessary.
-			my $value = $todoNodes{$someKey};
-			delete $todoNodes{$someKey};
-			
+			my $aNode = shift @todoNodes;
+			my $aNodeId = $aNode->{'id'};
+
 			# Update result data structutures.
-			if ($value->{'m.rf'}->{'content'})
+			if ($aNode->{'m.rf'}->{'content'})
 			{
 				# Map node ID to morpheme IDs.
-				$value->{'m.rf'}->{'content'} =~ /^m#(.*)$/;
-				$node2morpho{$someKey} = $1;
+				$aNode->{'m.rf'}->{'content'} =~ /^m#(.*)$/;
+				$node2morpho{$aNodeId} = $1;
 				# Add node ID to list to which tree ID maps to.	
 				$tree2node{$treeId} = [] unless ($tree2node{$treeId});
-				push @{$tree2node{$treeId}}, $someKey;
+				push @{$tree2node{$treeId}}, $aNodeId;
 			}
-				
+			$node2ord{$aNodeId} = $aNode->{'ord'}->{'content'};
+
 			# Add children nodes to hashmap containing nodes yet to be
 			# processed.
-			if ($value->{'children'})
+			if ($aNode->{'children'})
 			{
-				%todoNodes = (%todoNodes, %{$value->{'children'}->{'node'}})
-					if ($value->{'children'}->{'node'});
-				%todoNodes = (%todoNodes,
-					%{$value->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
-					if ($value->{'children'}->{'pmcinfo'});
-				%todoNodes = (%todoNodes,
-					%{$value->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
-					if ($value->{'children'}->{'coordinfo'});
-				%todoNodes = (%todoNodes,
-					%{$value->{'children'}->{'xinfo'}->{'children'}->{'node'}})
-					if ($value->{'children'}->{'xinfo'});
+				@todoNodes = (@todoNodes, @{$aNode->{'children'}->{'node'}})
+					if ($aNode->{'children'}->{'node'});
+				@todoNodes = (@todoNodes,
+					@{$aNode->{'children'}->{'pmcinfo'}->{'children'}->{'node'}})
+					if ($aNode->{'children'}->{'pmcinfo'});
+				@todoNodes = (@todoNodes,
+					@{$aNode->{'children'}->{'coordinfo'}->{'children'}->{'node'}})
+					if ($aNode->{'children'}->{'coordinfo'});
+				@todoNodes = (@todoNodes,
+					@{$aNode->{'children'}->{'xinfo'}->{'children'}->{'node'}})
+					if ($aNode->{'children'}->{'xinfo'});
 			}
 		}
 	}
@@ -521,14 +547,16 @@ sub _loadA
 	# Map morpheme IDs to node IDs.	
 	my %morpho2node = map {$node2morpho{$_} => $_} (keys %node2morpho);
 
+	print Dumper(\%node2ord);
 	return {
-		#%$resultAccu,
+		'treeSeq'   => \@treeSeq,
 		'tree2node' => \%tree2node,
 		'node2tree' => \%node2tree,
 		'tree2sent' => \%tree2mSent,
-		'sent2tree' => \%mSent2tree,		
-		'node2m' => \%node2morpho,
-		'm2node' => \%morpho2node
+		'sent2tree' => \%mSent2tree,
+		'node2m'    => \%node2morpho,
+		'm2node'    => \%morpho2node,
+		'node2ord'  => \%node2ord,
 	};
 }
 
