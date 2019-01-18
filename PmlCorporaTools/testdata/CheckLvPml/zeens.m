@@ -828,18 +828,18 @@
       <lemma>"</lemma>
       <tag>zq</tag>
     </m>
-    <m id="m-zeens-p14s2w5">
-      <src.rf>experimental</src.rf>
-      <form>Gan jau</form>
-      <lemma>gan jau</lemma>
-      <tag>qc</tag>
-    </m>
     <m id="m-zeens-p14s2w6">
       <src.rf>experimental</src.rf>
       <w.rf>w#w-zeens-p14w29</w.rf>
       <form>būs</form>
       <lemma>būt</lemma>
       <tag>vcnifii30an</tag>
+    </m>
+    <m id="m-zeens-p14s2w5">
+      <src.rf>experimental</src.rf>
+      <form>Gan jau</form>
+      <lemma>gan jau</lemma>
+      <tag>qc</tag>
     </m>
     <m id="m-zeens-p14s2w7">
       <src.rf>experimental</src.rf>

@@ -10,10 +10,12 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(checkLvPml processDir);
 
 use Data::Dumper;
-use XML::Simple;  # XML handling library
 use IO::File;
 use IO::Dir;
 use File::Path;
+use List::Util qw(first);
+use XML::Simple;  # XML handling library
+
 use LvCorporaTools::GenericUtils::SimpleXmlIo
 	qw(loadXml @FORCE_ARRAY_W @FORCE_ARRAY_M @FORCE_ARRAY_A @LOAD_AS_ID);
 
@@ -237,6 +239,15 @@ sub _testMW
 		print $out "\n\nM nodes with incomplete \'form_change\':\n";
 		print $out join("\n", @$badIds);
 	}
+
+	$badIds = &_checkSeq($data->{'wSeq'}, $data->{'mSeq'}, $data->{'w2m'}, 1);
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nM nodes occouring out of order:\n";
+		print $out join("\n", @$badIds);
+	}
+
 	return $problems;
 }
 
@@ -322,6 +333,22 @@ sub _testAM
 		print $out join("\n", @$badIds);
 	}
 
+	$badIds = &_checkSeq($data->{'sentSeq'}, $data->{'treeSeq'}, $data->{'sent2tree'}, );
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nA trees occouring out of order:\n";
+		print $out join("\n", @$badIds);
+	}
+
+	$badIds = &_checkSeq($data->{'mSeq'}, $data->{'nodeSeq'}, $data->{'m2node'}, );
+	$problems = $problems + scalar @$badIds;
+	if (scalar @$badIds)
+	{
+		print $out "\n\nA nodes occouring out of order:\n";
+		print $out join("\n", @$badIds);
+	}
+
 	return $problems;
 }
 
@@ -363,6 +390,8 @@ sub _loadW
 # returns hash refernece:
 #		'sentSeq' => array with sentence IDs in the order as they appear in
 #					 source XML (source: m layer),
+#		'mSeq' => array with m IDs in the order as they appear in source XML
+#				 (source: m layer),
 #		'm2w' => hash from m IDs to lists of w IDs, deletion marks, and lists
 #				 of form changes (source: m layer),
 #		'w2m' => hash from w IDs to lists of m IDs (source: m layer),
@@ -430,9 +459,12 @@ sub _loadM
 		}
 	}
 
+	# Array showing morpheme order.
+	my $mSeq = &_simpleSeqMaker(\@mSentSeq, \%mSent2morpho);
+
 	# Map token IDs to morpheme IDs.	
 	my %w2m = ();
-	for my $morpho (keys %m2w)
+	for my $morpho (@$mSeq) # Correct order is important here!
 	{
 		my $refs = $m2w{$morpho}->{'rf'};
 		%w2m = (%w2m, map {$_ => [$w2m{$_} ? @{$w2m{$_}} : (), $morpho]} @$refs)
@@ -441,6 +473,7 @@ sub _loadM
 
 	return {
 		'sentSeq' => \@mSentSeq,
+		'mSeq' => $mSeq,
 		'm2w' => \%m2w,
 		'w2m' => \%w2m,
 		'sent2m' => \%mSent2morpho,
@@ -453,13 +486,14 @@ sub _loadM
 # returns hash refernece:
 #		'treeSeq' => array with tree IDs in the order as they appear in source
 #					 XML (source: a layer),
+#		'nodeSeq' => array with the node IDs ordered by sentence and then by
+#					 their 'ord' value(source: a layer),
 #		'tree2node' => hash from tree IDs to lists of node IDs (source: a layer),
 #		'node2tree' => hash from node IDs to tree IDs (source: a layer),
 #		'tree2sent' => hash from tree IDs to sentence IDs (source: a layer),
 #		'sent2tree' => hash from sentence IDs to tree IDs (source: a layer),
 #		'node2m' => hash from node IDs to m IDs (source: a layer),
-#		'm2node' => hash from m IDs to node IDs (source: a layer),
-#		'node2ord' => hash from node IDs to node ord value (source: a layer).
+#		'm2node' => hash from m IDs to node IDs (source: a layer).
 # see &loadXML
 sub _loadA
 {
@@ -547,16 +581,16 @@ sub _loadA
 	# Map morpheme IDs to node IDs.	
 	my %morpho2node = map {$node2morpho{$_} => $_} (keys %node2morpho);
 
-	print Dumper(\%node2ord);
 	return {
 		'treeSeq'   => \@treeSeq,
+		'nodeSeq'   => &_seqMakerExternalOrds(\@treeSeq, \%tree2node, \%node2ord),
 		'tree2node' => \%tree2node,
 		'node2tree' => \%node2tree,
 		'tree2sent' => \%tree2mSent,
 		'sent2tree' => \%mSent2tree,
 		'node2m'    => \%node2morpho,
 		'm2node'    => \%morpho2node,
-		'node2ord'  => \%node2ord,
+		#'node2ord'  => \%node2ord,	# hash from node IDs to node ord value (source: a layer).
 	};
 }
 
@@ -578,13 +612,47 @@ sub _validateSentBound
 	{
 		for my $elemId (@{$source->{$sourceId}})
 		{
-			#print Dumper ($elemMap->{$elemId});
-			#print Dumper ($sentMap->{$sourceId});
-			#print Dumper ($target->{$elemMap->{$elemId}});
 			push (@res, $elemId)
 				unless ($elemMap->{$elemId} and $target->{$elemMap->{$elemId}}
 					and $sentMap->{$sourceId} and
 					($target->{$elemMap->{$elemId}} eq $sentMap->{$sourceId}));
+		}
+	}
+	return \@res;
+}
+
+# _checkMSeq (lower level key sequence, upper level key sequence,  mapping from
+#			  lower level to upper level(can be array or single value), can
+#			  multiple upper elements use the same lower element position
+#			 (optional, false by default))
+# returns: array with upper level keys that distrupt the ascending order.
+sub _checkSeq
+{
+	my $lowerSeq = shift @_;
+	my $upperSeq = shift @_;
+	my $lower2upper = shift @_;
+	my $isEqAllowed = (shift @_ or 0);
+	my @res = ();
+	my $previos = -1;
+	for my $lowerId (@$lowerSeq)
+	{
+		my $upperId = $lower2upper->{$lowerId};
+		next unless ($upperId); # This kind of errors is checked elsewhere.
+		my @upperIds = ref $upperId ? @$upperId : ($upperId);
+		for my $upperId (@upperIds)
+		{
+			my $upperPos = first {$upperSeq->[$_] eq $upperId } 0..$#$upperSeq;
+			push (@res, $upperId)
+				if ($upperPos <= $previos and not $isEqAllowed or $upperPos < $previos);
+			#if ($isEqAllowed)
+			#{
+			#	push (@res, $upperId) if ($upperPos < $previos);
+			#}
+			#else
+			#{
+			#	push (@res, $upperId) if ($upperPos <= $previos);
+			#}
+			$previos = $upperPos;
 		}
 	}
 	return \@res;
@@ -616,7 +684,6 @@ sub _checkFormChange
 	my $w2token = shift @_;
 	
 	my @res = ();
-
 
 	for my $m (keys %$m2w)
 	{
@@ -694,4 +761,40 @@ sub _checkFormChange
 	return \@res;
 }
 
+# _simpleSeqMaker (array with upper-level ID ordering, hash from upper-level
+#				   IDs to ordered lower-level IDs)
+# returns: array with accordingly ordered lower-level IDs.
+sub _simpleSeqMaker
+{
+	my $upperOrdering = shift @_;
+	my $lowerOrdering = shift @_;
+	my @res = ();
+
+	for my $upId (@$upperOrdering)
+	{
+		@res = (@res, @{$lowerOrdering->{$upId}});
+	}
+	return \@res;
+}
+
+# _seqMakerExternalOrds (array with upper-level ID ordering, hash from
+#						 upper-level IDs to lower-level IDs, hash from
+#						 lower-level IDs to their ordering)
+# returns: array with accordingly ordered lower-level IDs.
+sub _seqMakerExternalOrds
+{
+	my $upperOrdering = shift @_;
+	my $upper2Lower = shift @_;
+	my $lowerOrdering = shift @_;
+	my @res = ();
+
+	for my $upId (@$upperOrdering)
+	{
+		my @subResult = sort {
+				$lowerOrdering->{$a} <=> $lowerOrdering->{$b}
+			} (@{$upper2Lower->{$upId}});
+		@res = (@res, @subResult);
+	}
+	return \@res;
+}
 1;
