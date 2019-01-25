@@ -462,13 +462,7 @@ public class Sentence
 		}
 
 		// Set enhanced dependencies, but avoid circular.
-		if (!childEnhToken.equals(rootEnhToken))
-		{
-			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
-			childEnhToken.deps.add(newDep);
-			if (setBackbone) childEnhToken.depsBackbone = newDep;
-		}
+		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone, cleanOldDeps);
 	}
 
 	/**
@@ -496,13 +490,7 @@ public class Sentence
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set enhanced dependencies, but avoid circular.
-		if (!childEnhToken.equals(rootEnhToken))
-		{
-			if (cleanOldDeps) childEnhToken.deps.clear();
-			EnhencedDep newDep = new EnhencedDep(rootEnhToken, enhancedDep.first, enhancedDep.second);
-			childEnhToken.deps.add(newDep);
-			if (setBackbone) childEnhToken.depsBackbone = newDep;
-		}
+		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone, cleanOldDeps);
 	}
 
 	/**
@@ -576,16 +564,13 @@ public class Sentence
 		}
 
 		// Set enhanced dependencies.
-		if (cleanOldDeps) childEnhToken.deps.clear();
-		EnhencedDep newDep = EnhencedDep.root();
-		childEnhToken.deps.add(newDep);
-		childEnhToken.depsBackbone = newDep;
+		childEnhToken.setEnhancedHeadRoot(true, cleanOldDeps);
 	}
 
 
 	// ===== Simple relinking. =================================================
 
-	/**
+	/*
 	 * Changes the heads for all dependencies set (both base and enhanced) for
 	 * given childnode. It is expected that pmlaToEnhConll (if needed) and
 	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
@@ -593,7 +578,7 @@ public class Sentence
 	 * @param newParent	new parent
 	 * @param child		child node whose attachment should be changed
 	 */
-	public void changeHead (PmlANode newParent, PmlANode child)
+/*	public void changeHead (PmlANode newParent, PmlANode child)
 	{
 		Token rootBaseToken = pmlaToConll.get(newParent.getId());
 		Token rootEnhToken = pmlaToEnhConll.get(newParent.getId());
@@ -617,7 +602,7 @@ public class Sentence
 			if (childEnhToken.depsBackbone != null)childEnhToken.depsBackbone =
 					new EnhencedDep(rootEnhToken, childEnhToken.depsBackbone.role);
 		}
-	}
+	}//*/
 
 
 	// ===== Dependency related linking and relinking. =========================

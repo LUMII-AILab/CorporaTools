@@ -2,10 +2,7 @@ package lv.ailab.lvtb.universalizer.conllu;
 
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Format definition: http://universaldependencies.org/format.html
@@ -207,10 +204,9 @@ public class Token
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
 	 */
-	public void setParentDeps (Token parent,
-						 UDv2Relations baseDep,
-						 Tuple<UDv2Relations, String> enhancedDep,
-						 boolean setBackbone, boolean cleanOldDeps)
+	public void setHead(
+			Token parent, UDv2Relations baseDep, Tuple<UDv2Relations, String> enhancedDep,
+			boolean setBackbone, boolean cleanOldDeps)
 	{
 		// Set dependencies, but avoid circular dependencies.
 		if (!equals(parent))
@@ -221,10 +217,9 @@ public class Token
 			// Set enhanced dependencie.
 			if (enhancedDep != null)
 			{
-				if (cleanOldDeps) deps.clear();
-				EnhencedDep newDep = new EnhencedDep(parent, enhancedDep.first, enhancedDep.second);
-				deps.add(newDep);
-				if (setBackbone) parent.depsBackbone = newDep;
+				setEnhancedHead(parent, enhancedDep, setBackbone, cleanOldDeps);
+				// This was here before refactoring setEnhancedHead out. Seems wrong.
+				//if (setBackbone) parent.depsBackbone = newDep;
 			}
 		}
 	}
@@ -233,7 +228,7 @@ public class Token
 	 * Set base and enhanced dependency links between two tokens, but do not set
 	 * circular dependencies. Assumes base dependency label is the same as
 	 * enhanced. Assumes enhanced label does not need subtype.
-	 * Shortcut method, for more parameters use the other setParentDeps().
+	 * Shortcut method, for more parameters use the other setHead().
 	 * @param parent		token to make this token's parent
 	 * @param dep			label to be used both for base and enhanced
 	 *                      dependency
@@ -242,20 +237,115 @@ public class Token
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
 	 */
-	public void setParentDeps (Token parent, UDv2Relations dep,
-							   boolean setBackbone, boolean cleanOldDeps)
+	public void setHead(
+			Token parent, UDv2Relations dep, boolean setBackbone, boolean cleanOldDeps)
 	{
-		setParentDeps(parent, dep, Tuple.of(dep, null), setBackbone, cleanOldDeps);
+		setHead(parent, dep, Tuple.of(dep, null), setBackbone, cleanOldDeps);
 	}
+
+	/**
+	 * Sets enhanced dependency, does not set circular dependencies. Can check
+	 * and avoid setting multiple dependencies with the same head.
+	 * @param parent			token to be enhanced dependency head
+	 * @param role			UD role for enhanced dependency
+	 * @param rolePostfix	role postfix (preposition or case), can be null
+	 * @param setBackbone    		if enhanced dependency is made, should it
+	 *                              be set as backbone for child node
+	 * @param cleanOldDeps    		whether previous contents from deps field
+	 *                              should be removed
+	 //* @param forbidHeadDuplicates	should multiple links with the same head be
+	 *                              forbidden
+	 */
+	public void setEnhancedHead(
+			Token parent, UDv2Relations role, String rolePostfix,
+			boolean setBackbone, boolean cleanOldDeps)
+	{
+		if (equals(parent)) return; // No circulars.
+		boolean forbidHeadDuplicates = false; // TODO make this parameter
+
+		EnhencedDep dep = new EnhencedDep(parent, role, rolePostfix);
+		if (cleanOldDeps) deps.clear();
+
+		if (!forbidHeadDuplicates)
+		{
+			deps.add(dep);
+			if (setBackbone) depsBackbone = dep;
+			return;
+		}
+		EnhencedDep[] previous = deps.stream()
+				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhencedDep[]::new);
+		if (previous.length == 0)
+		{
+			deps.add(dep);
+			if (setBackbone) depsBackbone = dep;
+		}
+		else if (UDv2Relations.DEP != dep.role)
+		{
+			deps.removeAll(Arrays.asList(previous));
+			deps.add(dep);
+			if (setBackbone) depsBackbone = dep;
+
+		}
+		//else if (previous.length > 0 && UDv2Relations.DEP == dep.role);
+	}
+
+	/**
+	 * Sets enhanced dependency, does not set circular dependencies. Can check
+	 * and avoid setting multiple dependencies with the same head.
+	 * @param parent				token to be enhanced dependency head
+	 * @param enhancedDep			UD role for enhanced dependency
+	 * @param setBackbone    		if enhanced dependency is made, should it
+	 *                              be set as backbone for child node
+	 * @param cleanOldDeps    		whether previous contents from deps field
+	 *                              should be removed
+	// * @param forbidHeadDuplicates	should multiple links with the same head be
+	 *                              forbidden
+	 */
+	public void setEnhancedHead(
+			Token parent, Tuple<UDv2Relations, String> enhancedDep,
+			boolean setBackbone, boolean cleanOldDeps)
+	{
+		setEnhancedHead(parent, enhancedDep.first, enhancedDep.second,
+				setBackbone, cleanOldDeps);
+	}
+
+
+	/**
+	 * Sets enhanced dependency, does not set circular dependencies. Can check
+	 * and avoid setting multiple dependencies with the same head.
+	 * @param setBackbone    		if enhanced dependency is made, should it
+	 *                              be set as backbone for child node
+	 * @param cleanOldDeps    		whether previous contents from deps field
+	 *                              should be removed
+	 //* @param forbidHeadDuplicates	should multiple links with the same head be
+	 *                              forbidden
+	 */
+	public void setEnhancedHeadRoot(
+			boolean setBackbone, boolean cleanOldDeps)
+	{
+		boolean forbidHeadDuplicates = false; // TODO make this parameter
+		if (cleanOldDeps) deps.clear();
+		EnhencedDep dep = EnhencedDep.root();
+		if (!forbidHeadDuplicates)
+		{
+			deps.add(dep);
+			if (setBackbone) depsBackbone = dep;
+			return;
+		}
+		EnhencedDep[] previous = deps.stream()
+				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhencedDep[]::new);
+		if (previous.length > 0)
+			deps.removeAll(Arrays.asList(previous)); //if (UDv2Relations.DEP != dep.role) - // LOL, this is root.
+		deps.add(dep);
+		if (setBackbone) depsBackbone = dep;
+		// TODO is there realy something that tries to set dependency other than root to headID 0?
+	}
+
 
 /*	public void setSimpleHead(Token token, UDv2Relations role)
 	{
 		head = token.getFirstColumn();
 		deprel = role;
-	}
-	public void setEnhencedHead(Token token, UDv2Relations role)
-	{
-		deps.add(new EnhencedDep(token, role));
 	}
 	public void setBothHeads(Token token, UDv2Relations role)
 	{
@@ -267,10 +357,6 @@ public class Token
 	{
 		head = "0";
 		deprel = UDv2Relations.ROOT;
-	}
-	public void setEnhencedHeadRoot()
-	{
-		deps.add(EnhencedDep.root());
 	}
 	public void setBothHeadsRoot()
 	{

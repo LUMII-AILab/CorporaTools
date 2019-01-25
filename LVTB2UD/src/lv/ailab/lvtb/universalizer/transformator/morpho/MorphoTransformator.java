@@ -417,7 +417,7 @@ public class MorphoTransformator {
 		if (noSpaceAfter || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
 			nextToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO); //nextToken.misc.add("SpaceAfter=No");
-		nextToken.setParentDeps(
+		nextToken.setHead(
 				previousToken, UDv2Relations.PUNCT, true, true);
 		return nextToken;
 	}
@@ -476,7 +476,7 @@ public class MorphoTransformator {
 					hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
 				nextToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//nextToken.misc.add("NewPar=Yes");
 			if (noSpaceAfter) nextToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//nextToken.misc.add("SpaceAfter=No");
-			nextToken.setParentDeps(previousToken, UDv2Relations.PUNCT, true, true);
+			nextToken.setHead(previousToken, UDv2Relations.PUNCT, true, true);
 			return nextToken;
 		}
 		else
@@ -546,7 +546,7 @@ public class MorphoTransformator {
 			nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
 			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 				nextToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//nextToken.misc.add("NewPar=Yes");
-			nextToken.setParentDeps(previousToken, UDv2Relations.GOESWITH, true, true);
+			nextToken.setHead(previousToken, UDv2Relations.GOESWITH, true, true);
 			previousToken = nextToken;
 		}
 
