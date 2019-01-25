@@ -70,9 +70,10 @@ public class Sentence
 	/**
 	 * Mapping (multimap) between controled and rised subjects and nodes they
 	 * should be linked to. Indexed by subject node IDs. Governor nodes are
-	 * sorted by the depth in the tree, starting with deepest. Includes
-	 * standard subject links, i.e. cases when subject is directly dependent
-	 * from the node. This structure is updated also during transformation.
+	 * sorted by the depth in the tree, starting with deepest, then by deep ord
+	 * descending. Includes standard subject links, i.e. cases when subject is
+	 * directly dependent from the node. This structure is updated also during
+	 * transformation.
 	 */
 	public HashMap<String, ArrayList<String>> subj2gov = new HashMap<>();
 
@@ -100,9 +101,8 @@ public class Sentence
 	// ===== Pre-transformation preparations. ==================================
 
 	/**
-	 * This populates subj2gov map by collecting controlled subjects that are
-	 * not direct dependents of predicate. Also links to auxVerb labeled xPred
-	 * parts with true auxiliary verb lemma not collected.
+	 * This populates subj2gov map by collecting controlled subjects. Links to
+	 * auxVerb labeled xPred parts with true auxiliary verb lemma not collected.
 	 */
 	public void populateSubjectMap()
 	{
@@ -122,7 +122,9 @@ public class Sentence
 			ArrayList<String> tmp = subj2gov.get(subjNode).stream()
 					.map(id -> pmlTree.getDescendant(id))
 					.map(n -> Tuple.of(n, n.getDepthInTree()))
-					.sorted((t1, t2) -> t2.second.compareTo(t1.second))
+					.sorted((t1, t2) -> t2.second.equals(t1.second)
+							? t2.first.getDeepOrd().compareTo(t1.first.getDeepOrd())
+							: t2.second.compareTo(t1.second))
 					.map(t -> t.first.getId()).collect(Collectors.toCollection(ArrayList::new));
 			subj2gov.put(subjNode, tmp);
 		}
