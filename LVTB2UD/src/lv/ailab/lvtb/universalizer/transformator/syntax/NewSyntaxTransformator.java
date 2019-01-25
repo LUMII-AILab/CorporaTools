@@ -33,7 +33,7 @@ public class NewSyntaxTransformator
 		{
 			System.out.println("Subject map: ");
 			System.out.println(s.subj2gov.keySet().stream().sorted()
-					.map(id -> "\t" + id + " -> " + s.subj2gov.get(id).stream().sorted().reduce((a, b) -> a + ", " + b).orElse("NULL"))
+					.map(id -> "\t" + id + " -> " + s.subj2gov.get(id).stream().reduce((a, b) -> a + ", " + b).orElse("NULL"))
 					.reduce((a, b) -> a + "\n" + b).orElse("EMPTY"));
 			System.out.println("Coordination map: ");
 			System.out.println(s.coordPartsUnder.keySet().stream().sorted()

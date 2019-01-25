@@ -215,6 +215,13 @@ public interface PmlANode
 	 */
 	public boolean isSameNode(PmlANode other);
 
+	/**
+	 * Returns the lenght of the shortest path connecting this node and root.
+	 * @return	0 for root node, 1 for root's dependents and constituents, 2 for
+	 * 			for their dependents and constituents, etc.
+	 */
+	public Integer getDepthInTree();
+
 	//=== Tree modification ====================================================
 	/**
 	 * Remove this node from tree.

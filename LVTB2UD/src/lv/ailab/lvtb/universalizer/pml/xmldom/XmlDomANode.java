@@ -676,23 +676,6 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Find PML node by given ID.
-	 * @param id	an ID to search
-	 * @return	first node found
-	 * @throws XPathExpressionException unsuccessfull XPath evaluation (anywhere
-	 * 									in the PML tree) most probably due to
-	 * 									algorithmical error.
-	 */
-	public void findPmlNode(String id) throws XPathExpressionException
-	{
-//		NodeList res = (NodeList) XPathEngine.get().evaluate(
-//				".//node[@id='"+ id + "']", pmlTree, XPathConstants.NODESET);
-//		if (res == null || res.getLength() < 1) return null;
-//		return res.item(0);
-	}
-
-
-	/**
 	 * Find parent or the closest ancestor, that is not coordination phrase or
 	 * crdPart node.
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
@@ -750,6 +733,27 @@ public class XmlDomANode implements PmlANode
 		}
 		catch (ClassCastException e) {};
 		return false;
+	}
+
+	/**
+	 * Returns the lenght of the shortest path connecting this node and root.
+	 * @return	0 for root node, 1 for root's dependents and constituents, 2 for
+	 * 			for their dependents and constituents, etc.
+	 */
+	@Override
+	public Integer getDepthInTree()
+	{
+		try
+		{
+			NodeList res = (NodeList) XPathEngine.get().evaluate(
+					"ancestor-or-self::node",
+					domNode, XPathConstants.NODESET);
+			if (res == null || res.getLength() < 1) return 0;
+			return res.getLength();
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	//=== Tree modification ====================================================

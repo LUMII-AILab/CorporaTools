@@ -638,10 +638,10 @@ public class PhraseTransformator
 				result = noModXPredToUD(xNode);
 			else result = modXPredToUD(xNode);
 		}
-		String resultId = result.getId();
+		//String resultId = result.getId();
 		//for (String delId : s.coordPartsUnder.get(resultId))
 		//	s.removeGovFromSubjectMap(delId);
-		s.removeGovFromSubjectMap(result.getId());
+		//s.removeGovFromSubjectMap(result.getId());
 		return result;
 	}
 

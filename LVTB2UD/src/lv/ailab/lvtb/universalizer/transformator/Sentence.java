@@ -14,10 +14,7 @@ import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,11 +69,12 @@ public class Sentence
 
 	/**
 	 * Mapping (multimap) between controled and rised subjects and nodes they
-	 * should be linked to. Indexed by subject node IDs. Does not include
+	 * should be linked to. Indexed by subject node IDs. Governor nodes are
+	 * sorted by the depth in the tree, starting with deepest. Includes
 	 * standard subject links, i.e. cases when subject is directly dependent
 	 * from the node. This structure is updated also during transformation.
 	 */
-	public HashMap<String, HashSet<String>> subj2gov = new HashMap<>();
+	public HashMap<String, ArrayList<String>> subj2gov = new HashMap<>();
 
 	public Sentence(PmlANode pmlTree)
 	{
@@ -110,13 +108,23 @@ public class Sentence
 	{
 		HashMap<String, HashSet<String>> gov2subj = new HashMap<>();
 		gov2subj = getGov2subj(pmlTree, gov2subj);
-		for (String node : gov2subj.keySet()) for (String subj : gov2subj.get(node))
+		for (String govNode : gov2subj.keySet()) for (String subj : gov2subj.get(govNode))
 		{
-			HashSet<String> tmp = subj2gov.get(subj);
-			if (tmp == null) tmp = new HashSet<>();
-			if (!node.equals(pmlTree.getDescendant(subj).getParent().getId()))
-				tmp.add(node);
+			ArrayList<String> tmp = subj2gov.get(subj);
+			if (tmp == null) tmp = new ArrayList<>();
+			//if (!node.equals(pmlTree.getDescendant(subj).getParent().getId()))
+				tmp.add(govNode);
 			if (!tmp.isEmpty()) subj2gov.put(subj, tmp);
+		}
+
+		for (String subjNode : subj2gov.keySet())
+		{
+			ArrayList<String> tmp = subj2gov.get(subjNode).stream()
+					.map(id -> pmlTree.getDescendant(id))
+					.map(n -> Tuple.of(n, n.getDepthInTree()))
+					.sorted((t1, t2) -> t2.second.compareTo(t1.second))
+					.map(t -> t.first.getId()).collect(Collectors.toCollection(ArrayList::new));
+			subj2gov.put(subjNode, tmp);
 		}
 	}
 
@@ -665,7 +673,7 @@ public class Sentence
 	{
 		if (subject == null) return;
 		String subjectId = subject.getId();
-		HashSet <String> parentIds = subj2gov.get(subjectId);
+		ArrayList <String> parentIds = subj2gov.get(subjectId);
 		if (parentIds == null || parentIds.isEmpty()) return;
 
 		for (String parentId : parentIds)
@@ -982,7 +990,7 @@ public class Sentence
 	public boolean removeFromSubjectMap(String subjectId, String governorId)
 	{
 		if (!subj2gov.containsKey(subjectId)) return false;
-		HashSet<String> tmp = subj2gov.get(subjectId);
+		ArrayList<String> tmp = subj2gov.get(subjectId);
 		if (!tmp.contains(governorId)) return false;
 		tmp.remove(governorId);
 		if (tmp.isEmpty()) subj2gov.remove(subjectId);
@@ -995,7 +1003,7 @@ public class Sentence
 		int removed = 0;
 		for (String subjectId : subj2gov.keySet())
 		{
-			HashSet<String> tmp = subj2gov.get(subjectId);
+			ArrayList<String> tmp = subj2gov.get(subjectId);
 			if (!tmp.contains(governorId)) continue;
 			tmp.remove(governorId);
 			if (tmp.isEmpty()) subj2gov.remove(subjectId);
