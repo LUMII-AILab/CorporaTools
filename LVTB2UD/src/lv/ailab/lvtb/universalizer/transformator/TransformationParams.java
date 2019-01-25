@@ -47,6 +47,13 @@ public class TransformationParams
 	 */
 	public Boolean UD_STANDARD_NULLNODES = true;
 
+	/**
+	 * To fit UD standard, this must be true. If this is false, enhanced graph
+	 * may contain multiple links/labels per the same node pair and link
+	 * direction.
+	 */
+	public Boolean NO_EDEP_DUPLICATES = true;
+
 	//== Enhanced.
 	// NB! Check this before each UD release!
 	public Boolean ADD_CONTROL_SUBJ = true;

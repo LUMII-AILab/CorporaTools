@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.pml.LvtbCoordTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
@@ -147,14 +148,18 @@ public class Sentence
 		if (phrase != null)
 		{
 			phraseParts = phrase.getChildren();
-			if (LvtbXTypes.XPRED.equals(phrase.getPhraseType()))
+			String phraseType = phrase.getPhraseType();
+			if (LvtbXTypes.XPRED.equals(phraseType) ||
+					LvtbCoordTypes.CRDPARTS.equals(phraseType))
 				for (PmlANode phrasePart : phraseParts)
 			{
 				// Do not add standard auxiliaries used as aux.
 				String partRole = phrasePart.getRole();
-				if (LvtbRoles.AUXVERB.equals(partRole)
+				if (LvtbXTypes.XPRED.equals(phraseType) && LvtbRoles.AUXVERB.equals(partRole)
 						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(phrasePart.getM().getLemma()))
 							|| MorphoTransformator.isTrueAux(phrasePart.getReductionLemma())))
+					continue;
+				if (LvtbCoordTypes.CRDPARTS.equals(phraseType) && !LvtbRoles.CRDPART.equals(partRole))
 					continue;
 
 				String partId = phrasePart.getId();
@@ -441,10 +446,13 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
-	public void setLink (PmlANode parent, PmlANode child, UDv2Relations baseDep,
-						 Tuple<UDv2Relations, String> enhancedDep,
-						 boolean setBackbone, boolean cleanOldDeps)
+	public void setLink (
+			PmlANode parent, PmlANode child, UDv2Relations baseDep,
+			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
+			boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
 		Token rootBaseToken = pmlaToConll.get(parent.getId());
 		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
@@ -462,7 +470,8 @@ public class Sentence
 		}
 
 		// Set enhanced dependencies, but avoid circular.
-		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone, cleanOldDeps);
+		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone,
+				cleanOldDeps, forbidHeadDuplicates);
 	}
 
 	/**
@@ -477,10 +486,12 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
-	public void setEnhLink (PmlANode parent, PmlANode child,
-							Tuple<UDv2Relations, String> enhancedDep,
-							boolean setBackbone, boolean cleanOldDeps)
+	public void setEnhLink (
+			PmlANode parent, PmlANode child, Tuple<UDv2Relations, String> enhancedDep,
+			boolean setBackbone, boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
 		Token rootBaseToken = pmlaToConll.get(parent.getId());
 		Token rootEnhToken = pmlaToEnhConll.get(parent.getId());
@@ -490,7 +501,8 @@ public class Sentence
 		if (childEnhToken == null) childEnhToken = childBaseToken;
 
 		// Set enhanced dependencies, but avoid circular.
-		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone, cleanOldDeps);
+		childEnhToken.setEnhancedHead(rootEnhToken, enhancedDep, setBackbone,
+				cleanOldDeps, forbidHeadDuplicates);
 	}
 
 	/**
@@ -531,14 +543,17 @@ public class Sentence
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
 	public void setLinkAndCorsslinksPhrasal(
 			PmlANode parent, PmlANode child, UDv2Relations baseDep,
 			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
-			boolean cleanOldDeps)
+			boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
-		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps);
-		addFixedRoleCrosslinks(parent, child, enhancedDep);
+		setLink(parent, child, baseDep, enhancedDep, setBackbone, cleanOldDeps,
+				forbidHeadDuplicates);
+		addFixedRoleCrosslinks(parent, child, enhancedDep, forbidHeadDuplicates);
 	}
 
 	/**
@@ -618,18 +633,21 @@ public class Sentence
 	 * @param children	list of child nodes
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 */
 	public void relinkAllDependants(
 			PmlANode parent, List<PmlANode> children,
-			boolean addCoordPropCrosslinks, boolean addControledSubjects)
+			boolean addCoordPropCrosslinks, boolean addControledSubjects,
+			boolean forbidHeadDuplicates)
 	{
 		if (children == null || children.isEmpty()) return;
 		// Process children.
 		for (PmlANode child : children)
 		{
-			relinkSingleDependant(parent, child, addCoordPropCrosslinks);
+			relinkSingleDependant(parent, child, addCoordPropCrosslinks, forbidHeadDuplicates);
 			if (addControledSubjects)
-				addSubjectsControlers(child, addCoordPropCrosslinks);
+				addSubjectsControlers(child, addCoordPropCrosslinks, forbidHeadDuplicates);
 		}
 	}
 
@@ -638,10 +656,12 @@ public class Sentence
 	 * for given node.
 	 * @param subject		subject node from which controll links sould be made
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
-	 * 	 *                              done?
+	 * 									done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 */
 	public void addSubjectsControlers(
-			PmlANode subject, boolean addCoordPropCrosslinks)
+			PmlANode subject, boolean addCoordPropCrosslinks, boolean forbidHeadDuplicates)
 	{
 		if (subject == null) return;
 		String subjectId = subject.getId();
@@ -653,9 +673,9 @@ public class Sentence
 			PmlANode parent = pmlTree.getDescendant(parentId);
 			Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(
 					subject, parent, LvtbRoles.SUBJ);
-			setEnhLink(parent, subject, enhRole, false, false);
+			setEnhLink(parent, subject, enhRole, false, false, forbidHeadDuplicates);
 			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-				addFixedRoleCrosslinks(parent, subject, enhRole);
+				addFixedRoleCrosslinks(parent, subject, enhRole, forbidHeadDuplicates);
 		}
 	}
 
@@ -669,16 +689,19 @@ public class Sentence
 	 * @param child		designated child
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 */
 	protected void relinkSingleDependant(
-			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks)
+			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks,
+			boolean forbidHeadDuplicates)
 	{
 		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
 		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
 		setBaseLink(parent, child, baseRole);
-		setEnhLink(parent, child, enhRole, true, true);
+		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-			addDependencyCrosslinks(parent, child);
+			addDependencyCrosslinks(parent, child, forbidHeadDuplicates);
 	}
 
 	/**
@@ -691,8 +714,11 @@ public class Sentence
 	 * Use for relinking dependencies.
 	 * @param parent		phrase part to become dependency parent
 	 * @param child			phrase part to become dependency child
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
-	protected void addDependencyCrosslinks (PmlANode parent, PmlANode child)
+	protected void addDependencyCrosslinks (
+			PmlANode parent, PmlANode child, boolean forbidHeadDuplicates)
 	{
 		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
@@ -718,7 +744,8 @@ public class Sentence
 						altParent2 = pmlTree;
 					else altParent2 = pmlTree.getDescendant(altParentKey2);
 					PmlANode altChild2 = pmlTree.getDescendant(altChildKey2);
-					setEnhLink(altParent2, altChild2, childDeprel, false, false);
+					setEnhLink(altParent2, altChild2, childDeprel, false,
+							false, forbidHeadDuplicates);
 				}
 			}
 		}
@@ -736,15 +763,17 @@ public class Sentence
 	 *                          correct UD role for children
 	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
-	 * @param addCoordPropCrosslinks	should also coordination propagation be
-	 *                                  done?
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 * @return root of the corresponding dependency structure
 	 */
 	public PmlANode allUnderFirstConstituent(
-			PmlANode phraseNode, String newRootType, boolean addCoordPropCrosslinks,
-			boolean warnMoreThanOne)
+			PmlANode phraseNode, String newRootType, boolean warnMoreThanOne,
+			boolean addCoordPropCrosslinks, boolean forbidHeadDuplicates)
 	{
 		List<PmlANode> children = phraseNode.getChildren();
 		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
@@ -764,7 +793,7 @@ public class Sentence
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" seems to be empty.\n",
 					phraseNode.getPhraseType(), id));
-		relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks);
+		relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks, forbidHeadDuplicates);
 		return newRoot;
 	}
 
@@ -779,15 +808,18 @@ public class Sentence
 	 * @param newRootType		subroot for new UD structure will be searched
 	 *                          between PML nodes with this type/role
 	 * @param newRootBackUpType backUpRole, if no nodes of newRootType is found
-	 * @param addCoordPropCrosslinks	should also coordination propagation be
-	 *                                  done?
 	 * @param warnMoreThanOne	whether to warn if more than one potential root
 	 *                          is found
+	 * @param addCoordPropCrosslinks	should also coordination propagation be
+	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 * @return root of the corresponding dependency structure
 	 */
 	public PmlANode allUnderLastConstituent(
 			PmlANode phraseNode, String newRootType, String newRootBackUpType,
-			boolean addCoordPropCrosslinks, boolean warnMoreThanOne)
+			boolean warnMoreThanOne, boolean addCoordPropCrosslinks,
+			boolean forbidHeadDuplicates)
 	{
 		List<PmlANode> children = phraseNode.getChildren();
 		List<PmlANode> potentialRoots = phraseNode.getChildren(newRootType);
@@ -810,7 +842,8 @@ public class Sentence
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" seems to be empty.\n",
 					phraseNode.getPhraseType(), id));
-		relinkAllConstituents(newRoot, children, phraseNode, addCoordPropCrosslinks);
+		relinkAllConstituents(newRoot, children, phraseNode,
+				addCoordPropCrosslinks, forbidHeadDuplicates);
 		return newRoot;
 	}
 
@@ -826,16 +859,19 @@ public class Sentence
 	 *                      correct UD role for children
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 */
 	public void relinkAllConstituents(
 			PmlANode newRoot, List<PmlANode> children, PmlANode phraseNode,
-			boolean addCoordPropCrosslinks)
+			boolean addCoordPropCrosslinks, boolean forbidHeadDuplicates)
 	{
 		if (children == null || children.isEmpty()) return;
 
 		// Process children.
 		for (PmlANode child : children)
-			relinkSingleConstituent(newRoot, child, phraseNode, addCoordPropCrosslinks);
+			relinkSingleConstituent(newRoot, child, phraseNode,
+					addCoordPropCrosslinks, forbidHeadDuplicates);
 	}
 
 	/**
@@ -849,18 +885,21 @@ public class Sentence
 	 *                      correct UD role for children
 	 * @param addCoordPropCrosslinks	should also coordination propagation be
 	 *                                  done?
+	 * @param forbidHeadDuplicates		should multiple enhanced links with the
+	 *                              	same head be allowed
 	 */
 	public void relinkSingleConstituent(
 			PmlANode parent, PmlANode child, PmlANode phraseNode,
-			boolean addCoordPropCrosslinks)
+			boolean addCoordPropCrosslinks, boolean forbidHeadDuplicates)
 	{
 		if (child == null || child.isSameNode(parent)) return;
 
 		Tuple<UDv2Relations, String> childDeprel =
 				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
-		setLink(parent, child, childDeprel.first, childDeprel, true,true);
+		setLink(parent, child, childDeprel.first, childDeprel, true,
+				true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(childDeprel.first))
-			addPhrasalConjunctCrosslinks(parent, child, phraseNode);
+			addPhrasalConjunctCrosslinks(parent, child, phraseNode, forbidHeadDuplicates);
 	}
 
 	/**
@@ -874,9 +913,12 @@ public class Sentence
 	 * @param parent		phrase part to become dependency parent
 	 * @param child			phrase part to become dependency child
 	 * @param phraseNode	phrase information by which role will be determined
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
 	protected void addPhrasalConjunctCrosslinks (
-			PmlANode parent, PmlANode child, PmlANode phraseNode)
+			PmlANode parent, PmlANode child, PmlANode phraseNode,
+			boolean forbidHeadDuplicates)
 	{
 		if (parent == null || child == null) return;
 		Tuple<UDv2Relations, String> childDeprel =
@@ -892,7 +934,8 @@ public class Sentence
 			{
 				PmlANode altParent = pmlTree.getDescendant(altParentKey);
 				PmlANode altChild = pmlTree.getDescendant(altChildKey);
-				setEnhLink(altParent, altChild, childDeprel, false, false);
+				setEnhLink(altParent, altChild, childDeprel, false,
+						false, forbidHeadDuplicates);
 			}
 	}
 
@@ -911,9 +954,12 @@ public class Sentence
 	 * @param parent		node to become dependency parent
 	 * @param child			node to become dependency child
 	 * @param childDeprel	fixed role for all crosslinks
+	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
+	 *                              head be allowed
 	 */
 	protected void addFixedRoleCrosslinks(
-			PmlANode parent, PmlANode child, Tuple<UDv2Relations, String> childDeprel)
+			PmlANode parent, PmlANode child, Tuple<UDv2Relations,
+			String> childDeprel, boolean forbidHeadDuplicates)
 	{
 		if (parent == null || child == null) return;
 		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
@@ -926,7 +972,8 @@ public class Sentence
 		{
 			PmlANode altParent = pmlTree.getDescendant(altParentKey);
 			PmlANode altChild = pmlTree.getDescendant(altChildKey);
-			setEnhLink(altParent, altChild, childDeprel,false, false);
+			setEnhLink(altParent, altChild, childDeprel,false,
+					false, forbidHeadDuplicates);
 		}
 	}
 

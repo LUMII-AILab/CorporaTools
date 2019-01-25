@@ -203,10 +203,12 @@ public class Token
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
+	 * @param forbidHeadDuplicates	should multiple links with the same head be
+	 *                              forbidden
 	 */
 	public void setHead(
 			Token parent, UDv2Relations baseDep, Tuple<UDv2Relations, String> enhancedDep,
-			boolean setBackbone, boolean cleanOldDeps)
+			boolean setBackbone, boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
 		// Set dependencies, but avoid circular dependencies.
 		if (!equals(parent))
@@ -217,7 +219,7 @@ public class Token
 			// Set enhanced dependencie.
 			if (enhancedDep != null)
 			{
-				setEnhancedHead(parent, enhancedDep, setBackbone, cleanOldDeps);
+				setEnhancedHead(parent, enhancedDep, setBackbone, cleanOldDeps, forbidHeadDuplicates);
 				// This was here before refactoring setEnhancedHead out. Seems wrong.
 				//if (setBackbone) parent.depsBackbone = newDep;
 			}
@@ -236,11 +238,15 @@ public class Token
 	 *                      backbone for child node
 	 * @param cleanOldDeps	whether previous contents from deps field should be
 	 *                      removed
+	 * @param forbidHeadDuplicates	should multiple links with the same head be
+	 *                              forbidden
 	 */
 	public void setHead(
-			Token parent, UDv2Relations dep, boolean setBackbone, boolean cleanOldDeps)
+			Token parent, UDv2Relations dep, boolean setBackbone,
+			boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
-		setHead(parent, dep, Tuple.of(dep, null), setBackbone, cleanOldDeps);
+		setHead(parent, dep, Tuple.of(dep, null), setBackbone, cleanOldDeps,
+				forbidHeadDuplicates);
 	}
 
 	/**
@@ -253,15 +259,14 @@ public class Token
 	 *                              be set as backbone for child node
 	 * @param cleanOldDeps    		whether previous contents from deps field
 	 *                              should be removed
-	 //* @param forbidHeadDuplicates	should multiple links with the same head be
+	 * @param forbidHeadDuplicates	should multiple links with the same head be
 	 *                              forbidden
 	 */
 	public void setEnhancedHead(
 			Token parent, UDv2Relations role, String rolePostfix,
-			boolean setBackbone, boolean cleanOldDeps)
+			boolean setBackbone, boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
 		if (equals(parent)) return; // No circulars.
-		boolean forbidHeadDuplicates = false; // TODO make this parameter
 
 		EnhencedDep dep = new EnhencedDep(parent, role, rolePostfix);
 		if (cleanOldDeps) deps.clear();
@@ -298,15 +303,15 @@ public class Token
 	 *                              be set as backbone for child node
 	 * @param cleanOldDeps    		whether previous contents from deps field
 	 *                              should be removed
-	// * @param forbidHeadDuplicates	should multiple links with the same head be
+	 * @param forbidHeadDuplicates	should multiple links with the same head be
 	 *                              forbidden
 	 */
 	public void setEnhancedHead(
 			Token parent, Tuple<UDv2Relations, String> enhancedDep,
-			boolean setBackbone, boolean cleanOldDeps)
+			boolean setBackbone, boolean cleanOldDeps, boolean forbidHeadDuplicates)
 	{
 		setEnhancedHead(parent, enhancedDep.first, enhancedDep.second,
-				setBackbone, cleanOldDeps);
+				setBackbone, cleanOldDeps, forbidHeadDuplicates);
 	}
 
 

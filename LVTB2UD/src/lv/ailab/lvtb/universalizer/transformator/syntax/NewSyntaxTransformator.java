@@ -202,7 +202,8 @@ public class NewSyntaxTransformator
 					parentANode.getId(), newBaseDepRoot.getId()));
 
 		List<PmlANode> pmlDependents = parentANode.getChildren();
-		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS, params.ADD_CONTROL_SUBJ);
+		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS,
+				params.ADD_CONTROL_SUBJ, params.NO_EDEP_DUPLICATES);
 
 		//if (params.ADD_CONTROL_SUBJ) s.???(???, params.PROPAGATE_CONJUNCTS);
 	}

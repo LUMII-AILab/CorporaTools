@@ -66,14 +66,17 @@ public class PhraseTransformator
 			return utterToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.PRED, params.PROPAGATE_CONJUNCTS, true);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.PRED, true,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, params.PROPAGATE_CONJUNCTS, true);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, true,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		if (phraseType.equals(LvtbPmcTypes.INTERJ) ||
 				phraseType.equals(LvtbPmcTypes.PARTICLE))
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, params.PROPAGATE_CONJUNCTS, false);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, false,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 		//======= COORD ========================================================
 
@@ -88,28 +91,29 @@ public class PhraseTransformator
 		if (phraseType.equals(LvtbXTypes.XAPP) ||
 				phraseType.equals(LvtbXTypes.XNUM))
 			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, null,
-					params.PROPAGATE_CONJUNCTS, false);
+					false, params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 		// Multiple basElem, root is the first.
 		if (phraseType.equals(LvtbXTypes.XFUNCTOR) ||
 				phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbXTypes.NAMEDENT) ||
 				phraseType.equals(LvtbXTypes.COORDANAL))
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, params.PROPAGATE_CONJUNCTS,false);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, false,
+					params.PROPAGATE_CONJUNCTS,params.NO_EDEP_DUPLICATES);
 
 		// Only one basElem
 		if (phraseType.equals(LvtbXTypes.XPARTICLE))
 			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, null,
-					params.PROPAGATE_CONJUNCTS, true);
+					true, params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		if (phraseType.equals(LvtbXTypes.XPREP))
 			return s.allUnderLastConstituent(phraseNode, LvtbRoles.BASELEM, LvtbRoles.PREP,
-					params.PROPAGATE_CONJUNCTS, true);
+					true, params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
 			return xSimileToUD(phraseNode);
 		if (phraseType.equals(LvtbXTypes.UNSTRUCT))
 			//return unstructToUd(phraseNode);
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM,
-					params.PROPAGATE_CONJUNCTS,false);
+			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, false,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 		// Specific.
 		if (phraseType.equals(LvtbXTypes.SUBRANAL))
@@ -132,7 +136,8 @@ public class PhraseTransformator
 	{
 		List<PmlANode> children = phraseNode.getChildren();
 		PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
-		s.relinkAllConstituents(newRoot, children, phraseNode, params.PROPAGATE_CONJUNCTS);
+		s.relinkAllConstituents(newRoot, children, phraseNode,
+				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		return newRoot;
 	}
 
@@ -170,7 +175,8 @@ public class PhraseTransformator
 					"Sentence \"%s\" seems to be empty", s.id));
 
 		// Create dependency structure in conll table.
-		s.relinkAllConstituents(newRoot, children, pmcNode, params.PROPAGATE_CONJUNCTS);
+		s.relinkAllConstituents(newRoot, children, pmcNode,
+				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 		return newRoot;
 	}
@@ -232,7 +238,8 @@ public class PhraseTransformator
 				else break;
 			}
 			rootChildren.addAll(lastPunct);
-			s.relinkAllConstituents(newRoot, rootChildren, pmcNode, params.PROPAGATE_CONJUNCTS);
+			s.relinkAllConstituents(newRoot, rootChildren, pmcNode,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 			// now let's process what is left
 			while (sortedChildren.size() > 0)
@@ -252,17 +259,21 @@ public class PhraseTransformator
 				}
 
 				// process found part
-				s.relinkAllConstituents(subroot, nextPart, pmcNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(subroot, nextPart, pmcNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 				// Is this really safe that all crosslinks have the same role???
 				if (params.PROPAGATE_CONJUNCTS)
 					s.setLinkAndCorsslinksPhrasal(newRoot, subroot, UDv2Relations.PARATAXIS,
-							Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+							Tuple.of(UDv2Relations.PARATAXIS, null), true,
+							true, params.NO_EDEP_DUPLICATES);
 				else s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
-						Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+						Tuple.of(UDv2Relations.PARATAXIS, null), true,
+						true, params.NO_EDEP_DUPLICATES);
 			}
 		}
-		else s.relinkAllConstituents(newRoot, children, pmcNode, params.PROPAGATE_CONJUNCTS);
+		else s.relinkAllConstituents(newRoot, children, pmcNode,
+				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
 		return newRoot;
 	}
@@ -319,9 +330,11 @@ public class PhraseTransformator
 					coordNode);
 			if (params.PROPAGATE_CONJUNCTS)
 				s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-						Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+						Tuple.of(UDv2Relations.PARATAXIS, null), true,
+						true, params.NO_EDEP_DUPLICATES);
 			else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+					Tuple.of(UDv2Relations.PARATAXIS, null), true,
+					true, params.NO_EDEP_DUPLICATES);
 			semicOrd = nextSemicOrd;
 		}
 		// last
@@ -330,9 +343,11 @@ public class PhraseTransformator
 				coordNode);
 		if (params.PROPAGATE_CONJUNCTS)
 			s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-					Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+					Tuple.of(UDv2Relations.PARATAXIS, null), true,
+					true, params.NO_EDEP_DUPLICATES);
 		else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
-				Tuple.of(UDv2Relations.PARATAXIS, null), true, true);
+				Tuple.of(UDv2Relations.PARATAXIS, null), true,
+				true, params.NO_EDEP_DUPLICATES);
 		return newRoot;
 	}
 
@@ -356,12 +371,14 @@ public class PhraseTransformator
 		{
 			if (LvtbRoles.CRDPART.equals(n.getRole()))
 			{
-				s.relinkAllConstituents(n, postponed, coordNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(n, postponed, coordNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				lastSubroot = n;
 				if (newRoot == null)
 					newRoot = n;
 				else
-					s.relinkSingleConstituent(newRoot, n, coordNode, params.PROPAGATE_CONJUNCTS);
+					s.relinkSingleConstituent(newRoot, n, coordNode,
+							params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				postponed = new ArrayList<>();
 			} else postponed.add(n);
 		}
@@ -369,7 +386,8 @@ public class PhraseTransformator
 		if (!postponed.isEmpty())
 		{
 			if (lastSubroot != null)
-				s.relinkAllConstituents(lastSubroot, postponed, coordNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(lastSubroot, postponed, coordNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 			else
 			{
 				StandardLogger.l.doInsentenceWarning(String.format(
@@ -378,7 +396,8 @@ public class PhraseTransformator
 				if (sortedNodes.get(0) != null )
 				{
 					newRoot = sortedNodes.get(0);
-					s.relinkAllConstituents(newRoot, sortedNodes, coordNode, params.PROPAGATE_CONJUNCTS);
+					s.relinkAllConstituents(newRoot, sortedNodes, coordNode,
+							params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				}
 				else throw new IllegalArgumentException(String.format(
 						"\"%s\" in sentence \"%s\" seems to be empty",
@@ -448,9 +467,11 @@ public class PhraseTransformator
 		{
 			// TODO maybe this role choice should be moved to PhrasePartDepLogic.phrasePartRoleToUD()
 			case "vv" : return s.allUnderFirstConstituent(
-					xNode, LvtbRoles.BASELEM, params.PROPAGATE_CONJUNCTS, false);
+					xNode, LvtbRoles.BASELEM, false,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 			case "part" : return s.allUnderFirstConstituent(
-					xNode, LvtbRoles.BASELEM, params.PROPAGATE_CONJUNCTS, false);
+					xNode, LvtbRoles.BASELEM, false,
+					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 			case "ipv" :
 			{
 				List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
@@ -473,7 +494,8 @@ public class PhraseTransformator
 							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one adjective \"%s\".\n", xType, s.id, LvtbRoles.BASELEM);
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(adjs);
-				s.relinkAllConstituents(newRoot, children, xNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(newRoot, children, xNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				return newRoot;
 			}
 			case "skv" :
@@ -497,7 +519,8 @@ public class PhraseTransformator
 							"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".",
 							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
 				PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(prons);
-				s.relinkAllConstituents(newRoot, children, xNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(newRoot, children, xNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				return newRoot;
 			}
 			case "set" :
@@ -526,7 +549,8 @@ public class PhraseTransformator
 							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP));
 					//warnOut.printf("\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".\n", xType, s.id, LvtbRoles.BASELEM, LvtbXTypes.XPREP);
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noPrepBases);
-				s.relinkAllConstituents(newRoot, children, xNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(newRoot, children, xNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				return newRoot;
 			}
 			case "sal" :
@@ -553,7 +577,8 @@ public class PhraseTransformator
 							"\"%s\" in sentence \"%s\" has more than one \"%s\" without \"%s\".",
 							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM, LvtbXTypes.XSIMILE));
 				PmlANode newRoot = PmlANodeListUtils.getLastByDeepOrd(noSimBases);
-				s.relinkAllConstituents(newRoot, children, xNode, params.PROPAGATE_CONJUNCTS);
+				s.relinkAllConstituents(newRoot, children, xNode,
+						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				return newRoot;
 			}
 		}
@@ -584,11 +609,12 @@ public class PhraseTransformator
 			//NodeList children = NodeUtils.getAllPMLChildren(xNode);
 			List<PmlANode> children = xNode.getChildren();
 			PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(children);
-			s.relinkAllConstituents(newRoot, children, xNode, true);
+			s.relinkAllConstituents(newRoot, children, xNode, true,
+					params.NO_EDEP_DUPLICATES);
 			return newRoot;
 		}
 		return s.allUnderLastConstituent(xNode, LvtbRoles.BASELEM, null,
-				params.PROPAGATE_CONJUNCTS, true);
+				true, params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 	}
 
 	/**
@@ -612,6 +638,9 @@ public class PhraseTransformator
 				result = noModXPredToUD(xNode);
 			else result = modXPredToUD(xNode);
 		}
+		String resultId = result.getId();
+		//for (String delId : s.coordPartsUnder.get(resultId))
+		//	s.removeGovFromSubjectMap(delId);
 		s.removeGovFromSubjectMap(result.getId());
 		return result;
 	}
@@ -634,7 +663,7 @@ public class PhraseTransformator
 					xNode.getParent().getId(), xTag));
 		// Just put basElem under mod.
 		return s.allUnderLastConstituent(xNode, LvtbRoles.MOD, LvtbRoles.BASELEM,
-				params.PROPAGATE_CONJUNCTS, true);
+				true, params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 	}
 
 	/**
@@ -677,7 +706,8 @@ public class PhraseTransformator
 		PmlANode newRoot = basElem;
 		if (!ultimateAux) newRoot = lastAux;
 		List<PmlANode> children = xNode.getChildren();
-		s.relinkAllConstituents(newRoot, children, xNode, params.PROPAGATE_CONJUNCTS);
+		s.relinkAllConstituents(newRoot, children, xNode,
+				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		return newRoot;
 	}
 }
