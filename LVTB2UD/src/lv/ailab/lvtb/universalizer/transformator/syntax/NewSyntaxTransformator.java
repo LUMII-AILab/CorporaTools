@@ -22,7 +22,7 @@ public class NewSyntaxTransformator
 	{
 		s = sent;
 		this.params = params;
-		pTransf = new PhraseTransformator(s);
+		pTransf = new PhraseTransformator(s, params);
 	}
 
 	public void prepare()
@@ -54,7 +54,7 @@ public class NewSyntaxTransformator
 		transformPhraseParts(pmlPmc);
 
 		// Process root PMC.
-		PmlANode newRoot = pTransf.anyPhraseToUD(pmlPmc, params.PROPAGATE_CONJUNCTS);
+		PmlANode newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null) throw new IllegalArgumentException(String.format(
 				"Sentence %s has untransformable root PMC.", s.id));
 		s.pmlaToConll.put(s.pmlTree.getId(), s.pmlaToConll.get(newRoot.getId()));
@@ -99,7 +99,7 @@ public class NewSyntaxTransformator
 			transformPhraseParts(phraseNode);
 
 			// Find new subroot.
-			newBasicRoot = pTransf.anyPhraseToUD(phraseNode, params.PROPAGATE_CONJUNCTS);
+			newBasicRoot = pTransf.anyPhraseToUD(phraseNode);
 			newEnhancedRoot = newBasicRoot;
 			if (newBasicRoot == null)
 				throw new IllegalStateException(
