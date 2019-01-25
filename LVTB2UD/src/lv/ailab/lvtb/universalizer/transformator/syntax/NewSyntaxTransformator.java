@@ -66,7 +66,7 @@ public class NewSyntaxTransformator
 
 	public void aftercare()
 	{
-		if (params.CLEANUP_DUPLICATED_DEPS) s.removeDuplicateDeps();
+		if (params.CLEANUP_UNLABELED_EDEPS) s.removeUnlabeledDeps();
 	}
 
 	//=== Transformation details. ==============================================

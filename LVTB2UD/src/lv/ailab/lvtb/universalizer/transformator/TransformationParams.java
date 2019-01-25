@@ -45,21 +45,32 @@ public class TransformationParams
 	 * will contain empty nodes for inserted commas and nonpredicative empty
 	 * nodes.
 	 */
-	public Boolean UD_STANDARD_NULLNODES = true;
+	public Boolean UD_STANDARD_NULLNODES = true; // NB! Check this before each UD release!
 
+	// ===== Enhanced.
 	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph
 	 * may contain multiple links/labels per the same node pair and link
 	 * direction.
 	 */
-	public Boolean NO_EDEP_DUPLICATES = true;
+	public Boolean NO_EDEP_DUPLICATES = true; // NB! Check this before each UD release!
 
-	//== Enhanced.
-	// NB! Check this before each UD release!
-	public Boolean ADD_CONTROL_SUBJ = true;
-	public Boolean PROPAGATE_CONJUNCTS = true;
-	@Deprecated // Properly constructed algorithm should not make those.
-	public Boolean CLEANUP_DUPLICATED_DEPS = false;
+	/**
+	 * Should transformators add controlled/raised subject links in enhanced
+	 * graph?
+	 */
+	public Boolean ADD_CONTROL_SUBJ = true; // NB! Check this before each UD release!
+
+	/**
+	 * Should transformators add coordination propagation links in enhanced
+	 * graph?
+	 */
+	public Boolean PROPAGATE_CONJUNCTS = true; // NB! Check this before each UD release!
+
+	/**
+	 * Should enhanced links with role "dep" be thrown out?
+	 */
+	public Boolean CLEANUP_UNLABELED_EDEPS = false;
 
 	/**
 	 * Get default parameter set.

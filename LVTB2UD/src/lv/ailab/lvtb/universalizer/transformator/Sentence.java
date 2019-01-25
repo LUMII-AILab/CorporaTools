@@ -1,6 +1,5 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
-import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
@@ -14,7 +13,10 @@ import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -240,19 +242,21 @@ public class Sentence
 
 	// ===== After-transformation clean-ups. ===================================
 
-	@Deprecated // Properly constructed algorithm should not make those.
-	public void removeDuplicateDeps()
+	public void removeUnlabeledDeps()
 	{
 		for (Token t : conll)
 		{
-			HashSet<String> goodEnhDepHeads = new HashSet<>(t.deps.stream()
+			t.deps = t.deps.stream()
+					.filter(ed -> ed.role != null && ed.role != UDv2Relations.DEP)
+					.collect(Collectors.toCollection(HashSet::new));
+			/*HashSet<String> goodEnhDepHeads = new HashSet<>(t.deps.stream()
 					.filter(d -> (d.role != UDv2Relations.DEP))
 					.map(d -> d.headID).collect(Collectors.toSet()));
 			HashSet<EnhencedDep> noRoleEnhDepsToDelete = new HashSet<>(t.deps.stream()
 					.filter(d -> (d.role == UDv2Relations.DEP && goodEnhDepHeads.contains(d.headID)
 							&& (d.rolePostfix == null || d.rolePostfix.isEmpty())))
 					.collect(Collectors.toSet()));
-			t.deps.removeAll(noRoleEnhDepsToDelete);
+			t.deps.removeAll(noRoleEnhDepsToDelete);*/
 		}
 	}
 
