@@ -150,6 +150,8 @@ public class Sentence
 		HashSet<String> collectedSubjs = resultAccumulator.get(id);
 		if (collectedSubjs == null) collectedSubjs = new HashSet<>();
 		List<PmlANode> subjs = aNode.getChildren(LvtbRoles.SUBJ);
+		if (subjs!= null) subjs.addAll(aNode.getChildren(LvtbRoles.SUBJCL));
+		else subjs = aNode.getChildren(LvtbRoles.SUBJCL);
 		if (subjs != null) for (PmlANode s : subjs)
 			collectedSubjs.add(s.getId());
 		if (!collectedSubjs.isEmpty()) resultAccumulator.put(id, collectedSubjs);
@@ -659,8 +661,11 @@ public class Sentence
 		// Process children.
 		for (PmlANode child : children)
 		{
-			relinkSingleDependant(parent, child, addCoordPropCrosslinks, forbidHeadDuplicates);
-			if (addControledSubjects)
+			Tuple<UDv2Relations, String> role = relinkSingleDependant(parent, child,
+					addCoordPropCrosslinks, forbidHeadDuplicates);
+			if (addControledSubjects && (
+					role.first == UDv2Relations.NSUBJ || role.first == UDv2Relations.NSUBJ_PASS ||
+					role.first == UDv2Relations.CSUBJ || role.first == UDv2Relations.CSUBJ_PASS))
 				addSubjectsControlers(child, addCoordPropCrosslinks, forbidHeadDuplicates);
 		}
 	}
@@ -689,7 +694,9 @@ public class Sentence
 					subject, parent, LvtbRoles.SUBJ);
 			setEnhLink(parent, subject, enhRole, false, false, forbidHeadDuplicates);
 			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-				addFixedRoleCrosslinks(parent, subject, enhRole, forbidHeadDuplicates);
+				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates);
+				//addFixedRoleCrosslinks(parent, subject, enhRole, forbidHeadDuplicates);
+			//System.out.println(pmlaToConll.get(subject.getId()).toConllU());
 		}
 	}
 
@@ -705,8 +712,9 @@ public class Sentence
 	 *                                  done?
 	 * @param forbidHeadDuplicates		should multiple enhanced links with the
 	 *                              	same head be allowed
+	 * @return enhanced role for main link
 	 */
-	protected void relinkSingleDependant(
+	protected Tuple<UDv2Relations, String> relinkSingleDependant(
 			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks,
 			boolean forbidHeadDuplicates)
 	{
@@ -716,6 +724,7 @@ public class Sentence
 		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
 			addDependencyCrosslinks(parent, child, forbidHeadDuplicates);
+		return enhRole;
 	}
 
 	/**

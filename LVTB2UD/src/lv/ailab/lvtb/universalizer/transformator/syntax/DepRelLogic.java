@@ -77,6 +77,7 @@ public class DepRelLogic
 		Tuple<UDv2Relations, String> res = depToUDLogic(node, parent, lvtbRole);
 		if (res.first == null || UDv2Relations.DEP.equals(res.first))
 			warnOnRole(node, parent, lvtbRole,true);
+		//System.out.println("Enh. child: " + node.getId() + ", enh. parent: " + parent.getId() + " -> " + res.first);
 		return res;
 	}
 
