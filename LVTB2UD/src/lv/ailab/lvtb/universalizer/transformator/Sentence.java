@@ -690,12 +690,11 @@ public class Sentence
 		for (String parentId : parentIds)
 		{
 			PmlANode parent = pmlTree.getDescendant(parentId);
-			Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(
-					subject, parent, LvtbRoles.SUBJ);
+			Tuple<UDv2Relations, String> enhRole = DepRelLogic.cRSubjToUD(
+					subject, parent);
 			setEnhLink(parent, subject, enhRole, false, false, forbidHeadDuplicates);
 			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates);
-				//addFixedRoleCrosslinks(parent, subject, enhRole, forbidHeadDuplicates);
+				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates, true);
 			//System.out.println(pmlaToConll.get(subject.getId()).toConllU());
 		}
 	}
@@ -723,7 +722,7 @@ public class Sentence
 		setBaseLink(parent, child, baseRole);
 		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-			addDependencyCrosslinks(parent, child, forbidHeadDuplicates);
+			addDependencyCrosslinks(parent, child, forbidHeadDuplicates, false);
 		return enhRole;
 	}
 
@@ -741,7 +740,8 @@ public class Sentence
 	 *                              head be allowed
 	 */
 	protected void addDependencyCrosslinks (
-			PmlANode parent, PmlANode child, boolean forbidHeadDuplicates)
+			PmlANode parent, PmlANode child, boolean forbidHeadDuplicates,
+			boolean useCRSubjFun)
 	{
 		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
@@ -754,8 +754,9 @@ public class Sentence
 			// Role for ehnanced link is obtained by actual parent,
 			// actual child, but by "place-holder" role obtained
 			// from the original child.
-			Tuple<UDv2Relations, String> childDeprel =
-					DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
+			Tuple<UDv2Relations, String> childDeprel = useCRSubjFun
+					? DepRelLogic.cRSubjToUD(altChild, altParent)
+					: DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
 			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
 			{
 				HashSet<String> altParentKeys2 = getAllAlternatives(altParentKey, false);
