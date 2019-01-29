@@ -22,18 +22,25 @@ public class DepRelLogic
 	 * Generic relation between LVTB dependency roles and UD DEPREL.
 	 * @param node		node for which UD DEPREL should be obtained (use this
 	 *                  node's placement, role, tag and lemma)
+	 * @param isEligibleForOrphan	is this node to become a child for a core
+	 *                              argument or adjunct elevated instead of
+	 *                              ellipted predicate? (basically true if
+	 *                              EllipsisLogic.newParent() said so)
 	 * @return	UD DEPREL (including orphan, if parent is reduction and node is
 	 * 			representing a core argument).
 	 */
-	public static UDv2Relations depToUDBase(PmlANode node)
+	public static UDv2Relations depToUDBase(PmlANode node, boolean isEligibleForOrphan)
 	{
 		PmlANode pmlParent = node.getParent();
 		String lvtbRole = node.getRole();
 		UDv2Relations prelaminaryRole = depToUDLogic(node, pmlParent, lvtbRole).first;
 		if (prelaminaryRole == UDv2Relations.DEP)
 			warnOnRole(node, pmlParent, lvtbRole, false);
+		if (isEligibleForOrphan && canBecomeOrphan(prelaminaryRole))
+			return UDv2Relations.ORPHAN;
+		else return prelaminaryRole;
 
-		PmlANode pmlEffParent = node.getEffectiveAncestor();
+		/*PmlANode pmlEffParent = node.getEffectiveAncestor();
 		if ((pmlParent.isPureReductionNode() || pmlEffParent.isPureReductionNode())
 				&& (prelaminaryRole.equals(UDv2Relations.NSUBJ)
 					|| prelaminaryRole.equals(UDv2Relations.NSUBJ_PASS)
@@ -44,7 +51,7 @@ public class DepRelLogic
 					|| prelaminaryRole.equals(UDv2Relations.CCOMP)
 					|| prelaminaryRole.equals(UDv2Relations.XCOMP)))
 			return UDv2Relations.ORPHAN;
-		return prelaminaryRole;
+		return prelaminaryRole;*/
 	}
 
 	/**
@@ -732,5 +739,39 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
-
+	/**
+	 * Quoted https://universaldependencies.org/u/overview/specific-syntax.html#ellipsis
+	 * "If the elided element is a predicate and the promoted element is one of
+	 * its arguments or adjuncts, we use the orphan relation when attaching
+	 * other non-functional dependents to the promoted head."
+	 * Our interpretation is that non-functional means roles from blocks
+	 * Nominals, Clauses, Modifier words in https://universaldependencies.org/u/dep/index.html
+	 * @param role	role to check
+	 * @return	wheather it should be orphan when becomes dependant of
+	 * 			something lifted instead of predicate
+	 */
+	public static boolean canBecomeOrphan(UDv2Relations role)
+	{
+		return
+				// Nominals: core arguments
+				role == UDv2Relations.NSUBJ || role == UDv2Relations.NSUBJ_PASS
+				|| role == UDv2Relations.OBJ || role == UDv2Relations.IOBJ
+				// Clauses: core arguments
+				|| role == UDv2Relations.CSUBJ || role == UDv2Relations.CSUBJ_PASS
+				|| role == UDv2Relations.CCOMP || role == UDv2Relations.XCOMP
+				// Nominals: non-core dependents
+				|| role == UDv2Relations.OBL || role == UDv2Relations.VOCATIVE
+				|| role == UDv2Relations.EXPL || role == UDv2Relations.DISLOCATED
+				// Clauses: non-core dependents
+				|| role == UDv2Relations.ADVCL
+				// Modifier words: non-core dependents
+				|| role == UDv2Relations.ADVMOD || role == UDv2Relations.DISCOURSE
+				// Nominals: nominal dependents
+				|| role == UDv2Relations.NMOD || role == UDv2Relations.APPOS
+				|| role == UDv2Relations.NUMMOD
+				// Clauses: nominal dependents
+				|| role == UDv2Relations.ACL
+				// Modifier words: nominal dependents
+				|| role == UDv2Relations.AMOD;
+	}
 }

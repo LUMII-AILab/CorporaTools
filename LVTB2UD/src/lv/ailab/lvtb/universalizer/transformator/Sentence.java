@@ -57,8 +57,8 @@ public class Sentence
 
 	/**
 	 * Mapping from node ID to IDs of coordinated parts that are direct or
-	 * indirect part of this node. After populating this structure, each set
-	 * contains at least node itself.
+	 * indirect part of this node. Must be populated before transformation.
+	 * After populating this structure, each set contains at least node itself.
 	 */
 	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
 
@@ -74,10 +74,17 @@ public class Sentence
 	 * should be linked to. Indexed by subject node IDs. Governor nodes are
 	 * sorted by the depth in the tree, starting with deepest, then by deep ord
 	 * descending. Includes standard subject links, i.e. cases when subject is
-	 * directly dependent from the node. This structure is updated also during
+	 * directly dependent from the node. Must be populated before
 	 * transformation.
 	 */
 	public HashMap<String, ArrayList<String>> subj2gov = new HashMap<>();
+
+	/**
+	 * Set containing currently known ellipted predicates for which core
+	 * argument or adjunct is elevated and, thus, some of dependants might need
+	 * orphan role. Populated during transformation.
+	 */
+	public HashSet<String> ellipsisWithOrphans = new HashSet<>();
 
 	public Sentence(PmlANode pmlTree)
 	{
@@ -102,11 +109,22 @@ public class Sentence
 
 	// ===== Pre-transformation preparations. ==================================
 
+	//TODO incorporate in constructor?
+	/**
+	 * Do all the necessary preparation steps before transformation, collect all
+	 * beforehand needed information.
+	 */
+	public void prepare()
+	{
+		repopulateCoordPartsUnder();
+		repopulateSubjectMap();
+	}
+
 	/**
 	 * This populates subj2gov map by collecting controlled subjects. Links to
 	 * auxVerb labeled xPred parts with true auxiliary verb lemma not collected.
 	 */
-	public void populateSubjectMap()
+	public void repopulateSubjectMap()
 	{
 		HashMap<String, HashSet<String>> gov2subj = new HashMap<>();
 		gov2subj = getGov2subj(pmlTree, gov2subj);
@@ -194,7 +212,7 @@ public class Sentence
 		return resultAccumulator;
 	}
 
-	public void populateCoordPartsUnder()
+	public void repopulateCoordPartsUnder()
 	{
 		coordPartsUnder = new HashMap<>();
 		populateCoordPartsUnder(pmlTree);
@@ -717,7 +735,8 @@ public class Sentence
 			PmlANode parent, PmlANode child, boolean addCoordPropCrosslinks,
 			boolean forbidHeadDuplicates)
 	{
-		UDv2Relations baseRole = DepRelLogic.depToUDBase(child);
+		UDv2Relations baseRole = DepRelLogic.depToUDBase(child,
+				ellipsisWithOrphans.contains(parent.getId()));
 		Tuple<UDv2Relations, String> enhRole = DepRelLogic.depToUDEnhanced(child);
 		setBaseLink(parent, child, baseRole);
 		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);

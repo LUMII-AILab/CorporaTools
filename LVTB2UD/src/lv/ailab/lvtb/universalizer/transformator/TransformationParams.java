@@ -18,22 +18,11 @@ public class TransformationParams
 	 * Print warning when a sentence is omitted.
 	 */
 	public Boolean WARN_OMISSIONS = true;
-	/*
-	 * Make enhanced graph.
-	 * BUGGED.
-	 */
-	//public Boolean DO_ENHANCED = true;
 	/**
 	 * For already processed nodes without tag set the phrase tag based on node
 	 * chosen as substructure root.
 	 */
 	public Boolean INDUCE_PHRASE_TAGS = true;
-	/*
-	 * Rename newswire IDs' document part.
-	 * Deprecated functionality.
-	 */
-	//@Deprecated
-	//public Boolean CHANGE_IDS = false;
 	/**
 	 * What to when a file contains an untransformable tree? For true - whole
 	 * file is omitted; for false - only specific tree.

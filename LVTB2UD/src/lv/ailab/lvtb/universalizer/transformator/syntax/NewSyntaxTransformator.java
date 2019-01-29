@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.List;
 
@@ -27,8 +28,7 @@ public class NewSyntaxTransformator
 
 	public void prepare()
 	{
-		s.populateCoordPartsUnder();
-		s.populateSubjectMap();
+		s.prepare();
 		if (params.DEBUG)
 		{
 			System.out.println("Subject map: ");
@@ -123,13 +123,14 @@ public class NewSyntaxTransformator
 		//// Process reduction nodes.
 		else if (aNode.isPureReductionNode())
 		{
-			// Find, what will be elevated in basic sependencies.
+			// Find, what will be elevated in basic dependencies.
 			String nodeId = aNode.getId();
-			PmlANode redRoot = EllipsisLogic.newParent(aNode);
+			Tuple<PmlANode, Boolean> redRoot = EllipsisLogic.newParent(aNode);
 			if (redRoot == null) throw new IllegalArgumentException(String.format(
 					"No child was raised for ellipsis node %s.", nodeId));
 			String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
-			newBasicRoot = redRoot;
+			newBasicRoot = redRoot.first;
+			s.ellipsisWithOrphans.add(nodeId);
 
 			// Create ellipsis node for enhanced dependencies, if allowed to do so.
 			// TODO more precise restriction?
