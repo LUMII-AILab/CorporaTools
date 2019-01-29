@@ -41,7 +41,7 @@ public class EllipsisLogic
 		if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*")
 				|| LvtbRoles.SPC.equals(lvtbEffRole) && lvtbTag.matches("v..(n|p[up]).*"))
 		{
-			Tuple<PmlANode,Boolean> res = newParentForPreds(aNode);
+			Tuple<PmlANode,Boolean> res = newParentForVerbal(aNode);
 			if (res != null) return res;
 		}
 
@@ -59,7 +59,7 @@ public class EllipsisLogic
 		return null;
 	}
 
-	protected static Tuple<PmlANode,Boolean> newParentForPreds(PmlANode aNode)
+	protected static Tuple<PmlANode,Boolean> newParentForVerbal(PmlANode aNode)
 	{
 		List<PmlANode> children = aNode.getChildren();
 		if (children == null) return null;
