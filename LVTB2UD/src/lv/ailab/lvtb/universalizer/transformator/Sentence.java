@@ -682,9 +682,11 @@ public class Sentence
 			Tuple<UDv2Relations, String> role = relinkSingleDependant(parent, child,
 					addCoordPropCrosslinks, forbidHeadDuplicates);
 			if (addControledSubjects && (
-					role.first == UDv2Relations.NSUBJ || role.first == UDv2Relations.NSUBJ_PASS ||
+					role.first == UDv2Relations.NSUBJ || role.first == UDv2Relations.NSUBJ_PASS))
+				addSubjectsControlers(child, false, addCoordPropCrosslinks, forbidHeadDuplicates);
+			if (addControledSubjects && (
 					role.first == UDv2Relations.CSUBJ || role.first == UDv2Relations.CSUBJ_PASS))
-				addSubjectsControlers(child, addCoordPropCrosslinks, forbidHeadDuplicates);
+				addSubjectsControlers(child, true, addCoordPropCrosslinks, forbidHeadDuplicates);
 		}
 	}
 
@@ -692,13 +694,15 @@ public class Sentence
 	 * Based on previously populated subject map add propagated subjects
 	 * for given node.
 	 * @param subject		subject node from which controll links sould be made
+	 * @param isClausal		clausal subject (true) or ordinary (false)
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 * 									done?
 	 * @param forbidHeadDuplicates		should multiple enhanced links with the
 	 *                              	same head be allowed
 	 */
 	public void addSubjectsControlers(
-			PmlANode subject, boolean addCoordPropCrosslinks, boolean forbidHeadDuplicates)
+			PmlANode subject, boolean isClausal, boolean addCoordPropCrosslinks,
+			boolean forbidHeadDuplicates)
 	{
 		if (subject == null) return;
 		String subjectId = subject.getId();
@@ -709,10 +713,11 @@ public class Sentence
 		{
 			PmlANode parent = pmlTree.getDescendant(parentId);
 			Tuple<UDv2Relations, String> enhRole = DepRelLogic.cRSubjToUD(
-					subject, parent);
+					subject, parent, isClausal);
 			setEnhLink(parent, subject, enhRole, false, false, forbidHeadDuplicates);
 			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates, true);
+				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates,
+						(isClausal ? DepCroslinkParams.CLAUSE_CRSUBJ : DepCroslinkParams.NORMAL_CRSUBJ));
 			//System.out.println(pmlaToConll.get(subject.getId()).toConllU());
 		}
 	}
@@ -741,7 +746,7 @@ public class Sentence
 		setBaseLink(parent, child, baseRole);
 		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-			addDependencyCrosslinks(parent, child, forbidHeadDuplicates, false);
+			addDependencyCrosslinks(parent, child, forbidHeadDuplicates, DepCroslinkParams.NO_CRSUBJ);
 		return enhRole;
 	}
 
@@ -760,7 +765,7 @@ public class Sentence
 	 */
 	protected void addDependencyCrosslinks (
 			PmlANode parent, PmlANode child, boolean forbidHeadDuplicates,
-			boolean useCRSubjFun)
+			DepCroslinkParams croslinkParam)
 	{
 		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
@@ -773,9 +778,19 @@ public class Sentence
 			// Role for ehnanced link is obtained by actual parent,
 			// actual child, but by "place-holder" role obtained
 			// from the original child.
-			Tuple<UDv2Relations, String> childDeprel = useCRSubjFun
-					? DepRelLogic.cRSubjToUD(altChild, altParent)
-					: DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
+			Tuple<UDv2Relations, String> childDeprel = null;
+			switch (croslinkParam)
+			{
+				case NO_CRSUBJ:
+					childDeprel = DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
+					break;
+				case NORMAL_CRSUBJ:
+					childDeprel = DepRelLogic.cRSubjToUD(altChild, altParent, false);
+					break;
+				case CLAUSE_CRSUBJ:
+					childDeprel = DepRelLogic.cRSubjToUD(altChild, altParent, true);
+			}
+
 			if (UDv2Relations.canPropagateAftercheck(childDeprel.first))
 			{
 				HashSet<String> altParentKeys2 = getAllAlternatives(altParentKey, false);
@@ -1046,5 +1061,9 @@ public class Sentence
 			removed++;
 		}
 		return removed > 0;
+	}
+	protected static enum DepCroslinkParams
+	{
+		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ;
 	}
 }
