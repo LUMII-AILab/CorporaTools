@@ -41,9 +41,9 @@ Izejas dati:
 * CoNLL ar morfoloģiju un, ja var, tad sintaksi
 
 Piemērs:
-`perl -e "use LvCorporaTools::FormatTransf::Conll2MA qw(processDir); processDir(@ARGV)" t16_p21.w  result_folder t16_p21.conllu`
+`perl -e "use LvCorporaTools::FormatTransf::Conll2MA qw(processFileSet); processFileSet(@ARGV)" t16_p21.w  result_folder t16_p21.conllu`
 vai
-`perl -e "use LvCorporaTools::FormatTransf::Conll2MA qw(processDir); processDir(@ARGV)" t16_p21.w  result_folder`
+`perl -e "use LvCorporaTools::FormatTransf::Conll2MA qw(processFileSet); processFileSet(@ARGV)" t16_p21.w  result_folder`
 
 Parametri:
 1) w fails

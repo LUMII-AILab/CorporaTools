@@ -644,14 +644,6 @@ sub _checkSeq
 			my $upperPos = first {$upperSeq->[$_] eq $upperId } 0..$#$upperSeq;
 			push (@res, $upperId)
 				if ($upperPos <= $previos and not $isEqAllowed or $upperPos < $previos);
-			#if ($isEqAllowed)
-			#{
-			#	push (@res, $upperId) if ($upperPos < $previos);
-			#}
-			#else
-			#{
-			#	push (@res, $upperId) if ($upperPos <= $previos);
-			#}
 			$previos = $upperPos;
 		}
 	}

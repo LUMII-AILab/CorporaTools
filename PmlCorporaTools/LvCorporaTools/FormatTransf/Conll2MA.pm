@@ -431,7 +431,7 @@ sub _printARootFromHash
 
 	# 1. Start sentence enclosing part.
 	printASentBegin($aOut, $rootNode->{'aId'}, $rootNode->{'mId'}, $isFirst ? $firstSentComment : 0);
-	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+	if (exists $rootNode->{'children'} and (keys %{$rootNode->{'children'}}) > 0)
 	{
 		# 2. Print out (hopefully only one) phrase children.
 		for my $nodeId (keys %{$rootNode->{'children'}})
@@ -472,7 +472,7 @@ sub _printAPhraseFromHash
 	# 2. Start phrase node.
 	printAPhraseBegin($aOut, $rootType, $rootNode->{'phraseSubType'});
 	# 3. Print out phrase constituents.
-	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+	if (exists $rootNode->{'children'} and (keys %{$rootNode->{'children'}}) > 0)
 	{
 		for my $nodeId (keys %{$rootNode->{'children'}})
 		{
@@ -487,7 +487,7 @@ sub _printAPhraseFromHash
 	# 4. End phrase node.
 	printAPhraseEnd($aOut, $rootType);
 	# 5. Print out phrase dependents.
-	if (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+	if (exists $rootNode->{'children'} and (keys %{$rootNode->{'children'}}) > 0)
 	{
 		for my $nodeId (keys %{$rootNode->{'children'}})
 		{
@@ -509,7 +509,7 @@ sub _printANodeFromHash
 	my $rootNode = $nodeMap->{$rootId};
 
 	# Just print out the node, if there are no children for it.
-	unless (exists $rootNode->{'children'} and keys $rootNode->{'children'} > 0)
+	unless (exists $rootNode->{'children'} and (keys %{$rootNode->{'children'}}) > 0)
 	{
 		printALeaf($aOut, $rootNode->{'aId'}, $rootNode->{'role'},
 			$rootNode->{'mId'}, $rootNode->{'ord'}, $rootNode->{'token'});
