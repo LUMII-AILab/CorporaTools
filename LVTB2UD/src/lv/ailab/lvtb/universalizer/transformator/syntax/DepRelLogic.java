@@ -148,111 +148,84 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> subjToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
-		// Nominal++ subject
-		// This procesing is somewhat tricky: it is allowed for nsubj and
-		// nsubjpas to be [rci].*, but it is not allowed for nmod.
+		UDv2Relations resRoleActive;
+		UDv2Relations resRolePasive;
+
+		// First: is this nominal or clausal subject?
 		if (tag.matches("[nampxy].*|v..pd.*|[rci].*|y[npa].*]"))
 		{
-			String parentTag = parent.getAnyTag();
-			String parentEffType = parent.getEffectiveLabel();
-			PmlANode pmlEffAncestor = parent.getThisOrEffectiveAncestor();
-			// Hopefully either parent or effective ancestor is tagged as verb
-			// or xPred.
-			PmlANode parentXChild = parent.getPhraseNode();
-			String parentXChildType = parentXChild == null ? null : parentXChild.getPhraseType();
-			PmlANode ancXChild = pmlEffAncestor.getPhraseNode();
-			String ancXChildType = ancXChild == null ? null : ancXChild.getPhraseType();
+			resRoleActive = UDv2Relations.NSUBJ;
+			resRolePasive = UDv2Relations.NSUBJ_PASS;
+		}
+		else if (tag.matches("v..n.*"))
+		{
+			resRoleActive = UDv2Relations.CSUBJ;
+			resRolePasive = UDv2Relations.CSUBJ_PASS;
+		}
+		else return Tuple.of(UDv2Relations.DEP, null);
 
-			// Parent is predicate
-			if (parentEffType.equals(LvtbRoles.PRED))
+		// Second: is parent active or passive?
+
+		// Here we get nodes that will tell us if parent is pred or xPred
+		String parentTag = parent.getAnyTag();
+		String parentEffType = parent.getEffectiveLabel();
+		PmlANode parentXChild = parent.getPhraseNode();
+		String parentXChildType = parentXChild == null ? null : parentXChild.getPhraseType();
+
+		PmlANode pmlEffAncestor = parent.getThisOrEffectiveAncestor();
+		String effAncestorType = pmlEffAncestor.getEffectiveLabel();
+		PmlANode ancXChild = pmlEffAncestor.getPhraseNode();
+		String ancXChildType = ancXChild == null ? null : ancXChild.getPhraseType();
+
+		// But if parent is basElem, we need to know, if grandparent is spc
+		PmlANode pmlEffAncestor2 = pmlEffAncestor.getThisOrEffectiveAncestor();
+		String effAncestorType2 = pmlEffAncestor2.getEffectiveLabel();
+
+		boolean isParentRealVerbal = effAncestorType.equals(LvtbRoles.PRED)
+				|| effAncestorType.equals(LvtbRoles.SPC)
+				|| (effAncestorType.equals(LvtbRoles.BASELEM)
+				&& effAncestorType2.equals(LvtbRoles.SPC));
+		boolean isParentOtherBasElem = parentEffType.equals(LvtbRoles.BASELEM);
+
+		if (!isParentRealVerbal && !isParentOtherBasElem)
+			return Tuple.of(UDv2Relations.DEP, null);
+
+		// Parent is complex predicate something
+		if (LvtbXTypes.XPRED.equals(parentXChildType) ||
+				LvtbXTypes.XPRED.equals(ancXChildType))
+		{
+			if (parentTag.matches("v..[^p].....p.*|v..pd...p.*|v[^\\[]*\\[pas.*"))
+				return Tuple.of(resRolePasive, null);
+			if (parentTag.matches("v.*") && isParentRealVerbal ||
+					parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*"))
+				return Tuple.of(resRoleActive, null);
+
+			String ancestorTag = pmlEffAncestor.getAnyTag();
+			if (ancestorTag.matches("v..[^p].....p.*|v..pd...p.*|v[^\\[]*\\[pas.*"))
+				return Tuple.of(resRolePasive, null);
+			if (ancestorTag.matches("v.*") && isParentRealVerbal ||
+					parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*"))
+				return Tuple.of(resRoleActive, null);
+		}
+
+		// Parent is simple predicate/spc/basElem
+		else
+		{
+			if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
+				return Tuple.of(resRolePasive, null);
+			//if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
+			if (parentTag.matches("v.*"))
+				return Tuple.of(resRoleActive, null);
+
+			String reduction = parent.getReduction();
+			if (reduction != null && !reduction.isEmpty())
 			{
-				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(parentXChildType) ||
-						LvtbXTypes.XPRED.equals(ancXChildType))
-				{
-					if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					if (parentTag.matches("v.*")) return Tuple.of(UDv2Relations.NSUBJ, null);
-					String ancestorTag = pmlEffAncestor.getAnyTag();
-					if (ancestorTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*")) return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					if (ancestorTag.matches("v.*")) return Tuple.of(UDv2Relations.NSUBJ, null);
-
-				}
-				// Parent is simple predicate
-				else
-				{
-					// TODO: check the data if participles is realy appropriate here.
-					if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
-					//if (parentTag.matches("v..[^p].....a.*"))
-						return Tuple.of(UDv2Relations.NSUBJ, null);
-					if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
-					//if (parentTag.matches("v..[^p].....p.*"))
-						return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					String reduction = parent.getReduction();
-					//if (parentTag.matches("z.*"))
-					if (reduction != null && !reduction.isEmpty())
-					{
-						if (reduction.matches("v..[^pn].....[a0].*|v..pd...[a0].*|v..pu.*|v..n.*"))
-							return Tuple.of(UDv2Relations.NSUBJ, null);
-						if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
-							return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-						//if (reduction.matches("v..n.*"))
-						//	return  URelations.NMOD;
-					}
-				}
-			}
-
-			// SPC subject, subject subject ("vienam cīnīties ir grūtāk")
-			else if ((LvtbRoles.SPC.equals(parentEffType) || LvtbRoles.SUBJ.equals(parentEffType))
-					&& !tag.matches("[rci].*|yr.*]"))
-			{
-				Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
-				if (m.matches())
-				{
-					String caseLetter = m.group(2);
-					String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-					if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-						return Tuple.of(UDv2Relations.OBL, caseString);
-				}
-				if (tag.matches("[x].*"))
-					return Tuple.of(UDv2Relations.OBL, null);
-			}
-
-			// Parent is basElem of some phrase
-			else if (parentEffType.equals(LvtbRoles.BASELEM))
-			{
-				// Parent is complex predicate
-				if (LvtbXTypes.XPRED.equals(parentXChildType) ||
-						LvtbXTypes.XPRED.equals(ancXChildType))
-				{
-					if (parentTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					if (parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return Tuple.of(UDv2Relations.NSUBJ, null);
-					String ancestorTag = pmlEffAncestor.getAnyTag();
-					if (ancestorTag.matches("v..[^pn].....p.*|v[^\\[]+\\[pas.*")) return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-					if (ancestorTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*")) return Tuple.of(UDv2Relations.NSUBJ, null);
-				}
-				else if (parentTag.matches("v..[^pn].....a.*"))
-						return Tuple.of(UDv2Relations.NSUBJ, null);
-				else if (parentTag.matches("v..[^pn].....p.*"))
-						return Tuple.of(UDv2Relations.NSUBJ_PASS, null);
-				// Infinitive subjects
-				else if (parentTag.matches("v..[np].*") && !tag.matches("(yr|[rci]).*]"))
-				{
-					Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
-					if (m.matches())
-					{
-						String caseLetter = m.group(2);
-						String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-						if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-							return Tuple.of(UDv2Relations.OBL, caseString);
-					}
-					if (tag.matches("(x|y[npa]).*"))
-						return Tuple.of(UDv2Relations.OBL, null);
-				}
+				if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
+					return Tuple.of(resRolePasive, null);
+				if (reduction.matches("v.*"))
+					return Tuple.of(resRoleActive, null);
 			}
 		}
-		// Infinitive
-		if (tag.matches("v..n.*"))
-			return Tuple.of(UDv2Relations.CCOMP, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
