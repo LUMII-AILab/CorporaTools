@@ -3,7 +3,6 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +76,9 @@ public class FeatsLogic
 		if (xpostag.matches("v..pd...ap.*")) res.add(UDv2Feat.ASPECT_IMP);
 		if (xpostag.matches("v..pd....s.*")) res.add(UDv2Feat.ASPECT_PERF);
 
-		if (xpostag.matches("v..[^p].....a.*|v..p.....a.*")) res.add(UDv2Feat.VOICE_ACT);
+		if (xpostag.matches("v..[^p].....a.*|v..p....a.*")) res.add(UDv2Feat.VOICE_ACT);
 		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
-		if (xpostag.matches("v..[^p].....p.*|v..p.....p.*")) res.add(UDv2Feat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
+		if (xpostag.matches("v..[^p].....p.*|v..p....p.*")) res.add(UDv2Feat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.EVIDENT_FH);
 		if (xpostag.matches("v..r.*")) res.add(UDv2Feat.EVIDENT_NFH);
