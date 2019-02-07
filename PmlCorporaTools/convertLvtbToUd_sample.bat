@@ -21,7 +21,7 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/test --fold p=1 name=lv_lvtb-ud-test
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/dev --fold p=1 name=lv_lvtb-ud-dev
 :: File for validation (nothing is ommited) can be made like this
-:: perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/conll-u --fold p=1 name=lv_lvtb-ud-complete
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/conll-u --fold p=1 name=lv_lvtb-ud-complete
 :: File for statistics (includes only sentences to be published) is made by concatenating tran, test, dev: lv_lvtb-ud-tb = lv_lvtb-ud-train + lv_lvtb-ud-test + lv_lvtb-ud-dev
 
 :: Convert everything to Linux line endings
@@ -30,7 +30,7 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 :: Copy lv_lvtb-ud-tb.conll to ../../tools
 :: Get newest UD tools version from github to folder ../../tools
 
-:: Validate files to be published, python 2.7 needed.
+:: Validate files to be published, Python 3 needed.
 ::cd ../../tools
 ::python validate.py --lang=lv ../UD_Latvian-LVTB/lv_lvtb-ud-train.conllu
 ::python validate.py --lang=lv ../UD_Latvian-LVTB/lv_lvtb-ud-dev.conllu
@@ -39,8 +39,9 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 ::python validate.py --lang=lv lv_lvtb-ud-tb.conllu
 :: or
 ::python validate.py --lang=lv lv_lvtb-ud-complete.conllu
+::python validate.py --lang=lv --max-err=0 lv_lvtb-ud-complete.conllu > ud-validator.lv.log 2>&1
 
-:: Get stats for UD readme.
+:: Get stats for UD readme - OBSELOTE and needs Python 2
 ::python conllu-stats.py --stats ../UD_Latvian-LVTB/lv_lvtb-ud-train.conllu ../UD_Latvian-LVTB/lv_lvtb-ud-dev.conllu ../UD_Latvian-LVTB/lv_lvtb-ud-test.conllu ../UD_Latvian/lv_lvtb-ud-cairo.conllu
 
 :: ../../tools contains an old stats.xml, delete it.
