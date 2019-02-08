@@ -241,10 +241,10 @@ sub is_role_allowed_for_parent
   # subject's parent is something predicative
   if ($node->{'role'} eq 'subj')
   {
-	return 1 if ($node->{'role'} eq 'pred' or
-                 $node->{'role'} eq 'spc' or
-                 $node->{'role'} eq 'basElem' or
-				 $node->{'role'} eq 'crdPart' or
+	return 1 if ($p->{'role'} eq 'pred' or
+                 $p->{'role'} eq 'spc' or
+                 $p->{'role'} eq 'basElem' or
+				 $p->{'role'} eq 'crdPart' or
 				 $p->{'pmctype'} eq 'utter' or # Parcelaati.
 				 $p->{'pmctype'} eq 'ins');
 	return 0;
@@ -253,11 +253,11 @@ sub is_role_allowed_for_parent
   # subject clause's parent is either subject or something predicative
   if ($node->{'role'} eq 'subjCl')
   {
-	return 1 if ($node->{'role'} eq 'subj' or
-                 $node->{'role'} eq 'pred' or
-                 $node->{'role'} eq 'spc' or
-                 $node->{'role'} eq 'basElem' or
-				 $node->{'role'} eq 'crdPart' or
+	return 1 if ($p->{'role'} eq 'subj' or
+                 $p->{'role'} eq 'pred' or
+                 $p->{'role'} eq 'spc' or
+                 $p->{'role'} eq 'basElem' or
+				 $p->{'role'} eq 'crdPart' or
 				 $p->{'pmctype'} eq 'utter' or # Parcelaati.
 				 $p->{'pmctype'} eq 'ins');
 	return 0;
