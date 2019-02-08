@@ -165,6 +165,7 @@ sub is_role_allowed_for_parent
 	return 0 if ($node->{'role'} eq 'punct' or
                  $node->{'role'} eq 'conj' or
                  $node->{'role'} eq 'pred' or
+                 $node->{'role'} eq 'subj' or
 				 $node->{'role'} eq 'basElem');
 	return 1 if ($node->{'#name'} eq 'node');
 	return 0;
@@ -199,7 +200,7 @@ sub is_role_allowed_for_parent
     return 1 if ($p->{'#name'} eq 'coordinfo');
 	return 0;
   }
-  # modal werbs and aux.werbs must be below xPred
+  # modal werbs and aux.verbs must be below xPred
   if ($node->{'role'} eq 'mod' or
       $node->{'role'} eq 'auxVerb')
   {
@@ -236,15 +237,41 @@ sub is_role_allowed_for_parent
 				 $p->{'xtype'} eq 'xParticle');
 	return 0;
   }
-  # subjects, objects, atributes etc. can be either in dependency or in
+  
+  # subject's parent is something predicative
+  if ($node->{'role'} eq 'subj')
+  {
+	return 1 if ($node->{'role'} eq 'pred' or
+                 $node->{'role'} eq 'spc' or
+                 $node->{'role'} eq 'basElem' or
+				 $node->{'role'} eq 'crdPart' or
+				 $p->{'pmctype'} eq 'utter' or # Parcelaati.
+				 $p->{'pmctype'} eq 'ins');
+	return 0;
+  }
+  
+  # subject clause's parent is either subject or something predicative
+  if ($node->{'role'} eq 'subjCl')
+  {
+	return 1 if ($node->{'role'} eq 'subj' or
+                 $node->{'role'} eq 'pred' or
+                 $node->{'role'} eq 'spc' or
+                 $node->{'role'} eq 'basElem' or
+				 $node->{'role'} eq 'crdPart' or
+				 $p->{'pmctype'} eq 'utter' or # Parcelaati.
+				 $p->{'pmctype'} eq 'ins');
+	return 0;
+  }
+
+  # objects, atributes etc. can be either in dependency or in
   # insertion or in parenthesis
+  # NB! subjects are already procesed before this!
   foreach (@normalRoles, @clRoles) #@redRoles, 
   {
 	if ($node->{'role'} eq $_)
 	{
 	  return 1 if ($p->{'#name'} eq 'node' or
 				   $p->{'s.rf'} or
-				   #$p->{'pmctype'} eq 'sent' or
 				   $p->{'pmctype'} eq 'utter' or # Parcelaati.
 				   $p->{'pmctype'} eq 'ins');
 	  return 0;
@@ -269,6 +296,7 @@ sub is_role_allowed_for_parent
 	}
 	return 0;
   }
+  
   return 1;
 }
 
