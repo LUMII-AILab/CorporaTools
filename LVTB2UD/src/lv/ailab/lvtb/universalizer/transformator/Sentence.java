@@ -13,10 +13,7 @@ import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -140,7 +137,7 @@ public class Sentence
 		for (String subjNode : subj2gov.keySet())
 		{
 			ArrayList<String> tmp = subj2gov.get(subjNode).stream()
-					.map(id -> pmlTree.getDescendant(id))
+					.map(id -> pmlTree.getThisOrDescendant(id))
 					.map(n -> Tuple.of(n, n.getDepthInTree()))
 					.sorted((t1, t2) -> t2.second.equals(t1.second)
 							? t2.first.getDeepOrd().compareTo(t1.first.getDeepOrd())

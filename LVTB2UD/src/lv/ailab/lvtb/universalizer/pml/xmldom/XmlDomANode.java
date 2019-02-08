@@ -586,6 +586,29 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
+	 * Find this or descendant node by given ID (thus, no phrase nodes will be
+	 * found)
+	 * @param id	an ID to search
+	 * @return	first node found
+	 */
+	@Override
+	public XmlDomANode getThisOrDescendant(String id)
+	{
+		if (id == null) return null;
+		if (id.equals(getId())) return this;
+		try
+		{
+			NodeList res = (NodeList) XPathEngine.get().evaluate(
+					".//node[@id='"+ id + "']", domNode, XPathConstants.NODESET);
+			if (res == null || res.getLength() < 1) return null;
+			return new XmlDomANode(res.item(0));
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
 	 * Get any descendants of any type. Root is not included.
 	 * @return	descendant list
 	 */

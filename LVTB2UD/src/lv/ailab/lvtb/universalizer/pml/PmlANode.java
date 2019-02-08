@@ -168,6 +168,13 @@ public interface PmlANode
 	 */
 	public PmlANode getDescendant(String id);
 	/**
+	 * Find this or descendant node by given ID (thus, no phrase nodes will be
+	 * found)
+	 * @param id	an ID to search
+	 * @return	first node found
+	 */
+	public PmlANode getThisOrDescendant(String id);
+	/**
 	 * Get any descendants of any type. Root is not included.
 	 * @return	descendant list
 	 */
