@@ -140,7 +140,7 @@ public class DepRelLogic
 
 			// Other
 			// TODO wait for answer in https://github.com/UniversalDependencies/docs/issues/594
-			case LvtbRoles.REPEAT : return Tuple.of(UDv2Relations.DEP, null);
+			case LvtbRoles.REPEAT : return Tuple.of(UDv2Relations.REPARANDUM, null);
 			default : return Tuple.of(UDv2Relations.DEP, null);
 		}
 	}
