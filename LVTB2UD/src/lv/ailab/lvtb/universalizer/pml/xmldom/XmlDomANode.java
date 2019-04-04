@@ -6,6 +6,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -675,13 +676,13 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Find ellipsis in the subtree headed by this node. Parameter allows to
-	 * find either all ellipsis or only leaf nodes.
+	 * Find pure ellipsis (no corresponding token) in the subtree headed by this
+	 * node. Parameter allows to find either all ellipsis or only leaf nodes.
 	 * @param leafsOnly	if true, only leaf nodes are returned
 	 * @return	list of ellipsis nodes in no particular order
 	 */
 	@Override
-	public ArrayList<PmlANode> getEllipsisDescendants(boolean leafsOnly)
+	public ArrayList<PmlANode> getPureEllipsisDescendants(boolean leafsOnly)
 	{
 		String pattern = leafsOnly
 				? ".//node[reduction and not(m.rf) and not(children)]"
@@ -691,6 +692,88 @@ public class XmlDomANode implements PmlANode
 			NodeList tempRes = (NodeList) XPathEngine.get().evaluate(
 					pattern, domNode, XPathConstants.NODESET);
 			return XmlDomANode.asList(tempRes);
+		}
+		catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
+	 * Find ellipsis nodes with corresponding token in the subtree headed by
+	 * this node. Parameter allows to find either all ellipsis or only leaf
+	 * nodes.
+	 * @param leafsOnly	if true, only leaf nodes are returned
+	 * @return	list of ellipsis nodes in no particular order
+	 */
+	@Override
+	public List<PmlANode> getMorphoEllipsisDescendants(boolean leafsOnly)
+	{
+		String pattern = leafsOnly
+				? ".//node[reduction and m.rf and not(children)]"
+				: ".//node[reduction and m.rf]";
+		try
+		{
+			NodeList tempRes = (NodeList) XPathEngine.get().evaluate(
+					pattern, domNode, XPathConstants.NODESET);
+			return XmlDomANode.asList(tempRes);
+		}
+		catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
+	 * Split nonempty ellipsis node into empty ellipsis node and dependant
+	 * child.
+	 * @param idPostfix	string to append to the node ID to create ID for new
+	 *                  node.
+	 * @return	if an actual split was done
+	 */
+	@Override
+	public boolean splitMorphoEllipsis(String idPostfix)
+	{
+		if (isPureReductionNode()) return false;
+		String reductionField = getReduction();
+		if (reductionField == null || reductionField.isEmpty()) return false;
+		try
+		{
+			// Children container
+			Node childenNode = (Node) XPathEngine.get().evaluate(
+					"./children", domNode, XPathConstants.NODE);
+			if (childenNode == null)
+			{
+				childenNode = domNode.getOwnerDocument().createElement("children");
+				domNode.appendChild(childenNode);
+			}
+
+			// Node itself
+			Element newTokenNode = domNode.getOwnerDocument().createElement("node");
+			childenNode.appendChild(newTokenNode);
+
+			// id attribute
+			String newId = getId() + idPostfix;
+			newTokenNode.setAttribute("id", newId);
+
+			// Move morphology
+			Node mDom = (Node) XPathEngine.get().evaluate(
+					"./m.rf", domNode, XPathConstants.NODE);
+			domNode.removeChild(mDom);
+			newTokenNode.appendChild(mDom);
+
+			// Move ord
+			Node ord = (Node) XPathEngine.get().evaluate(
+					"./ord", domNode, XPathConstants.NODE);
+			domNode.removeChild(ord);
+			newTokenNode.appendChild(ord);
+
+			// Role.
+			Node roleNode = domNode.getOwnerDocument().createElement("role");
+			newTokenNode.appendChild(roleNode);
+			roleNode.appendChild(domNode.getOwnerDocument().createTextNode(LvtbRoles.ELLIPSIS_TOKEN));
+
+			return true;
 		}
 		catch (XPathExpressionException e)
 		{

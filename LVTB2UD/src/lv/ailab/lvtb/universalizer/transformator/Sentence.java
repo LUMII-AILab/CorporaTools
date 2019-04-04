@@ -83,6 +83,12 @@ public class Sentence
 	 */
 	public HashSet<String> ellipsisWithOrphans = new HashSet<>();
 
+	/**
+	 * Postfix used to append to the ellipsis node ID during the non-empty
+	 * ellipsis split to create ID for new node.
+	 */
+	public static final String ID_POSTFIX = "-SPLIT";
+
 	public Sentence(PmlANode pmlTree)
 	{
 		this.pmlTree = pmlTree;

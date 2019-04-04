@@ -47,6 +47,7 @@ public class SentenceTransformEngine
 	{
 		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
+		if (params.SPLIT_NONEMPTY_ELLIPSIS) ellipPreproc.splitTokenEllipsis();
 		morphoTransf.transformTokens();
 		StandardLogger.l.flush();
 		morphoTransf.extractSendenceText();

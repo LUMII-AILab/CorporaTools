@@ -141,6 +141,7 @@ public class DepRelLogic
 			// Other
 			// TODO wait for answer in https://github.com/UniversalDependencies/docs/issues/594
 			case LvtbRoles.REPEAT : return Tuple.of(UDv2Relations.REPARANDUM, null);
+			case LvtbRoles.ELLIPSIS_TOKEN: return ellipsisTokToUD(node, parent);
 			default : return Tuple.of(UDv2Relations.DEP, null);
 		}
 	}
@@ -606,6 +607,13 @@ public class DepRelLogic
 					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED));
 		if (preds != null && !preds.isEmpty()) return Tuple.of(UDv2Relations.PARATAXIS, null);
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
+	}
+
+	public static Tuple<UDv2Relations, String> ellipsisTokToUD(PmlANode node, PmlANode parent)
+	{
+		String tag = node.getAnyTag();
+		if (tag.matches("z.*")) return Tuple.of(UDv2Relations.DEP, null);
+		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
 	/**

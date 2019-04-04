@@ -82,6 +82,28 @@ public class MorphoTransformator {
 				prevW = currentWs.get(currentWs.size() - 1);
 			prevOrd = currentOrd;
 		}
+		if (params.ADD_NODE_IDS && params.SPLIT_NONEMPTY_ELLIPSIS) cleanupIds();
+	}
+
+	/**
+	 * Check all references to original nodes and remove artificially added node
+	 * ID prefixes.
+	 */
+	protected void cleanupIds()
+	{
+		for (Token t : s.conll)
+		{
+			HashSet<String> misc = t.misc.get(MiscKeys.LVTB_NODE_ID);
+			for (String id : misc)
+			{
+				if (id.endsWith(Sentence.ID_POSTFIX))
+				{
+					String newId = id.substring(0, id.length() - Sentence.ID_POSTFIX.length());
+					misc.remove(id);
+					misc.add(newId);
+				}
+			}
+		}
 	}
 
 	/**

@@ -36,6 +36,13 @@ public class TransformationParams
 	 */
 	public Boolean UD_STANDARD_NULLNODES = true; // NB! Check this before each UD release!
 
+	/**
+	 * To fit UD standard, this must be true. When true, each ellipsis node with
+	 * morphology is split into empty ellipsis node and dependant node with
+	 * morphology.
+	 */
+	public Boolean SPLIT_NONEMPTY_ELLIPSIS = true; // NB! Check this before each UD release!
+
 	// ===== Enhanced.
 	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph

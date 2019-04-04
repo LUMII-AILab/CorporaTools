@@ -54,4 +54,5 @@ public class LvtbRoles
 
 	// other
 	public final static String REPEAT = "repeat";
+	public final static String ELLIPSIS_TOKEN = "ellipsisTok";
 }

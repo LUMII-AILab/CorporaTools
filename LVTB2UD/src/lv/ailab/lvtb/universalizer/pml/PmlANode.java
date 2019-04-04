@@ -192,13 +192,31 @@ public interface PmlANode
 	 * @return	descendant list sorted by ord values
 	 */
 	public List<PmlANode> getDescendantsWithOrdAndM();
+
 	/**
-	 * Find ellipsis in the subtree headed by this node. Parameter allows to
-	 * find either all ellipsis or only leaf nodes.
+	 * Split nonempty ellipsis node into empty ellipsis node and dependant
+	 * child.
+	 * @param idPostfix	string to append to the node ID to create ID for new
+	 *                  node.
+	 * @return	if an actual split was done
+	 */
+	public boolean splitMorphoEllipsis(String idPostfix);
+
+	/**
+	 * Find pure ellipsis (no corresponding token) in the subtree headed by this
+	 * node. Parameter allows to find either all ellipsis or only leaf nodes.
 	 * @param leafsOnly	if true, only leaf nodes are returned
 	 * @return	list of ellipsis nodes in no particular order
 	 */
-	public List<PmlANode> getEllipsisDescendants(boolean leafsOnly);
+	public List<PmlANode> getPureEllipsisDescendants(boolean leafsOnly);
+	/**
+	 * Find ellipsis nodes with corresponding token in the subtree headed by
+	 * this node. Parameter allows to find either all ellipsis or only leaf
+	 * nodes.
+	 * @param leafsOnly	if true, only leaf nodes are returned
+	 * @return	list of ellipsis nodes in no particular order
+	 */
+	public List<PmlANode> getMorphoEllipsisDescendants(boolean leafsOnly);
 	/**
 	 * Find parent or the closest ancestor, that is not coordination phrase or
 	 * crdPart node.

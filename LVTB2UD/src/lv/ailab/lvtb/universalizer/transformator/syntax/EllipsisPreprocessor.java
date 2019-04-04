@@ -4,7 +4,6 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
-import lv.ailab.lvtb.universalizer.utils.Logger;
 
 import java.util.List;
 
@@ -20,6 +19,16 @@ public class EllipsisPreprocessor
 		s = sent;
 	}
 
+	public void splitTokenEllipsis()
+	{
+		List<PmlANode> ellipsisNodes = s.pmlTree.getMorphoEllipsisDescendants(false);
+		if (ellipsisNodes == null || ellipsisNodes.isEmpty()) return;
+		for (PmlANode ellipsisNode : ellipsisNodes)
+		{
+			ellipsisNode.splitMorphoEllipsis(Sentence.ID_POSTFIX);
+		}
+	}
+
 	/**
 	 * Remove the childless ellipsis nodes assuming they can be ignored in
 	 * latter processing. Replace empty xPreds with just ellipsis nodes.
@@ -29,7 +38,7 @@ public class EllipsisPreprocessor
 	public boolean removeAllChildlessEllipsis()
 	{
 		// Childless, empty reductions are removed.
-		List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
+		List<PmlANode> ellipsisChildren = s.pmlTree.getPureEllipsisDescendants(true);
 		while (ellipsisChildren != null && !ellipsisChildren.isEmpty())
 		{
 			for (PmlANode ellipsisChild : ellipsisChildren)
@@ -48,11 +57,11 @@ public class EllipsisPreprocessor
 					parent.delete();
 				}
 			}
-			ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
+			ellipsisChildren = s.pmlTree.getPureEllipsisDescendants(true);
 		}
 
 		// Check if there is other reductions.
-		ellipsisChildren = s.pmlTree.getEllipsisDescendants(false);
+		ellipsisChildren = s.pmlTree.getPureEllipsisDescendants(false);
 		return ellipsisChildren == null || ellipsisChildren.size() <= 0;
 	}
 
@@ -69,7 +78,7 @@ public class EllipsisPreprocessor
 		boolean searchForMore = true;
 		while (searchForMore)
 		{
-			List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(true);
+			List<PmlANode> ellipsisChildren = s.pmlTree.getPureEllipsisDescendants(true);
 			searchForMore = false;
 			for (PmlANode ellipsisChild : ellipsisChildren)
 			{
@@ -98,7 +107,7 @@ public class EllipsisPreprocessor
 		}
 
 		// Check if there is other reductions.
-		List<PmlANode> ellipsisChildren = s.pmlTree.getEllipsisDescendants(false);
+		List<PmlANode> ellipsisChildren = s.pmlTree.getPureEllipsisDescendants(false);
 		return ellipsisChildren == null || ellipsisChildren.size() <= 0;
 	}
 

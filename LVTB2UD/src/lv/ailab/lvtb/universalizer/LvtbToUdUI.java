@@ -166,6 +166,10 @@ public class LvtbToUdUI
 						}
 						else return false;
 						break;
+					case "split_ellipsis":
+						if (isBool) params.SPLIT_NONEMPTY_ELLIPSIS = value;
+						else return false;
+						break;
 					case "debug":
 						if (isBool) params.DEBUG = value;
 						else return false;
@@ -226,6 +230,8 @@ public class LvtbToUdUI
 				"Possible key values (case insensitive):\n" +
 				"  add_node_ids   [bool, mandatory] - should Misc column contain node IDs from\n" +
 				"                                   LVTB?\n" +
+				"  split_ellipsis [bool, true by default] - treat ellipsis node with morphology\n" +
+				"                                         as two nodes.\n" +
 				"  debug          [bool, false by default] - print debug message for each node.\n" +
 				"  warn_ellipsis  [bool, false by default] - warn on ellipsis.\n" +
 				"  warn_omissions [bool, true  by default]  - warn if a sentence is omitted.\n" +
