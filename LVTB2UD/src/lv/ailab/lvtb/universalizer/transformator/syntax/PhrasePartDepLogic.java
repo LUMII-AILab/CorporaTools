@@ -124,13 +124,19 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.UNSTRUCT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 		{
+			if (aNode.getAnyTag().matches("z.*"))
+				return Tuple.of(UDv2Relations.PUNCT, null);
 			if (phraseTag != null && phraseTag.matches("xf.*"))
 				return Tuple.of(UDv2Relations.FLAT_FOREIGN, null);
 			else return Tuple.of(UDv2Relations.FLAT, null);
 		}
 		if (phraseType.equals(LvtbXTypes.NAMEDENT) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
+		{
+			if (aNode.getAnyTag().matches("z.*"))
+				return Tuple.of(UDv2Relations.PUNCT, null);
 			return Tuple.of(UDv2Relations.FLAT_NAME, null);
+		}
 
 		if (phraseType.equals(LvtbXTypes.SUBRANAL) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
