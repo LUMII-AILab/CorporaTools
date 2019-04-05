@@ -1,6 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
+import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
@@ -135,7 +137,13 @@ public class NewSyntaxTransformator
 			// Create ellipsis node for enhanced dependencies, if allowed to do so.
 			// TODO more precise restriction?
 			if (redXPostag.matches("v..([^p].*|p[du].*)") || ! params.UD_STANDARD_NULLNODES)
-				s.createNewEnhEllipsisNode(aNode, newBasicRoot.getId(), params.ADD_NODE_IDS);
+			{
+				String newIdStub = newBasicRoot.getId();
+				List<PmlANode> tokenNodes = aNode.getChildren(LvtbRoles.ELLIPSIS_TOKEN);
+				if (tokenNodes != null && !tokenNodes.isEmpty())
+					newIdStub = PmlANodeListUtils.getFirstByDescOrd(tokenNodes).getId();
+				s.createNewEnhEllipsisNode(aNode, newIdStub, params.ADD_NODE_IDS);
+			}
 
 		}
 
