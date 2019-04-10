@@ -6,6 +6,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -739,17 +740,20 @@ public class XmlDomANode implements PmlANode
 		if (reductionField == null || reductionField.isEmpty()) return false;
 		try
 		{
+			XmlDomANode parentToAppend = getParent();
+			if (!parentToAppend.isPhraseNode()) parentToAppend = this;
+			Document ownerDoc = domNode.getOwnerDocument();
 			// Children container
 			Node childenNode = (Node) XPathEngine.get().evaluate(
-					"./children", domNode, XPathConstants.NODE);
+					"./children", parentToAppend.domNode, XPathConstants.NODE);
 			if (childenNode == null)
 			{
-				childenNode = domNode.getOwnerDocument().createElement("children");
-				domNode.appendChild(childenNode);
+				childenNode = ownerDoc.createElement("children");
+				parentToAppend.domNode.appendChild(childenNode);
 			}
 
 			// Node itself
-			Element newTokenNode = domNode.getOwnerDocument().createElement("node");
+			Element newTokenNode = ownerDoc.createElement("node");
 			childenNode.appendChild(newTokenNode);
 
 			// id attribute
@@ -769,9 +773,9 @@ public class XmlDomANode implements PmlANode
 			newTokenNode.appendChild(ord);
 
 			// Role.
-			Node roleNode = domNode.getOwnerDocument().createElement("role");
+			Node roleNode = ownerDoc.createElement("role");
 			newTokenNode.appendChild(roleNode);
-			roleNode.appendChild(domNode.getOwnerDocument().createTextNode(LvtbRoles.ELLIPSIS_TOKEN));
+			roleNode.appendChild(ownerDoc.createTextNode(LvtbRoles.ELLIPSIS_TOKEN));
 
 			return true;
 		}

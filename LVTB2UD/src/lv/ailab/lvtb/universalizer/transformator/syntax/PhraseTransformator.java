@@ -675,36 +675,43 @@ public class PhraseTransformator
 	{
 		// Get basElems and warn if there is none.
 		List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
+		if (basElems != null && basElems.size() > 1)
+			throw new IllegalArgumentException(String.format(
+					"\"%s\" in sentence \"%s\" has multiple \"basElem\"",
+					xNode.getPhraseType(), s.id));
 		PmlANode basElem = PmlANodeListUtils.getLastByDeepOrd(basElems);
 		if (basElem == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has no \"basElem\"",
 					xNode.getPhraseType(), s.id));
+		PmlANode newRoot = basElem;
+
 		List<PmlANode> auxes = xNode.getChildren(LvtbRoles.AUXVERB);
 		PmlANode lastAux = PmlANodeListUtils.getLastByDeepOrd(auxes);
-		if (lastAux == null)
+		/*if (lastAux == null)
 			throw new IllegalArgumentException(String.format(
 					"\"%s\" in sentence \"%s\" has neither \"auxVerb\" nor \"mod\"",
-					xNode.getPhraseType(), s.id));
-		if (auxes.size() > 1) for (int i = 0; i < auxes.size(); i++)
+					xNode.getPhraseType(), s.id));*/
+		if (lastAux != null)
 		{
-			String auxLemma = lastAux.getM().getLemma();
+			if (auxes.size() > 1) for (int i = 0; i < auxes.size(); i++)
+			{
+				String auxLemma = lastAux.getM().getLemma();
+				String auxRedLemma = lastAux.getReductionLemma();
+				if (!MorphoTransformator.isTrueAux(auxLemma) &&
+						!MorphoTransformator.isTrueAux(auxRedLemma))
+					StandardLogger.l.doInsentenceWarning(String.format(
+							"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
+							xNode.getParent().getId(), auxLemma));
+			}
+
+			PmlMNode lastAuxM = lastAux.getM();
+			String auxLemma = lastAuxM == null ? null : lastAuxM.getLemma();
 			String auxRedLemma = lastAux.getReductionLemma();
-			if (!MorphoTransformator.isTrueAux(auxLemma) &&
-					!MorphoTransformator.isTrueAux(auxRedLemma))
-				StandardLogger.l.doInsentenceWarning(String.format(
-						"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
-						xNode.getParent().getId(), auxLemma));
+			boolean ultimateAux = MorphoTransformator.isTrueAux(auxLemma)
+					|| MorphoTransformator.isTrueAux(auxRedLemma);
+			if (!ultimateAux) newRoot = lastAux;
 		}
-
-		PmlMNode lastAuxM = lastAux.getM();
-		String auxLemma = lastAuxM == null ? null : lastAuxM.getLemma();
-		String auxRedLemma = lastAux.getReductionLemma();
-		boolean ultimateAux = MorphoTransformator.isTrueAux(auxLemma)
-				|| MorphoTransformator.isTrueAux(auxRedLemma);
-
-		PmlANode newRoot = basElem;
-		if (!ultimateAux) newRoot = lastAux;
 		List<PmlANode> children = xNode.getChildren();
 		s.relinkAllConstituents(newRoot, children, xNode,
 				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);

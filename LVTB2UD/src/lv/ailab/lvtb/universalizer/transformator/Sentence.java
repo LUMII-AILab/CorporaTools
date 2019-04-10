@@ -194,7 +194,11 @@ public class Sentence
 						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(phrasePart.getM().getLemma()))
 							|| MorphoTransformator.isTrueAux(phrasePart.getReductionLemma())))
 					continue;
+				// Do not add coordination conjuctions and punctuation.
 				if (LvtbCoordTypes.CRDPARTS.equals(phraseType) && !LvtbRoles.CRDPART.equals(partRole))
+					continue;
+				// Do not add split ellipsis nodes.
+				if (LvtbRoles.ELLIPSIS_TOKEN.equals(partRole))
 					continue;
 
 				String partId = phrasePart.getId();

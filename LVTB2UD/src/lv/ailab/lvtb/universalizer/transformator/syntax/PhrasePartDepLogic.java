@@ -266,6 +266,12 @@ public class PhrasePartDepLogic
 				return Tuple.of(UDv2Relations.XCOMP, null);
 		}
 
+		if (lvtbRole.equals(LvtbRoles.ELLIPSIS_TOKEN))
+		{
+			String tag = aNode.getAnyTag();
+			if (tag.matches("z.*")) return Tuple.of(UDv2Relations.PUNCT, null);
+		}
+
 		StandardLogger.l.doInsentenceWarning(String.format(
 				"\"%s\" (%s) in \"%s\" has no UD label.",
 				lvtbRole, nodeId, phraseType));
