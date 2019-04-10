@@ -60,7 +60,8 @@ public class PhraseTransformator
 
 		if (phraseType.equals(LvtbPmcTypes.SENT) ||
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
-				phraseType.equals(LvtbPmcTypes.INSPMC))
+				phraseType.equals(LvtbPmcTypes.INSPMC) ||
+				phraseType.equals(LvtbPmcTypes.QUOT))
 			return sentencyToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.UTTER))
 			return utterToUD(phraseNode);
@@ -69,7 +70,6 @@ public class PhraseTransformator
 			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.PRED, true,
 					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
-				phraseType.equals(LvtbPmcTypes.QUOT) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
 			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, true,
 					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
