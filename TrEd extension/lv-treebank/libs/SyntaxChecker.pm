@@ -294,6 +294,7 @@ sub is_role_allowed_for_parent
 	{
 	  return 1 if ($p->{'pmctype'} eq $_);
 	}
+	return 1 if ($p->{'pmctype'} eq 'quot');
 	return 0;
   }
   
