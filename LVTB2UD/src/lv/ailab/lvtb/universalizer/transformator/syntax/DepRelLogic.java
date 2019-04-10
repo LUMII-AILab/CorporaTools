@@ -102,6 +102,7 @@ public class DepRelLogic
 			PmlANode node, PmlANode parent, String lvtbRole)
 	{
 		// Simple dependencies.
+
 		switch (lvtbRole)
 		{
 			case LvtbRoles.SUBJ : return subjToUD(node, parent);
@@ -612,7 +613,8 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> ellipsisTokToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
-		if (tag.matches("z.*")) return Tuple.of(UDv2Relations.DEP, null);
+		//System.out.println("Node " + node.getId() + ": " + tag + "; parent " + parent.getId() + ": " + parent.getAnyTag());
+		if (tag.matches("z.*")) return Tuple.of(UDv2Relations.PUNCT, null);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
