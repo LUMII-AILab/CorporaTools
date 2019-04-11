@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
@@ -335,8 +336,21 @@ public class DepRelLogic
 			String conjLemma = null;
 			if (conjs.size() > 0) // One weird case of reduced conjunction has no conjs.
 			{
-				conjLemma = conjs.get(0).getM().getLemma();
-				String conjRed = conjs.get(0).getReduction();
+				PmlANode conj = conjs.get(0);
+				PmlMNode morpho = conj.getM();
+				if (morpho == null) // If there is no morphology, but there is an xFunctor, use the lemma of the last xFunctors basElem.
+				{
+					PmlANode phraseConj = conj.getPhraseNode();
+					if (phraseConj != null && phraseConj.getPhraseType().equals(LvtbXTypes.XFUNCTOR))
+					{
+						PmlANode lastXBase = PmlANodeListUtils.getLastByDescOrd(
+								phraseConj.getChildren(LvtbRoles.BASELEM));
+						morpho = lastXBase.getM();
+					}
+				}
+				if (morpho != null) conjLemma = morpho.getLemma();
+
+				String conjRed = conj.getReduction();
 				if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
 			}
 			else StandardLogger.l.doInsentenceWarning(String.format(
