@@ -2321,392 +2321,392 @@
       <s.rf>m#m-c68-zeeni-p14s1</s.rf>
       <children>
         <pmcinfo>
-          <pmctype>sent</pmctype>
+          <pmctype>dirSpPmc</pmctype>
           <children>
-            <node id="a-c68-zeeni-p14s1w3">
-              <m.rf id="m-c68-zeeni-p14s1w3">
-                <src.rf>experimental</src.rf>
-                <w.rf id="w-c68-zeeni-p14w3">
-                  <token>,</token>
-                  <no_space_after>1</no_space_after>
-                </w.rf>
-                <form>,</form>
-                <lemma>,</lemma>
-                <tag>zc</tag>
-              </m.rf>
-              <role>punct</role>
-              <ord>3</ord>
-            </node>
-            <node id="a-c68-zeeni-p14s1w6">
-              <m.rf id="m-c68-zeeni-p14s1w6">
-                <src.rf>experimental</src.rf>
-                <w.rf id="w-c68-zeeni-p14w6">
-                  <token>turpināja</token>
-                  <no_space_after>1</no_space_after>
-                </w.rf>
-                <form>turpināja</form>
-                <lemma>turpināt</lemma>
-                <tag>vmnist330an</tag>
-              </m.rf>
-              <role>pred</role>
-              <ord>6</ord>
+            <node id="a-c68-zeeni-p14s1x2">
+              <role>basElem</role>
               <children>
-                <node id="a-c68-zeeni-p14s1x1">
-                  <role>dirSp</role>
+                <pmcinfo>
+                  <pmctype>sent</pmctype>
                   <children>
-                    <pmcinfo>
-                      <pmctype>dirSpPmc</pmctype>
+                    <node id="a-c68-zeeni-p14s1x3">
+                      <role>basElem</role>
                       <children>
-                        <node id="a-c68-zeeni-p14s1x2">
-                          <role>basElem</role>
+                        <coordinfo>
+                          <coordtype>crdClauses</coordtype>
                           <children>
-                            <pmcinfo>
-                              <pmctype>sent</pmctype>
+                            <node id="a-c68-zeeni-p14s1x4">
+                              <role>conj</role>
                               <children>
-                                <node id="a-c68-zeeni-p14s1x3">
-                                  <role>basElem</role>
+                                <xinfo>
+                                  <xtype>xFunctor</xtype>
+                                  <tag>cs</tag>
                                   <children>
-                                    <coordinfo>
-                                      <coordtype>crdClauses</coordtype>
+                                    <node id="a-c68-zeeni-p14s1w13">
+                                      <m.rf id="m-c68-zeeni-p14s1w13">
+                                        <src.rf>experimental</src.rf>
+                                        <w.rf id="w-c68-zeeni-p14w13">
+                                          <token>lai</token>
+                                        </w.rf>
+                                        <form>lai</form>
+                                        <lemma>lai</lemma>
+                                        <tag>cs</tag>
+                                      </m.rf>
+                                      <role>basElem</role>
+                                      <ord>13</ord>
+                                    </node>
+                                    <node id="a-c68-zeeni-p14s1w14">
+                                      <m.rf id="m-c68-zeeni-p14s1w14">
+                                        <src.rf>experimental</src.rf>
+                                        <w.rf id="w-c68-zeeni-p14w14">
+                                          <token>gan</token>
+                                          <no_space_after>1</no_space_after>
+                                        </w.rf>
+                                        <form>gan</form>
+                                        <lemma>gan</lemma>
+                                        <tag>cs</tag>
+                                      </m.rf>
+                                      <role>basElem</role>
+                                      <ord>14</ord>
+                                    </node>
+                                  </children>
+                                </xinfo>
+                              </children>
+                            </node>
+                            <node id="a-c68-zeeni-p14s1x5">
+                              <role>crdPart</role>
+                              <children>
+                                <pmcinfo>
+                                  <pmctype>mainCl</pmctype>
+                                  <children>
+                                    <node id="a-c68-zeeni-p14s1w10">
+                                      <m.rf id="m-c68-zeeni-p14s1w10">
+                                        <src.rf>experimental</src.rf>
+                                        <w.rf id="w-c68-zeeni-p14w10">
+                                          <token>iesim</token>
+                                        </w.rf>
+                                        <form>iesim</form>
+                                        <lemma>iet</lemma>
+                                        <tag>vmnifii1pan</tag>
+                                      </m.rf>
+                                      <role>pred</role>
+                                      <ord>10</ord>
                                       <children>
-                                        <node id="a-c68-zeeni-p14s1x4">
-                                          <role>conj</role>
-                                          <children>
-                                            <xinfo>
-                                              <xtype>xFunctor</xtype>
-                                              <tag>cs</tag>
-                                              <children>
-                                                <node id="a-c68-zeeni-p14s1w13">
-                                                  <m.rf id="m-c68-zeeni-p14s1w13">
-                                                    <src.rf>experimental</src.rf>
-                                                    <w.rf id="w-c68-zeeni-p14w13">
-                                                      <token>lai</token>
-                                                    </w.rf>
-                                                    <form>lai</form>
-                                                    <lemma>lai</lemma>
-                                                    <tag>cs</tag>
-                                                  </m.rf>
-                                                  <role>basElem</role>
-                                                  <ord>13</ord>
-                                                </node>
-                                                <node id="a-c68-zeeni-p14s1w14">
-                                                  <m.rf id="m-c68-zeeni-p14s1w14">
-                                                    <src.rf>experimental</src.rf>
-                                                    <w.rf id="w-c68-zeeni-p14w14">
-                                                      <token>gan</token>
-                                                      <no_space_after>1</no_space_after>
-                                                    </w.rf>
-                                                    <form>gan</form>
-                                                    <lemma>gan</lemma>
-                                                    <tag>cs</tag>
-                                                  </m.rf>
-                                                  <role>basElem</role>
-                                                  <ord>14</ord>
-                                                </node>
-                                              </children>
-                                            </xinfo>
-                                          </children>
-                                        </node>
-                                        <node id="a-c68-zeeni-p14s1x5">
-                                          <role>crdPart</role>
-                                          <children>
-                                            <pmcinfo>
-                                              <pmctype>mainCl</pmctype>
-                                              <children>
-                                                <node id="a-c68-zeeni-p14s1w10">
-                                                  <m.rf id="m-c68-zeeni-p14s1w10">
-                                                    <src.rf>experimental</src.rf>
-                                                    <w.rf id="w-c68-zeeni-p14w10">
-                                                      <token>iesim</token>
-                                                    </w.rf>
-                                                    <form>iesim</form>
-                                                    <lemma>iet</lemma>
-                                                    <tag>vmnifii1pan</tag>
-                                                  </m.rf>
-                                                  <role>pred</role>
-                                                  <ord>10</ord>
-                                                  <children>
-                                                    <node id="a-c68-zeeni-p14s1w2">
-                                                      <m.rf id="m-c68-zeeni-p14s1w2">
-                                                        <src.rf>experimental</src.rf>
-                                                        <w.rf id="w-c68-zeeni-p14w2">
-                                                          <token>Mēs</token>
-                                                          <no_space_after>1</no_space_after>
-                                                        </w.rf>
-                                                        <form>Mēs</form>
-                                                        <lemma>mēs</lemma>
-                                                        <tag>pp10pnn</tag>
-                                                      </m.rf>
-                                                      <role>subj</role>
-                                                      <ord>2</ord>
-                                                    </node>
-                                                    <node id="a-c68-zeeni-p14s1w9">
-                                                      <m.rf id="m-c68-zeeni-p14s1w9">
-                                                        <src.rf>experimental</src.rf>
-                                                        <w.rf id="w-c68-zeeni-p14w9">
-                                                          <token>nu</token>
-                                                        </w.rf>
-                                                        <form>nu</form>
-                                                        <lemma>nu</lemma>
-                                                        <tag>r0t</tag>
-                                                      </m.rf>
-                                                      <role>adv</role>
-                                                      <ord>9</ord>
-                                                    </node>
-                                                    <node id="a-c68-zeeni-p14s1w11">
-                                                      <m.rf id="m-c68-zeeni-p14s1w11">
-                                                        <src.rf>experimental</src.rf>
-                                                        <w.rf id="w-c68-zeeni-p14w11">
-                                                          <token>mājās</token>
-                                                          <no_space_after>1</no_space_after>
-                                                        </w.rf>
-                                                        <form>mājās</form>
-                                                        <lemma>māja</lemma>
-                                                        <tag>ncfpl4</tag>
-                                                      </m.rf>
-                                                      <role>adv</role>
-                                                      <ord>11</ord>
-                                                    </node>
-                                                  </children>
-                                                </node>
-                                              </children>
-                                            </pmcinfo>
-                                          </children>
-                                        </node>
-                                        <node id="a-c68-zeeni-p14s1w12">
-                                          <m.rf id="m-c68-zeeni-p14s1w12">
+                                        <node id="a-c68-zeeni-p14s1w2">
+                                          <m.rf id="m-c68-zeeni-p14s1w2">
                                             <src.rf>experimental</src.rf>
-                                            <w.rf id="w-c68-zeeni-p14w12">
-                                              <token>,</token>
+                                            <w.rf id="w-c68-zeeni-p14w2">
+                                              <token>Mēs</token>
+                                              <no_space_after>1</no_space_after>
                                             </w.rf>
-                                            <form>,</form>
-                                            <lemma>,</lemma>
-                                            <tag>zc</tag>
+                                            <form>Mēs</form>
+                                            <lemma>mēs</lemma>
+                                            <tag>pp10pnn</tag>
                                           </m.rf>
-                                          <role>punct</role>
-                                          <ord>12</ord>
+                                          <role>subj</role>
+                                          <ord>2</ord>
                                         </node>
-                                        <node id="a-c68-zeeni-p14s1x6">
-                                          <role>crdPart</role>
-                                          <children>
-                                            <pmcinfo>
-                                              <pmctype>mainCl</pmctype>
-                                              <children>
-                                                <node id="a-c68-zeeni-p14s1x7">
-                                                  <role>no</role>
-                                                  <children>
-                                                    <pmcinfo>
-                                                      <pmctype>address</pmctype>
-                                                      <children>
-                                                        <node id="a-c68-zeeni-p14s1w15">
-                                                          <m.rf id="m-c68-zeeni-p14s1w15">
-                                                            <src.rf>experimental</src.rf>
-                                                            <w.rf id="w-c68-zeeni-p14w15">
-                                                              <token>,</token>
-                                                            </w.rf>
-                                                            <form>,</form>
-                                                            <lemma>,</lemma>
-                                                            <tag>zc</tag>
-                                                          </m.rf>
-                                                          <role>punct</role>
-                                                          <ord>15</ord>
-                                                        </node>
-                                                        <node id="a-c68-zeeni-p14s1w16">
-                                                          <m.rf id="m-c68-zeeni-p14s1w16">
-                                                            <src.rf>experimental</src.rf>
-                                                            <w.rf id="w-c68-zeeni-p14w16">
-                                                              <token>Maija</token>
-                                                              <no_space_after>1</no_space_after>
-                                                            </w.rf>
-                                                            <form>Maija</form>
-                                                            <lemma>Maija</lemma>
-                                                            <tag>npfsv4</tag>
-                                                          </m.rf>
-                                                          <role>basElem</role>
-                                                          <ord>16</ord>
-                                                        </node>
-                                                        <node id="a-c68-zeeni-p14s1w17">
-                                                          <m.rf id="m-c68-zeeni-p14s1w17">
-                                                            <src.rf>experimental</src.rf>
-                                                            <w.rf id="w-c68-zeeni-p14w17">
-                                                              <token>,</token>
-                                                            </w.rf>
-                                                            <form>,</form>
-                                                            <lemma>,</lemma>
-                                                            <tag>zc</tag>
-                                                          </m.rf>
-                                                          <role>punct</role>
-                                                          <ord>17</ord>
-                                                        </node>
-                                                      </children>
-                                                    </pmcinfo>
-                                                  </children>
-                                                </node>
-                                                <node id="a-c68-zeeni-p14s1x8">
-                                                  <role>pred</role>
-                                                  <children>
-                                                    <node id="a-c68-zeeni-p14s1w18">
-                                                      <m.rf id="m-c68-zeeni-p14s1w18">
-                                                        <src.rf>experimental</src.rf>
-                                                        <w.rf id="w-c68-zeeni-p14w18">
-                                                          <token>tu</token>
-                                                        </w.rf>
-                                                        <form>tu</form>
-                                                        <lemma>tu</lemma>
-                                                        <tag>pp20snn</tag>
-                                                      </m.rf>
-                                                      <role>subj</role>
-                                                      <ord>18</ord>
-                                                    </node>
-                                                    <xinfo>
-                                                      <xtype>xPred</xtype>
-                                                      <tag>vm0ip002san[modals00]</tag>
-                                                      <children>
-                                                        <node id="a-c68-zeeni-p14s1w19">
-                                                          <m.rf id="m-c68-zeeni-p14s1w19">
-                                                            <src.rf>experimental</src.rf>
-                                                            <w.rf id="w-c68-zeeni-p14w19">
-                                                              <token>vari</token>
-                                                            </w.rf>
-                                                            <form>vari</form>
-                                                            <lemma>varēt</lemma>
-                                                            <tag>vonipi32san</tag>
-                                                          </m.rf>
-                                                          <role>mod</role>
-                                                          <ord>19</ord>
-                                                        </node>
-                                                        <node id="a-c68-zeeni-p14s1w20">
-                                                          <m.rf id="m-c68-zeeni-p14s1w20">
-                                                            <src.rf>experimental</src.rf>
-                                                            <w.rf id="w-c68-zeeni-p14w20">
-                                                              <token>palikt</token>
-                                                              <no_space_after>1</no_space_after>
-                                                            </w.rf>
-                                                            <form>palikt</form>
-                                                            <lemma>palikt</lemma>
-                                                            <tag>vmnn0i1000n</tag>
-                                                          </m.rf>
-                                                          <role>basElem</role>
-                                                          <ord>20</ord>
-                                                        </node>
-                                                      </children>
-                                                    </xinfo>
-                                                  </children>
-                                                </node>
-                                              </children>
-                                            </pmcinfo>
-                                          </children>
+                                        <node id="a-c68-zeeni-p14s1w9">
+                                          <m.rf id="m-c68-zeeni-p14s1w9">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-c68-zeeni-p14w9">
+                                              <token>nu</token>
+                                            </w.rf>
+                                            <form>nu</form>
+                                            <lemma>nu</lemma>
+                                            <tag>r0t</tag>
+                                          </m.rf>
+                                          <role>adv</role>
+                                          <ord>9</ord>
+                                        </node>
+                                        <node id="a-c68-zeeni-p14s1w11">
+                                          <m.rf id="m-c68-zeeni-p14s1w11">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-c68-zeeni-p14w11">
+                                              <token>mājās</token>
+                                              <no_space_after>1</no_space_after>
+                                            </w.rf>
+                                            <form>mājās</form>
+                                            <lemma>māja</lemma>
+                                            <tag>ncfpl4</tag>
+                                          </m.rf>
+                                          <role>adv</role>
+                                          <ord>11</ord>
                                         </node>
                                       </children>
-                                    </coordinfo>
+                                    </node>
                                   </children>
-                                </node>
-                                <node id="a-c68-zeeni-p14s1w21">
-                                  <m.rf id="m-c68-zeeni-p14s1w21">
-                                    <src.rf>experimental</src.rf>
-                                    <w.rf id="w-c68-zeeni-p14w21">
-                                      <token>.</token>
-                                      <no_space_after>1</no_space_after>
-                                    </w.rf>
-                                    <form>.</form>
-                                    <lemma>.</lemma>
-                                    <tag>zs</tag>
-                                  </m.rf>
-                                  <role>punct</role>
-                                  <ord>21</ord>
-                                </node>
+                                </pmcinfo>
                               </children>
-                            </pmcinfo>
+                            </node>
+                            <node id="a-c68-zeeni-p14s1w12">
+                              <m.rf id="m-c68-zeeni-p14s1w12">
+                                <src.rf>experimental</src.rf>
+                                <w.rf id="w-c68-zeeni-p14w12">
+                                  <token>,</token>
+                                </w.rf>
+                                <form>,</form>
+                                <lemma>,</lemma>
+                                <tag>zc</tag>
+                              </m.rf>
+                              <role>punct</role>
+                              <ord>12</ord>
+                            </node>
+                            <node id="a-c68-zeeni-p14s1x6">
+                              <role>crdPart</role>
+                              <children>
+                                <pmcinfo>
+                                  <pmctype>mainCl</pmctype>
+                                  <children>
+                                    <node id="a-c68-zeeni-p14s1x7">
+                                      <role>no</role>
+                                      <children>
+                                        <pmcinfo>
+                                          <pmctype>address</pmctype>
+                                          <children>
+                                            <node id="a-c68-zeeni-p14s1w15">
+                                              <m.rf id="m-c68-zeeni-p14s1w15">
+                                                <src.rf>experimental</src.rf>
+                                                <w.rf id="w-c68-zeeni-p14w15">
+                                                  <token>,</token>
+                                                </w.rf>
+                                                <form>,</form>
+                                                <lemma>,</lemma>
+                                                <tag>zc</tag>
+                                              </m.rf>
+                                              <role>punct</role>
+                                              <ord>15</ord>
+                                            </node>
+                                            <node id="a-c68-zeeni-p14s1w16">
+                                              <m.rf id="m-c68-zeeni-p14s1w16">
+                                                <src.rf>experimental</src.rf>
+                                                <w.rf id="w-c68-zeeni-p14w16">
+                                                  <token>Maija</token>
+                                                  <no_space_after>1</no_space_after>
+                                                </w.rf>
+                                                <form>Maija</form>
+                                                <lemma>Maija</lemma>
+                                                <tag>npfsv4</tag>
+                                              </m.rf>
+                                              <role>basElem</role>
+                                              <ord>16</ord>
+                                            </node>
+                                            <node id="a-c68-zeeni-p14s1w17">
+                                              <m.rf id="m-c68-zeeni-p14s1w17">
+                                                <src.rf>experimental</src.rf>
+                                                <w.rf id="w-c68-zeeni-p14w17">
+                                                  <token>,</token>
+                                                </w.rf>
+                                                <form>,</form>
+                                                <lemma>,</lemma>
+                                                <tag>zc</tag>
+                                              </m.rf>
+                                              <role>punct</role>
+                                              <ord>17</ord>
+                                            </node>
+                                          </children>
+                                        </pmcinfo>
+                                      </children>
+                                    </node>
+                                    <node id="a-c68-zeeni-p14s1x8">
+                                      <role>pred</role>
+                                      <children>
+                                        <node id="a-c68-zeeni-p14s1w18">
+                                          <m.rf id="m-c68-zeeni-p14s1w18">
+                                            <src.rf>experimental</src.rf>
+                                            <w.rf id="w-c68-zeeni-p14w18">
+                                              <token>tu</token>
+                                            </w.rf>
+                                            <form>tu</form>
+                                            <lemma>tu</lemma>
+                                            <tag>pp20snn</tag>
+                                          </m.rf>
+                                          <role>subj</role>
+                                          <ord>18</ord>
+                                        </node>
+                                        <xinfo>
+                                          <xtype>xPred</xtype>
+                                          <tag>vm0ip002san[modals00]</tag>
+                                          <children>
+                                            <node id="a-c68-zeeni-p14s1w19">
+                                              <m.rf id="m-c68-zeeni-p14s1w19">
+                                                <src.rf>experimental</src.rf>
+                                                <w.rf id="w-c68-zeeni-p14w19">
+                                                  <token>vari</token>
+                                                </w.rf>
+                                                <form>vari</form>
+                                                <lemma>varēt</lemma>
+                                                <tag>vonipi32san</tag>
+                                              </m.rf>
+                                              <role>mod</role>
+                                              <ord>19</ord>
+                                            </node>
+                                            <node id="a-c68-zeeni-p14s1w20">
+                                              <m.rf id="m-c68-zeeni-p14s1w20">
+                                                <src.rf>experimental</src.rf>
+                                                <w.rf id="w-c68-zeeni-p14w20">
+                                                  <token>palikt</token>
+                                                  <no_space_after>1</no_space_after>
+                                                </w.rf>
+                                                <form>palikt</form>
+                                                <lemma>palikt</lemma>
+                                                <tag>vmnn0i1000n</tag>
+                                              </m.rf>
+                                              <role>basElem</role>
+                                              <ord>20</ord>
+                                            </node>
+                                          </children>
+                                        </xinfo>
+                                      </children>
+                                    </node>
+                                  </children>
+                                </pmcinfo>
+                              </children>
+                            </node>
                           </children>
-                        </node>
-                        <node id="a-c68-zeeni-p14s1w1">
-                          <m.rf id="m-c68-zeeni-p14s1w1">
-                            <src.rf>experimental</src.rf>
-                            <w.rf id="w-c68-zeeni-p14w1">
-                              <token>"</token>
-                              <no_space_after>1</no_space_after>
-                            </w.rf>
-                            <form>"</form>
-                            <lemma>"</lemma>
-                            <tag>zq</tag>
-                          </m.rf>
-                          <role>punct</role>
-                          <ord>1</ord>
-                        </node>
-                        <node id="a-c68-zeeni-p14s1w4">
-                          <m.rf id="m-c68-zeeni-p14s1w4">
-                            <src.rf>experimental</src.rf>
-                            <w.rf id="w-c68-zeeni-p14w4">
-                              <token>"</token>
-                            </w.rf>
-                            <form>"</form>
-                            <lemma>"</lemma>
-                            <tag>zq</tag>
-                          </m.rf>
-                          <role>punct</role>
-                          <ord>4</ord>
-                        </node>
-                        <node id="a-c68-zeeni-p14s1w8">
-                          <m.rf id="m-c68-zeeni-p14s1w8">
-                            <src.rf>experimental</src.rf>
-                            <w.rf id="w-c68-zeeni-p14w8">
-                              <token>"</token>
-                              <no_space_after>1</no_space_after>
-                            </w.rf>
-                            <form>"</form>
-                            <lemma>"</lemma>
-                            <tag>zq</tag>
-                          </m.rf>
-                          <role>punct</role>
-                          <ord>8</ord>
-                        </node>
-                        <node id="a-c68-zeeni-p14s1w22">
-                          <m.rf id="m-c68-zeeni-p14s1w22">
-                            <src.rf>experimental</src.rf>
-                            <w.rf id="w-c68-zeeni-p14w22">
-                              <token>"</token>
-                            </w.rf>
-                            <form>"</form>
-                            <lemma>"</lemma>
-                            <tag>zq</tag>
-                          </m.rf>
-                          <role>punct</role>
-                          <ord>22</ord>
-                        </node>
+                        </coordinfo>
                       </children>
-                    </pmcinfo>
+                    </node>
+                    <node id="a-c68-zeeni-p14s1w21">
+                      <m.rf id="m-c68-zeeni-p14s1w21">
+                        <src.rf>experimental</src.rf>
+                        <w.rf id="w-c68-zeeni-p14w21">
+                          <token>.</token>
+                          <no_space_after>1</no_space_after>
+                        </w.rf>
+                        <form>.</form>
+                        <lemma>.</lemma>
+                        <tag>zs</tag>
+                      </m.rf>
+                      <role>punct</role>
+                      <ord>21</ord>
+                    </node>
                   </children>
-                </node>
-                <node id="a-c68-zeeni-p14s1w5">
-                  <m.rf id="m-c68-zeeni-p14s1w5">
-                    <src.rf>experimental</src.rf>
-                    <w.rf id="w-c68-zeeni-p14w5">
-                      <token>viņš</token>
-                    </w.rf>
-                    <form>viņš</form>
-                    <lemma>viņš</lemma>
-                    <tag>pp3msnn</tag>
-                  </m.rf>
-                  <role>subj</role>
-                  <ord>5</ord>
-                </node>
+                </pmcinfo>
               </children>
             </node>
-            <node id="a-c68-zeeni-p14s1w7">
-              <m.rf id="m-c68-zeeni-p14s1w7">
+            <node id="a-c68-zeeni-p14s1w1">
+              <m.rf id="m-c68-zeeni-p14s1w1">
                 <src.rf>experimental</src.rf>
-                <w.rf id="w-c68-zeeni-p14w7">
-                  <token>,</token>
+                <w.rf id="w-c68-zeeni-p14w1">
+                  <token>"</token>
+                  <no_space_after>1</no_space_after>
                 </w.rf>
-                <form>,</form>
-                <lemma>,</lemma>
-                <tag>zc</tag>
+                <form>"</form>
+                <lemma>"</lemma>
+                <tag>zq</tag>
               </m.rf>
               <role>punct</role>
-              <ord>7</ord>
+              <ord>1</ord>
+            </node>
+            <node id="a-c68-zeeni-p14s1w4">
+              <m.rf id="m-c68-zeeni-p14s1w4">
+                <src.rf>experimental</src.rf>
+                <w.rf id="w-c68-zeeni-p14w4">
+                  <token>"</token>
+                </w.rf>
+                <form>"</form>
+                <lemma>"</lemma>
+                <tag>zq</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>4</ord>
+            </node>
+            <node id="a-c68-zeeni-p14s1w8">
+              <m.rf id="m-c68-zeeni-p14s1w8">
+                <src.rf>experimental</src.rf>
+                <w.rf id="w-c68-zeeni-p14w8">
+                  <token>"</token>
+                  <no_space_after>1</no_space_after>
+                </w.rf>
+                <form>"</form>
+                <lemma>"</lemma>
+                <tag>zq</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>8</ord>
+            </node>
+            <node id="a-c68-zeeni-p14s1w22">
+              <m.rf id="m-c68-zeeni-p14s1w22">
+                <src.rf>experimental</src.rf>
+                <w.rf id="w-c68-zeeni-p14w22">
+                  <token>"</token>
+                </w.rf>
+                <form>"</form>
+                <lemma>"</lemma>
+                <tag>zq</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>22</ord>
             </node>
           </children>
         </pmcinfo>
+        <node id="a-c68-zeeni-p14s1x1">
+          <role>ins</role>
+          <children>
+            <pmcinfo>
+              <pmctype>insPmc</pmctype>
+              <children>
+                <node id="a-c68-zeeni-p14s1w3">
+                  <m.rf id="m-c68-zeeni-p14s1w3">
+                    <src.rf>experimental</src.rf>
+                    <w.rf id="w-c68-zeeni-p14w3">
+                      <token>,</token>
+                      <no_space_after>1</no_space_after>
+                    </w.rf>
+                    <form>,</form>
+                    <lemma>,</lemma>
+                    <tag>zc</tag>
+                  </m.rf>
+                  <role>punct</role>
+                  <ord>3</ord>
+                </node>
+                <node id="a-c68-zeeni-p14s1w6">
+                  <m.rf id="m-c68-zeeni-p14s1w6">
+                    <src.rf>experimental</src.rf>
+                    <w.rf id="w-c68-zeeni-p14w6">
+                      <token>turpināja</token>
+                      <no_space_after>1</no_space_after>
+                    </w.rf>
+                    <form>turpināja</form>
+                    <lemma>turpināt</lemma>
+                    <tag>vmnist330an</tag>
+                  </m.rf>
+                  <role>pred</role>
+                  <ord>6</ord>
+                  <children>
+                    <node id="a-c68-zeeni-p14s1w5">
+                      <m.rf id="m-c68-zeeni-p14s1w5">
+                        <src.rf>experimental</src.rf>
+                        <w.rf id="w-c68-zeeni-p14w5">
+                          <token>viņš</token>
+                        </w.rf>
+                        <form>viņš</form>
+                        <lemma>viņš</lemma>
+                        <tag>pp3msnn</tag>
+                      </m.rf>
+                      <role>subj</role>
+                      <ord>5</ord>
+                    </node>
+                  </children>
+                </node>
+                <node id="a-c68-zeeni-p14s1w7">
+                  <m.rf id="m-c68-zeeni-p14s1w7">
+                    <src.rf>experimental</src.rf>
+                    <w.rf id="w-c68-zeeni-p14w7">
+                      <token>,</token>
+                    </w.rf>
+                    <form>,</form>
+                    <lemma>,</lemma>
+                    <tag>zc</tag>
+                  </m.rf>
+                  <role>punct</role>
+                  <ord>7</ord>
+                </node>
+              </children>
+            </pmcinfo>
+          </children>
+        </node>
       </children>
     </LM>
     <LM id="a-c68-zeeni-p14s2">
@@ -3129,7 +3129,7 @@
                       <role>crdPart</role>
                       <ord>10</ord>
                       <children>
-                        <node id="a-c68-zeeni-p15s1x4">
+                        <node id="a-c68-zeeni-p15s1x3">
                           <role>adv</role>
                           <children>
                             <xinfo>
@@ -3258,7 +3258,7 @@
                       <xtype>xApp</xtype>
                       <tag>n0msn0[agr]</tag>
                       <children>
-                        <node id="a-c68-zeeni-p15s1x3">
+                        <node id="a-c68-zeeni-p15s1x4">
                           <role>basElem</role>
                           <children>
                             <xinfo>
@@ -6248,7 +6248,7 @@
                                         </w.rf>
                                         <form>kļuva</form>
                                         <lemma>kļūt</lemma>
-                                        <tag>vcnisi130an</tag>
+                                        <tag>vtnisi130an</tag>
                                       </m.rf>
                                       <role>auxVerb</role>
                                       <ord>8</ord>
@@ -9356,7 +9356,7 @@
             <coordinfo>
               <coordtype>crdClauses</coordtype>
               <children>
-                <node id="a-c68-zeeni-p50s1x4">
+                <node id="a-c68-zeeni-p50s1x3">
                   <role>crdPart</role>
                   <children>
                     <pmcinfo>
@@ -9485,7 +9485,7 @@
                   <role>conj</role>
                   <ord>8</ord>
                 </node>
-                <node id="a-c68-zeeni-p50s1x5">
+                <node id="a-c68-zeeni-p50s1x4">
                   <role>crdPart</role>
                   <children>
                     <pmcinfo>
@@ -9599,7 +9599,7 @@
             <node id="a-c68-zeeni-p50s1x2">
               <role>pred</role>
               <children>
-                <node id="a-c68-zeeni-p50s1x3">
+                <node id="a-c68-zeeni-p50s1x5">
                   <role>objCl</role>
                   <children>
                     <pmcinfo>
@@ -10740,6 +10740,7 @@
     </LM>
     <LM id="a-c68-zeeni-p55s1">
       <s.rf>m#m-c68-zeeni-p55s1</s.rf>
+      <comment>partikula vai isteniba ir pakartojuma saiklis, bet vajadzeja taa zimet UD delj</comment>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
@@ -10764,15 +10765,60 @@
                     <node id="a-c68-zeeni-p55s1x2">
                       <role>objCl</role>
                       <children>
-                        <coordinfo>
-                          <coordtype>crdClauses</coordtype>
+                        <pmcinfo>
+                          <pmctype>subrCl</pmctype>
                           <children>
+                            <node id="a-c68-zeeni-p55s1w5">
+                              <m.rf id="m-c68-zeeni-p55s1w5">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c68-zeeni-p55w5">
+                                  <token>,</token>
+                                </w.rf>
+                                <form>,</form>
+                                <lemma>,</lemma>
+                                <tag>zc</tag>
+                              </m.rf>
+                              <role>punct</role>
+                              <ord>5</ord>
+                            </node>
                             <node id="a-c68-zeeni-p55s1x3">
-                              <role>crdPart</role>
+                              <role>pred</role>
                               <children>
-                                <pmcinfo>
-                                  <pmctype>subrCl</pmctype>
+                                <coordinfo>
+                                  <coordtype>crdParts</coordtype>
                                   <children>
+                                    <node id="a-c68-zeeni-p55s1x5">
+                                      <reduction>vmyipi230an(iezīmējas)</reduction>
+                                      <role>crdPart</role>
+                                      <children>
+                                        <node id="a-c68-zeeni-p55s1w6">
+                                          <m.rf id="m-c68-zeeni-p55s1w6">
+                                            <src.rf>semi-automatic</src.rf>
+                                            <w.rf id="w-c68-zeeni-p55w6">
+                                              <token>vai</token>
+                                            </w.rf>
+                                            <form>vai</form>
+                                            <lemma>vai</lemma>
+                                            <tag>q</tag>
+                                          </m.rf>
+                                          <role>no</role>
+                                          <ord>6</ord>
+                                        </node>
+                                      </children>
+                                    </node>
+                                    <node id="a-c68-zeeni-p55s1w7">
+                                      <m.rf id="m-c68-zeeni-p55s1w7">
+                                        <src.rf>semi-automatic</src.rf>
+                                        <w.rf id="w-c68-zeeni-p55w7">
+                                          <token>un</token>
+                                        </w.rf>
+                                        <form>un</form>
+                                        <lemma>un</lemma>
+                                        <tag>cc</tag>
+                                      </m.rf>
+                                      <role>conj</role>
+                                      <ord>7</ord>
+                                    </node>
                                     <node id="a-c68-zeeni-p55s1w15">
                                       <m.rf id="m-c68-zeeni-p55s1w15">
                                         <src.rf>semi-automatic</src.rf>
@@ -10783,7 +10829,7 @@
                                         <lemma>iezīmēties</lemma>
                                         <tag>vmyipi230an</tag>
                                       </m.rf>
-                                      <role>pred</role>
+                                      <role>crdPart</role>
                                       <ord>15</ord>
                                       <children>
                                         <node id="a-c68-zeeni-p55s1w9">
@@ -10945,64 +10991,11 @@
                                       </children>
                                     </node>
                                   </children>
-                                </pmcinfo>
+                                </coordinfo>
                               </children>
-                            </node>
-                            <node id="a-c68-zeeni-p55s1x4">
-                              <role>crdPart</role>
-                              <children>
-                                <pmcinfo>
-                                  <pmctype>subrCl</pmctype>
-                                  <children>
-                                    <node id="a-c68-zeeni-p55s1x5">
-                                      <reduction>vmyipi230an(iezīmējas)</reduction>
-                                      <role>pred</role>
-                                    </node>
-                                    <node id="a-c68-zeeni-p55s1w5">
-                                      <m.rf id="m-c68-zeeni-p55s1w5">
-                                        <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-c68-zeeni-p55w5">
-                                          <token>,</token>
-                                        </w.rf>
-                                        <form>,</form>
-                                        <lemma>,</lemma>
-                                        <tag>zc</tag>
-                                      </m.rf>
-                                      <role>punct</role>
-                                      <ord>5</ord>
-                                    </node>
-                                    <node id="a-c68-zeeni-p55s1w6">
-                                      <m.rf id="m-c68-zeeni-p55s1w6">
-                                        <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-c68-zeeni-p55w6">
-                                          <token>vai</token>
-                                        </w.rf>
-                                        <form>vai</form>
-                                        <lemma>vai</lemma>
-                                        <tag>q</tag>
-                                      </m.rf>
-                                      <role>no</role>
-                                      <ord>6</ord>
-                                    </node>
-                                  </children>
-                                </pmcinfo>
-                              </children>
-                            </node>
-                            <node id="a-c68-zeeni-p55s1w7">
-                              <m.rf id="m-c68-zeeni-p55s1w7">
-                                <src.rf>semi-automatic</src.rf>
-                                <w.rf id="w-c68-zeeni-p55w7">
-                                  <token>un</token>
-                                </w.rf>
-                                <form>un</form>
-                                <lemma>un</lemma>
-                                <tag>cc</tag>
-                              </m.rf>
-                              <role>conj</role>
-                              <ord>7</ord>
                             </node>
                           </children>
-                        </coordinfo>
+                        </pmcinfo>
                       </children>
                     </node>
                   </children>
