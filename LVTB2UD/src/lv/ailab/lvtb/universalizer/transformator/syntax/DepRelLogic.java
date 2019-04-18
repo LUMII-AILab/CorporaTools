@@ -488,9 +488,14 @@ public class DepRelLogic
 				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
-			String prepLemma = preps.get(0).getM().getLemma();
-			String prepRed = preps.get(0).getReduction();
-			if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
+			String prepLemma = null;
+			if (!preps.isEmpty())
+			{
+				preps.get(0).getM().getLemma();
+				String prepRed = preps.get(0).getReduction();
+				if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
+				// TODO: vai ir okei nelietot reducēto lemmu?
+			}
 			return Tuple.of(UDv2Relations.OBL, prepLemma);
 		}
 		if (tag.matches("n.*|p.*|mo.*"))
