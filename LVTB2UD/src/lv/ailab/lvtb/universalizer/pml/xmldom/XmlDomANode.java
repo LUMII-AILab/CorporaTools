@@ -741,7 +741,9 @@ public class XmlDomANode implements PmlANode
 		try
 		{
 			XmlDomANode parentToAppend = getParent();
-			if (!parentToAppend.isPhraseNode()) parentToAppend = this;
+			//if (!parentToAppend.isPhraseNode()) parentToAppend = this;
+			if (!parentToAppend.isPhraseNode() || parentToAppend.getNodeType().equals(Type.COORD))
+				parentToAppend = this;
 			Document ownerDoc = domNode.getOwnerDocument();
 			// Children container
 			Node childenNode = (Node) XPathEngine.get().evaluate(

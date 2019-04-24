@@ -61,6 +61,27 @@ public class SentenceTransformEngine
 		StandardLogger.l.flush();
 		morphoTransf.transformPostsyntMorpho();
 		StandardLogger.l.finishSentenceNormal();
+		/*try
+		{
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+			// Uncomment if you do not require XML declaration
+			// transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+			//A character stream that collects its output in a string buffer,
+			//which can then be used to construct a string.
+			StringWriter writer = new StringWriter();
+
+			//transform document to string
+			transformer.transform(new DOMSource(((XmlDomANode)s.pmlTree).domNode), new StreamResult(writer));
+
+			String xmlString = writer.getBuffer().toString();
+			System.out.println(xmlString);						//Print to console or logs
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}*/
 	}
 
 	/**
