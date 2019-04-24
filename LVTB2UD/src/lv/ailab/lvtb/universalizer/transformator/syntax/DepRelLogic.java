@@ -619,13 +619,28 @@ public class DepRelLogic
 	{
 		PmlANode phrase = node.getPhraseNode();
 		if (phrase == null || phrase.getNodeType() != PmlANode.Type.PMC)
+		{
+			String tag = node.getAnyTag();
+			if (tag != null && tag.matches("z.*")) return Tuple.of(UDv2Relations.PUNCT, null);
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
+		}
 
 		List<PmlANode> preds = phrase.getChildren(LvtbRoles.PRED);
 		if (preds!= null && preds.size() > 1)
 			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.PRED));
 		if (preds != null && !preds.isEmpty()) return Tuple.of(UDv2Relations.PARATAXIS, null);
+		List<PmlANode> basElems = phrase.getChildren(LvtbRoles.BASELEM);
+		if (basElems!= null && basElems.size() > 1)
+			StandardLogger.l.doInsentenceWarning(String.format(
+					"\"%s\" has multiple \"%s\".", LvtbPmcTypes.INSPMC, LvtbRoles.BASELEM));
+		if (basElems != null && !basElems.isEmpty())
+		{
+			String tag = basElems.get(0).getAnyTag();
+			if (tag != null && tag.matches("z.*"))
+				return Tuple.of(UDv2Relations.PUNCT, null);
+		}
+
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
 	}
 
