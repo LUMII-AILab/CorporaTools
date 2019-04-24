@@ -1,5 +1,8 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
+import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
+import lv.ailab.lvtb.universalizer.conllu.Token;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
@@ -66,6 +69,7 @@ public class NewSyntaxTransformator
 
 	public void aftercare()
 	{
+		if (params.NORMALIZE_PUNCT_ATTACHMENT) noPunctUnderPunct();
 		if (params.CLEANUP_UNLABELED_EDEPS) s.removeUnlabeledDeps();
 	}
 
@@ -214,6 +218,36 @@ public class NewSyntaxTransformator
 		s.relinkAllDependants(parentANode, pmlDependents, params.PROPAGATE_CONJUNCTS,
 				params.ADD_CONTROL_SUBJ, params.NO_EDEP_DUPLICATES);
 
+	}
+
+	/**
+	 * Postprocessing: rise all punctuation which are children of other punctuation.
+	 */
+	protected void noPunctUnderPunct()
+	{
+		boolean doStuff = true;
+		while (doStuff)
+		{
+			doStuff = false;
+			for (Token token : s.conll)
+				if (token.deprel == UDv2Relations.PUNCT)
+			{
+				Token parent = token.head.second;
+				if (parent != null && parent.deprel == UDv2Relations.PUNCT)
+				{
+					doStuff = true;
+					token.head = parent.head;
+					EnhencedDep oldEnhHead = new EnhencedDep(parent, UDv2Relations.PUNCT);
+					if (token.deps.contains(oldEnhHead))
+					{
+						token.deps.remove(oldEnhHead);
+						token.deps.add(new EnhencedDep(parent.head.second, UDv2Relations.PUNCT));
+					}
+					break;
+				}
+			}
+
+		}
 	}
 
 }

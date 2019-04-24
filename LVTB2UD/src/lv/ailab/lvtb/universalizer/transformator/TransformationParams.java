@@ -43,6 +43,12 @@ public class TransformationParams
 	 */
 	public Boolean SPLIT_NONEMPTY_ELLIPSIS = true; // NB! Check this before each UD release!
 
+	/**
+	 * To fit UD standard this must be true. When true, preprocessind is done to
+	 * rise punct dependants of other punct.
+	 */
+	public Boolean NORMALIZE_PUNCT_ATTACHMENT = true; // NB! Check this before each UD release!
+
 	// ===== Enhanced.
 	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph
