@@ -49,6 +49,12 @@ public class TransformationParams
 	 */
 	public Boolean NORMALIZE_PUNCT_ATTACHMENT = true; // NB! Check this before each UD release!
 
+	/**
+	 * To fit UD standard this must be true. When true, nonprojective
+	 * punctuation is relinked.
+	 */
+	public Boolean NORMALIZE_NONPROJ_PUNCT = true; // NB! Check this before each UD release!
+
 	// ===== Enhanced.
 	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph

@@ -1,10 +1,12 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
+import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
+import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
@@ -70,6 +72,9 @@ public class NewSyntaxTransformator
 	public void aftercare()
 	{
 		if (params.NORMALIZE_PUNCT_ATTACHMENT) noPunctUnderPunct();
+		if (params.NORMALIZE_NONPROJ_PUNCT) fixPunctProjectivity();
+		if (params.NORMALIZE_PUNCT_ATTACHMENT && params.NORMALIZE_NONPROJ_PUNCT)
+			noPunctUnderPunct();
 		if (params.CLEANUP_UNLABELED_EDEPS) s.removeUnlabeledDeps();
 	}
 
@@ -221,7 +226,8 @@ public class NewSyntaxTransformator
 	}
 
 	/**
-	 * Postprocessing: rise all punctuation which are children of other punctuation.
+	 * Postprocessing: rise all punctuation which are children of other
+	 * punctuation.
 	 */
 	protected void noPunctUnderPunct()
 	{
@@ -246,6 +252,41 @@ public class NewSyntaxTransformator
 					break;
 				}
 			}
+		}
+	}
+
+	/**
+	 * Postprocessing: move nonprojecting punctuation to be children of the
+	 * previous node.
+	 */
+	protected void fixPunctProjectivity()
+	{
+		for (Token t : s.conll)
+		{
+			if (t.idSub > 0 || t.deprel != UDv2Relations.PUNCT) continue;
+			boolean isProjective = s.isProjective(t);
+			boolean createsNonproj = s.createsNonprojectivity(t);
+			if (isProjective && !createsNonproj) continue;
+			Token newParent = s.getPrevSurfaceToken(t);
+			if (newParent == null) s.getNextSurfaceToken(t);
+			if (newParent != null)
+			{
+				EnhencedDep oldEnhHead = new EnhencedDep(t.head.second, UDv2Relations.PUNCT);
+				if (t.deps.contains(oldEnhHead))
+				{
+					t.deps.remove(oldEnhHead);
+					t.deps.add(new EnhencedDep(newParent, UDv2Relations.PUNCT));
+				}
+				t.head = Tuple.of(newParent.getFirstColumn(), newParent);
+
+				StandardLogger.l.doInsentenceWarning(String.format(
+						"CONLL token \"%s\" %s in sentence \"%s\" relinked to preserve projectivity.",
+						t.getFirstColumn(), t.misc.get(MiscKeys.LVTB_NODE_ID), s.id));
+			}
+			else
+				StandardLogger.l.doInsentenceWarning(String.format(
+						"CONLL token \"%s\" %s in sentence \"%s\" should be relinked to preserve projectivity, but where?",
+						t.getFirstColumn(), t.misc.get(MiscKeys.LVTB_NODE_ID), s.id));
 
 		}
 	}

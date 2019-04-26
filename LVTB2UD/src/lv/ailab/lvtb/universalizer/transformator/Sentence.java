@@ -1074,23 +1074,15 @@ public class Sentence
 		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ;
 	}
 
-	protected ArrayList<Token> getProblemPunct()
+	/**
+	 * Check if given token is linked to the tree with projective dependency.
+	 * Algorithm from https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+	 * @param token	token to analyze
+	 * @return false if the link is nonprojective
+	 */
+	public boolean isProjective(Token token)
 	{
-		ArrayList<Token> result = new ArrayList<>();
-
-		for (Token thisTok : this.conll) if (thisTok.deprel == UDv2Relations.PUNCT)
-		{
-			if (!isProjective(thisTok)) result.add(thisTok);
-			else if (createsNonprojectivity(thisTok)) result.add(thisTok);
-		}
-		return result;
-	}
-
-	protected boolean isProjective(Token token)
-	{
-		if (token == null) return true;
-		// Algorithm from
-		// https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+		if (token == null || token.head == null) return true;
 		Token parent = token.head.second;
 		boolean hasStartedGap = parent == null;
 		HashSet<Token> nonproj = new HashSet<>();
@@ -1106,7 +1098,7 @@ public class Sentence
 			}
 			// Process a node in the gap. Only basic dependencies are
 			// checked.
-			else if (hasStartedGap && otherTok.idSub < 0)
+			else if (hasStartedGap && otherTok.idSub < 1)
 			{
 				Token tmpParent = otherTok;
 				// Travel up the ancestry chain.
@@ -1120,20 +1112,28 @@ public class Sentence
 		return nonproj.isEmpty();
 	}
 
-	protected boolean createsNonprojectivity(Token token)
+	/**
+	 *  Checks whether a node is in a gap of a nonprojective edge. Report true
+	 *  only if the node's parent is not in the same gap. Used to check that a
+	 *  punctuation node does not cause nonprojectivity. But if it has been
+	 *  dragged to the gap with a larger subtree, then it itself is not blamed.
+	 *  Algorithm from https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+	 * @param token token to analyze
+	 * @return true if this node creates some nonprojectivity
+	 */
+	public boolean createsNonprojectivity(Token token)
 	{
-		if (token == null) return false;
-		// Algorithm from
-		// https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+		if (token == null || token.head == null) return false;
 		Token parent = token.head.second;
 		HashSet<Token> ancestry = getTokenAncestry(token);
 		boolean parentIsBefore = parent.idBegin < token.idBegin;
 		ArrayList<Token> nonprojectives = new ArrayList<>();
 		for (Token otherTok : conll)
 		{
-			Token otherParent = otherTok.head.second;
+			Token otherParent = null;
+			if (otherTok.head != null) otherParent = otherTok.head.second;
 			// Enhanced-only nodes are not checked.
-			if (otherTok.idSub > -1) continue;
+			if (otherTok.idSub > 0) continue;
 			// Ancestors are not considered.
 			else if (ancestry.contains(otherTok)) continue;
 			// If parent is before node, then tokens before parent are not considered.
@@ -1165,6 +1165,50 @@ public class Sentence
 		{
 			result.add(token);
 			token = token.head.second;
+		}
+		return result;
+	}
+
+	/**
+	 * Get the token following the given one in the sentence.
+	 * @param token token whose following token must be found
+	 * @return next token or null if this is the last one.
+	 */
+	public Token getNextSurfaceToken (Token token)
+	{
+		LinkedList<Token> tempRes = new LinkedList<>();
+		boolean hasMetToken = false;
+		for (Token t : conll)
+		{
+			if (hasMetToken && t.idSub < 1) tempRes.add(t);
+			else if (t.equals(token)) hasMetToken = true;
+		}
+		return tempRes.getFirst();
+	}
+	/**
+	 * Get the token before the given one in the sentence.
+	 * @param token token whose previous token must be found
+	 * @return previous token or null if this is the first one.
+	 */
+	public Token getPrevSurfaceToken (Token token)
+	{
+		LinkedList<Token> tempRes = new LinkedList<>();
+		for (Token t : conll)
+		{
+			if (t.equals(token)) break;
+			if (t.idSub < 1) tempRes.add(t);
+		}
+		return tempRes.getLast();
+	}
+
+	protected ArrayList<Token> getTokenChildren (Token token)
+	{
+		ArrayList<Token> result = new ArrayList<>();
+		for (Token t : conll)
+		{
+			if (t.head.second == token || t.head.second != null &&
+					t.head.second.equals(token))
+				result.add(t);
 		}
 		return result;
 	}
