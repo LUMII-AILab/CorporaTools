@@ -502,15 +502,15 @@ public class PhraseTransformator
 			{
 				List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
 				List<PmlANode> potSubroot = new ArrayList<>();
-				if (!xTag.matches("[pm].*"))
+				if (!xTag.matches("(p|mc|xn).*"))
 					StandardLogger.l.doInsentenceWarning(String.format(
-							"\"%s\" in sentence \"%s\" is tagged neither as pronouns nor numeral.",
+							"\"%s\" in sentence \"%s\" is tagged neither as pronoun nor numeral.",
 							xNode.getPhraseType(), s.id));
 				boolean isNumeral = xTag.startsWith("m");
 				for (PmlANode basElem : basElems)
 				{
 					String tag = basElem.getAnyTag();
-					if (isNumeral && tag.matches("m.*")) potSubroot.add(basElem);
+					if (isNumeral && tag.matches("(mc|xn).*")) potSubroot.add(basElem);
 					else if (tag.matches("p.*"))potSubroot.add(basElem);
 				}
 				if (potSubroot.size() < 1)
