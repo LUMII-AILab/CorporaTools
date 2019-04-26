@@ -501,24 +501,32 @@ public class PhraseTransformator
 			case "skv" :
 			{
 				List<PmlANode> basElems = xNode.getChildren(LvtbRoles.BASELEM);
-				List<PmlANode> prons = new ArrayList<>();
+				List<PmlANode> potSubroot = new ArrayList<>();
+				if (!xTag.matches("[pm].*"))
+					StandardLogger.l.doInsentenceWarning(String.format(
+							"\"%s\" in sentence \"%s\" is tagged neither as pronouns nor numeral.",
+							xNode.getPhraseType(), s.id));
+				boolean isNumeral = xTag.startsWith("m");
 				for (PmlANode basElem : basElems)
 				{
 					String tag = basElem.getAnyTag();
-					if (tag.matches("p.*")) prons.add(basElem);
+					if (isNumeral && tag.matches("m.*")) potSubroot.add(basElem);
+					else if (tag.matches("p.*"))potSubroot.add(basElem);
 				}
-				if (prons.size() < 1)
+				if (potSubroot.size() < 1)
 				{
 					StandardLogger.l.doInsentenceWarning(String.format(
-							"\"%s\" in sentence \"%s\" has no pronominal \"%s\".",
-							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
-					prons = children;
+							"\"%s\" in sentence \"%s\" has no %s \"%s\".",
+							xNode.getPhraseType(), s.id, isNumeral ? "numeral" : "pronominal",
+							LvtbRoles.BASELEM));
+					potSubroot = children;
 				}
-				else if (prons.size() > 1)
+				else if (potSubroot.size() > 1)
 					StandardLogger.l.doInsentenceWarning(String.format(
-							"\"%s\" in sentence \"%s\" has more than one pronominal \"%s\".",
-							xNode.getPhraseType(), s.id, LvtbRoles.BASELEM));
-				PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(prons);
+							"\"%s\" in sentence \"%s\" has more than one %s \"%s\".",
+							xNode.getPhraseType(), s.id, isNumeral ? "numeral" : "pronominal",
+							LvtbRoles.BASELEM));
+				PmlANode newRoot = PmlANodeListUtils.getFirstByDeepOrd(potSubroot);
 				s.relinkAllConstituents(newRoot, children, xNode,
 						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 				return newRoot;
