@@ -1073,4 +1073,99 @@ public class Sentence
 	{
 		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ;
 	}
+
+	protected ArrayList<Token> getProblemPunct()
+	{
+		ArrayList<Token> result = new ArrayList<>();
+
+		for (Token thisTok : this.conll) if (thisTok.deprel == UDv2Relations.PUNCT)
+		{
+			if (!isProjective(thisTok)) result.add(thisTok);
+			else if (createsNonprojectivity(thisTok)) result.add(thisTok);
+		}
+		return result;
+	}
+
+	protected boolean isProjective(Token token)
+	{
+		if (token == null) return true;
+		// Algorithm from
+		// https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+		Token parent = token.head.second;
+		boolean hasStartedGap = parent == null;
+		HashSet<Token> nonproj = new HashSet<>();
+		// Find nodes in gap between punctuation and its parent.
+		// Then check if these nodes are punctuation parents descendants.
+		for (Token otherTok : conll)
+		{
+			// Process begining and the end of the gap.
+			if (otherTok.equals(token) || otherTok.equals(parent))
+			{
+				if (hasStartedGap) break;
+				else hasStartedGap = true;
+			}
+			// Process a node in the gap. Only basic dependencies are
+			// checked.
+			else if (hasStartedGap && otherTok.idSub < 0)
+			{
+				Token tmpParent = otherTok;
+				// Travel up the ancestry chain.
+				while (tmpParent != null && !tmpParent.equals(parent))
+					tmpParent = tmpParent.head.second;
+				// Null means root. If the root is reached without meeting
+				// punctuation nodes parent, then there is non-projectivity.
+				if (tmpParent == null) nonproj.add(otherTok);
+			}
+		}
+		return nonproj.isEmpty();
+	}
+
+	protected boolean createsNonprojectivity(Token token)
+	{
+		if (token == null) return false;
+		// Algorithm from
+		// https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
+		Token parent = token.head.second;
+		HashSet<Token> ancestry = getTokenAncestry(token);
+		boolean parentIsBefore = parent.idBegin < token.idBegin;
+		ArrayList<Token> nonprojectives = new ArrayList<>();
+		for (Token otherTok : conll)
+		{
+			Token otherParent = otherTok.head.second;
+			// Enhanced-only nodes are not checked.
+			if (otherTok.idSub > -1) continue;
+			// Ancestors are not considered.
+			else if (ancestry.contains(otherTok)) continue;
+			// If parent is before node, then tokens before parent are not considered.
+			else if (parentIsBefore && otherTok.idBegin < parent.idBegin) continue;
+			// If parent is after node, then tokens after parent are not considered.
+			else if (!parentIsBefore && otherTok.idBegin > parent.idBegin) break;
+			// "leftcross"
+			else if (otherTok.idBegin < token.idBegin)
+			{
+				if ((otherParent != null && otherParent.idBegin > token.idBegin) // This means, link spans across token in question
+						&& (parentIsBefore || otherParent.idBegin < parent.idBegin)) // This means, link doesn't span across both token in question and its parent
+					nonprojectives.add(otherTok);
+			}
+			// "rightcross"
+			else if (otherTok.idBegin > token.idBegin)
+			{
+				if ((otherParent == null || otherParent.idBegin < token.idBegin) // This means, link spans across token in question
+						&& (!parentIsBefore || otherParent != null && otherParent.idBegin > parent.idBegin)) // This means, link doesn't span across both token in question and its parent
+					nonprojectives.add(otherTok);
+			}
+		}
+		return !nonprojectives.isEmpty();
+	}
+
+	protected HashSet<Token> getTokenAncestry (Token token)
+	{
+		HashSet<Token> result = new HashSet<>();
+		while (token != null)
+		{
+			result.add(token);
+			token = token.head.second;
+		}
+		return result;
+	}
 }
