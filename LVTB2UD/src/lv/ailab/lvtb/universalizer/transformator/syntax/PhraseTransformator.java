@@ -506,12 +506,12 @@ public class PhraseTransformator
 					StandardLogger.l.doInsentenceWarning(String.format(
 							"\"%s\" in sentence \"%s\" is tagged neither as pronoun nor numeral.",
 							xNode.getPhraseType(), s.id));
-				boolean isNumeral = xTag.startsWith("m");
+				boolean isNumeral = xTag.matches("(mc|xn).*");
 				for (PmlANode basElem : basElems)
 				{
 					String tag = basElem.getAnyTag();
 					if (isNumeral && tag.matches("(mc|xn).*")) potSubroot.add(basElem);
-					else if (tag.matches("p.*"))potSubroot.add(basElem);
+					else if (!isNumeral && tag.matches("p.*"))potSubroot.add(basElem);
 				}
 				if (potSubroot.size() < 1)
 				{
