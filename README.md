@@ -13,16 +13,16 @@ TrEd extension/lv-treebank/resources.
 Dependencies;
 * TrEd extension - development snapshot for lv-treebank module for TrEd tool
 (this enables TrEd to operate with lv-PML files);
-* MorphoVerificator - *obselote* - java written tool implementing various heuristics for
+* MorphoVerificator - *obsolete* - java written tool implementing various heuristics for
 searching human errors in morphological corpora;
-* ParserTools - *obselote* - tools used for preUD parser experiments.
+* ParserTools - *obsolete* - tools used for preUD parser experiments.
 
 For each script in PmlCorporaTools there is a .bat file showing invocation
 sample on dummy data located in PmlCorporaTools/testdata. Also, it is possible
 to launch these scripts without parameters to get information about expected
 parameter values and meaning.
 
-Some scripts have not been used several years and might be obselote, sorry.
+Some scripts have not been used several years and might be obsolete, sorry.
 
 Folder Docs containing datasplits moved to Treebank repo in 2017-12-11.
 
@@ -33,11 +33,22 @@ For PmlCorporaTools:
 * Perl
 * `XML::Simple`
 * XSLT module (on Ubuntu, run 'sudo apt-get install libxml-libxslt-perl')
+* Treex::Core according to https://ufal.mff.cuni.cz/treex/install.html
 
 For LVTB2UD
 * Java
 * Morphological https://github.com/PeterisP/morphology
 
+### OSX install
+* install homebrew
+* brew install cpanm
+* brew install libxml2
+* sudo cpanm XML::LibXML
+* sudo cpanm -n PerlIO::Util
+* sudo cpanm Moose
+* moose-outdated | cpanm
+* sudo cpanm Treex::Core
+* treex -h
 
 ## Main work-flows
 
