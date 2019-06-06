@@ -6,6 +6,7 @@ text:<? $${m/w/token}eq$${m/form} ?
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
   
+node: <? '#{dimgray}ID: ${id}' if (not $${#name}) ?>
 node: <? '#{black}${comment}' if $${comment}?>
 node:#{red}<? join "\n", @{ LV_A::get_structural_errors($this); }?>
 node:#{red}<? join "\n", @{ LV_A::get_lemma_errors($${m/lemma}, $${m/tag}) }?>

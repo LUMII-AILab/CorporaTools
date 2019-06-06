@@ -5,7 +5,8 @@ text:<? $${m/w/token}eq$${m/form} ?
   '#{-over:1}#{'.CustomColor('spell').'}['.
      join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
   ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
-
+  
+node: <? '#{dimgray}ID: ${id}' if (not $${#name}) ?>
 node:#{darkblue}${role}${xtype}${coordtype}${pmctype}
 node:${m/form}
 node:<? '#{darkviolet}reduction' if $${reduction}?>
