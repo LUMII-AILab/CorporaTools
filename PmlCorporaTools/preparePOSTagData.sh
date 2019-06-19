@@ -60,7 +60,7 @@ do
 		mv "$pmlFolder/res/$file.pml" "$pmlFolder/train" || true;
 	elif [ $type = "skip" ]; then
 		echo "skipping $file"
-		rm "$pmlFolder/res/$file.pml"
+		rm "$pmlFolder/res/$file.pml" || true
 	else 
 		echo "$file has bad type"
 	fi
