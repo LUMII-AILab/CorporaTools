@@ -238,6 +238,8 @@ public class DepRelLogic
 		String tag = node.getAnyTag();
 		String parentTag = parent.getAnyTag();
 		PmlANode phraseChild = node.getPhraseNode();
+		if (parentTag.matches("a.*"))
+			return Tuple.of(UDv2Relations.OBL, null);
 		if (phraseChild != null)
 		{
 			String constLabel = phraseChild.getAnyLabel();
