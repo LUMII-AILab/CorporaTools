@@ -101,10 +101,10 @@ public class FeatsLogic
 		//if (xpostag.matches("is.*") && lemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
 
 		// Lexical features
-		if (xpostag.matches("p[ps].*")) res.add(UDv2Feat.PRONTYPE_PRS);
+		if (xpostag.matches("p[psx].*")) res.add(UDv2Feat.PRONTYPE_PRS);
 		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
 			res.add(UDv2Feat.PRONTYPE_PRS);
-		if (xpostag.matches("px.*")) res.add(UDv2Feat.PRONTYPE_RCP);
+		//if (xpostag.matches("px.*")) res.add(UDv2Feat.PRONTYPE_RCP);
 		if (xpostag.matches("pq.*")) res.add(UDv2Feat.PRONTYPE_INT);
 		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
 			res.add(UDv2Feat.PRONTYPE_INT);
