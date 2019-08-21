@@ -139,11 +139,17 @@ public class NewSyntaxTransformator
 					"No child was raised for ellipsis node %s.", nodeId));
 			String redXPostag = XPosLogic.getXpostag(aNode.getReductionTagPart());
 			newBasicRoot = redRoot.first;
-			s.ellipsisWithOrphans.add(nodeId);
 
 			// Create ellipsis node for enhanced dependencies, if allowed to do so.
 			// TODO more precise restriction?
-			if (redXPostag.matches("v..([^p].*|p[du].*)") || ! params.UD_STANDARD_NULLNODES)
+			boolean isVerbal = false;
+			if (redXPostag.matches("v..([^p].*|p[du].*)"))
+			{
+				s.ellipsisWithOrphans.add(nodeId);
+				isVerbal = true;
+			}
+
+			if (isVerbal || ! params.UD_STANDARD_NULLNODES)
 			{
 				String newIdStub = newBasicRoot.getId();
 				//List<PmlANode> tokenNodes = aNode.getChildren(LvtbRoles.ELLIPSIS_TOKEN);
