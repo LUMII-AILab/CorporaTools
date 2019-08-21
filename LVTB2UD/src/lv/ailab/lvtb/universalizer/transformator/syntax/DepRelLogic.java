@@ -256,7 +256,6 @@ public class DepRelLogic
 	{
 		String tag = node.getAnyTag();
 		String parentTag = parent.getAnyTag();
-
 		// If parent is something reduced to punctuation mark, use reduction
 		// tag instead.
 		if (parentTag.matches("z.*"))
@@ -265,10 +264,14 @@ public class DepRelLogic
 			if (parentRed != null && parentRed.length() > 0)
 				parentTag = parentRed;
 		}
-
 		String parentEffRole = parent.getEffectiveLabel();
+		PmlANode phrase = node.getPhraseNode();
+		String pmcType = phrase == null || phrase.getNodeType() != PmlANode.Type.PMC
+				? null
+				: phrase.getPhraseType();
+
 		// Infinitive SPC
-		if (tag.matches("v..n.*"))
+		if (pmcType == null && tag.matches("v..n.*"))
 		{
 			PmlANode pmlEfParent = parent.getThisOrEffectiveAncestor();
 			String effParentType = pmlEfParent.getAnyLabel();
@@ -278,12 +281,10 @@ public class DepRelLogic
 			if (parentTag.matches("[nampx].*|y[npa].*")) return Tuple.of(UDv2Relations.NMOD, null);
 		}
 
-		PmlANode phrase = node.getPhraseNode();
-		//String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", node);
 		String xType = phrase == null || phrase.getNodeType() != PmlANode.Type.X
 				? null
 				: phrase.getPhraseType();
-		// prepositional SPC
+		// prepositional SPC (without PMC)
 		if (xType != null && xType.equals(LvtbXTypes.XPREP))
 		{
 			List<PmlANode> preps = phrase.getChildren(LvtbRoles.PREP);
@@ -327,7 +328,7 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.NMOD, prepLemma);
 		}
 
-		// SPC with comparison
+		// SPC with comparison (without PMC)
 		if (xType != null && xType.equals(LvtbXTypes.XSIMILE))
 		{
 			List<PmlANode> conjs = phrase.getChildren(LvtbRoles.CONJ);
@@ -362,12 +363,13 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.NMOD, conjLemma);
 			return Tuple.of(UDv2Relations.OBL, conjLemma);
 		}
-		// Simple nominal SPC
-		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
+		// Simple nominal SPC (without PMC)
+		if (pmcType == null && tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
-		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
+		if (pmcType == null && tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
-		if (tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..pd..[adnl].*|x.*|y[npa].*"))
+		if (pmcType == null &&
+				tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..pd..[adnl].*|x.*|y[npa].*"))
 		{
 			// TODO Optimize to a single match
 			Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
@@ -382,14 +384,10 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.ACL, null);
 		}
 
-		// Participal SPC
+		// Participal SPC (both with and without PMC)
 		if (tag.matches("v..p[pu].*")) return Tuple.of(UDv2Relations.ADVCL, null);
 
 		// SPC with punctuation.
-		//String pmcType = XPathEngine.get().evaluate("./children/pmcinfo/pmctype", node);
-		String pmcType = phrase == null || phrase.getNodeType() != PmlANode.Type.PMC
-				? null
-				: phrase.getPhraseType();
 		if (pmcType != null && pmcType.equals(LvtbPmcTypes.SPCPMC))
 		{
 			List<PmlANode> basElems = phrase.getChildren(LvtbRoles.BASELEM);
@@ -421,7 +419,7 @@ public class DepRelLogic
 			if (basElemTag.matches("v..p[pu].*|r.*|yr.*"))
 				return Tuple.of(UDv2Relations.ADVCL, null);
 			// Nominal SPC
-			if (basElemTag.matches("n.*") || 	basElemTag.matches("y[np].*"))
+			if (basElemTag.matches("n.*") || basElemTag.matches("y[np].*"))
 				return Tuple.of(UDv2Relations.APPOS, null);
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..d.*|ya.*"))
