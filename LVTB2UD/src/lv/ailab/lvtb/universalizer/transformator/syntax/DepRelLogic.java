@@ -639,6 +639,13 @@ public class DepRelLogic
 			String tag = basElems.get(0).getAnyTag();
 			if (tag != null && tag.matches("z.*"))
 				return Tuple.of(UDv2Relations.PUNCT, null);
+
+			PmlANode basPhrase = basElems.get(0).getPhraseNode();
+			String coordType = basPhrase == null || basPhrase.getNodeType() != PmlANode.Type.COORD
+					? null
+					: basPhrase.getPhraseType();
+			if (LvtbCoordTypes.CRDCLAUSES.equals(coordType))
+				return Tuple.of(UDv2Relations.PARATAXIS, null);
 		}
 
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
