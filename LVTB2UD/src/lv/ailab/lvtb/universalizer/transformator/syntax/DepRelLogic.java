@@ -420,7 +420,23 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.ADVCL, null);
 			// Nominal SPC
 			if (basElemTag.matches("n.*") || basElemTag.matches("y[np].*"))
+			{
+				if (parentTag.matches("v..([^p]|p[^d]).*"))
+				{
+					Matcher m = Pattern.compile("n...(.).*").matcher(tag);
+					if (m.matches())
+					{
+						String caseLetter = m.group(2);
+						String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
+						if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
+							return Tuple.of(UDv2Relations.OBL, caseString);
+					}
+					if (tag.matches("y.*"))
+						return Tuple.of(UDv2Relations.OBL, null);
+				}
+
 				return Tuple.of(UDv2Relations.APPOS, null);
+			}
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..d.*|ya.*"))
 				return Tuple.of(UDv2Relations.ACL, null);
