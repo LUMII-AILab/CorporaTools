@@ -373,15 +373,10 @@ public class DepRelLogic
 		{
 			// TODO Optimize to a single match
 			Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
-			if (m.matches())
-			{
-				String caseLetter = m.group(2);
-				String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-				if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-					return Tuple.of(UDv2Relations.ACL, caseString);
-			}
-			if (tag.matches("[xy].*"))
-				return Tuple.of(UDv2Relations.ACL, null);
+			String caseLetter = null;
+			if (m.matches()) caseLetter = m.group(2);
+			String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
+			return Tuple.of(UDv2Relations.ACL, caseString);
 		}
 
 		// Participal SPC (both with and without PMC)
@@ -421,21 +416,37 @@ public class DepRelLogic
 			// Nominal SPC
 			if (basElemTag.matches("n.*") || basElemTag.matches("y[np].*"))
 			{
-				if (parentTag.matches("v..([^p]|p[^d]).*"))
-				{
-					Matcher m = Pattern.compile("n...(.).*").matcher(tag);
-					if (m.matches())
-					{
-						String caseLetter = m.group(2);
-						String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-						if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-							return Tuple.of(UDv2Relations.OBL, caseString);
-					}
-					if (tag.matches("y.*"))
-						return Tuple.of(UDv2Relations.OBL, null);
-				}
+				Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
+				String caseLetter = null;
+				if (m.matches()) caseLetter = m.group(2);
+				String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
 
-				return Tuple.of(UDv2Relations.APPOS, null);
+				if (parentTag.matches("v..([^p]|p[^d]).*"))
+					return Tuple.of(UDv2Relations.OBL, caseString);
+				if (parentTag.matches("(pp|n).*]") && LvtbRoles.SUBJ.equals(parentEffRole))
+				{
+					int chOrd = node.getDeepOrd();
+					int parOrd = parent.getOrd();
+					if (parOrd < 1)
+					{
+						PmlANode parPhrase = parent.getPhraseNode();
+						if (parPhrase != null) parOrd = parPhrase.getDeepOrd();
+					}
+					if (parOrd < 0 || chOrd < 0 || chOrd == parOrd)
+						return Tuple.of(UDv2Relations.DEP, null);
+
+					if (chOrd > parOrd)
+					{
+						List<PmlANode> subBasElems = phrase.getChildren("basElem");
+						PmlANode onlySubBasElemPhrase = null;
+						if (subBasElems != null && subBasElems.size() == 1)
+							onlySubBasElemPhrase = subBasElems.get(0).getPhraseNode();
+						if (onlySubBasElemPhrase == null || !LvtbXTypes.XPREP.equals(onlySubBasElemPhrase.getPhraseType()))
+							return Tuple.of(UDv2Relations.APPOS, null);
+					}
+					return Tuple.of(UDv2Relations.ACL, caseString);
+				}
+				return Tuple.of(UDv2Relations.ACL, caseString);
 			}
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..d.*|ya.*"))

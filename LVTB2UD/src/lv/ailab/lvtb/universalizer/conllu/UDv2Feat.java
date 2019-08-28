@@ -103,6 +103,7 @@ public enum UDv2Feat
 
 	public static String caseLetterToLCString(String ch)
 	{
+		if (ch == null) return null;
 		switch (ch)
 		{
 			case "n": return UDv2Feat.CASE_NOM.value.toLowerCase();
