@@ -3,6 +3,8 @@ package lv.ailab.lvtb.universalizer.conllu;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Enumeration for Universal Dependencies's mophological FEATs.
@@ -99,6 +101,15 @@ public enum UDv2Feat
 			res.put(f.key, val);
 		}
 		return res;
+	}
+
+	public static String tagToCaseString(String tag)
+	{
+		if (tag == null) return null;
+		Matcher m = Pattern.compile("([na]...|[mp]....|v..p...)(.).*").matcher(tag);
+		String caseLetter = null;
+		if (m.matches()) caseLetter = m.group(2);
+		return UDv2Feat.caseLetterToLCString(caseLetter);
 	}
 
 	public static String caseLetterToLCString(String ch)
