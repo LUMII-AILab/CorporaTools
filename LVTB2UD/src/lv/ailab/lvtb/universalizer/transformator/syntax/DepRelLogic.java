@@ -323,13 +323,8 @@ public class DepRelLogic
 		}
 
 		// Simple nominal SPC (without PMC)
-		if (pmcType == null && tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
-			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
-		if (pmcType == null && tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
-			return Tuple.of(UDv2Relations.OBL, null);
-		if (pmcType == null &&
-				tag.matches("[na]...[adnl].*|[pm]....[adnl].*|v..pd..[adnl].*|x.*|y[npa].*"))
-			return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
+		if (pmcType == null && tag.matches("[napmx].*|v..pd.*|y[npa].*"))
+			return noPunctNominalSpcToUD(tag, parentTag);
 
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
@@ -498,6 +493,20 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.DISLOCATED, null);
 
 		return Tuple.of(UDv2Relations.ACL, caseString);
+	}
+
+	protected static Tuple<UDv2Relations, String> noPunctNominalSpcToUD(
+			String tag, String parentTag)
+	{
+		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
+			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
+		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
+			return Tuple.of(UDv2Relations.OBL, null);
+		if (tag.matches("[na]...[n].*|[pm]....[n].*|v..pd..[n].*"))
+			return Tuple.of(UDv2Relations.XCOMP, null);
+		if (tag.matches("[na]...[adl].*|[pm]....[adl].*|v..pd..[adl].*|x.*|y[npa].*"))
+			return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
+		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
 	public static Tuple<UDv2Relations, String> attrToUD(PmlANode node, PmlANode parent)
