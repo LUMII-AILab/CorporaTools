@@ -304,7 +304,7 @@ public class DepRelLogic
 					&& LvtbXTypes.XPREP.equals(basElemXType))
 				return pmcXPrepSpcToUD(basElems.get(0), basElemPhrase, parentTag);
 
-			// SPC with comparison
+			// SPC with pmc-ed comparison
 			if (basElemPhrase != null && basElemPhrase.getNodeType() == PmlANode.Type.X
 					&& LvtbXTypes.XSIMILE.equals(basElemXType))
 				return pmcXSimileSpcToUD(basElems.get(0), basElemPhrase);
@@ -484,8 +484,7 @@ public class DepRelLogic
 
 		// If parent is noun or personal pronoun and child is after parent,
 		// then apposition or acl
-		if (parentTag.matches("(pp|n|y[np]).*") && LvtbRoles.SUBJ.equals(parentEffRole)
-				&& chOrd > parOrd && parOrd > 0)
+		if (parentTag.matches("(pp|n|y[np]).*") && chOrd > parOrd && parOrd > 0)
 		{
 			String basElemCase = UDv2Feat.tagToCaseString(basElem.getAnyTag());
 			if ((basElemCase == caseString || basElemCase != null && basElemCase.equals(caseString)) &&
@@ -495,8 +494,7 @@ public class DepRelLogic
 		}
 
 		// If parent is pronoun and child is before parent, then dislocated
-		if (parentTag.matches("p.*") && LvtbRoles.SUBJ.equals(parentEffRole)
-				&& chOrd < parOrd && chOrd > 0)
+		if (parentTag.matches("p.*") && chOrd < parOrd && chOrd > 0)
 			return Tuple.of(UDv2Relations.DISLOCATED, null);
 
 		return Tuple.of(UDv2Relations.ACL, caseString);
