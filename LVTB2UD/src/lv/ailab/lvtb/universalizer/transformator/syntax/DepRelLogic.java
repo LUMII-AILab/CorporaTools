@@ -825,8 +825,10 @@ public class DepRelLogic
 	 * "If the elided element is a predicate and the promoted element is one of
 	 * its arguments or adjuncts, we use the orphan relation when attaching
 	 * other non-functional dependents to the promoted head."
-	 * Our interpretation is that non-functional means roles from blocks
-	 * Nominals, Clauses, Modifier words in https://universaldependencies.org/u/dep/index.html
+	 * Our  initial interpretation was that non-functional means roles from
+	 * blocks Nominals, Clauses, Modifier words in https://universaldependencies.org/u/dep/index.html ,
+	 * however, discussion https://github.com/UniversalDependencies/docs/issues/643
+	 * narrowed the scope down.
 	 * @param role	role to check
 	 * @return	wheather it should be orphan when becomes dependant of
 	 * 			something lifted instead of predicate
@@ -842,17 +844,19 @@ public class DepRelLogic
 				|| role == UDv2Relations.CCOMP || role == UDv2Relations.XCOMP
 				// Nominals: non-core dependents
 				|| role == UDv2Relations.OBL || role == UDv2Relations.VOCATIVE
-				|| role == UDv2Relations.EXPL || role == UDv2Relations.DISLOCATED
+				//|| role == UDv2Relations.EXPL
+				|| role == UDv2Relations.DISLOCATED
 				// Clauses: non-core dependents
 				|| role == UDv2Relations.ADVCL
 				// Modifier words: non-core dependents
-				|| role == UDv2Relations.ADVMOD || role == UDv2Relations.DISCOURSE
+				|| role == UDv2Relations.ADVMOD //|| role == UDv2Relations.DISCOURSE
 				// Nominals: nominal dependents
-				|| role == UDv2Relations.NMOD || role == UDv2Relations.APPOS
-				|| role == UDv2Relations.NUMMOD
+				//|| role == UDv2Relations.NMOD || role == UDv2Relations.APPOS
+				//|| role == UDv2Relations.NUMMOD
 				// Clauses: nominal dependents
-				|| role == UDv2Relations.ACL
+				//|| role == UDv2Relations.ACL
 				// Modifier words: nominal dependents
-				|| role == UDv2Relations.AMOD;
+				//|| role == UDv2Relations.AMOD
+				;
 	}
 }
