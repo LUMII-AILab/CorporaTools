@@ -318,7 +318,7 @@ public class DepRelLogic
 				return pmcNominalSpcToUD(node, parent, basElems.get(0),
 						basElemPhrase, tag, parentTag, parentEffRole);
 			// Adjective SPC
-			if (basElemTag.matches("a.*|v..d.*|ya.*"))
+			if (basElemTag.matches("a.*|v..pd.*|ya.*"))
 				return Tuple.of(UDv2Relations.ACL, null);
 		}
 
@@ -498,14 +498,32 @@ public class DepRelLogic
 	protected static Tuple<UDv2Relations, String> noPunctNominalSpcToUD(
 			String tag, String parentTag)
 	{
+		// Genitives.
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
 		if (tag.matches("x.*|y[npa].*") && parentTag.matches("v..p....ps.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
-		if (tag.matches("[na]...[n].*|[pm]....[n].*|v..pd..[n].*"))
-			return Tuple.of(UDv2Relations.XCOMP, null);
-		if (tag.matches("[na]...[adl].*|[pm]....[adl].*|v..pd..[adl].*|x.*|y[npa].*"))
+		// Any nominal with noun parent.
+		if (parentTag.matches("[np].*|y[np].*]"))
 			return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
+
+		// Pronoun with verbal parent.
+		if (tag.matches("p.*") && parentTag.matches("v..([^p]|p[pu]).*"))
+		{
+			if (parentTag.matches(".*?\\[subst.*"))
+				return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
+			return Tuple.of(UDv2Relations.OBL, UDv2Feat.tagToCaseString(tag));
+		}
+		// Noun with verbal parent.
+		if (tag.matches("n.*|y[np].*]") && parentTag.matches("v..([^p]|p[pu]).*") )
+		{
+			if (tag.matches("n...n.*")) return Tuple.of(UDv2Relations.XCOMP, null);
+			return Tuple.of(UDv2Relations.OBL, UDv2Feat.tagToCaseString(tag));
+		}
+		// Adjective with verbal parent.
+		if (tag.matches("[am].*|ya.*") && parentTag.matches("v..([^p]|p[pu]).*"))
+			return Tuple.of(UDv2Relations.XCOMP, null);
+
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
