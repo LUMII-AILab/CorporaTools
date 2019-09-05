@@ -508,20 +508,20 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
 
 		// Pronoun with verbal parent.
-		if (tag.matches("p.*") && parentTag.matches("v..([^p]|p[pu]).*"))
+		if (tag.matches("p.*") && parentTag.matches("v.*"))
 		{
 			if (parentTag.matches(".*?\\[subst.*"))
 				return Tuple.of(UDv2Relations.NMOD, UDv2Feat.tagToCaseString(tag));
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.tagToCaseString(tag));
 		}
 		// Noun with verbal parent.
-		if (tag.matches("n.*|y[np].*]") && parentTag.matches("v..([^p]|p[pu]).*") )
+		if (tag.matches("n.*|y[np].*]") && parentTag.matches("v.*") )
 		{
 			if (tag.matches("n...n.*")) return Tuple.of(UDv2Relations.XCOMP, null);
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.tagToCaseString(tag));
 		}
 		// Adjective with verbal parent.
-		if (tag.matches("[am].*|ya.*") && parentTag.matches("v..([^p]|p[pu]).*"))
+		if (tag.matches("[am].*|v..pd.*|ya.*") && parentTag.matches("v..([^p]|p[pu]).*"))
 			return Tuple.of(UDv2Relations.XCOMP, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
