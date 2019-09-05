@@ -521,7 +521,7 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.tagToCaseString(tag));
 		}
 		// Adjective with verbal parent.
-		if (tag.matches("[am].*|v..pd.*|ya.*") && parentTag.matches("v..([^p]|p[pu]).*"))
+		if (tag.matches("[am].*|v..pd.*|ya.*") && parentTag.matches("v.*"))
 			return Tuple.of(UDv2Relations.XCOMP, null);
 
 		return Tuple.of(UDv2Relations.DEP, null);
