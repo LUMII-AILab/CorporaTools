@@ -316,7 +316,7 @@ public class DepRelLogic
 			// Nominal SPC
 			if (basElemTag.matches("(n|y[np]).*"))
 				return pmcNominalSpcToUD(node, parent, basElems.get(0),
-						basElemPhrase, tag, parentTag, parentEffRole);
+						basElemPhrase, tag, parentTag);
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..pd.*|ya.*"))
 				return Tuple.of(UDv2Relations.ACL, null);
@@ -324,7 +324,7 @@ public class DepRelLogic
 
 		// Simple nominal SPC (without PMC)
 		if (pmcType == null && tag.matches("[napmx].*|v..pd.*|y[npa].*"))
-			return noPunctNominalSpcToUD(tag, parentTag);
+			return noPunctNominalSpcToUD(node, parent, tag, parentTag);
 
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
@@ -376,6 +376,7 @@ public class DepRelLogic
 		// prepM is null in the rare cases when prep is coordinated.
 		String prepLemma = prepM == null ? null : prepM.getLemma();
 		if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
+
 		if ("par".equals(prepLemma)
 				&& baseElemTag != null && baseElemTag.matches("[nampx].*|y[npa].*")
 				&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
@@ -461,7 +462,7 @@ public class DepRelLogic
 
 	protected static Tuple<UDv2Relations, String> pmcNominalSpcToUD (
 			PmlANode node, PmlANode parent, PmlANode basElem, PmlANode basElemPhrase,
-			String tag, String parentTag, String parentEffRole)
+			String tag, String parentTag)
 	{
 		String caseString = UDv2Feat.tagToCaseString(tag);
 
@@ -496,8 +497,51 @@ public class DepRelLogic
 	}
 
 	protected static Tuple<UDv2Relations, String> noPunctNominalSpcToUD(
-			String tag, String parentTag)
+			PmlANode node, PmlANode parent, String tag, String parentTag)
 	{
+		// viens otru, cits citu
+		// SPC lemma
+		PmlMNode nodeM = node.getM();
+		String lemma = nodeM == null ? null : nodeM.getLemma();
+		if (lemma == null) lemma = node.getReductionLemma();
+		if (lemma != null && lemma.matches("(vien|cits)[sa]") && tag.matches("[mp].*"))
+		{
+			// Parent lemma
+			PmlMNode parentM = parent.getM();
+			String parentLemma = parentM == null ? null : parentM.getLemma();
+			if (parentLemma == null) parentLemma = parent.getReductionLemma();
+			if (parentM == null)
+			{
+				PmlANode parentPhrase = parent.getPhraseNode();
+				String parentPhraseType = parentPhrase == null ? null : parentPhrase.getPhraseType();
+				if (parentPhrase != null && parentPhrase.getNodeType() == PmlANode.Type.X
+						&& LvtbXTypes.XPREP.equals(parentPhraseType))
+				{
+					List<PmlANode> basElems = parentPhrase.getChildren(LvtbRoles.BASELEM);
+					if (basElems == null || basElems.size() < 1)
+						StandardLogger.l.doInsentenceWarning(String.format(
+								"\"%s\" has no \"%s\".", parentPhraseType, LvtbRoles.BASELEM));
+					else
+					{
+						if (basElems.size() > 1)
+							StandardLogger.l.doInsentenceWarning(String.format(
+									"\"%s\" has multiple \"%s\".", parentPhraseType, LvtbRoles.BASELEM));
+						PmlMNode basM = basElems.get(0).getM();
+						parentLemma = basM == null ? null : basM.getLemma();
+						if (parentLemma == null) parentLemma = basElems.get(0).getReductionLemma();
+					}
+				}
+			}
+			// Actual analysis
+			if (parentLemma != null)
+				if (lemma.matches("vien[sa]") && tag.matches("[mp].*")
+						&& parentLemma.matches("otr[sa]") && parentTag.matches("[mp].*")
+					|| lemma.matches("cit[sa]") && tag.matches("p.*")
+						&& parentLemma.matches("cit[sa]") && parentTag.matches("p.*"))
+					return Tuple.of(UDv2Relations.COMPOUND, null);
+
+		}
+
 		// Genitives.
 		if (tag.matches("[na]...[g].*|[pm]....[g].*|v..p...[g].*"))
 			return Tuple.of(UDv2Relations.OBL, UDv2Feat.CASE_GEN.value.toLowerCase());
