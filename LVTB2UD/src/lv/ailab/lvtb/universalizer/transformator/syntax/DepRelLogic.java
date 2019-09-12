@@ -410,6 +410,22 @@ public class DepRelLogic
 	protected static Tuple<UDv2Relations, String> noPunctXSimileSpcToUD (
 			PmlANode node, PmlANode phrase, String tag, String parentTag)
 	{
+		String conjLemma = getXSimileConjLemma(node, phrase);
+		if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
+			return Tuple.of(UDv2Relations.NMOD, conjLemma);
+		return Tuple.of(UDv2Relations.OBL, conjLemma);
+	}
+
+	protected static Tuple<UDv2Relations, String> pmcXSimileSpcToUD (
+			PmlANode basElem, PmlANode basElemPhrase
+	)
+	{
+		String conjLemma = getXSimileConjLemma(basElem, basElemPhrase);
+		return Tuple.of(UDv2Relations.ADVCL, conjLemma);
+	}
+
+	protected static String getXSimileConjLemma(PmlANode node, PmlANode phrase)
+	{
 		String xType = phrase.getPhraseType();
 		List<PmlANode> conjs = phrase.getChildren(LvtbRoles.CONJ);
 		if (conjs.size() > 1)
@@ -421,14 +437,14 @@ public class DepRelLogic
 		{
 			PmlANode conj = conjs.get(0);
 			PmlMNode morpho = conj.getM();
-			if (morpho == null) // If there is no morphology, but there is an xFunctor, use the lemma of the last xFunctors basElem.
+			if (morpho == null) // If there is no morphology, but there is an xFunctor, use the lemma of the first xFunctors basElem.
 			{
 				PmlANode phraseConj = conj.getPhraseNode();
 				if (phraseConj != null && phraseConj.getPhraseType().equals(LvtbXTypes.XFUNCTOR))
 				{
-					PmlANode lastXBase = PmlANodeListUtils.getLastByDescOrd(
+					PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
 							phraseConj.getChildren(LvtbRoles.BASELEM));
-					morpho = lastXBase.getM();
+					morpho = firstXBase.getM();
 				}
 			}
 			if (morpho != null) conjLemma = morpho.getLemma();
@@ -439,25 +455,7 @@ public class DepRelLogic
 		else StandardLogger.l.doInsentenceWarning(String.format(
 				"\"%s\" with ID \"%s\" has no \"%s\".",
 				xType, node.getId(), LvtbRoles.CONJ));
-		if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
-			return Tuple.of(UDv2Relations.NMOD, conjLemma);
-		return Tuple.of(UDv2Relations.OBL, conjLemma);
-	}
-
-	protected static Tuple<UDv2Relations, String> pmcXSimileSpcToUD (
-			PmlANode basElem, PmlANode basElemPhrase
-	)
-	{
-		String basElemXType = basElem.getPhraseType();
-		List<PmlANode> conjs = basElemPhrase.getChildren(LvtbRoles.CONJ);
-		if (conjs.size() > 1)
-			StandardLogger.l.doInsentenceWarning(String.format(
-					"\"%s\" with ID \"%s\" has multiple \"%s\".",
-					basElemXType, basElem.getId(), LvtbRoles.CONJ));
-		String conjLemma = conjs.get(0).getM().getLemma();
-		String conjRed = conjs.get(0).getReduction();
-		if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
-		return Tuple.of(UDv2Relations.ADVCL, conjLemma);
+		return conjLemma;
 	}
 
 	protected static Tuple<UDv2Relations, String> pmcNominalSpcToUD (
