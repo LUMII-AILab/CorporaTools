@@ -427,8 +427,9 @@ public class MorphoTransformator {
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, mForm, mLemma, lvtbTag, true);
 		if (paragraphChange) previousToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //previousToken.misc.add("NewPar=Yes");
+		source = source.substring(0, mForm.length());
 		if (!source.contains(" ")) previousToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO); //previousToken.misc.add("SpaceAfter=No");
-		else StandardLogger.l.doInsentenceWarning(String.format(
+		else if (source.trim().contains(" ")) StandardLogger.l.doInsentenceWarning(String.format(
 				"Don't know how to add SpaceAfter for \"%s\"",
 				lvtbAId));
 
