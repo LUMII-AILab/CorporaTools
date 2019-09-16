@@ -337,7 +337,7 @@ public class DepRelLogic
 		if (parentTag.matches("v..([^p]|p[^d]).*") || LvtbXTypes.XPRED.equals(effParentType))
 			return Tuple.of(UDv2Relations.CCOMP, null); // It is impposible safely to distinguish xcomp for now.
 		if (parentTag.matches("v..pd.*")) return Tuple.of(UDv2Relations.XCOMP, null);
-		if (parentTag.matches("[nampx].*|y[npa].*")) return Tuple.of(UDv2Relations.NMOD, null);
+		if (parentTag.matches("[nampx].*|y[npa].*")) return Tuple.of(UDv2Relations.ACL, null);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
