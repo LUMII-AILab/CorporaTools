@@ -317,6 +317,9 @@ public class DepRelLogic
 			if (basElemTag.matches("(n|y[np]).*"))
 				return pmcNominalSpcToUD(node, parent, basElems.get(0),
 						basElemPhrase, tag, parentTag);
+			// Declensible participle SPC
+			if (basElemTag.matches("v..pd.*") && parentTag.matches("v..([^p]|p[^d])*"))
+				return Tuple.of(UDv2Relations.XCOMP, null);
 			// Adjective SPC
 			if (basElemTag.matches("a.*|v..pd.*|ya.*"))
 				return Tuple.of(UDv2Relations.ACL, null);
@@ -381,6 +384,8 @@ public class DepRelLogic
 				&& baseElemTag != null && baseElemTag.matches("[nampx].*|y[npa].*")
 				&& (parentTag.matches("v.*") || LvtbRoles.PRED.equals(parentEffRole)))
 			return Tuple.of(UDv2Relations.XCOMP, null);
+		else if (parentTag.matches("v..([^p]|p[^d]).*"))
+			return Tuple.of(UDv2Relations.OBL, prepLemma);
 		else if (parentTag.matches("[nampx].*|y[npa].*|v..pd.*"))
 			//return Tuple.of(UDv2Relations.NMOD, prepLemma == null ? null : prepLemma.toLowerCase());
 			return Tuple.of(UDv2Relations.NMOD, prepLemma);
