@@ -794,6 +794,17 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.PARATAXIS, null);
 		}
 
+		// Insertions in parenthesis () are parataxis.
+		List<PmlANode> puncts = phrase.getChildren(LvtbRoles.PUNCT);
+		if (puncts != null) for (PmlANode p : puncts)
+		{
+			String punctLemma = null;
+			PmlMNode punctM = p.getM();
+			if (punctM != null) punctLemma = punctM.getLemma();
+			if (punctLemma != null && punctLemma.matches("[)(\\[\\]]"))
+				return Tuple.of(UDv2Relations.PARATAXIS, null);
+		}
+
 		return Tuple.of(UDv2Relations.DISCOURSE, null); // Washington (CNN) is left unidentified.
 	}
 
