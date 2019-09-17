@@ -284,7 +284,8 @@ public class DepRelLogic
 		// Infinitive SPC (+/- PMC)
 		if (tag.matches("v..n.*")) return infSpcToUD(parent, parentTag);
 		// Participal SPC (both with and without PMC)
-		if (tag.matches("v..p[pu].*")) return Tuple.of(UDv2Relations.ADVCL, null);
+		if (tag.matches("v..pp.*")) return Tuple.of(UDv2Relations.XCOMP, null);
+		if (tag.matches("v..pu.*")) return Tuple.of(UDv2Relations.ADVCL, null);
 
 		// SPC with punctuation.
 		if (pmcType != null && pmcType.equals(LvtbPmcTypes.SPCPMC))
