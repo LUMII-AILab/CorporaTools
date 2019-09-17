@@ -1375,7 +1375,7 @@
                                                     </w.rf>
                                                     <form>kino</form>
                                                     <lemma>kino</lemma>
-                                                    <tag>nc0000</tag>
+                                                    <tag>ncm000</tag>
                                                   </m.rf>
                                                   <role>basElem</role>
                                                   <ord>5</ord>
@@ -3129,7 +3129,7 @@
                       <role>crdPart</role>
                       <ord>10</ord>
                       <children>
-                        <node id="a-c68-zeeni-p15s1x3">
+                        <node id="a-c68-zeeni-p15s1x4">
                           <role>adv</role>
                           <children>
                             <xinfo>
@@ -3258,7 +3258,7 @@
                       <xtype>xApp</xtype>
                       <tag>n0msn0[agr]</tag>
                       <children>
-                        <node id="a-c68-zeeni-p15s1x4">
+                        <node id="a-c68-zeeni-p15s1x3">
                           <role>basElem</role>
                           <children>
                             <xinfo>
@@ -7540,42 +7540,33 @@
                     </xinfo>
                   </children>
                 </node>
-                <node id="a-c68-zeeni-p37s1x2">
+                <node id="a-c68-zeeni-p37s1w6">
+                  <m.rf id="m-c68-zeeni-p37s1w6">
+                    <src.rf>annotator</src.rf>
+                    <w.rf id="w-c68-zeeni-p37w6">
+                      <token>gaidīt</token>
+                      <no_space_after>1</no_space_after>
+                    </w.rf>
+                    <form>gaidīt</form>
+                    <lemma>gaidīt</lemma>
+                    <tag>vmnn0t3000n</tag>
+                  </m.rf>
                   <role>subj</role>
+                  <ord>6</ord>
                   <children>
-                    <xinfo>
-                      <xtype>phrasElem</xtype>
-                      <tag>N/A</tag>
-                      <children>
-                        <node id="a-c68-zeeni-p37s1w5">
-                          <m.rf id="m-c68-zeeni-p37s1w5">
-                            <src.rf>annotator</src.rf>
-                            <w.rf id="w-c68-zeeni-p37w5">
-                              <token>ko</token>
-                            </w.rf>
-                            <form>ko</form>
-                            <lemma>kas</lemma>
-                            <tag>pi000an</tag>
-                          </m.rf>
-                          <role>basElem</role>
-                          <ord>5</ord>
-                        </node>
-                        <node id="a-c68-zeeni-p37s1w6">
-                          <m.rf id="m-c68-zeeni-p37s1w6">
-                            <src.rf>annotator</src.rf>
-                            <w.rf id="w-c68-zeeni-p37w6">
-                              <token>gaidīt</token>
-                              <no_space_after>1</no_space_after>
-                            </w.rf>
-                            <form>gaidīt</form>
-                            <lemma>gaidīt</lemma>
-                            <tag>vmnn0t3000n</tag>
-                          </m.rf>
-                          <role>basElem</role>
-                          <ord>6</ord>
-                        </node>
-                      </children>
-                    </xinfo>
+                    <node id="a-c68-zeeni-p37s1w5">
+                      <m.rf id="m-c68-zeeni-p37s1w5">
+                        <src.rf>annotator</src.rf>
+                        <w.rf id="w-c68-zeeni-p37w5">
+                          <token>ko</token>
+                        </w.rf>
+                        <form>ko</form>
+                        <lemma>kas</lemma>
+                        <tag>pi000an</tag>
+                      </m.rf>
+                      <role>obj</role>
+                      <ord>5</ord>
+                    </node>
                   </children>
                 </node>
               </children>
@@ -8139,7 +8130,7 @@
                         </w.rf>
                         <form>uzņemties</form>
                         <lemma>uzņemties</lemma>
-                        <tag>vmyn0i1000n</tag>
+                        <tag>vmyn0t1000n</tag>
                       </m.rf>
                       <role>basElem</role>
                       <ord>5</ord>
