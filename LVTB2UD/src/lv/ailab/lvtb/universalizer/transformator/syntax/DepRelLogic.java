@@ -315,7 +315,7 @@ public class DepRelLogic
 			if (basElemTag.matches("r.*|yr.*"))
 				return Tuple.of(UDv2Relations.ADVCL, null);
 			// Nominal SPC
-			if (basElemTag.matches("(n|y[np]).*"))
+			if (basElemTag.matches("n.*|y[np].*"))
 				return pmcNominalSpcToUD(node, parent, basElems.get(0),
 						basElemPhrase, tag, parentTag);
 			// Declensible participle SPC
