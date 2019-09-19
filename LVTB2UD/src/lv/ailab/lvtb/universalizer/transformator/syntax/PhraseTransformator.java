@@ -258,6 +258,10 @@ public class PhraseTransformator
 					nextPart.add(sortedChildren.remove(0));
 				}
 
+				if (subroot == null)
+						throw new IllegalArgumentException(String.format(
+								"\"%s\" has no \"basElem\" between multiple \"punct\".", s.id));
+
 				// process found part
 				s.relinkAllConstituents(subroot, nextPart, pmcNode,
 						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
