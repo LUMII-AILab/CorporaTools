@@ -416,7 +416,7 @@ public class DepRelLogic
 	protected static Tuple<UDv2Relations, String> noPunctXSimileSpcToUD (
 			PmlANode node, PmlANode phrase, String tag, String parentTag)
 	{
-		String conjLemma = getXSimileConjLemma(node, phrase);
+		String conjLemma = getXSimileConjOrXPrepPrepLemma(node, phrase, LvtbRoles.CONJ);
 		if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
 			return Tuple.of(UDv2Relations.NMOD, conjLemma);
 		return Tuple.of(UDv2Relations.OBL, conjLemma);
@@ -426,42 +426,53 @@ public class DepRelLogic
 			PmlANode basElem, PmlANode basElemPhrase
 	)
 	{
-		String conjLemma = getXSimileConjLemma(basElem, basElemPhrase);
+		String conjLemma = getXSimileConjOrXPrepPrepLemma(basElem, basElemPhrase, LvtbRoles.CONJ);
 		return Tuple.of(UDv2Relations.ADVCL, conjLemma);
 	}
 
-	protected static String getXSimileConjLemma(PmlANode node, PmlANode phrase)
+	protected static String getXSimileConjOrXPrepPrepLemma(
+			PmlANode node, PmlANode phrase, String prepRole)
 	{
 		String xType = phrase.getPhraseType();
-		List<PmlANode> conjs = phrase.getChildren(LvtbRoles.CONJ);
-		if (conjs.size() > 1)
+		List<PmlANode> preps = phrase.getChildren(prepRole);
+		if (preps.size() > 1)
 			StandardLogger.l.doInsentenceWarning(String.format(
 					"\"%s\" with ID \"%s\" has multiple \"%s\".",
-					xType, node.getId(), LvtbRoles.CONJ));
-		String conjLemma = null;
-		if (conjs.size() > 0) // One weird case of reduced conjunction has no conjs.
+					xType, node.getId(), prepRole));
+		String prepLemma = null;
+		if (preps.size() > 0) // One weird case of reduced conjunction has no conjs in xSimile.
 		{
-			PmlANode conj = conjs.get(0);
-			PmlMNode morpho = conj.getM();
-			if (morpho == null) // If there is no morphology, but there is an xFunctor, use the lemma of the first xFunctors basElem.
+			PmlANode prep = preps.get(0);
+			PmlMNode morpho = prep.getM();
+			// If there is no morphology, but there is an xFunctor or coordination, use the lemma of the first basElem or crdPart.
+			PmlANode phraseConj = prep.getPhraseNode();
+			String phraseType = phraseConj == null ? null : phraseConj.getPhraseType();
+			while (morpho == null && phraseConj != null &&
+					(phraseType.equals(LvtbXTypes.XFUNCTOR) || phraseType.equals(LvtbCoordTypes.CRDPARTS)))
 			{
-				PmlANode phraseConj = conj.getPhraseNode();
-				if (phraseConj != null && phraseConj.getPhraseType().equals(LvtbXTypes.XFUNCTOR))
+				PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
+						phraseConj.getChildren(LvtbRoles.BASELEM));
+				PmlANode firstCrdPart = PmlANodeListUtils.getFirstByDescOrd(
+						phraseConj.getChildren(LvtbRoles.CRDPART));
+				PmlANode resultPrep = null;
+				if (firstXBase != null) resultPrep = firstXBase;
+				else if (firstCrdPart != null) resultPrep = firstCrdPart;
+				if (resultPrep != null)
 				{
-					PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
-							phraseConj.getChildren(LvtbRoles.BASELEM));
-					morpho = firstXBase.getM();
+					phraseConj = resultPrep.getPhraseNode();
+					phraseType = phraseConj == null ? null : phraseConj.getPhraseType();
+					morpho = resultPrep.getM();
 				}
 			}
-			if (morpho != null) conjLemma = morpho.getLemma();
+			if (morpho != null) prepLemma = morpho.getLemma();
 
-			String conjRed = conj.getReduction();
-			if (conjRed != null && !conjRed.isEmpty()) conjLemma = null;
+			String prepRed = prep.getReduction();
+			if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
 		}
 		else StandardLogger.l.doInsentenceWarning(String.format(
 				"\"%s\" with ID \"%s\" has no \"%s\".",
-				xType, node.getId(), LvtbRoles.CONJ));
-		return conjLemma;
+				xType, node.getId(), prepRole));
+		return prepLemma;
 	}
 
 	protected static Tuple<UDv2Relations, String> pmcNominalSpcToUD (
@@ -629,19 +640,19 @@ public class DepRelLogic
 		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
 				xType.equals(LvtbXTypes.XPREP))
 		{
-			List<PmlANode> preps = phrase.getChildren(LvtbRoles.PREP);
+			String prepLemma = getXSimileConjOrXPrepPrepLemma(node, phrase, LvtbRoles.PREP);
+			/*List<PmlANode> preps = phrase.getChildren(LvtbRoles.PREP);
 			if (preps.size() > 1)
 				StandardLogger.l.doInsentenceWarning(String.format(
 						"\"%s\" with ID \"%s\" has multiple \"%s\".",
 						xType, node.getId(), LvtbRoles.PREP));
-			String prepLemma = null;
 			if (!preps.isEmpty())
 			{
-				preps.get(0).getM().getLemma();
+				prepLemma = preps.get(0).getM().getLemma();
 				String prepRed = preps.get(0).getReduction();
 				if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
 				// TODO: vai ir okei nelietot reducēto lemmu?
-			}
+			}*/
 			return Tuple.of(UDv2Relations.OBL, prepLemma);
 		}
 		if (tag.matches("n.*|p.*|mo.*"))
