@@ -109,10 +109,10 @@ public class EllipsisLogic
 
 		ArrayList<PmlANode> sortedChildren = PmlANodeListUtils.asOrderedList(children);
 
-		// Taken from UDv2 guidelines.
+		// Taken from UDv2 guidelines (except ACL).
 		UDv2Relations[] priorities = new UDv2Relations[] {
 				UDv2Relations.AMOD, UDv2Relations.NUMMOD, UDv2Relations.DET,
-				UDv2Relations.NMOD, UDv2Relations.CASE};
+				UDv2Relations.NMOD, UDv2Relations.CASE, UDv2Relations.ACL};
 		for (UDv2Relations role : priorities) for (PmlANode n : sortedChildren)
 		{
 			UDv2Relations noRedUDrole = DepRelLogic.depToUDLogic(
