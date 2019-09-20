@@ -164,7 +164,7 @@ public class MorphoTransformator {
 				prevRealTok.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.INS_PUNCT_AFTER);
 			return params.UD_STANDARD_NULLNODES ? previousToken : transfOnPunctInsert(aNode, previousToken, paragraphChange);
 		}
-		// Renmoved punctuation (good case - no other problems)
+		// Removed punctuation (good case - no other problems)
 		else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
 				&& formChanges.size() == 2 && source.startsWith(mForm))
 			return transfOnCleanPunctDel(aNode, previousToken, paragraphChange);
