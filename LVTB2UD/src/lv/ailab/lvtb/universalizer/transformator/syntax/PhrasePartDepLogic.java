@@ -4,7 +4,6 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
-import java.util.List;
 
 /**
  * Relation between phrase part names used in LVTB and dependency labeling used
@@ -151,13 +150,14 @@ public class PhrasePartDepLogic
 			{
 				if (tag.matches("[np].*"))
 				{
-					List<? extends  PmlANode> preps =
+					/*List<? extends  PmlANode> preps =
 							subPhrase.getChildren(LvtbRoles.PREP);
 					if (preps.size() > 1)
 						StandardLogger.l.doInsentenceWarning(String.format(
 								"\"%s\" with ID \"%s\" has multiple \"%s\".",
 								subXType, aNode.getId(), LvtbRoles.PREP));
-					String prepLemma = preps.get(0).getM().getLemma();
+					String prepLemma = preps.get(0).getM().getLemma();*/
+					String prepLemma = Helper.getXSimileConjOrXPrepPrepLemma(subPhrase, LvtbRoles.PREP);
 					return Tuple.of(UDv2Relations.NMOD, prepLemma);
 				}
 				if (tag.matches("(mc|xn).*")) return Tuple.of(UDv2Relations.NUMMOD, null);
