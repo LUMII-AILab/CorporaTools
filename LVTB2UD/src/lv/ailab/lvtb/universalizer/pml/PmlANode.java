@@ -194,15 +194,6 @@ public interface PmlANode
 	public List<PmlANode> getDescendantsWithOrdAndM();
 
 	/**
-	 * Split nonempty ellipsis node into empty ellipsis node and dependant
-	 * child.
-	 * @param idPostfix	string to append to the node ID to create ID for new
-	 *                  node.
-	 * @return	if an actual split was done
-	 */
-	public boolean splitMorphoEllipsis(String idPostfix);
-
-	/**
 	 * Find pure ellipsis (no corresponding token) in the subtree headed by this
 	 * node. Parameter allows to find either all ellipsis or only leaf nodes.
 	 * @param leafsOnly	if true, only leaf nodes are returned
@@ -217,6 +208,13 @@ public interface PmlANode
 	 * @return	list of ellipsis nodes in no particular order
 	 */
 	public List<PmlANode> getMorphoEllipsisDescendants(boolean leafsOnly);
+
+	/**
+	 * Find nodes having m-token, form_change "insert" and no w-token.
+	 * @return list of inserted token nodes in no particular order
+	 */
+	public List<PmlANode> getInsertedMorphoDescendants();
+
 	/**
 	 * Find parent or the closest ancestor, that is not coordination phrase or
 	 * crdPart node.
@@ -253,6 +251,11 @@ public interface PmlANode
 	 */
 	public void delete();
 	/**
+	 * Remove this nodes m-node.
+	 */
+	public void deleteM();
+
+	/**
 	 * Set a phraseTag for X or COORD node, return false for other node types.
 	 * @param tag	tag value to set
 	 * @return	true if tag was set
@@ -265,6 +268,23 @@ public interface PmlANode
 	 * @return	true if tag was set
 	 */
 	public boolean setReductionTag(String tag);
+
+	/**
+	 * Set a reduction form, if there is none, return false otherwise.
+	 * @param form	form value to set
+	 * @return	true if form was set
+	 */
+	public boolean setReductionForm(String form);
+
+	/**
+	 * Split nonempty ellipsis node into empty ellipsis node and dependant
+	 * child.
+	 * @param idPostfix	string to append to the node ID to create ID for new
+	 *                  node.
+	 * @return	if an actual split was done
+	 */
+	public boolean splitMorphoEllipsis(String idPostfix);
+
 
 	/**
 	 * Distinguished node types. Logic-wise, ROOT is a subtlype of NODE.

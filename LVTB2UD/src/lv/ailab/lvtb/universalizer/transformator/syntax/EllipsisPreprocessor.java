@@ -1,11 +1,10 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
-import lv.ailab.lvtb.universalizer.pml.LvtbXTypes;
-import lv.ailab.lvtb.universalizer.pml.PmlANode;
+import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 
 import java.util.List;
+import java.util.Set;
 
 public class EllipsisPreprocessor
 {
@@ -26,6 +25,30 @@ public class EllipsisPreprocessor
 		for (PmlANode ellipsisNode : ellipsisNodes)
 		{
 			ellipsisNode.splitMorphoEllipsis(Sentence.ID_POSTFIX);
+		}
+	}
+
+	public void replaceInsertedWords()
+	{
+		List<PmlANode> insMNodes = s.pmlTree.getInsertedMorphoDescendants();
+		if (insMNodes == null || insMNodes.isEmpty()) return;
+		for (PmlANode insNode : insMNodes)
+		{
+			// Do not transform in all shady cases.
+			if (insNode.getReduction() != null && !insNode.getReduction().isEmpty()
+					|| insNode.getM() == null) continue;
+			PmlMNode mNode = insNode.getM();
+			Set<LvtbFormChange> fc = mNode.getFormChange();
+			if (fc == null || fc.isEmpty() || !fc.contains(LvtbFormChange.INSERT)
+				|| fc.size() > 2 || fc.size() == 2 && !fc.contains(LvtbFormChange.SPELL)) continue;
+			String mTag = mNode.getTag();
+			String mForm = mNode.getForm();
+			if (mTag == null || mTag.isEmpty() || mForm == null || mForm.isEmpty())
+				continue;
+			// Ok, seems safe to transform.
+			insNode.setReductionTag(mTag);
+			insNode.setReductionForm(mForm);
+			insNode.deleteM();
 		}
 	}
 

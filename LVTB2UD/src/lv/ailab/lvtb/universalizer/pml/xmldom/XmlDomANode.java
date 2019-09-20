@@ -726,60 +726,18 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Split nonempty ellipsis node into empty ellipsis node and dependant
-	 * child.
-	 * @param idPostfix	string to append to the node ID to create ID for new
-	 *                  node.
-	 * @return	if an actual split was done
+	 * Find nodes having m-token, but no w-token.
+	 * @return list of inserted token nodes in no particular order
 	 */
 	@Override
-	public boolean splitMorphoEllipsis(String idPostfix)
+	public List<PmlANode> getInsertedMorphoDescendants()
 	{
-		if (isPureReductionNode()) return false;
-		String reductionField = getReduction();
-		if (reductionField == null || reductionField.isEmpty()) return false;
+		String pattern = ".//node[m.rf and not(w.rf)]";
 		try
 		{
-			XmlDomANode parentToAppend = getParent();
-			//if (!parentToAppend.isPhraseNode()) parentToAppend = this;
-			if (!parentToAppend.isPhraseNode() || parentToAppend.getNodeType().equals(Type.COORD))
-				parentToAppend = this;
-			Document ownerDoc = domNode.getOwnerDocument();
-			// Children container
-			Node childenNode = (Node) XPathEngine.get().evaluate(
-					"./children", parentToAppend.domNode, XPathConstants.NODE);
-			if (childenNode == null)
-			{
-				childenNode = ownerDoc.createElement("children");
-				parentToAppend.domNode.appendChild(childenNode);
-			}
-
-			// Node itself
-			Element newTokenNode = ownerDoc.createElement("node");
-			childenNode.appendChild(newTokenNode);
-
-			// id attribute
-			String newId = getId() + idPostfix;
-			newTokenNode.setAttribute("id", newId);
-
-			// Move morphology
-			Node mDom = (Node) XPathEngine.get().evaluate(
-					"./m.rf", domNode, XPathConstants.NODE);
-			domNode.removeChild(mDom);
-			newTokenNode.appendChild(mDom);
-
-			// Move ord
-			Node ord = (Node) XPathEngine.get().evaluate(
-					"./ord", domNode, XPathConstants.NODE);
-			domNode.removeChild(ord);
-			newTokenNode.appendChild(ord);
-
-			// Role.
-			Node roleNode = ownerDoc.createElement("role");
-			newTokenNode.appendChild(roleNode);
-			roleNode.appendChild(ownerDoc.createTextNode(LvtbRoles.ELLIPSIS_TOKEN));
-
-			return true;
+			NodeList tempRes = (NodeList) XPathEngine.get().evaluate(
+					pattern, domNode, XPathConstants.NODESET);
+			return XmlDomANode.asList(tempRes);
 		}
 		catch (XPathExpressionException e)
 		{
@@ -879,6 +837,24 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
+	 * Remove this nodes m-node.
+	 */
+	@Override
+	public void deleteM()
+	{
+		try
+		{
+			Node mDom = (Node) XPathEngine.get().evaluate(
+					"./m.rf", domNode, XPathConstants.NODE);
+			domNode.removeChild(mDom);
+		}
+		catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
 	 * Set a phraseTag for X or COORD node, return false for other node types.
 	 * @param tag	tag value to set
 	 * @return	true if tag was set
@@ -928,17 +904,113 @@ public class XmlDomANode implements PmlANode
 			if (tagNode == null) tagNode = domNode.getOwnerDocument().createElement("reduction");
 			while (tagNode.getFirstChild() != null)
 				tagNode.removeChild(tagNode.getFirstChild());
-			if (tag != null && !tag.isEmpty())
-			{
+			//if (tag != null && !tag.isEmpty())
+			//{
 				tagNode.appendChild(domNode.getOwnerDocument().createTextNode(newRedField));
 				domNode.appendChild(tagNode);
-			}
+			//}
 			return true;
 		} catch (XPathExpressionException e)
 		{
 			throw new IllegalArgumentException(e);
 		}
 	}
+	/**
+	 * Set a reduction form, if there is none, return false otherwise.
+	 * @param form	form value to set
+	 * @return	true if form was set
+	 */
+	@Override
+	public boolean setReductionForm(String form)
+	{
+		String oldRedForm = getReductionFormPart();
+		if (oldRedForm != null && !oldRedForm.trim().isEmpty()) return false;
+		String oldRedTag = getReductionTagPart();
+		String newRedField = "";
+		if (form != null) newRedField = "(" + form.trim() + ")";
+		if (oldRedTag != null) newRedField = oldRedTag + newRedField;
+		try
+		{
+			Node tagNode = (Node) XPathEngine.get().evaluate(
+					"./reduction", domNode, XPathConstants.NODE);
+			if (tagNode == null) tagNode = domNode.getOwnerDocument().createElement("reduction");
+			while (tagNode.getFirstChild() != null)
+				tagNode.removeChild(tagNode.getFirstChild());
+			//if (form != null && !form.isEmpty())
+			//{
+				tagNode.appendChild(domNode.getOwnerDocument().createTextNode(newRedField));
+				domNode.appendChild(tagNode);
+			//}
+			return true;
+		} catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+
+	/**
+	 * Split nonempty ellipsis node into empty ellipsis node and dependant
+	 * child.
+	 * @param idPostfix	string to append to the node ID to create ID for new
+	 *                  node.
+	 * @return	if an actual split was done
+	 */
+	@Override
+	public boolean splitMorphoEllipsis(String idPostfix)
+	{
+		if (isPureReductionNode()) return false;
+		String reductionField = getReduction();
+		if (reductionField == null || reductionField.isEmpty()) return false;
+		try
+		{
+			XmlDomANode parentToAppend = getParent();
+			//if (!parentToAppend.isPhraseNode()) parentToAppend = this;
+			if (!parentToAppend.isPhraseNode() || parentToAppend.getNodeType().equals(Type.COORD))
+				parentToAppend = this;
+			Document ownerDoc = domNode.getOwnerDocument();
+			// Children container
+			Node childenNode = (Node) XPathEngine.get().evaluate(
+					"./children", parentToAppend.domNode, XPathConstants.NODE);
+			if (childenNode == null)
+			{
+				childenNode = ownerDoc.createElement("children");
+				parentToAppend.domNode.appendChild(childenNode);
+			}
+
+			// Node itself
+			Element newTokenNode = ownerDoc.createElement("node");
+			childenNode.appendChild(newTokenNode);
+
+			// id attribute
+			String newId = getId() + idPostfix;
+			newTokenNode.setAttribute("id", newId);
+
+			// Move morphology
+			Node mDom = (Node) XPathEngine.get().evaluate(
+					"./m.rf", domNode, XPathConstants.NODE);
+			domNode.removeChild(mDom);
+			newTokenNode.appendChild(mDom);
+
+			// Move ord
+			Node ord = (Node) XPathEngine.get().evaluate(
+					"./ord", domNode, XPathConstants.NODE);
+			domNode.removeChild(ord);
+			newTokenNode.appendChild(ord);
+
+			// Role.
+			Node roleNode = ownerDoc.createElement("role");
+			newTokenNode.appendChild(roleNode);
+			roleNode.appendChild(ownerDoc.createTextNode(LvtbRoles.ELLIPSIS_TOKEN));
+
+			return true;
+		}
+		catch (XPathExpressionException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+
 	//=== Helpers ==============================================================
 
 	/**

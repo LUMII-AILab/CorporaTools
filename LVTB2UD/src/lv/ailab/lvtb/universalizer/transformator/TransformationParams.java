@@ -30,6 +30,14 @@ public class TransformationParams
 	public Boolean OMIT_WHOLE_FILES = false;
 
 	/**
+	 * If true, inserted words ar converted to ellipsis and then processed
+	 * according UD ellipsis guidelines. Otherwise transformator just crash on
+	 * them.
+	 */
+	public Boolean TURN_INSERTED_WORD_ELLIPSIS = true;
+
+	// ===== For fitting UD standard.
+	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph
 	 * will contain empty nodes for inserted commas and nonpredicative empty
 	 * nodes.
