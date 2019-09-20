@@ -1,6 +1,7 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.pml.LvtbPmcTypes;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
@@ -36,11 +37,17 @@ public class EllipsisLogic
 
 		String lvtbEffRole = aNode.getEffectiveLabel();
 		String lvtbTag = aNode.getAnyTag();
+		String lvtbEffPrevRole = null;
+		PmlANode tmpAnc = aNode.getEffectiveAncestor();
+		if (tmpAnc != null) tmpAnc = tmpAnc.getParent();
+		if (tmpAnc != null)lvtbEffPrevRole = tmpAnc.getEffectiveLabel();
 
 		// Rules for specific parents.
 		if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*")
-				|| LvtbRoles.SPC.equals(lvtbEffRole) && lvtbTag.matches("v..(n|p[up]).*"))
+				|| lvtbTag.matches("v..(n|p[up]).*") && (LvtbRoles.SPC.equals(lvtbEffRole)
+						|| LvtbRoles.BASELEM.equals(lvtbEffRole) && LvtbPmcTypes.SPCPMC.equals(lvtbEffPrevRole)))
 		{
+			System.out.println("verbal ellipsis");
 			Tuple<PmlANode,Boolean> res = newParentForVerbal(aNode);
 			if (res != null) return res;
 		}
