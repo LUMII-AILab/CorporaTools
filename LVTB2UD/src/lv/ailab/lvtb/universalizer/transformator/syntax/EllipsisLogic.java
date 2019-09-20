@@ -47,7 +47,6 @@ public class EllipsisLogic
 				|| lvtbTag.matches("v..(n|p[up]).*") && (LvtbRoles.SPC.equals(lvtbEffRole)
 						|| LvtbRoles.BASELEM.equals(lvtbEffRole) && LvtbPmcTypes.SPCPMC.equals(lvtbEffPrevRole)))
 		{
-			System.out.println("verbal ellipsis");
 			Tuple<PmlANode,Boolean> res = newParentForVerbal(aNode);
 			if (res != null) return res;
 		}
