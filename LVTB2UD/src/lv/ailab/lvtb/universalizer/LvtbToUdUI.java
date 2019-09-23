@@ -68,6 +68,10 @@ public class LvtbToUdUI
 		int autoFiles = 0;
 		int fixmeFiles = 0;
 		int crashFiles = 0;
+		int depBaseRoleSent = 0;
+		int depBaseRoleSum = 0;
+		int depEnhRoleSent = 0;
+		int depEnhRoleSum = 0;
 		for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
@@ -89,6 +93,10 @@ public class LvtbToUdUI
 				if (ft.hasCrashSent) crashFiles++;
 				if (ft.hasFixme) fixmeFiles++;
 				if (ft.hasAuto) autoFiles++;
+				depBaseRoleSent = depBaseRoleSent + ft.depRoleBaseSent;
+				depBaseRoleSum = depBaseRoleSum + ft.depRoleBaseSum;
+				depEnhRoleSent = depEnhRoleSent+ ft.depRoleEnhSent;
+				depEnhRoleSum = depEnhRoleSum + ft.depRoleEnhSum;
 			} catch (Exception e)
 			{
 				System.out.printf("File failed with exception %s.\n", e.toString());
@@ -112,16 +120,25 @@ public class LvtbToUdUI
 					"Everything is finished, %s trees was omited.\n", omittedTrees);
 		else
 			System.out.printf(
-					"Everything is finished, %s files and %s trees was omited.\n",
+					"Everything is finished, %s file(s) and %s tree(s) was omited.\n",
 					omittedFiles, omittedTrees);
 		if (autoFiles > 0)
-			System.out.printf("%s files have AUTOs.\n", autoFiles);
+			System.out.printf("%s file(s) have AUTOs.\n", autoFiles);
 		if (fixmeFiles > 0)
-			System.out.printf("%s files have FIXMEs.\n", fixmeFiles);
+			System.out.printf("%s file(s) have FIXMEs.\n", fixmeFiles);
 		if (crashFiles > 0)
-			System.out.printf("%s files have crashing sentences.\n", crashFiles);
+			System.out.printf("%s file(s) have crashing sentences.\n", crashFiles);
+		if (depBaseRoleSent > 0)
+			System.out.printf(
+					"%s sentence(s) have altogether %s 'dep' role(s) in basic dependency layer.\n",
+					depBaseRoleSent, depBaseRoleSum);
+		if (depEnhRoleSent > 0)
+			System.out.printf(
+					"%s sentence(s) have altogether %s 'dep' role(s) in enhanced dependency layer.\n",
+					depEnhRoleSent, depEnhRoleSum);
 		StandardLogger.l.finalStatsAndClose(omittedFiles, omittedTrees,
-				autoFiles, fixmeFiles, crashFiles);
+				autoFiles, fixmeFiles, crashFiles, depBaseRoleSent,
+				depBaseRoleSum, depEnhRoleSent, depEnhRoleSum);
 	}
 
 	/**

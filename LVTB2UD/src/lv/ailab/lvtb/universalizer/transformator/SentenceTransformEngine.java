@@ -1,9 +1,11 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.transformator.syntax.EllipsisPreprocessor;
 import lv.ailab.lvtb.universalizer.transformator.syntax.NewSyntaxTransformator;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 /**
  * Logic for transforming LVTB sentence annotations to UD.
@@ -92,9 +94,10 @@ public class SentenceTransformEngine
 	 * @param pmlTree	tree to transform
 	 * @param params	transformation parameters
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
-	 * 			transformed.
+	 * 			transformed paired with stats about dep roles (basic dependency
+	 * 			'dep' first, then ehnhanced dependency 'dep').
 	 */
-	public static String treeToConll(
+	public static Tuple<String, Tuple<Integer, Integer>> treeToConll(
 			PmlANode pmlTree, TransformationParams params)
 	{
 		String id ="<unknown>";
@@ -102,7 +105,8 @@ public class SentenceTransformEngine
 			SentenceTransformEngine t = new SentenceTransformEngine(pmlTree, params);
 			id = t.s.id;
 			t.transform();
-			return t.s.toConllU();
+			return Tuple.of(t.s.toConllU(),
+					Tuple.of(t.s.countUdBaseRole(UDv2Relations.DEP), t.s.countUdEnhRole(UDv2Relations.DEP)));
 		} catch (NullPointerException|IllegalArgumentException e)
 		{
 			System.err.println("Transforming sentence " + id + " completely failed! Check structure and try again.");

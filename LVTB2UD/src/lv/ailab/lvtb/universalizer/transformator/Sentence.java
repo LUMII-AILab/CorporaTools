@@ -1,5 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
+import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
@@ -1210,6 +1211,26 @@ public class Sentence
 					t.head.second.equals(token))
 				result.add(t);
 		}
+		return result;
+	}
+
+	public int countUdBaseRole (UDv2Relations role)
+	{
+		if (role == null) return 0;
+		int result = 0;
+		for (Token token : conll)
+			if (token.deprel != null && token.deprel.equals(role)) result++;
+		return result;
+	}
+
+	public int countUdEnhRole (UDv2Relations role)
+	{
+		if (role == null) return 0;
+		int result = 0;
+		for (Token token : conll)
+			if (token != null && token.deps != null && !token.deps.isEmpty())
+				for (EnhencedDep dep : token.deps)
+					if (dep != null && dep.role != null && dep.role.equals(role)) result ++;
 		return result;
 	}
 }

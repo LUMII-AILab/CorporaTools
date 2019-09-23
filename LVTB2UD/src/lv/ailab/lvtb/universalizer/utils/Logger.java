@@ -171,22 +171,31 @@ public class Logger
 				"%s#%s\t%s", sentenceID, tokFirstCol, lvtbNodeId));
 	}
 
-	public void finalStatsAndClose(int omittedFiles, int omittedTrees,
-								   int autoFiles, int fixmeFiles, int crashFiles)
+	public void finalStatsAndClose(
+			int omittedFiles, int omittedTrees, int autoFiles, int fixmeFiles,
+			int crashFiles, int depBaseRoleSent, int depBaseRoleSum,
+			int depEnhRoleSent, int depEnhRoleSum)
 	{
 		if (omittedFiles == 0 && omittedTrees == 0)
 			statusOut.printf("Everything is finished, nothing was omited.\n");
 		else if (omittedFiles == 0)
 			statusOut.printf(
-					"Everything is finished, %s trees was omited.\n", omittedTrees);
+					"Everything is finished, %s tree(s) was omited.\n", omittedTrees);
 		else
 			statusOut.printf(
-					"Everything is finished, %s files and at least %s trees was omited.\n",
+					"Everything is finished, %s file(s) and at least %s tree(s) was omited.\n",
 					omittedFiles, omittedTrees);
-		if (autoFiles > 0) statusOut.printf("%s files have AUTOs.\n", autoFiles);
-		if (fixmeFiles > 0) statusOut.printf("%s files have FIXMEs.\n", fixmeFiles);
-		if (crashFiles > 0) statusOut.printf("%s files have crashing sentences.\n", crashFiles);
-
+		if (autoFiles > 0) statusOut.printf("%s file(s) have AUTOs.\n", autoFiles);
+		if (fixmeFiles > 0) statusOut.printf("%s file(s) have FIXMEs.\n", fixmeFiles);
+		if (crashFiles > 0) statusOut.printf("%s file(s) have crashing sentences.\n", crashFiles);
+		if (depBaseRoleSent > 0)
+			statusOut.printf(
+					"%s sentence(s) have altogether %s 'dep' role(s) in basic dependency layer.\n",
+					depBaseRoleSent, depBaseRoleSum);
+		if (depEnhRoleSent > 0)
+			statusOut.printf(
+					"%s sentence(s) have altogether %s 'dep' role(s) in enhanced dependency layer.\n",
+					depEnhRoleSent, depEnhRoleSum);
 		flush();
 		statusOut.close();
 		if (idMappingOut != null) idMappingOut.close();

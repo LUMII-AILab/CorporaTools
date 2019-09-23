@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.PmlXmlLoader;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.xmldom.XPathEngine;
 import lv.ailab.lvtb.universalizer.pml.xmldom.XmlDomANode;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -31,6 +32,10 @@ public class PmlXmlFileTransformator
 	public boolean hasAuto;
 	public boolean hasFixme;
 	public boolean hasCrashSent;
+	public int depRoleBaseSum;
+	public int depRoleBaseSent;
+	public int depRoleEnhSum;
+	public int depRoleEnhSent;
 
 	public PmlXmlFileTransformator(TransformationParams params)
 	{
@@ -42,6 +47,10 @@ public class PmlXmlFileTransformator
 		hasAuto = false;
 		hasFixme = false;
 		hasCrashSent = false;
+		depRoleBaseSum = 0;
+		depRoleBaseSent = 0;
+		depRoleEnhSum = 0;
+		depRoleEnhSent = 0;
 	}
 
 	/**
@@ -123,8 +132,14 @@ public class PmlXmlFileTransformator
 			String conllTree = null;
 			try
 			{
-				conllTree = SentenceTransformEngine.treeToConll(
-						pmlTree, params);
+				Tuple<String, Tuple<Integer, Integer>> result =
+						SentenceTransformEngine.treeToConll(pmlTree, params);
+				conllTree = result.first;
+				Tuple<Integer, Integer> depCounts = result.second;
+				if (depCounts.first > 0) depRoleBaseSent++;
+				depRoleBaseSum = depRoleBaseSum + depCounts.first;
+				if (depCounts.second > 0) depRoleEnhSent++;
+				depRoleEnhSum = depRoleEnhSum + depCounts.second;
 			} catch (Exception e)
 			{
 				String treeId = pmlTree.getId();
