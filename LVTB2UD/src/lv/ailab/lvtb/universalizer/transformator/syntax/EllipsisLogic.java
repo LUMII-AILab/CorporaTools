@@ -94,7 +94,8 @@ public class EllipsisLogic
 				UDv2Relations.OBJ, UDv2Relations.IOBJ, UDv2Relations.OBL,
 				UDv2Relations.ADVMOD, UDv2Relations.CSUBJ,
 				UDv2Relations.CSUBJ_PASS, UDv2Relations.XCOMP,
-				UDv2Relations.CCOMP, UDv2Relations.ADVCL};
+				UDv2Relations.CCOMP, UDv2Relations.ADVCL,
+				UDv2Relations.DISLOCATED, UDv2Relations.VOCATIVE};
 		for (UDv2Relations role : priorities) for (PmlANode n : sortedChildren)
 		{
 			UDv2Relations noRedUDrole = DepRelLogic.depToUDLogic(
