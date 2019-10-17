@@ -30,27 +30,43 @@ public class Helper
 		{
 			PmlANode prep = preps.get(0);
 			PmlMNode morpho = prep.getM();
-			// If there is no morphology, but there is an xFunctor or coordination, use the lemma of the first basElem or crdPart.
+			String combinedPrepLemma = null;
+			// If there is no morphology, but there is an xFunctor or coordination,
+			// use the lemma of the first basElem or crdPart.
 			PmlANode phraseConj = prep.getPhraseNode();
 			String phraseType = phraseConj == null ? null : phraseConj.getPhraseType();
-			while (morpho == null && phraseConj != null &&
+			while (morpho == null && combinedPrepLemma == null && phraseConj != null &&
 					(phraseType.equals(LvtbXTypes.XFUNCTOR) || phraseType.equals(LvtbCoordTypes.CRDPARTS)))
 			{
-				PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
-						phraseConj.getChildren(LvtbRoles.BASELEM));
-				PmlANode firstCrdPart = PmlANodeListUtils.getFirstByDescOrd(
-						phraseConj.getChildren(LvtbRoles.CRDPART));
-				PmlANode resultPrep = null;
-				if (firstXBase != null) resultPrep = firstXBase;
-				else if (firstCrdPart != null) resultPrep = firstCrdPart;
-				if (resultPrep != null)
+				if ((phraseType.equals(LvtbXTypes.XFUNCTOR)))
 				{
-					phraseConj = resultPrep.getPhraseNode();
-					phraseType = phraseConj == null ? null : phraseConj.getPhraseType();
-					morpho = resultPrep.getM();
+					combinedPrepLemma = "";
+					for (PmlANode n : PmlANodeListUtils.asOrderedList(phraseConj.getChildren()))
+						if (n.getM() != null)
+							combinedPrepLemma = combinedPrepLemma + "_" +n.getM().getLemma();
+					combinedPrepLemma = combinedPrepLemma.replaceAll("^_+", "");
+					combinedPrepLemma = combinedPrepLemma.replaceAll("_+$", "");
+				}
+				else if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
+				{
+					PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
+							phraseConj.getChildren(LvtbRoles.BASELEM));
+					PmlANode firstCrdPart = PmlANodeListUtils.getFirstByDescOrd(
+							phraseConj.getChildren(LvtbRoles.CRDPART));
+					PmlANode resultPrep = null;
+					if (firstXBase != null) resultPrep = firstXBase;
+					else if (firstCrdPart != null) resultPrep = firstCrdPart;
+					if (resultPrep != null)
+					{
+						phraseConj = resultPrep.getPhraseNode();
+						phraseType = phraseConj == null ? null : phraseConj.getPhraseType();
+						morpho = resultPrep.getM();
+					}
 				}
 			}
-			if (morpho != null) prepLemma = morpho.getLemma();
+			if (combinedPrepLemma != null && !combinedPrepLemma.isEmpty())
+				prepLemma = combinedPrepLemma;
+			else if (morpho != null) prepLemma = morpho.getLemma();
 
 			String prepRed = prep.getReduction();
 			if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;

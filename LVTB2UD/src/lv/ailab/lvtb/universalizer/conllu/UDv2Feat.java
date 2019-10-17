@@ -74,6 +74,8 @@ public enum UDv2Feat
     VERBFORM_VNOUN("VerbForm", "Vnoun"),
     VOICE_ACT("Voice", "Act"),
     VOICE_PASS("Voice", "Pass"),
+
+    TYPO_YES("Typo", "Yes"),
 	;
 
 	public final String key;

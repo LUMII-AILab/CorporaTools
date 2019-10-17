@@ -6,7 +6,8 @@ public enum MiscKeys
 	NEW_PAR ("NewPar"),
 	LVTB_NODE_ID("LvtbNodeId"),
 	CORRECTION_TYPE("CorrectionType"),
-	CORRECTED_FORM("CorrectedForm"),
+	CORRECT_FORM("CorrectForm"),
+	CORRECT_SPACE_AFTER("CorrectSpaceAfter"),
 	;
 
 	final String strRep;

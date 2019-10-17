@@ -150,6 +150,7 @@ public class FeatsLogic
 			Token token, List<Token> sentence)
 	{
 		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
+		if (token.feats.contains(UDv2Feat.TYPO_YES)) res.add(UDv2Feat.TYPO_YES);
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
 		if (!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene")) &&

@@ -1,9 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.morpho;
 
-import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
-import lv.ailab.lvtb.universalizer.conllu.MiscValues;
-import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.conllu.*;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlIdUtils;
@@ -180,6 +177,7 @@ public class MorphoTransformator {
 					formChanges.contains(LvtbFormChange.SPELL)) &&
 				wNodes != null && wNodes.size() > 1)
 			return transfOnRemovedSpaces(aNode, previousToken, paragraphChange);
+		// Split words?
 		else if (formChanges.contains(LvtbFormChange.SPACING) &&
 				!formChanges.contains(LvtbFormChange.UNION) &&
 				!formChanges.contains(LvtbFormChange.PUNCT))
@@ -228,7 +226,9 @@ public class MorphoTransformator {
 		//	Add note to misc field if retokenization has been done.
 		// This happens if word is split between rows.
 		if (formChanges.contains(LvtbFormChange.SPACING))
+		{
 			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);
+		}
 
 		return res;
 	}
@@ -274,7 +274,8 @@ public class MorphoTransformator {
 		Token res =  makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, source, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);
+		res.addMisc(MiscKeys.CORRECT_FORM, mForm);
+		res.feats.add(UDv2Feat.TYPO_YES);
 		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -310,8 +311,9 @@ public class MorphoTransformator {
 		Token res = makeNewToken(
 				previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 				lvtbAId, source, mLemma, lvtbTag, true);
-		res.addMisc(MiscKeys.CORRECTED_FORM, mForm);
+		res.addMisc(MiscKeys.CORRECT_FORM, mForm);
 		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);
+		res.feats.add(UDv2Feat.TYPO_YES);
 		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -485,8 +487,9 @@ public class MorphoTransformator {
 			previousToken = makeNewToken(
 					previousToken == null ? 1 : previousToken.idBegin + 1, 0,
 					lvtbAId, firstPart, mLemma, lvtbTag, true);
-			previousToken.addMisc(MiscKeys.CORRECTED_FORM, mForm); //previousToken.misc.add("CorrectedForm="+mForm);
+			previousToken.addMisc(MiscKeys.CORRECT_FORM, mForm); //previousToken.misc.add("CorrectedForm="+mForm);
 			previousToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING); //previousToken.misc.add("CorrectionType=Spelling");
+			previousToken.feats.add(UDv2Feat.TYPO_YES);
 			if (paragraphChange) previousToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES); //previousToken.misc.add("NewPar=Yes");
 			if (!source.contains(" ")) previousToken.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO); //previousToken.misc.add("SpaceAfter=No");
 			//else logger.doInsentenceWarning(String.format(
@@ -549,9 +552,10 @@ public class MorphoTransformator {
 				lvtbAId,
 				forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
 				mLemma, lvtbTag, true);
-		previousToken.addMisc(MiscKeys.CORRECTED_FORM, mForm);//previousToken.misc.add("CorrectedForm="+mForm);
+		previousToken.addMisc(MiscKeys.CORRECT_FORM, mForm);//previousToken.misc.add("CorrectedForm="+mForm);
 		previousToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);//previousToken.misc.add("CorrectionType=Spacing,Spelling");
 		previousToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//previousToken.misc.add("CorrectionType=Spacing,Spelling");
+		previousToken.feats.add(UDv2Feat.TYPO_YES);
 		if (paragraphChange ||
 				PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 			previousToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//previousToken.misc.add("NewPar=Yes");
@@ -569,6 +573,7 @@ public class MorphoTransformator {
 					null, "N/a", false);
 			nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
 			nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
+			nextToken.feats.add(UDv2Feat.TYPO_YES);
 			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 				nextToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//nextToken.misc.add("NewPar=Yes");
 			nextToken.setHead(previousToken, UDv2Relations.GOESWITH, true,
@@ -582,8 +587,7 @@ public class MorphoTransformator {
 
 	/**
 	 * Helper method: Create necessary CoNLL table entries for mNode where
-	 * source text from w level does not match the wordworm and the only
-	 * form_change is "spell".
+	 * source text from w level is split with missing spaces?
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
 	 * @param previousToken		the token after which should follow all newmade
@@ -609,11 +613,15 @@ public class MorphoTransformator {
 				lvtbAId, source, mLemma, lvtbTag, true);
 		if (!mForm.equals(source))
 		{
-			res.addMisc(MiscKeys.CORRECTED_FORM, mForm);//res.misc.add("CorrectedForm="+mForm);
+			res.addMisc(MiscKeys.CORRECT_FORM, mForm);//res.misc.add("CorrectedForm="+mForm);
 			res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//res.misc.add("CorrectionType=Spelling");
+			res.feats.add(UDv2Feat.TYPO_YES);
 		}
 		res.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);
-		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		if (noSpaceAfter)
+		{
+			res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);//res.misc.add("SpaceAfter=No");
+		}
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
 			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//res.misc.add("NewPar=Yes");
