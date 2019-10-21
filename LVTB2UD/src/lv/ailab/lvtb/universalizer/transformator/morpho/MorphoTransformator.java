@@ -150,8 +150,8 @@ public class MorphoTransformator {
 			return transfOnSpellOnly(aNode, previousToken, paragraphChange, false);
 			// If only correction is spelling, add in misc correct form and process as normal
 			// If also has missing space after, add in misc CorrectSpaceAfter.
-		else if (formChanges.contains(LvtbFormChange.SPACING) && !source.contains(" ")
-				&& formChanges.size() == 2)
+		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.contains(LvtbFormChange.SPACING)
+				&& !source.contains(" ") && formChanges.size() == 2)
 			return transfOnSpellOnly(aNode, previousToken, paragraphChange, true);
 		// Inserted punctuation
 		else if (formChanges.contains(LvtbFormChange.INSERT) && formChanges.contains(LvtbFormChange.PUNCT)
