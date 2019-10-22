@@ -21,7 +21,7 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/test --fold p=1 name=lv_lvtb-ud-test
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/dev --fold p=1 name=lv_lvtb-ud-dev
 :: File for validation (nothing is ommited) can be made like this
-::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/conll-u --fold p=1 name=lv_lvtb-ud-tb
+::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/conll-u --fold p=1 name=lv_lvtb-ud-everything
 :: File for statistics (includes only sentences to be published) is made by concatenating tran, test, dev: lv_lvtb-ud-tb = lv_lvtb-ud-train + lv_lvtb-ud-test + lv_lvtb-ud-dev
 
 :: Convert everything to Linux line endings
@@ -36,7 +36,8 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 ::python validate.py --lang=lv ../UD_Latvian-LVTB/lv_lvtb-ud-dev.conllu
 ::python validate.py --lang=lv ../UD_Latvian-LVTB/lv_lvtb-ud-test.conllu
 :: If you want to validate full corpus located in ../../tools, do
-::python validate.py --lang=lv lv_lvtb-ud-tb.conllu
+::python validate.py --lang=lv lv_lvtb-ud-everything.conllu
+::python validate.py --lang=lv --max-err=0 lv_lvtb-ud-everything.conllu > ud-validator.lv.log 2>&1
 :: or
 ::python validate.py --lang=lv lv_lvtb-ud-tb.conllu
 ::python validate.py --lang=lv --max-err=0 lv_lvtb-ud-tb.conllu > ud-validator.lv.log 2>&1
