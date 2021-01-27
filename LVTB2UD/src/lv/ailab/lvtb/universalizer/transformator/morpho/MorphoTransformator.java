@@ -734,6 +734,7 @@ public class MorphoTransformator {
 	public static boolean isTrueAux (String lemma)
 	{
 		if (lemma == null) return false;
-		return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)");
+		//return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)"); // From UDv2.8 "kļūt" is not true aux
+		return lemma.matches("(ne)?(būt|tikt|tapt)");
 	}
 }
