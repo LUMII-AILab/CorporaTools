@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
+import lv.ailab.lvtb.universalizer.transformator.morpho.MorphoTransformator;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 /**
@@ -242,8 +243,8 @@ public class PhrasePartDepLogic
 				PmlMNode morfo = aNode.getM();
 				String lemma = morfo == null ? null : morfo.getLemma();
 				String redLemma = aNode.getReductionLemma();
-				boolean ultimateAux = lemma != null && lemma.matches("(ne)?(būt|kļūt|tikt|tapt)") ||
-						redLemma != null && redLemma.matches("(ne)?(būt|kļūt|tikt|tapt)");
+				boolean ultimateAux = MorphoTransformator.isTrueAux(lemma) ||
+						MorphoTransformator.isTrueAux(redLemma);
 				boolean nominal = false;
 				boolean passive = false;
 				if (subTag.startsWith("pass"))

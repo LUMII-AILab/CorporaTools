@@ -729,7 +729,8 @@ public class MorphoTransformator {
 
 	/**
 	 * Return true if lemma matches one of for "standard" auxiliary verbs:
-	 * būt, tikt, tapt, kļūt. For legacy reasons also mach negated lemmas.
+	 * būt, tikt, tapt. For legacy reasons also mach negated lemmas.
+	 * Since 2021-01-27 (prep for UDv2.8) "kļūt" is excluded.
 	 */
 	public static boolean isTrueAux (String lemma)
 	{
