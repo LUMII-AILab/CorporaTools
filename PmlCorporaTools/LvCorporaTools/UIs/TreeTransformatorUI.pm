@@ -359,7 +359,6 @@ sub ord
 	print "\n==== Recalculating ord fields ================================\n";
 	die "Invalid argument ".$params->[0]." for --ord $!"
 		if ($params->{'mode'} ne 'TOKEN' and $params->{'mode'} ne 'NODE');
-	mkpath ($dest);
 	
 	# Definition how to process a single tree.
 	my $treeProc = sub
@@ -401,7 +400,6 @@ sub unnest
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Unnesting coordinations =================================\n";
-	mkpath ($dest);
 		
 	# Convert.
 	LvCorporaTools::TreeTransf::UnnestCoord::processDir($source, $params->{'ord'});
@@ -428,7 +426,6 @@ sub dep
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Converting to dependencies ==============================\n";
-	mkpath ($dest);
 		
 	# Set parameters.
 	$LvCorporaTools::TreeTransf::Hybrid2Dep::XPRED = $params->{'xpred'}
@@ -484,7 +481,6 @@ sub red
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Removing reductions =====================================\n";
-	mkpath ($dest);
 		
 	# Set parameters.
 	$LvCorporaTools::TreeTransf::RemoveReduction::LABEL_EMPTY = $params->{'label'}
@@ -515,7 +511,6 @@ sub knit
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Knitting-in =============================================\n";
-	mkpath ($dest);
 	
 	# Set parameters.
 	my $schemaDir = $params->{'path'};
@@ -537,7 +532,6 @@ sub conll
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Converting to CoNLL =====================================\n";
-	mkpath ($dest);
 	
 	# Set parameters.
 	$LvCorporaTools::FormatTransf::DepPml2Conll::CPOSTAG = 
@@ -564,7 +558,6 @@ sub fold
 {
 	my ($source, $dest, $params) = @_;
 	print "\n==== Folding datasets ========================================\n";
-	mkpath ($dest);
 	
 	LvCorporaTools::DataSelector::SplitTreebank::splitCorpus(
 		$source, $params->{'p'}, $params->{'seed'}, $params->{'name'});
