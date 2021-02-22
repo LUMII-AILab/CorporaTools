@@ -2,20 +2,13 @@
 set -o nounset
 set -o errexit
 
-# FIXME! now nothing is taken from Morphocorpus anymore, but its used as the temporary location for merging all the data...
-if [ $# -ge 1 ]
-then sourceFolder="$1"
-# should come from https://github.com/LUMII-AILab/Morphocorpus
-else sourceFolder="../../Morphocorpus/Corpora" 
-fi
-
 #Treebank is in a separate git repository https://github.com/LUMII-AILab/Treebank, and its morphological data is also usable for tagger training
 treebankFolder="../../Treebank/Corpora"
 morphologyFolder="../../morphology"
 taggerFolder="../../LVTagger"
 
-# We'll use the Morphocorpus Corpora/Merged folder as the temporary location for merging all the data
-pmlFolder="$sourceFolder/Merged"
+# We'll use the Treebank/Merged folder as the temporary location for merging all the data
+pmlFolder="../../Treebank/Merged"
 rm -rf $pmlFolder
 mkdir $pmlFolder
 mkdir $pmlFolder/dev
@@ -39,7 +32,7 @@ done
 
 # Knitting merges the .m and .w files together
 echo "Knitting - start"
-time perl -e "use LvCorporaTools::PMLUtils::Knit qw(processDir); processDir(@ARGV)" $pmlFolder m "../TrEd extension/lv-treebank/resources" >/dev/null
+time perl -I ./ -e "use LvCorporaTools::PMLUtils::Knit qw(processDir); processDir(@ARGV)" $pmlFolder m "../TrEd extension/lv-treebank/resources" >/dev/null
 echo "Knitting - done"
 rm $pmlFolder/*.m
 rm $pmlFolder/*.w
