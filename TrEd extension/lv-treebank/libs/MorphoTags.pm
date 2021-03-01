@@ -45,7 +45,7 @@ our %tags = (
 		'p' => 'Phasal',
 		'e' => 'Expressional',
 		'c' => 'Auxilliary or copula "būt"',
-		't' => 'Copula "kļūt", "tapt", etc.'}],
+		't' => 'Copula "kļūt", "tapt", etc.',
 		'a' => 'Auxilliary "tikt", "tapt"'}],
 	['Reflexive', {
 		'n' => 'No',
