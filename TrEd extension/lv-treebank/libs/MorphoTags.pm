@@ -41,12 +41,12 @@ our %tags = (
 'v' => ['Verb', [
 	['Type', {
 		'm' => 'Main',
-		'g' => '"nebūt", "trūkt", "pietikt"',
 		'o' => 'Modal',
 		'p' => 'Phasal',
 		'e' => 'Expressional',
-		'c' => 'Auxilliary "būt"',
-		't' => 'Auxilliary "tikt", "tapt", "kļūt"'}],
+		'c' => 'Auxilliary or copula "būt"',
+		't' => 'Copula "kļūt", "tapt", etc.'}],
+		'a' => 'Auxilliary "tikt", "tapt"'}],
 	['Reflexive', {
 		'n' => 'No',
 		'y' => 'Yes'}],
