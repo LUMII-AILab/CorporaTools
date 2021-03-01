@@ -20,6 +20,8 @@ sub get_structural_errors
     if (is_unfinished($node));
   push @errors, 'Role unsuitable for this parent!'
     unless (is_role_allowed_for_parent($node));
+  push @errors, 'Tag and role mismatch!'
+    if (not is_role_allowed_for_tag($node));
   push @errors, 'Node must have reduction, morphology or phrase!'
     unless (is_allowed_to_be_empty($node) or PMLLVHelpers::is_phrase_node($node));
   push @errors, 'Phrase node must have children!'
@@ -130,6 +132,21 @@ sub is_unfinished
 	or ($node->attr('m/tag') eq 'N/A')
 	or ($node->attr('m/lemma') eq 'N/A')
   ) ? 1 : 0;
+}
+
+# Determine wether the given node is logicaly apropriate for it's tag
+# N/A values gives positive answer.
+sub is_role_allowed_for_tag
+{
+  my $node = shift;
+  my $tag = $node->attr('m/tag');
+  $tag = $node->attr('tag') unless $tag;
+  $tag = $node->attr('reduction') unless $tag;
+  return 1 unless $tag;
+  return 0 if ($node->{'role'} eq 'auxVerb' and $tag !~ '^v[tac]');
+  return 0 if ($node->{'role'} eq 'mod' and $tag !~ '^v[oep]');
+  return 0 if ($node->{'role'} eq 'pred' and $tag !~ '^vm');
+  return 1;
 }
 
 # Determine wether the given node is logicaly apropriate for it's parent
