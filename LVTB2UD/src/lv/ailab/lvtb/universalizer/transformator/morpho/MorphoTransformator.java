@@ -732,10 +732,11 @@ public class MorphoTransformator {
 	 * būt, tikt, tapt. For legacy reasons also mach negated lemmas.
 	 * Since 2021-01-27 (prep for UDv2.8) "kļūt" is excluded.
 	 */
-	public static boolean isTrueAux (String lemma)
+	public static boolean isTrueAux (String lemma, String tag)
 	{
-		if (lemma == null) return false;
+		if (lemma == null || tag == null) return false;
 		//return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)"); // From UDv2.8 "kļūt" is not true aux
-		return lemma.matches("(ne)?(būt|tikt|tapt)");
+		return (lemma.matches("(ne)?(būt)") && tag.matches("vc.*")) ||
+				(lemma.matches("(ne)?(tikt|tapt)") && tag.matches("va.*"));
 	}
 }

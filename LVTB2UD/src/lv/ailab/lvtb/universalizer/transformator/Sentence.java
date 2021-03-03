@@ -191,9 +191,12 @@ public class Sentence
 			{
 				// Do not add standard auxiliaries used as aux.
 				String partRole = phrasePart.getRole();
+				String partLemma = phrasePart.getM().getLemma();
+				String partRedLemma = phrasePart.getReductionLemma();
+				String partTag = phrasePart.getAnyTag();
 				if (LvtbXTypes.XPRED.equals(phraseType) && LvtbRoles.AUXVERB.equals(partRole)
-						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(phrasePart.getM().getLemma()))
-							|| MorphoTransformator.isTrueAux(phrasePart.getReductionLemma())))
+						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(partLemma, partTag))
+							|| MorphoTransformator.isTrueAux(partRedLemma, partTag)))
 					continue;
 				// Do not add coordination conjuctions and punctuation.
 				if (LvtbCoordTypes.CRDPARTS.equals(phraseType) && !LvtbRoles.CRDPART.equals(partRole))

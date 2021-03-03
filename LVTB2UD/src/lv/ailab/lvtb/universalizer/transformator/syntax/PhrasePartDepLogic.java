@@ -243,8 +243,9 @@ public class PhrasePartDepLogic
 				PmlMNode morfo = aNode.getM();
 				String lemma = morfo == null ? null : morfo.getLemma();
 				String redLemma = aNode.getReductionLemma();
-				boolean ultimateAux = MorphoTransformator.isTrueAux(lemma) ||
-						MorphoTransformator.isTrueAux(redLemma);
+				String tag = aNode.getAnyTag();
+				boolean ultimateAux = MorphoTransformator.isTrueAux(lemma, tag) ||
+						MorphoTransformator.isTrueAux(redLemma, tag);
 				boolean nominal = false;
 				boolean passive = false;
 				if (subTag.startsWith("pass"))

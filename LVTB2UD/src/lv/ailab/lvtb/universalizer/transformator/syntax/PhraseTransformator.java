@@ -710,8 +710,9 @@ public class PhraseTransformator
 			{
 				String auxLemma = lastAux.getM().getLemma();
 				String auxRedLemma = lastAux.getReductionLemma();
-				if (!MorphoTransformator.isTrueAux(auxLemma) &&
-						!MorphoTransformator.isTrueAux(auxRedLemma))
+				String auxTag = lastAux.getAnyTag();
+				if (!MorphoTransformator.isTrueAux(auxLemma, auxTag) &&
+						!MorphoTransformator.isTrueAux(auxRedLemma, auxTag))
 					StandardLogger.l.doInsentenceWarning(String.format(
 							"xPred \"%s\" has multiple auxVerb one of which has lemma \"%s\".",
 							xNode.getParent().getId(), auxLemma));
@@ -720,8 +721,9 @@ public class PhraseTransformator
 			PmlMNode lastAuxM = lastAux.getM();
 			String auxLemma = lastAuxM == null ? null : lastAuxM.getLemma();
 			String auxRedLemma = lastAux.getReductionLemma();
-			boolean ultimateAux = MorphoTransformator.isTrueAux(auxLemma)
-					|| MorphoTransformator.isTrueAux(auxRedLemma);
+			String auxTag = lastAux.getAnyTag();
+			boolean ultimateAux = MorphoTransformator.isTrueAux(auxLemma, auxTag)
+					|| MorphoTransformator.isTrueAux(auxRedLemma, auxTag);
 			if (!ultimateAux) newRoot = lastAux;
 		}
 		List<PmlANode> children = xNode.getChildren();
