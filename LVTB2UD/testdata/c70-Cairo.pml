@@ -1270,7 +1270,7 @@
                         </w.rf>
                         <form>izvēlēties</form>
                         <lemma>izvēlēties</lemma>
-                        <tag>vmyn0i3000n</tag>
+                        <tag>vmyn0t3000n</tag>
                       </m.rf>
                       <role>basElem</role>
                       <ord>2</ord>
