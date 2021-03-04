@@ -191,7 +191,7 @@ public class Sentence
 			{
 				// Do not add standard auxiliaries used as aux.
 				String partRole = phrasePart.getRole();
-				String partLemma = phrasePart.getM().getLemma();
+				String partLemma = phrasePart.getM() == null ? null : phrasePart.getM().getLemma();
 				String partRedLemma = phrasePart.getReductionLemma();
 				String partTag = phrasePart.getAnyTag();
 				if (LvtbXTypes.XPRED.equals(phraseType) && LvtbRoles.AUXVERB.equals(partRole)
