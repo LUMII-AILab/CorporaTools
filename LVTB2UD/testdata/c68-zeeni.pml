@@ -3578,7 +3578,7 @@
                       <no_space_after>1</no_space_after>
                     </w.rf>
                     <form>mācībās</form>
-                    <lemma>mācības</lemma>
+                    <lemma>mācība</lemma>
                     <tag>ncfdl4</tag>
                   </m.rf>
                   <role>adv</role>
@@ -7492,7 +7492,7 @@
                   <token>nav</token>
                 </w.rf>
                 <form>nav</form>
-                <lemma>nebūt</lemma>
+                <lemma>būt</lemma>
                 <tag>vmnipii30ay</tag>
               </m.rf>
               <role>pred</role>
@@ -7668,7 +7668,7 @@
                           <token>nebija</token>
                         </w.rf>
                         <form>nebija</form>
-                        <lemma>nebūt</lemma>
+                        <lemma>būt</lemma>
                         <tag>vcnisii30ay</tag>
                       </m.rf>
                       <role>auxVerb</role>
@@ -10882,7 +10882,7 @@
                                                   <token>izmaiņu</token>
                                                 </w.rf>
                                                 <form>izmaiņu</form>
-                                                <lemma>izmaiņas</lemma>
+                                                <lemma>izmaiņa</lemma>
                                                 <tag>ncfdg4</tag>
                                               </m.rf>
                                               <role>attr</role>
@@ -11162,7 +11162,7 @@
                                   <token>nav</token>
                                 </w.rf>
                                 <form>nav</form>
-                                <lemma>nebūt</lemma>
+                                <lemma>būt</lemma>
                                 <tag>vmnipii30ay</tag>
                               </m.rf>
                               <role>pred</role>
@@ -12267,58 +12267,6 @@
                           </m.rf>
                           <role>basElem</role>
                           <ord>10</ord>
-                          <children>
-                            <node id="a-c68-zeeni-p58s3x4">
-                              <role>spc</role>
-                              <children>
-                                <coordinfo>
-                                  <coordtype>crdParts</coordtype>
-                                  <children>
-                                    <node id="a-c68-zeeni-p58s3w13">
-                                      <m.rf id="m-c68-zeeni-p58s3w13">
-                                        <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-c68-zeeni-p58w28">
-                                          <token>Amerikā</token>
-                                          <no_space_after>1</no_space_after>
-                                        </w.rf>
-                                        <form>Amerikā</form>
-                                        <lemma>Amerika</lemma>
-                                        <tag>npfsl4</tag>
-                                      </m.rf>
-                                      <role>crdPart</role>
-                                      <ord>13</ord>
-                                    </node>
-                                    <node id="a-c68-zeeni-p58s3w11">
-                                      <m.rf id="m-c68-zeeni-p58s3w11">
-                                        <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-c68-zeeni-p58w26">
-                                          <token>Anglijā</token>
-                                        </w.rf>
-                                        <form>Anglijā</form>
-                                        <lemma>Anglija</lemma>
-                                        <tag>npfsl4</tag>
-                                      </m.rf>
-                                      <role>crdPart</role>
-                                      <ord>11</ord>
-                                    </node>
-                                    <node id="a-c68-zeeni-p58s3w12">
-                                      <m.rf id="m-c68-zeeni-p58s3w12">
-                                        <src.rf>semi-automatic</src.rf>
-                                        <w.rf id="w-c68-zeeni-p58w27">
-                                          <token>un</token>
-                                        </w.rf>
-                                        <form>un</form>
-                                        <lemma>un</lemma>
-                                        <tag>cc</tag>
-                                      </m.rf>
-                                      <role>conj</role>
-                                      <ord>12</ord>
-                                    </node>
-                                  </children>
-                                </coordinfo>
-                              </children>
-                            </node>
-                          </children>
                         </node>
                       </children>
                     </xinfo>
@@ -12356,6 +12304,56 @@
                     </node>
                   </children>
                 </xinfo>
+                <node id="a-c68-zeeni-p58s3x4">
+                  <role>adv</role>
+                  <children>
+                    <coordinfo>
+                      <coordtype>crdParts</coordtype>
+                      <children>
+                        <node id="a-c68-zeeni-p58s3w13">
+                          <m.rf id="m-c68-zeeni-p58s3w13">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c68-zeeni-p58w28">
+                              <token>Amerikā</token>
+                              <no_space_after>1</no_space_after>
+                            </w.rf>
+                            <form>Amerikā</form>
+                            <lemma>Amerika</lemma>
+                            <tag>npfsl4</tag>
+                          </m.rf>
+                          <role>crdPart</role>
+                          <ord>13</ord>
+                        </node>
+                        <node id="a-c68-zeeni-p58s3w11">
+                          <m.rf id="m-c68-zeeni-p58s3w11">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c68-zeeni-p58w26">
+                              <token>Anglijā</token>
+                            </w.rf>
+                            <form>Anglijā</form>
+                            <lemma>Anglija</lemma>
+                            <tag>npfsl4</tag>
+                          </m.rf>
+                          <role>crdPart</role>
+                          <ord>11</ord>
+                        </node>
+                        <node id="a-c68-zeeni-p58s3w12">
+                          <m.rf id="m-c68-zeeni-p58s3w12">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c68-zeeni-p58w27">
+                              <token>un</token>
+                            </w.rf>
+                            <form>un</form>
+                            <lemma>un</lemma>
+                            <tag>cc</tag>
+                          </m.rf>
+                          <role>conj</role>
+                          <ord>12</ord>
+                        </node>
+                      </children>
+                    </coordinfo>
+                  </children>
+                </node>
               </children>
             </node>
             <node id="a-c68-zeeni-p58s3w14">

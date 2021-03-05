@@ -1409,7 +1409,7 @@
                           <token>Nevarēja</token>
                         </w.rf>
                         <form>Nevarēja</form>
-                        <lemma>nevarēt</lemma>
+                        <lemma>varēt</lemma>
                         <tag>vonisi330ay</tag>
                       </m.rf>
                       <role>mod</role>
@@ -1462,7 +1462,7 @@
                   <token>nav</token>
                 </w.rf>
                 <form>nav</form>
-                <lemma>nebūt</lemma>
+                <lemma>būt</lemma>
                 <tag>vmnipii30ay</tag>
               </m.rf>
               <role>pred</role>
@@ -2254,7 +2254,7 @@
                                   <no_space_after>1</no_space_after>
                                 </w.rf>
                                 <form>neizdarīja</form>
-                                <lemma>neizdarīt</lemma>
+                                <lemma>izdarīt</lemma>
                                 <tag>vmnist330ay</tag>
                               </m.rf>
                               <role>pred</role>
@@ -2554,7 +2554,7 @@
                           <token>nevarēju</token>
                         </w.rf>
                         <form>nevarēju</form>
-                        <lemma>nevarēt</lemma>
+                        <lemma>varēt</lemma>
                         <tag>vonisi31say</tag>
                       </m.rf>
                       <role>mod</role>
