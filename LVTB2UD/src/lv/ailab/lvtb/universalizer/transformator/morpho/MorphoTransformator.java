@@ -729,14 +729,14 @@ public class MorphoTransformator {
 
 	/**
 	 * Return true if lemma matches one of for "standard" auxiliary verbs:
-	 * būt, tikt, tapt. For legacy reasons also mach negated lemmas.
+	 * būt, tikt, tapt.
 	 * Since 2021-01-27 (prep for UDv2.8) "kļūt" is excluded.
 	 */
 	public static boolean isTrueAux (String lemma, String tag)
 	{
 		if (lemma == null || tag == null) return false;
 		//return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)"); // From UDv2.8 "kļūt" is not true aux
-		return (lemma.matches("(ne)?(būt)") && tag.matches("vc.*")) ||
-				(lemma.matches("(ne)?(tikt|tapt)") && tag.matches("va.*"));
+		return (lemma.matches("būt") && tag.matches("vc.*")) ||
+				(lemma.matches("(tikt|tapt)") && tag.matches("va.*"));
 	}
 }

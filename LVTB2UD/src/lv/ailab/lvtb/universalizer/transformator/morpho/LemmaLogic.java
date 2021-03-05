@@ -15,7 +15,7 @@ public class LemmaLogic
 		if (xpostag == null || xpostag.isEmpty() || xpostag.equals("N/A")
 			|| lemma == null || lemma.isEmpty())
 			return lemma;
-		if (xpostag.matches("^v..([^p].{6}|p.{8})y.*"))
+		/*if (xpostag.matches("^v..([^p].{6}|p.{8})y.*"))
 		{
 			if (lemma.startsWith("ne"))
 				lemma = lemma.substring(2);
@@ -26,7 +26,7 @@ public class LemmaLogic
 				if (StandardLogger.l != null)
 					StandardLogger.l.doInsentenceWarning(errorMsg);
 			}
-		}
+		}*/ // Since 20210305 not needed anymore
 		if (xpostag.matches("^(s|rr).*"))
 		{
 			String lcLemma = lemma.toLowerCase();

@@ -26,9 +26,9 @@ public class UPosLogic
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;
-		else if (xpostag.matches("v[c].*") && lemma.matches("(ne)?būt")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[c].*") && lemma.matches("būt")) return UDv2PosTag.AUX;
 		//else if (xpostag.matches("v[t].*") && lemma.matches("(ne)?(kļūt|tikt|tapt)")) return UDv2PosTag.AUX; // for UDv2.8 "kļūt" is not AUX anymore
-		else if (xpostag.matches("v[a].*") && lemma.matches("(ne)?(tikt|tapt)")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[a].*") && lemma.matches("(tikt|tapt)")) return UDv2PosTag.AUX;
 		else if (xpostag.matches("v.*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..[^p].*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
