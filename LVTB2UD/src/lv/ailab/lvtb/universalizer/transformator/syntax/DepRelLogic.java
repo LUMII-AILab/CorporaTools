@@ -846,7 +846,7 @@ public class DepRelLogic
 			{
 				if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
 					return Tuple.of(resRolePasive, null);
-				if (parentTag.matches("v.*"))
+				if (parentTag.matches("v.*|[nampxy].*|[rci].*|y[npa].*]"))
 					return Tuple.of(resRoleActive, null);
 
 				String reduction = parent.getReduction();
@@ -854,13 +854,13 @@ public class DepRelLogic
 				{
 					if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
 						return Tuple.of(resRolePasive, null);
-					if (reduction.matches("v.*"))
+					if (reduction.matches("v.*|[nampxy].*|[rci].*|y[npa].*]"))
 						return Tuple.of(resRoleActive, null);
 				}
-				// TODO nominal parent?
 			}
 		}
 		// TODO infinite subject?
+		//warnOnRole(node, parent, isClausal ? "clausal secondary subject" : "simple secondary subject", true);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
