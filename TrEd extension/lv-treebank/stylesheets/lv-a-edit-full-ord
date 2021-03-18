@@ -10,6 +10,7 @@ node: <? '#{dimgray}ID: ${id}' if (not $${#name}) ?>
 node: <? '#{black}${comment}' if $${comment}?>
 node:#{red}<? join "\n", @{ LV_A::get_structural_errors($this); }?>
 node:#{red}<? join "\n", @{ LV_A::get_lemma_errors($${m/lemma}, $${m/tag}) }?>
+node:#{red}<? join "\n", @{ LV_A::get_form_errors($${m/form}, $${m/tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${m/tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${tag}) }?>
 node:#{red}<? join "\n", @{ LV_A::get_tag_errors($${reduction}) }?>

@@ -2,6 +2,7 @@ package LemmaChecker;
 
 use utf8;
 use strict;
+#use Data::Dumper;
 
 # TODO: maybe we need to use MorphoTags.getAVPairsFromAnyTag() here?
 sub checkLemmaByTag
@@ -17,18 +18,17 @@ sub checkLemmaByTag
 	push @errors, 'Lemma should contain a punctuation symbol?' if ($tag =~ /^z.*/ and $lemma !~ /\p{P}/);
 	push @errors, 'Lemma must be lowercase!' if ($tag =~ /^(nc|i).*/ and $lemma !~ /^-?\p{Ll}+(-\p{Ll}+)*-?$/);
 	push @errors, 'Lemma must be lowercase!' if ($tag =~ /^(?!n|x|y|z|i).*/ and $lemma !~ /^\p{Ll}+$/);
-	# Needed for UD
-	#push @errors, 'Lemma must be lowercase!' if ($tag =~ /^s.*/ and $lemma !~ /^\p{Ll}+$/);
-	# Needed for UD
+	push @errors, 'Lemma must be lowercase!' if ($tag =~ /^[sc].*/ and $lemma !~ /^\p{Ll}+$/);
 	#push @errors, 'Lemma must be lowercase!' if ($tag =~ /^rr.*/ and $lemma !~ /^\p{Ll}+$/);
 
-	# Needed for UD
-	push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..[^p].{6}y.*/ and $lemma !~ /^ne/);
-	# Needed for UD
-	push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..p.{8}y.*/ and $lemma !~ /^ne/);
+	#push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..[^p].{6}y.*/ and $lemma !~ /^ne/);
+	#push @errors, 'Lemma must start with \'ne\'!' if ($tag =~ /^v..p.{8}y.*/ and $lemma !~ /^ne/);
 	
-	push @errors, 'Wrong verb lemma ending!' if ($tag =~ /^v.*/ and $lemma !~ /t(ies)?$/);
+	push @errors, 'Wrong verb lemma ending!' if ($tag =~ /^v.n.*/ and $lemma !~ /t$/);
+	push @errors, 'Wrong verb lemma ending!' if ($tag =~ /^v.y.*/ and $lemma !~ /ties$/);
+	push @errors, 'Wrong verb lemma ending!' if ($tag =~ /^v.[^yn].*/ and $lemma !~ /t(ies)?$/);
 	push @errors, 'Wrong adjective lemma ending!' if ($tag =~ /^a.*/ and $lemma !~ /[sšāiou]$/);
+	
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[svp].1.*/ and $lemma !~ /[sš]$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[svp].2.*/ and $lemma !~ /([^aeu]is|(akm|asm|rud|ūd|zib)ens|mēness|uguns|suns|sāls)$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[d].[12].*/ and $lemma !~ /i$/);
@@ -43,6 +43,8 @@ sub checkLemmaByTag
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n..[d].6.*/ and $lemma !~ /is$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n....r.*/ and $lemma !~ /(šanās|umies|ājies)$/);
 	push @errors, 'Wrong noun lemma ending!' if ($tag =~ /^n....g.*/ and $lemma !~ /(u|a|as|es)$/);
+
+	#print Dumper ({'Lemma' => $lemma, 'Tag' => $tag, 'Result' => \@errors});
 	
 	return \@errors;
 	

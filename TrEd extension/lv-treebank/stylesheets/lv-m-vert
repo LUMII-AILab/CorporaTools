@@ -14,6 +14,7 @@ node:#{darkgreen}${#content/tag}
 node:<? $${#content/lemma} ? '#{dimgray}[${#content/lemma}]' : ''?>
 node:#{red}<? join "\n", @{ LV_M::get_tag_errors($${#content/tag}) }?>
 node:#{red}<? join "\n", @{ LV_M::get_lemma_errors($${#content/lemma}, $${#content/tag}) }?>
+node:#{red}<? join "\n", @{ LV_M::get_form_errors($${#content/form}, $${#content/tag}) }?>
 
 style: #{Node-shape:oval}
        #{Oval-fill:yellow}

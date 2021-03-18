@@ -10,6 +10,7 @@ use strict;
 use MorphoTags;
 use SyntaxChecker;
 use LemmaChecker;
+use FormChecker;
 
 BEGIN { import TredMacro; import PML; }
 
@@ -110,11 +111,18 @@ sub get_lemma_errors
 	return LemmaChecker::checkLemmaByTag(@_);
 }
 
+sub get_form_errors
+{
+	return FormChecker::checkFormByTag(@_);
+}
+
+
 sub get_all_morphomorpho_errors
 {
    my $node = shift;
    my @res = ();
    push @res, @{get_lemma_errors($node->attr('m/lemma'), $node->attr('m/tag'))};
+   push @res, @{get_form_errors($node->attr('m/form'), $node->attr('m/tag'))};
    push @res, @{get_tag_errors($node->attr('m/tag'))};
    return \@res;
 }
@@ -125,6 +133,10 @@ sub get_all_morphosynt_errors
    my @res = ();
    push @res, @{get_tag_errors($node->attr('tag'))};
    push @res, @{get_tag_errors($node->attr('reduction'))};
+   $node->attr('reduction') =~ /\((.*)\)/;
+   my $redForm = $1;
+   push @res, @{get_form_errors($redForm, $node->attr('reduction'))}
+     if ($redForm);
    push @res, @{get_tag_for_xType_errors($node->attr('tag'),$node->attr('xtype')) }
 	 if ($node->attr('#name') eq 'xinfo');
    return \@res;

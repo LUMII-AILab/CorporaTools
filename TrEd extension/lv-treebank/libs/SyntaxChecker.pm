@@ -139,9 +139,9 @@ sub is_unfinished
 sub is_role_allowed_for_tag
 {
   my $node = shift;
-  my $tag = $node->attr('m/tag');
+  my $tag = $node->attr('reduction');
+  $tag = $node->attr('m/tag') unless $tag;
   $tag = $node->attr('tag') unless $tag;
-  $tag = $node->attr('reduction') unless $tag;
   return 1 unless $tag;
   return 0 if ($node->{'role'} eq 'auxVerb' and $tag !~ '^v[tac]');
   return 0 if ($node->{'role'} eq 'mod' and $tag !~ '^v[oep]');

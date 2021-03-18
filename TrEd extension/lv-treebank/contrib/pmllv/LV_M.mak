@@ -9,6 +9,7 @@ package LV_M;
 use strict;
 use MorphoTags;
 use LemmaChecker;
+use FormChecker;
 
 BEGIN { import TredMacro; import PML; }
 
@@ -185,6 +186,11 @@ sub get_tag_errors
 sub get_lemma_errors
 {
 	return LemmaChecker::checkLemmaByTag(@_);
+}
+
+sub get_form_errors
+{
+	return FormChecker::checkFormByTag(@_);
 }
 
 
