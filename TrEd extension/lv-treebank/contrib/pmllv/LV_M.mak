@@ -193,6 +193,17 @@ sub get_form_errors
 	return FormChecker::checkFormByTag(@_);
 }
 
+sub get_all_errors
+{
+   my $node = shift;
+   my @res = ();
+   push @res, @{get_tag_errors($node->attr('#content/tag'))};
+   push @res, @{get_lemma_errors($node->attr('#content/lemma'), $node->attr('#content/tag'))};
+   push @res, @{get_form_errors($node->attr('#content/form'), $node->attr('#content/tag'))};
+   return \@res;
+}
+
+
 
 #binding-context LV_M
 
