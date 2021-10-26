@@ -214,7 +214,7 @@ public class Sentence
 			}
 		}
 
-		// Posprocess children.
+		// Postprocess children.
 		List<PmlANode> dependants = aNode.getChildren();
 		if (dependants != null) for (PmlANode dependant : dependants)
 			getGov2subj(dependant, resultAccumulator);
