@@ -1,0 +1,74 @@
+NAME "UD_Latvian-LVTB"
+PATH /corpora/data/udlv_lvtb
+VERTICAL /corpora/vert/udlv_lvtb.vert
+ENCODING "UTF-8"
+
+
+ATTRIBUTE word {
+	LABEL "Vārdforma"
+}
+
+ATTRIBUTE lemma {
+	LABEL "Lemma"
+}
+
+ATTRIBUTE   lc {
+	LABEL	"Vārdforma (ar maziem burtiem)"
+	DYNAMIC  utf8lowercase
+	DYNLIB   internal
+	ARG1     "C"
+	FUNTYPE  s
+	FROMATTR word
+	TYPE     index
+	TRANSQUERY	yes
+}
+
+ATTRIBUTE   lemma_lc {
+	LABEL	"Lemma (ar maziem burtiem)"
+	DYNAMIC  utf8lowercase
+	DYNLIB   internal
+	ARG1     "C"
+	FUNTYPE  s
+	FROMATTR lemma
+	TYPE     index
+	TRANSQUERY	yes
+}
+
+ATTRIBUTE  xpos {
+	LABEL   "Morfoloģiskais tags"
+}
+
+ATTRIBUTE  upos {
+	LABEL   "UD morfoloģiskais tags"
+}
+
+ATTRIBUTE  deprel {
+	LABEL   "UD loma"
+}
+
+
+STRUCTURE doc {
+	LABEL "Dokuments"
+	ATTRIBUTE id {
+		LABEL "Dokumenta ID"
+	}
+}
+
+STRUCTURE p {
+	LABEL "Rindkopa"
+	ATTRIBUTE id {
+		LABEL "Rindkopas ID"
+	}
+}
+STRUCTURE s {
+	LABEL "Teikums"
+	ATTRIBUTE id {
+		LABEL "Teikuma ID"
+	}
+}
+
+STRUCTURE g {
+	DISPLAYTAG 0
+	DISPLAYBEGIN "_EMPTY_"
+}
+
