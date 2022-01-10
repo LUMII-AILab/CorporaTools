@@ -2,6 +2,7 @@ NAME "UD_Latvian-LVTB"
 PATH /corpora/data/udlv_lvtb
 VERTICAL /corpora/vert/udlv_lvtb.vert
 ENCODING "UTF-8"
+LANGUAGE "Latvian"
 
 
 ATTRIBUTE word {
@@ -34,7 +35,7 @@ ATTRIBUTE   lemma_lc {
 	TRANSQUERY	yes
 }
 
-ATTRIBUTE  xpos {
+ATTRIBUTE  tag {
 	LABEL   "Morfoloģiskais tags"
 }
 
