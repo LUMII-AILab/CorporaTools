@@ -171,7 +171,7 @@ public class MorphoTransformator {
 		else if(formChanges.contains(LvtbFormChange.UNION) && formChanges.contains(LvtbFormChange.PUNCT)
 				&& formChanges.size() == 2 && source.startsWith(mForm))
 			return transfOnCleanPunctDel(aNode, previousToken, paragraphChange);
-		// Renmoved punctuation other cases
+		// Removed punctuation other cases
 		else if(formChanges.contains(LvtbFormChange.UNION)
 				&& formChanges.contains(LvtbFormChange.PUNCT))
 			return transfOnUglyPunctDel(aNode, previousToken, paragraphChange);
