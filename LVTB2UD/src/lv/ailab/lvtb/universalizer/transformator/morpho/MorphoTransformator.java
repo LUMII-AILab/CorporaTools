@@ -144,14 +144,19 @@ public class MorphoTransformator {
 		//else if (formChanges.isEmpty())
 		//	return transfOnEmptyFormCh(aNode, previousToken, paragraphChange);
 
-		// If only correction is spelling, add in misc correct form and process as normal
-		// If also has missing space after, add in misc CorrectSpaceAfter.
+		// If only correction is spelling, add in misc correct form and process as normal.
 		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.size() == 1)
 			return transfOnSpellOnly(aNode, previousToken, paragraphChange, false);
-			// If only correction is spelling, add in misc correct form and process as normal
-			// If also has missing space after, add in misc CorrectSpaceAfter.
+		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.contains(LvtbFormChange.UNION)
+				&& !source.contains(" ") && formChanges.size() == 2)
+			return transfOnSpellOnly(aNode, previousToken, paragraphChange, false);
+		// If only correction is spelling, add in misc correct form and process as normal.
+		// If also has missing space after, add in misc CorrectSpaceAfter.
 		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.contains(LvtbFormChange.SPACING)
 				&& !source.contains(" ") && formChanges.size() == 2)
+			return transfOnSpellOnly(aNode, previousToken, paragraphChange, true);
+		else if (formChanges.contains(LvtbFormChange.SPELL) && formChanges.contains(LvtbFormChange.UNION)
+				&& formChanges.contains(LvtbFormChange.SPACING) && !source.contains(" ") && formChanges.size() == 3)
 			return transfOnSpellOnly(aNode, previousToken, paragraphChange, true);
 		// Inserted punctuation
 		else if (formChanges.contains(LvtbFormChange.INSERT) && formChanges.contains(LvtbFormChange.PUNCT)
