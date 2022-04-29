@@ -593,9 +593,9 @@ public class MorphoTransformator {
 					previousToken.idBegin + 1, 0, lvtbAId,
 					forNexTok.stream().map(PmlWNode::getToken).reduce((s1, s2) -> s1 + s2).get(),
 					null, "N/a", false);
-			nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
-			nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
-			nextToken.feats.add(UDv2Feat.TYPO_YES);
+			//nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPACING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
+			//nextToken.addMisc(MiscKeys.CORRECTION_TYPE, MiscValues.SPELLING);//nextToken.misc.add("CorrectionType=Spacing,Spelling");
+			//nextToken.feats.add(UDv2Feat.TYPO_YES);
 			if (PmlIdUtils.isParaBorderBetween(forNexTok.peek().getId(), forNexTok.poll().getId()))
 				nextToken.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);//nextToken.misc.add("NewPar=Yes");
 			nextToken.setHead(previousToken, UDv2Relations.GOESWITH, true,
