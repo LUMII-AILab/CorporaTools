@@ -137,7 +137,7 @@ public class DepRelLogic
 
 			// Semi-clausal dependencies.
 			case LvtbRoles.INS : return insToUD(node, parent);
-			case LvtbRoles.DIRSP : return Tuple.of(UDv2Relations.PARATAXIS, null);
+			case LvtbRoles.DIRSP : return Tuple.of(UDv2Relations.CCOMP, null);
 
 			// Other
 			// TODO wait for answer in https://github.com/UniversalDependencies/docs/issues/594
