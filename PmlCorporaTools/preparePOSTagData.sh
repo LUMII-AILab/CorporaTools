@@ -20,7 +20,7 @@ tail -n +2 $treebankFolder/LatvianTreebankMorpho.fl | while read file
 do
 	if [ -z "$file" ]; then
 		echo "empty line" 
-	elif [[ $file =~ .*Verbu_rindkopas.* ]] && grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a"; then
+	elif [[ $file =~ .*Mazais_Princis.* ]] && [[ $file =~ .*Verbu_rindkopas.* ]] && grep -q "<comment>AUTO" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - unfinished"
 	elif grep -q "<comment>FIXME" "$treebankFolder/${file%.m}.a"; then
 		echo "skipping $file - fixme"
@@ -79,6 +79,7 @@ rm -rf "$pmlFolder/res"
 echo "Converting $pmlFolder"
 for n in $(find "$pmlFolder/train" -type f -name "*.pml")
 do
+#	echo "./runPmlMToPlain.sh $n"
    ./runPmlMToPlain.sh "$n" >/dev/null
 done
 find "$pmlFolder/train" -type f -name "*.txt" -exec cat {} > "$pmlFolder/train.txt" \;
@@ -119,13 +120,13 @@ cp "$pmlFolder/train.txt" "$morphologyFolder/src/main/resources/"
 cp "$pmlFolder/all.txt" "$morphologyFolder/src/test/resources/"
 cp "$pmlFolder/dev.txt" "$morphologyFolder/src/test/resources/"
 cp "$pmlFolder/test.txt" "$morphologyFolder/src/test/resources/"
-cp "$treebankFolder/../Docs/Annotation how-to/SemTi-Kamols_morphotags.xlsx" "$morphologyFolder/docs/"
+cp "$treebankFolder/../Docs/Annotation how-to/Tags&tagset/SemTi-Kamols_morphotags.xlsx" "$morphologyFolder/docs/"
 
 cp "$pmlFolder/train.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/train_dev.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/test.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/dev.txt" "$taggerFolder/MorphoCRF/"
 cp "$pmlFolder/all.txt" "$taggerFolder/MorphoCRF/"
-cp "$treebankFolder/../Docs/Annotation how-to/SemTi-Kamols_morphotags.xlsx" "$taggerFolder/docs/"
+cp "$treebankFolder/../Docs/Annotation how-to/Tags&tagset/SemTi-Kamols_morphotags.xlsx" "$taggerFolder/docs/"
 
 echo "Done!"
