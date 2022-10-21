@@ -42,7 +42,7 @@ public class FeatsLogic
 		if (xpostag.matches("[na]...v.*|v..p...v.*")) res.add(UDv2Feat.CASE_VOC);
 
 		if (xpostag.matches("a....n.*|v..p......n.*")) res.add(UDv2Feat.DEFINITE_IND);
-		if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_SPEC);
+		if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_IND);
 		if (xpostag.matches("a....y.*|v..p......y.*")) res.add(UDv2Feat.DEFINITE_DEF);
 		if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_DEF);
 
