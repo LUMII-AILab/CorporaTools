@@ -219,7 +219,6 @@ our %tags = (
 		'p' => 'Place',
 		't' => 'Time',
 		'c' => 'Causative'}],
-	],
 	['Relative', {
 		'n' => 'No',
 		'y' => 'Yes'}],
