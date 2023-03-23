@@ -210,7 +210,6 @@ our %tags = (
 	]],
 'r' => ['Adverb', [
 	['Degree', {
-		'r' => 'Relative',
 		'p' => 'Positive',
 		'c' => 'Comparative',
 		's' => 'Superlative'}],
@@ -220,6 +219,10 @@ our %tags = (
 		'p' => 'Place',
 		't' => 'Time',
 		'c' => 'Causative'}],
+	],
+	['Relative', {
+		'n' => 'No',
+		'y' => 'Yes'}],
 	]],
 's' => ['Preposition', [
 	['Position', {
