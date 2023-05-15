@@ -127,7 +127,8 @@ public class MorphoTransformator {
 		// be tokens with spaces.
 		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
 				!lvtbTag.matches("x[no].*") &&
-				!mForm.replace(" ", "").matches("u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.|u\\.t\\.t\\.|(P\\.)+S\\.|N\\.B\\."))
+				!mForm.replace(" ", "").matches(
+						"u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\.|u\\.t\\.t\\.|(P\\.)+S\\.|N\\.B\\.|\\d?\\d\\.\\d?\\d\\.(\\d\\d)?\\d\\d\\.?|(\\d\\d)?\\d\\d\\.\\d?\\d\\.\\d?\\d\\.?"))
 			throw new IllegalArgumentException(String.format(
 					"Node \"%s\" with form \"%s\" and lemma \"%s\" contains spaces",
 					lvtbAId, mForm, mLemma)); // UD allowed words with spaces are supposed to be the same as LVTB
