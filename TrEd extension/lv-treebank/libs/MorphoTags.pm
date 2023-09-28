@@ -213,12 +213,6 @@ our %tags = (
 		'p' => 'Positive',
 		'c' => 'Comparative',
 		's' => 'Superlative'}],
-	['Semantic group', {
-		'q' => 'Quantitative',
-		'm' => 'Manner',
-		'p' => 'Place',
-		't' => 'Time',
-		'c' => 'Causative'}],
 	['Relative', {
 		'n' => 'No',
 		'y' => 'Yes'}],
