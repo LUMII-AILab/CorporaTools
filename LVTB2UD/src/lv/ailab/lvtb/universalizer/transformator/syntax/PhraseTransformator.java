@@ -161,6 +161,12 @@ public class PhraseTransformator
 					s.id, LvtbRoles.PRED, pmcType));
 		if (preds == null || preds.isEmpty())
 			preds = pmcNode.getChildren(LvtbRoles.BASELEM);
+		if (preds == null || preds.isEmpty())
+			preds = pmcNode.getChildren(LvtbRoles.ELLIPSIS_TOKEN);
+		if (preds == null || preds.isEmpty())
+			preds = pmcNode.getChildren(LvtbRoles.NO);
+		if (preds == null || preds.isEmpty())
+			preds = pmcNode.getChildren(LvtbRoles.CONJ);
 		newRoot = PmlANodeListUtils.getFirstByDeepOrd(preds);
 
 		if (newRoot == null)
