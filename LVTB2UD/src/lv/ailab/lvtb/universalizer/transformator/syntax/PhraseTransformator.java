@@ -67,8 +67,8 @@ public class PhraseTransformator
 			return utterToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
-			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.PRED, true,
-					params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
+			return sentencyToUD(phraseNode);
+			//return clauseToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
 			return s.allUnderFirstConstituent(phraseNode, LvtbRoles.BASELEM, true,
@@ -141,9 +141,21 @@ public class PhraseTransformator
 		return newRoot;
 	}
 
+	/*
+	 * Transformation for subrCl or mainCl PMC that can have either or pred or
+	 * reduced pred - all children goes below first pred, or below first reduced,
+	 * if there is no pred.
+	 * @return PML A-level node: root of the corresponding UD structure.
+	 */
+	/*protected PmlANode clauseToUD(PmlANode pmcNode)
+	{
+		return s.allUnderFirstConstituent(pmcNode, LvtbRoles.PRED, true,
+				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
+	}*/
+
 	/**
 	 * Transformation for PMC that can have either basElem or pred - all
-	 * children goes below first pred, r below forst basElem, if there is no
+	 * children goes below first pred, or below first basElem, if there is no
 	 * pred.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
