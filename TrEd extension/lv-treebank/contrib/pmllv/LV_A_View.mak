@@ -30,11 +30,11 @@ sub pre_switch_context_hook {
 
 #binding-context LV_A_View
 
-#bind Redraw_All to Ctrl+r menu Redraw
-#bind switch_mode to Ctrl+m menu Switch to Edit Mode
-#bind swich_styles_vert to Ctrl+h menu Switch Horizontal/Vertical Layout
-#bind swich_styles_full to Ctrl+t menu Switch on/off Tags
-#bind switch_styles_compact to Ctrl+k menu Switch on/off Compact Layout
+#bind Redraw_All menu Redraw
+#bind switch_mode to Ctrl+m menu Switch to Edit mode
+#bind swich_styles_vert to Ctrl+h menu Switch horizontal/vertical layout
+#bind swich_styles_full to Ctrl+t menu Switch on/off tags
+#bind switch_styles_compact to Ctrl+k menu Switch on/off compact layout
 
 1;
 

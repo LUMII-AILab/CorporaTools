@@ -208,11 +208,11 @@ sub get_all_errors
 #binding-context LV_M
 
 #bind Save to Ctrl+s menu Save
-#bind Redraw_All to Ctrl+r menu Redraw
+#bind Redraw_All menu Redraw
 
-#bind new_brother_after to a menu New Node After Current
-#bind new_brother_before to b menu New Node Before Current
-#bind delete_node to Delete menu Delete Leaf Node
+#bind new_brother_after to a menu New node after current
+#bind new_brother_before to b menu New node before current
+#bind delete_node to Delete menu Delete leaf node
 
 1;
 

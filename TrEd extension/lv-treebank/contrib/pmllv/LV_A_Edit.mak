@@ -186,12 +186,12 @@ sub incorp_in_parent
 {
   if ((not $this->parent) or ($this->parent->{'#name'} ne 'node'))
   {
-    stderr 'Can\'t incorporate in parent, active node has no appropriate parent!';
+    stderr 'Can\'t incorporate in parent, active node has no appropriate parent!\n';
 	return;	
   }
   if ($this->firstson)
   {
-    stderr 'Can\'t incorporate in parent, active node has children!';
+    stderr 'Can\'t incorporate in parent, active node has children!\n';
 	return;	
   }
   foreach my $member (TredMacro::ListV($this->attr('m/w')))
@@ -204,6 +204,72 @@ sub incorp_in_parent
   &delete_node;
   return;
 }
+
+# Move a word node from its parent to its grandparent
+sub move_up
+{
+  if (($this->{'#name'} ne 'node'))
+  {
+    stderr 'Can\'t move this kind of node!\n';
+	return;	
+  }
+  if ((not $this->parent) or (not $this->parent->parent))
+  {
+    stderr 'Can\'t move up, has no grandparent!\n';
+	return;	
+  }
+  TredMacro::CutPaste($this, $this->parent->parent)
+}
+
+# Move a word node from its parent to its parents first child
+sub move_down_first
+{
+  if (($this->{'#name'} ne 'node'))
+  {
+    stderr 'Can\'t move this kind of node!\n';
+	return;	
+  }
+  if ((not $this->parent))
+  {
+    stderr 'Can\'t move, has no parent!\n';
+	return;	
+  }
+  TredMacro::CutPaste($this, $this->parent->firstson)
+}
+
+# Move a word node from its parent to its left brother
+sub move_left
+{
+  if (($this->{'#name'} ne 'node'))
+  {
+    stderr 'Can\'t move this kind of node!\n';
+	return;	
+  }
+  if ((not $this->lbrother))
+  {
+    stderr 'Can\'t move, has no left brother!\n';
+	return;	
+  }
+  TredMacro::CutPaste($this, $this->lbrother)
+}
+
+# Move a word node from its parent to its right brother
+sub move_right
+{
+  if (($this->{'#name'} ne 'node'))
+  {
+    stderr 'Can\'t move this kind of node!\n';
+	return;	
+  }
+  if ((not $this->rbrother))
+  {
+    stderr 'Can\'t move, has no right brother!\n';
+	return;	
+  }
+  TredMacro::CutPaste($this, $this->rbrother)
+}
+
+
 
 # Create new x-word node.
 sub new_xinfo_node
@@ -688,35 +754,40 @@ sub set_auto
 
 #binding-context LV_A_Edit
 
-#bind new_xinfo_node to x menu New X-word Node
-#bind new_pmcinfo_node to p menu New PMC Node
-#bind new_coordinfo_node to c menu New Coordination Node
-#bind new_child_node to n menu New Ordinary Node
-#insert new_m_node menu New Node with Morphology (forces save, can't be undone)
-#bind new_coordcl_struct to C menu New Coordination Construction
+#bind new_xinfo_node to x menu New X-word node
+#bind new_pmcinfo_node to p menu New PMC node
+#bind new_coordinfo_node to c menu New coordination node
+#bind new_child_node to n menu New dependency node
+#insert new_m_node menu New node with morphology (forces save, can't be undone)
+#bind new_coordcl_struct to C menu New coordination construction
 
 #bind set_fixme to f menu Add "FIXME"
 #bind set_auto to a menu Add "AUTO"
 
-#bind incorp_in_parent to Ctrl+Up menu Incorporate in Parent
-#bind delete_node to Delete menu Delete Leaf Node
+#bind incorp_in_parent to Ctrl+Up menu Incorporate in parent
+#bind delete_node to Delete menu Delete leaf node
+#bind move_up to Ctrl+u menu Move dependency node upwards
+#bind move_down_first to Ctrl+d menu Move dependency node downwards
+#bind move_left to Ctrl+l menu Move dependency node leftwards
+#bind move_right to Ctrl+r menu Move dependency node rightwards
 
-#bind normalize_m_ords to Ctrl+w menu Recalculate Word Order (delete empty nodes' ords)
-#bind normalize_m_ords_all_trees to Ctrl+W menu Recalculate Word Order for All Trees (might take some time)
-#bind normalize_n_ords to Ctrl+n menu Recalculate Node Order (give ords for empty nodes)
-#bind normalize_n_ords_all_trees to Ctrl+N menu Recalculate Node Order for All Trees (might take some time)
+
+#bind normalize_m_ords to Ctrl+w menu Recalculate word order (delete empty nodes' ords)
+#bind normalize_m_ords_all_trees to Ctrl+W menu Recalculate word order for all trees (might take some time)
+#bind normalize_n_ords to Ctrl+n menu Recalculate node order (give ords for empty nodes)
+#bind normalize_n_ords_all_trees to Ctrl+N menu Recalculate node order for all trees (might take some time)
 
 #bind Save to Ctrl+s menu Save
 #bind PerlSearch to Ctrl+h menu Perl-Search
-#bind PerlSearchNext to Ctrl+H menu Perl-Search Next
+#bind PerlSearchNext to Ctrl+H menu Perl-Search find next
 
-#bind Redraw_All to Ctrl+r menu Redraw
-#bind switch_mode to Ctrl+m menu Switch to View Mode
-#bind swich_styles_full to Ctrl+t menu Switch on/off Tags
-#bind swich_styles_ord to Ctrl+o menu Switch on/off Ordered Layout
+#bind Redraw_All menu Redraw
+#bind switch_mode to Ctrl+m menu Switch to view mode
+#bind swich_styles_full to Ctrl+t menu Switch on/off tags
+#bind swich_styles_ord to Ctrl+o menu Switch on/off ordered Layout
 
-#insert passive_subj_to_obj menu Change Passive Voice subj to obj
-#insert remove_single_child_x menu Remove Single-childed namedEnt and phrasElem
+#insert passive_subj_to_obj menu Change passive voice subj to obj
+#insert remove_single_child_x menu Remove single-childed namedEnt and phrasElem
 
 1;
 
