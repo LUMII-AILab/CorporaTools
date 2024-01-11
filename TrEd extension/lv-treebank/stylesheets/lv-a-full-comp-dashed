@@ -1,0 +1,67 @@
+context: LV_A_View
+rootstyle: #{NodeLabel-skipempty:1}#{balance:0}#{skipHiddenLevels}
+text:<? $${m/w/token}eq$${m/form} ? 
+  '#{'.CustomColor('sentence').'}${m/w/token}' : 
+  '#{-over:1}#{'.CustomColor('spell').'}['.
+     join(" ",map { $_->{token} } ListV($this->attr('m/w'))).
+  ']#{-over:0}#{'.CustomColor('sentence').'}${m/form}' ?>
+node: <? '#{dimgray}ID: ${id}' if (not $${#name}) ?>
+node:#{darkblue}${role}
+node:#{darkblue}<?
+  LV_A::has_nondep_child($this)->{xtype}
+    if (LV_A::has_nondep_child($this)->attr('#name') eq 'xinfo')
+  ?><?
+  LV_A::has_nondep_child($this)->{coordtype}
+    if (LV_A::has_nondep_child($this)->attr('#name') eq 'coordinfo')
+  ?><?
+  LV_A::has_nondep_child($this)->{pmctype}
+    if (LV_A::has_nondep_child($this)->attr('#name') eq 'pmcinfo')
+  ?>
+node:#{black}${m/form}
+node:#{darkgreen}${m/tag}<?
+  (LV_A::has_nondep_child($this)->attr('#name') eq 'xinfo'
+   or LV_A::has_nondep_child($this)->attr('#name') eq 'coordinfo')
+  ?
+    LV_A::has_nondep_child($this)->{tag}
+  : '' ?>
+node:<? $${m/lemma} ? '#{dimgray}[${m/lemma}]' : '' ?>
+node:<? '#{darkviolet}reduction:' if $${reduction}?>
+node:<? '#{darkviolet}${reduction}' if $${reduction}?>
+style: #{Node-shape:oval}
+       #{Oval-fill:yellow}
+       #{CurrentOval-width:2}
+       #{Line-arrow:first}
+       #{Line-width:3}
+       #{Line-fill:SaddleBrown}
+       #{Node-width:8}
+       #{Node-height:8}
+       #{Node-currentwidth:13}
+       #{Node-currentheight:13}
+<? if (($${#name} eq 'xinfo')
+	   or ($${#name} eq 'coordinfo')
+	   or ($${#name} eq 'pmcinfo')) {
+    '#{Node-hide:1}'
+  } elsif ((($this->parent)->attr('#name')eq 'xinfo')) {
+    '#{Oval-fill:orange}
+	 #{Line-dash:20,3,}
+     #{Line-fill:DarkGreen}'
+  } elsif ((($this->parent)->attr('#name')eq 'coordinfo')) {
+    '#{Oval-fill:orange}
+	 #{Line-dash:20,3,}
+     #{Line-fill:blue3}'
+  } elsif ((($this->parent)->attr('#name')eq 'pmcinfo')) {
+    '#{Oval-fill:orange}
+	 #{Line-dash:20,3,}
+     #{Line-fill:DarkOrchid4}'} ?>
+
+hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
+  $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
+  $${tag} ? 'phrase/tag: ${tag}' : '' ?><? 
+  $${m/form_change} ? "\n".'m/form_change: ${m/form_change}' : '' ?><?
+  "\n-----\n" if ($${m/tag} or $${tag} or $${reduction}) ?><?
+  join "\n", map { join ': ', @$_ } @{ LV_M::get_extendend_morpho($${m/tag}) } ?><?
+  "\n-----\n" if ($${m/tag} and ($${tag} or $${reduction})) ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${tag}) } ?><?
+  "\n-----\n" if ($${tag} and $${reduction}) ?><?
+  join "\n---\n", map { join "\n", map {join ': ', @$_} @$_} @{ LV_A::get_extendend_morpho($${reduction}) } ?>
+ 

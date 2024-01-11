@@ -752,6 +752,23 @@ sub set_auto
   $this = $node;
 }
 
+sub perl_search_helper
+{
+  my $search_function = shift @_;
+  my $result = 0 + @{$search_function->($this)};
+  if (not $result and CurrentTreeNumber >= GetTrees()-1 and not $this->following($root))
+  {
+    foreach (GetSecondaryFiles())
+    {
+      $_->save();
+    }
+    CurrentFile()->save(FileName());
+    NextFile();
+    $result = 0 + @{$search_function->($this)};
+  }
+  $result;
+}
+
 #binding-context LV_A_Edit
 
 #bind new_xinfo_node to x menu New X-word node
