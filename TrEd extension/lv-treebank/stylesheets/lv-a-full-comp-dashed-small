@@ -31,7 +31,7 @@ style: #{Node-shape:oval}
        #{Oval-fill:yellow}
        #{CurrentOval-width:2}
        #{Line-arrow:first}
-       #{Line-width:3}
+       #{Line-width:2}
        #{Line-fill:SaddleBrown}
        #{Node-width:8}
        #{Node-height:8}
@@ -43,13 +43,16 @@ style: #{Node-shape:oval}
     '#{Node-hide:1}'
   } elsif ((($this->parent)->attr('#name')eq 'xinfo')) {
     '#{Oval-fill:orange}
-     #{Line-fill:YellowGreen}'
+	 #{Line-dash:20,3,}
+     #{Line-fill:DarkGreen}'
   } elsif ((($this->parent)->attr('#name')eq 'coordinfo')) {
     '#{Oval-fill:orange}
-     #{Line-fill:LightSkyBlue}'
+	 #{Line-dash:20,3,}
+     #{Line-fill:blue3}'
   } elsif ((($this->parent)->attr('#name')eq 'pmcinfo')) {
     '#{Oval-fill:orange}
-     #{Line-fill:LightSlateBlue}'} ?>
+	 #{Line-dash:20,3,}
+     #{Line-fill:DarkOrchid4}'} ?>
 
 hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
   $${m/tag} ? 'm/tag: ${m/tag}' : '' ?><? 
