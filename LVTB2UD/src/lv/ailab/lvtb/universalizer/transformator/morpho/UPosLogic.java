@@ -59,7 +59,7 @@ public class UPosLogic
 		else if (xpostag.matches("xf.*")) return UDv2PosTag.X; // Or sometimes PROPN/NOUN
 		else if (xpostag.matches("xn.*")) return UDv2PosTag.NUM;
 		else if (xpostag.matches("xo.*")) return UDv2PosTag.ADJ;
-		else if (xpostag.matches("xu.*")) return UDv2PosTag.SYM;
+		else if (xpostag.matches("xu.*")) return UDv2PosTag.PROPN; //https://github.com/UniversalDependencies/docs/issues/973#issuecomment-1859447774
 		else if (xpostag.matches("xx.*")) return UDv2PosTag.SYM; // Or sometimes PROPN/NOUN
 			//else warnOut.printf("Could not obtain UPOSTAG for \"%s\" with XPOSTAG \"%s\".\n", lemma, xpostag);
 		else
