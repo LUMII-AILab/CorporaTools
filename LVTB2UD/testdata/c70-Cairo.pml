@@ -2636,7 +2636,6 @@
     </LM>
     <LM id="a-c70-Cairo-p19s1">
       <s.rf>m#m-c70-Cairo-p19s1</s.rf>
-      <comment>FIXME</comment>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
@@ -2823,7 +2822,6 @@
     </LM>
     <LM id="a-c70-Cairo-p20s1">
       <s.rf>m#m-c70-Cairo-p20s1</s.rf>
-      <comment>FIXME</comment>
       <children>
         <pmcinfo>
           <pmctype>sent</pmctype>
