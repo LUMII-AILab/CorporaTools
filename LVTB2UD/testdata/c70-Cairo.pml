@@ -945,7 +945,7 @@
                                   <token>—</token>
                                 </w.rf>
                                 <form>—</form>
-                                <lemma>—</lemma>
+                                <lemma>–</lemma>
                                 <tag>zd</tag>
                               </m.rf>
                               <reduction>vmnist130an(ieguva)</reduction>
@@ -998,7 +998,7 @@
                                   <token>—</token>
                                 </w.rf>
                                 <form>—</form>
-                                <lemma>—</lemma>
+                                <lemma>–</lemma>
                                 <tag>zd</tag>
                               </m.rf>
                               <reduction>vmnist130an(ieguva)</reduction>
@@ -1707,7 +1707,7 @@
                     </w.rf>
                     <form>Kā</form>
                     <lemma>kā</lemma>
-                    <tag>r0m</tag>
+                    <tag>r0n</tag>
                   </m.rf>
                   <role>adv</role>
                   <ord>1</ord>
@@ -1729,7 +1729,7 @@
                                 </w.rf>
                                 <form>kad</form>
                                 <lemma>kad</lemma>
-                                <tag>r0t</tag>
+                                <tag>r0n</tag>
                               </m.rf>
                               <role>adv</role>
                               <ord>5</ord>
@@ -2048,7 +2048,7 @@
                             </w.rf>
                             <form>tad</form>
                             <lemma>tad</lemma>
-                            <tag>r0t</tag>
+                            <tag>r0n</tag>
                           </m.rf>
                           <role>adv</role>
                           <ord>6</ord>
@@ -2344,7 +2344,7 @@
                                     </w.rf>
                                     <form>todien</form>
                                     <lemma>todien</lemma>
-                                    <tag>r0t</tag>
+                                    <tag>r0n</tag>
                                   </m.rf>
                                   <role>adv</role>
                                   <ord>12</ord>
@@ -2498,7 +2498,7 @@
                         </w.rf>
                         <form>ātri</form>
                         <lemma>ātri</lemma>
-                        <tag>rpm</tag>
+                        <tag>rpn</tag>
                       </m.rf>
                       <role>adv</role>
                       <ord>11</ord>
@@ -2511,7 +2511,7 @@
                             </w.rf>
                             <form>pārāk</form>
                             <lemma>pārāk</lemma>
-                            <tag>r0q</tag>
+                            <tag>r0n</tag>
                           </m.rf>
                           <role>adv</role>
                           <ord>10</ord>
@@ -2602,7 +2602,7 @@
                                     </w.rf>
                                     <form>līdzi</form>
                                     <lemma>līdzi</lemma>
-                                    <tag>rrp</tag>
+                                    <tag>r0y</tag>
                                   </m.rf>
                                   <role>prep</role>
                                   <ord>5</ord>
@@ -2629,6 +2629,313 @@
               </m.rf>
               <role>punct</role>
               <ord>12</ord>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-c70-Cairo-p19s1">
+      <s.rf>m#m-c70-Cairo-p19s1</s.rf>
+      <comment>FIXME</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-c70-Cairo-p19s1w10">
+              <m.rf id="m-c70-Cairo-p19s1w10">
+                <src.rf>semi-automatic</src.rf>
+                <w.rf id="w-c70-Cairo-p19w10">
+                  <token>.</token>
+                </w.rf>
+                <form>.</form>
+                <lemma>.</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>10</ord>
+            </node>
+            <node id="a-c70-Cairo-p19s1x1">
+              <role>pred</role>
+              <children>
+                <coordinfo>
+                  <coordtype>crdParts</coordtype>
+                  <children>
+                    <node id="a-c70-Cairo-p19s1x2">
+                      <role>crdPart</role>
+                      <children>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vm0ip003san[substsmg]</tag>
+                          <children>
+                            <node id="a-c70-Cairo-p19s1w3">
+                              <m.rf id="m-c70-Cairo-p19s1w3">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c70-Cairo-p19w3">
+                                  <token>ir</token>
+                                </w.rf>
+                                <form>ir</form>
+                                <lemma>būt</lemma>
+                                <tag>vcnipii30an</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>3</ord>
+                            </node>
+                            <node id="a-c70-Cairo-p19s1x4">
+                              <role>basElem</role>
+                              <children>
+                                <xinfo>
+                                  <xtype>xPrep</xtype>
+                                  <tag>npmsg0[pre]</tag>
+                                  <children>
+                                    <node id="a-c70-Cairo-p19s1w4">
+                                      <m.rf id="m-c70-Cairo-p19s1w4">
+                                        <src.rf>semi-automatic</src.rf>
+                                        <w.rf id="w-c70-Cairo-p19w4">
+                                          <token>no</token>
+                                        </w.rf>
+                                        <form>no</form>
+                                        <lemma>no</lemma>
+                                        <tag>spsg</tag>
+                                      </m.rf>
+                                      <role>prep</role>
+                                      <ord>4</ord>
+                                    </node>
+                                    <node id="a-c70-Cairo-p19s1w5">
+                                      <m.rf id="m-c70-Cairo-p19s1w5">
+                                        <src.rf>semi-automatic</src.rf>
+                                        <w.rf id="w-c70-Cairo-p19w5">
+                                          <token>Pētera</token>
+                                        </w.rf>
+                                        <form>Pētera</form>
+                                        <lemma>Pēteris</lemma>
+                                        <tag>npmsg2</tag>
+                                      </m.rf>
+                                      <role>basElem</role>
+                                      <ord>5</ord>
+                                    </node>
+                                  </children>
+                                </xinfo>
+                              </children>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                    <node id="a-c70-Cairo-p19s1x3">
+                      <role>crdPart</role>
+                      <children>
+                        <node id="a-c70-Cairo-p19s1w9">
+                          <m.rf id="m-c70-Cairo-p19s1w9">
+                            <src.rf>semi-automatic</src.rf>
+                            <w.rf id="w-c70-Cairo-p19w9">
+                              <token>vakar</token>
+                              <no_space_after>1</no_space_after>
+                            </w.rf>
+                            <form>vakar</form>
+                            <lemma>vakar</lemma>
+                            <tag>r0n</tag>
+                          </m.rf>
+                          <role>adv</role>
+                          <ord>9</ord>
+                        </node>
+                        <xinfo>
+                          <xtype>xPred</xtype>
+                          <tag>vm0is003spn[passsfn]</tag>
+                          <children>
+                            <node id="a-c70-Cairo-p19s1w7">
+                              <m.rf id="m-c70-Cairo-p19s1w7">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c70-Cairo-p19w7">
+                                  <token>tika</token>
+                                </w.rf>
+                                <form>tika</form>
+                                <lemma>tikt</lemma>
+                                <tag>vtnisi130an</tag>
+                              </m.rf>
+                              <role>auxVerb</role>
+                              <ord>7</ord>
+                            </node>
+                            <node id="a-c70-Cairo-p19s1w8">
+                              <m.rf id="m-c70-Cairo-p19s1w8">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c70-Cairo-p19w8">
+                                  <token>piegādāta</token>
+                                </w.rf>
+                                <form>piegādāta</form>
+                                <lemma>piegādāt</lemma>
+                                <tag>vmnpdfsnpsnpn</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>8</ord>
+                            </node>
+                          </children>
+                        </xinfo>
+                      </children>
+                    </node>
+                    <node id="a-c70-Cairo-p19s1w6">
+                      <m.rf id="m-c70-Cairo-p19s1w6">
+                        <src.rf>semi-automatic</src.rf>
+                        <w.rf id="w-c70-Cairo-p19w6">
+                          <token>un</token>
+                        </w.rf>
+                        <form>un</form>
+                        <lemma>un</lemma>
+                        <tag>cc</tag>
+                      </m.rf>
+                      <role>conj</role>
+                      <ord>6</ord>
+                    </node>
+                  </children>
+                </coordinfo>
+                <node id="a-c70-Cairo-p19s1w2">
+                  <m.rf id="m-c70-Cairo-p19s1w2">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p19w2">
+                      <token>vēstule</token>
+                    </w.rf>
+                    <form>vēstule</form>
+                    <lemma>vēstule</lemma>
+                    <tag>ncfsn5</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>2</ord>
+                  <children>
+                    <node id="a-c70-Cairo-p19s1w1">
+                      <m.rf id="m-c70-Cairo-p19s1w1">
+                        <src.rf>semi-automatic</src.rf>
+                        <w.rf id="w-c70-Cairo-p19w1">
+                          <token>Šī</token>
+                        </w.rf>
+                        <form>Šī</form>
+                        <lemma>šī</lemma>
+                        <tag>pd3fsnn</tag>
+                      </m.rf>
+                      <role>attr</role>
+                      <ord>1</ord>
+                    </node>
+                  </children>
+                </node>
+              </children>
+            </node>
+          </children>
+        </pmcinfo>
+      </children>
+    </LM>
+    <LM id="a-c70-Cairo-p20s1">
+      <s.rf>m#m-c70-Cairo-p20s1</s.rf>
+      <comment>FIXME</comment>
+      <children>
+        <pmcinfo>
+          <pmctype>sent</pmctype>
+          <children>
+            <node id="a-c70-Cairo-p20s1w7">
+              <m.rf id="m-c70-Cairo-p20s1w7">
+                <src.rf>semi-automatic</src.rf>
+                <w.rf id="w-c70-Cairo-p20w7">
+                  <token>.</token>
+                </w.rf>
+                <form>.</form>
+                <lemma>.</lemma>
+                <tag>zs</tag>
+              </m.rf>
+              <role>punct</role>
+              <ord>7</ord>
+            </node>
+            <node id="a-c70-Cairo-p20s1w2">
+              <m.rf id="m-c70-Cairo-p20s1w2">
+                <src.rf>semi-automatic</src.rf>
+                <w.rf id="w-c70-Cairo-p20w2">
+                  <token>uzauga</token>
+                </w.rf>
+                <form>uzauga</form>
+                <lemma>uzaugt</lemma>
+                <tag>vmnisi130an</tag>
+              </m.rf>
+              <role>pred</role>
+              <ord>2</ord>
+              <children>
+                <node id="a-c70-Cairo-p20s1w1">
+                  <m.rf id="m-c70-Cairo-p20s1w1">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p20w1">
+                      <token>Viņa</token>
+                    </w.rf>
+                    <form>Viņa</form>
+                    <lemma>viņa</lemma>
+                    <tag>pp3fsnn</tag>
+                  </m.rf>
+                  <role>subj</role>
+                  <ord>1</ord>
+                </node>
+                <node id="a-c70-Cairo-p20s1w3">
+                  <m.rf id="m-c70-Cairo-p20s1w3">
+                    <src.rf>semi-automatic</src.rf>
+                    <w.rf id="w-c70-Cairo-p20w3">
+                      <token>Parīzē</token>
+                      <no_space_after>1</no_space_after>
+                    </w.rf>
+                    <form>Parīzē</form>
+                    <lemma>Parīze</lemma>
+                    <tag>npfsl5</tag>
+                  </m.rf>
+                  <role>adv</role>
+                  <ord>3</ord>
+                  <children>
+                    <node id="a-c70-Cairo-p20s1x1">
+                      <role>spc</role>
+                      <children>
+                        <pmcinfo>
+                          <pmctype>spcPmc</pmctype>
+                          <children>
+                            <node id="a-c70-Cairo-p20s1w4">
+                              <m.rf id="m-c70-Cairo-p20s1w4">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c70-Cairo-p20w4">
+                                  <token>,</token>
+                                </w.rf>
+                                <form>,</form>
+                                <lemma>,</lemma>
+                                <tag>zc</tag>
+                              </m.rf>
+                              <role>punct</role>
+                              <ord>4</ord>
+                            </node>
+                            <node id="a-c70-Cairo-p20s1w6">
+                              <m.rf id="m-c70-Cairo-p20s1w6">
+                                <src.rf>semi-automatic</src.rf>
+                                <w.rf id="w-c70-Cairo-p20w6">
+                                  <token>galvaspilsētā</token>
+                                  <no_space_after>1</no_space_after>
+                                </w.rf>
+                                <form>galvaspilsētā</form>
+                                <lemma>galvaspilsēta</lemma>
+                                <tag>ncfsl4</tag>
+                              </m.rf>
+                              <role>basElem</role>
+                              <ord>6</ord>
+                              <children>
+                                <node id="a-c70-Cairo-p20s1w5">
+                                  <m.rf id="m-c70-Cairo-p20s1w5">
+                                    <src.rf>semi-automatic</src.rf>
+                                    <w.rf id="w-c70-Cairo-p20w5">
+                                      <token>Francijas</token>
+                                    </w.rf>
+                                    <form>Francijas</form>
+                                    <lemma>Francija</lemma>
+                                    <tag>npfsg4</tag>
+                                  </m.rf>
+                                  <role>attr</role>
+                                  <ord>5</ord>
+                                </node>
+                              </children>
+                            </node>
+                          </children>
+                        </pmcinfo>
+                      </children>
+                    </node>
+                  </children>
+                </node>
+              </children>
             </node>
           </children>
         </pmcinfo>
