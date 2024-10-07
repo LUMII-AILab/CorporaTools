@@ -27,15 +27,29 @@ public class AnalyzerWrapper
 		try
 		{
 			Word analysis = getMorpho().analyze(form);
-			String tag = postag.contains("_") ? postag.substring(0, postag.indexOf('_')) : postag;
+			//String tag = postag.contains("_") ? postag.substring(0, postag.indexOf('_')) : postag;
 			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
-			return analysis.getMatchingWordform(tag, false);
+			//return analysis.getMatchingWordform(tag, false);
+			return analysis.getMatchingWordform(postag, false);
 		} catch (Exception e)
 		{
 			StandardLogger.l.warnForAnalyzerException(e);
 			return null;
 		}
+	}
 
+	public static String getPredefUpos(String form, String postag)
+	{
+		try
+		{
+			Word analysis = getMorpho().analyze(form);
+			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			return analysis.getMatchingWordform(postag, false).getValue("UD vārdšķira");
+		} catch (Exception e)
+		{
+			StandardLogger.l.warnForAnalyzerException(e);
+			return null;
+		}
 	}
 
 	/**

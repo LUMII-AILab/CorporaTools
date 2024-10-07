@@ -17,13 +17,15 @@ public class UPosLogic
 	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.*/
 
 	/**
-	 * Use this to obtain UPOSTAG, if no syntactic information is available.
+	 * Use this to obtain UPOSTAG.
 	 */
 	public static UDv2PosTag getUPosTag(
 			String form, String lemma, String xpostag)
 	{
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
+		String uposFromTez = AnalyzerWrapper.getPredefUpos(form, xpostag);
+		if (uposFromTez != null && !uposFromTez.isEmpty()) return UDv2PosTag.valueOf(uposFromTez);
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;
 		else if (xpostag.matches("v[c].*") && lemma.matches("būt")) return UDv2PosTag.AUX;
@@ -76,7 +78,11 @@ public class UPosLogic
 	/**
 	 * Use this to obtain UPOSTAG, if syntactic information (upostag for
 	 * parameter token) is available.
-	 */	public static UDv2PosTag getPostsyntUPosTag (Token token)
+	 *
+	 * @deprecated everything about UPOS is now based on morphological analyzer data.
+	 */
+	@Deprecated
+	public static UDv2PosTag getPostsyntUPosTag (Token token)
 	{
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
