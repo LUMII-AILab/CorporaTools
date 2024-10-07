@@ -34,13 +34,14 @@ public class UPosLogic
 		else if (xpostag.matches("v.*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..[^p].*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
-		else if (xpostag.matches("a.*"))
+		else if (xpostag.matches("a.*")) return UDv2PosTag.ADJ;
+		/*else if (xpostag.matches("a.*"))
 		{
 			if (lemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
 					lemma.matches("(manējā|tavējā|mūsējā|jūsējā|viņējā|savējā|daudzas|vairākas)"))
 				return UDv2PosTag.PRON;
 			else return UDv2PosTag.ADJ;
-		}
+		}//*/
 		else if (xpostag.matches("p[pxd].*")) return UDv2PosTag.PRON;
 		else if (xpostag.matches("p[siqgr].*")) return UDv2PosTag.PRON;
 		else if (xpostag.matches("r.*")) return UDv2PosTag.ADV; // Or sometimes SCONJ
