@@ -778,8 +778,11 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> ellipsisTokToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
+		String lemma = null;
+		if (node.getM() != null) lemma = node.getM().getLemma();
 		//System.out.println("Node " + node.getId() + ": " + tag + "; parent " + parent.getId() + ": " + parent.getAnyTag());
 		if (tag.matches("z.*")) return Tuple.of(UDv2Relations.PUNCT, null);
+		if (tag.matches("q.*") && lemma != null && lemma.equals("ne") ) return Tuple.of(UDv2Relations.ADVMOD, null);
 		return Tuple.of(UDv2Relations.DEP, null);
 	}
 
