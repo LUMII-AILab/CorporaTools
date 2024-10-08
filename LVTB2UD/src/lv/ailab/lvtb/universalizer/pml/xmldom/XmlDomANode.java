@@ -5,7 +5,7 @@ import lv.ailab.lvtb.universalizer.pml.LvtbHelperRoles;
 import lv.ailab.lvtb.universalizer.pml.LvtbRoles;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
-import lv.ailab.lvtb.universalizer.transformator.morpho.AnalyzerWrapper;
+import lv.ailab.lvtb.universalizer.utils.MorphoAnalyzerWrapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -338,7 +338,7 @@ public class XmlDomANode implements PmlANode
 		String form = getReductionFormPart();
 		if (tag == null || form == null || tag.isEmpty() || form.isEmpty())
 			return null;
-		return AnalyzerWrapper.getLemma(form, tag);
+		return MorphoAnalyzerWrapper.getLemma(form, tag);
 	}
 
 	/**

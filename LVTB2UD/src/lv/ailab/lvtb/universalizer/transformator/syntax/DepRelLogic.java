@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer.transformator.syntax;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
+import lv.ailab.lvtb.universalizer.pml.utils.MorphoTagUtils;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.DepStats;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
@@ -805,8 +806,8 @@ public class DepRelLogic
 		StandardLogger.l.doInsentenceWarning(warning);
 
 		StandardLogger.l.registerMissingDep(
-				new DepStats.LocalTreeConfig(lvtbRole, node.getAnyTag(),
-						parent.getEffectiveLabel(), parent.getAnyTag()),
+				new DepStats.LocalTreeConfig(lvtbRole, MorphoTagUtils.reduceTagSparsity(node.getAnyTag()),
+						parent.getEffectiveLabel(), MorphoTagUtils.reduceTagSparsity(parent.getAnyTag())),
 				node.getId(), enhanced);
 	}
 

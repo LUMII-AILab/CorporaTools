@@ -4,7 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2PosTag;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
-import lv.ailab.lvtb.universalizer.utils.Logger;
+import lv.ailab.lvtb.universalizer.utils.MorphoAnalyzerWrapper;
 
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
@@ -24,7 +24,7 @@ public class UPosLogic
 	{
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
-		String uposFromTez = AnalyzerWrapper.getPredefUpos(form, xpostag);
+		String uposFromTez = MorphoAnalyzerWrapper.getPredefUpos(form, xpostag);
 		if (uposFromTez != null && !uposFromTez.isEmpty()) return UDv2PosTag.valueOf(uposFromTez);
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;

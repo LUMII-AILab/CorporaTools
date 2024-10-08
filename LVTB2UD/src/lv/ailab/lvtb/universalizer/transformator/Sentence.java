@@ -12,6 +12,7 @@ import lv.ailab.lvtb.universalizer.pml.utils.PmlANodeListUtils;
 import lv.ailab.lvtb.universalizer.transformator.morpho.*;
 import lv.ailab.lvtb.universalizer.transformator.syntax.DepRelLogic;
 import lv.ailab.lvtb.universalizer.transformator.syntax.PhrasePartDepLogic;
+import lv.ailab.lvtb.universalizer.utils.MorphoAnalyzerWrapper;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.*;
@@ -450,7 +451,7 @@ public class Sentence
 		{
 			String assumedLvtbLemma = null;
 			if (decimalToken.form != null && !decimalToken.form.isEmpty())
-				assumedLvtbLemma = AnalyzerWrapper.getLemma(
+				assumedLvtbLemma = MorphoAnalyzerWrapper.getLemma(
 						decimalToken.form, decimalToken.xpostag);
 			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
 					assumedLvtbLemma, decimalToken.xpostag);
