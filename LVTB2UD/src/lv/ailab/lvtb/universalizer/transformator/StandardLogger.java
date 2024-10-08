@@ -14,15 +14,17 @@ public class StandardLogger
 	}
 
 	public static void initialize(File logFolder)
-			throws FileNotFoundException, UnsupportedEncodingException
+			throws IOException
 	{
-		l = new Logger(logFolder + "/status.log", logFolder + "/ids.log");
+		l = new Logger(
+				logFolder + "/status.log", logFolder + "/ids.log",
+				logFolder + "/deps.log");
 	}
 
-	public static void initialize(String statusLogPath, String idLogPath)
-			throws FileNotFoundException, UnsupportedEncodingException
+	public static void initialize(String statusLogPath, String idLogPath, String depsLogPath)
+			throws IOException
 	{
-		l = new Logger(statusLogPath, idLogPath);
+		l = new Logger(statusLogPath, idLogPath, depsLogPath);
 	}
 
 	public static void initializeAllToConsole (String consoleEncoding)

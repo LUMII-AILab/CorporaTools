@@ -1,10 +1,13 @@
 package lv.ailab.lvtb.universalizer.utils;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class for printing out in the log files various kinds of additional
@@ -14,6 +17,7 @@ public class Logger
 {
 	protected PrintWriter statusOut;
 	protected PrintWriter idMappingOut = null;
+	protected PrintWriter missingDepOut = null;
 
 	/**
 	 * To avoid repetitive messages, any message once printed are remembered in
@@ -21,6 +25,8 @@ public class Logger
  	 */
 	protected HashSet<String> warnings;
 	protected ArrayList<String> idMappingDesc;
+	protected DepStats missingBasicRoles;
+	protected DepStats missingEnhancedRoles;
 
 	/**
 	 * @param statusOutPath		filename for printing various status messages;
@@ -30,19 +36,23 @@ public class Logger
 	 * @param idMappingOutPath	filename for printing mapping between PML IDs
 	 *                          and conll token numbers; if null, this info is
 	 *                          not printed anywhere
-	 * @throws FileNotFoundException
-	 * @throws UnsupportedEncodingException
+	 * @param missingDepOutPath filename for printing overview what tree fragments
+	 *                          obtained UD role "dep"
+	 * @throws IOException tried opening unavailable file etc.
 	 */
-	public Logger(String statusOutPath, String idMappingOutPath)
-			throws FileNotFoundException, UnsupportedEncodingException
-	{
+	public Logger(String statusOutPath, String idMappingOutPath, String missingDepOutPath)
+			throws IOException {
 		if (statusOutPath != null && !statusOutPath.isEmpty())
-			statusOut = new PrintWriter(new PrintWriter(statusOutPath, "UTF-8"), true);
+			statusOut = new PrintWriter(new PrintWriter(statusOutPath, StandardCharsets.UTF_8), true);
 		else statusOut = new PrintWriter(System.out);
 		if (idMappingOutPath != null && !idMappingOutPath.isEmpty())
-			idMappingOut = new PrintWriter(new PrintWriter(idMappingOutPath, "UTF-8"), true);
+			idMappingOut = new PrintWriter(new PrintWriter(idMappingOutPath, StandardCharsets.UTF_8), true);
+		if (missingDepOutPath != null && !missingDepOutPath.isEmpty())
+			missingDepOut = new PrintWriter(new PrintWriter(missingDepOutPath, StandardCharsets.UTF_8), true);
 		warnings = new HashSet<>();
 		idMappingDesc = new ArrayList<>();
+		missingBasicRoles = new DepStats();
+		missingEnhancedRoles = new DepStats();
 	}
 
 	/**
@@ -56,7 +66,7 @@ public class Logger
 	public Logger(PrintWriter statusOut, PrintWriter idMappingOut)
 	{
 		if (statusOut != null) this.statusOut = statusOut;
-		else statusOut = new PrintWriter(System.out);
+		else this.statusOut = new PrintWriter(System.out);
 		this.idMappingOut = idMappingOut;
 		warnings = new HashSet<>();
 		idMappingDesc = new ArrayList<>();
@@ -171,6 +181,12 @@ public class Logger
 				"%s#%s\t%s", sentenceID, tokFirstCol, lvtbNodeId));
 	}
 
+	public void registerMissingDep(DepStats.LocalTreeConfig config, String childId, boolean enhanced)
+	{
+		if (enhanced) missingEnhancedRoles.add(config, childId);
+		else missingBasicRoles.add(config, childId);
+	}
+
 	public void finalStatsAndClose(
 			int omittedFiles, int omittedTrees, int autoFiles, int fixmeFiles,
 			int crashFiles, int depBaseRoleSent, int depBaseRoleSum,
@@ -196,14 +212,52 @@ public class Logger
 			statusOut.printf(
 					"%s sentence(s) have altogether %s 'dep' role(s) in enhanced dependency layer.\n",
 					depEnhRoleSent, depEnhRoleSum);
+
+		printDepStats();
 		flush();
 		statusOut.close();
 		if (idMappingOut != null) idMappingOut.close();
+		if (missingDepOut != null) missingDepOut.close();
+	}
+
+	public void printDepStats()
+	{
+		if (missingDepOut == null) return;
+
+		Comparator<Map.Entry<DepStats.LocalTreeConfig, HashSet<String>>> byCountThenConf =
+				(o1, o2) -> {
+					if (!Objects.equals(o1.getValue().size(), o2.getValue().size()))
+						return Objects.compare(o1.getValue().size(), o2.getValue().size(), Comparator.reverseOrder());
+					return Objects.compare(o1.getKey(), o2.getKey(), Comparator.naturalOrder());
+				};
+
+		missingDepOut.println ("Enhanced Dependencies");
+		missingDepOut.println ("---------------------");
+		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurances");
+		for (Map.Entry<DepStats.LocalTreeConfig, HashSet<String>> e : missingEnhancedRoles.data.entrySet().stream().sorted(byCountThenConf).toList())
+		{
+			missingDepOut.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
+					e.getKey().childRole, e.getKey().parentRole, e.getKey().childTag, e.getKey().parentTag,
+					e.getValue().size(), e.getValue().stream().sorted().reduce((a, b) -> a + ", " + b).orElse(""));
+		}
+
+		missingDepOut.println();
+
+		missingDepOut.println ("Basic Dependencies");
+		missingDepOut.println ("------------------");
+		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurances");
+		for (Map.Entry<DepStats.LocalTreeConfig, HashSet<String>> e : missingBasicRoles.data.entrySet().stream().sorted(byCountThenConf).toList())
+		{
+			missingDepOut.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
+					e.getKey().childRole, e.getKey().parentRole, e.getKey().childTag, e.getKey().parentTag,
+					e.getValue().size(), e.getValue().stream().sorted().reduce((a, b) -> a + ", " + b).orElse(""));
+		}
 	}
 
 	public void flush()
 	{
 		statusOut.flush();
 		if (idMappingOut != null) idMappingOut.flush();
+		if (missingDepOut != null) missingDepOut.flush();
 	}
 }

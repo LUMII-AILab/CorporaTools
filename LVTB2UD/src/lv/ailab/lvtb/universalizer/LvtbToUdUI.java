@@ -72,7 +72,8 @@ public class LvtbToUdUI
 		int depBaseRoleSum = 0;
 		int depEnhRoleSent = 0;
 		int depEnhRoleSum = 0;
-		for (File f : listOfFiles)
+
+		if (listOfFiles != null) for (File f : listOfFiles)
 		{
 			String fileName = f.getName();
 			if (f.isDirectory() || f.getName().startsWith("~")) continue;
@@ -99,7 +100,7 @@ public class LvtbToUdUI
 				depEnhRoleSum = depEnhRoleSum + ft.depRoleEnhSum;
 			} catch (Exception e)
 			{
-				System.out.printf("File failed with exception %s.\n", e.toString());
+				System.out.printf("File failed with exception %s.\n", e.getMessage());
 				StandardLogger.l.finishFileWithException(e);
 				omittedTrees = omittedTrees + ft.all;
 				omittedFiles++;

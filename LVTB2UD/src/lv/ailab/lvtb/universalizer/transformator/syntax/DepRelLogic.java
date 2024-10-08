@@ -4,6 +4,7 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.pml.*;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
+import lv.ailab.lvtb.universalizer.utils.DepStats;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.List;
@@ -802,6 +803,11 @@ public class DepRelLogic
 				"%s \"%s\" for node \"%s\" with respect to parent \"%s\" was not transformed.",
 				prefix, lvtbRole, node.getId(), parent.getId());
 		StandardLogger.l.doInsentenceWarning(warning);
+
+		StandardLogger.l.registerMissingDep(
+				new DepStats.LocalTreeConfig(lvtbRole, node.getAnyTag(),
+						parent.getEffectiveLabel(), parent.getAnyTag()),
+				node.getId(), enhanced);
 	}
 
 	/**
