@@ -475,8 +475,12 @@ sub checkAnyTag
 {
 	my $tag = shift;
 	return [] unless ($tag);
-	my @avPairs = map {@$_} @{ getAVPairsFromAnyTag($tag) };
 	my @errors = ();
+	push @errors, 'Tag starts with space!' if ($tag =~ m/^\s/);
+	push @errors, 'Tag ends with space!' if ($tag =~ m/\s$/);
+	push @errors, 'Space in bracket-tag!' if ($tag =~ m/\[.*\s.*\]/);
+
+	my @avPairs = map {@$_} @{ getAVPairsFromAnyTag($tag) };
 	
 	push @errors, 'Missing tag values!' if (0 < grep {$_->[1] eq $missing} @avPairs);
 	push @errors, 'Unrecognized tag values!' if (0 < grep {$_->[1] eq $notRecognized} @avPairs);
