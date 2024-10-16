@@ -25,7 +25,7 @@ public class UPosLogic
 			String form, String lemma, String xpostag)
 	{
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
-		if (xpostag.matches("N/[Aa]")) return UDv2PosTag.X; // Not given.
+		if (xpostag.matches("N/[Aa]|_+")) return UDv2PosTag.X; // Not given.
 		String uposFromTez = MorphoAnalyzerWrapper.getPredefUpos(form, xpostag);
 		if (uposFromTez != null && !uposFromTez.isEmpty()) return UDv2PosTag.valueOf(uposFromTez);
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
