@@ -2,6 +2,8 @@ package lv.ailab.lvtb.universalizer.conllu;
 
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
+import java.util.Objects;
+
 /**
  * Description of one enhanced dependency link - head ID's string
  * representation, role and additional information for sorting.
@@ -15,7 +17,7 @@ public class EnhencedDep {
 	public UDv2Relations role = null;
 	public String rolePostfix = null;
 
-	public EnhencedDep(){};
+	public EnhencedDep(){}
 	public EnhencedDep (Token head, UDv2Relations role)
 	{
 		headID = head.getFirstColumn();
@@ -73,8 +75,8 @@ public class EnhencedDep {
 		if (this == o) return true;
 		EnhencedDep other = (EnhencedDep) o;
 		return (sortValue == other.sortValue &&
-				(headID == other.headID || headID != null && headID.equals(other.headID)) &&
-				(rolePostfix == other.rolePostfix || rolePostfix != null && rolePostfix.equals(other.rolePostfix)) &&
+				(Objects.equals(headID, other.headID)) &&
+				(Objects.equals(rolePostfix, other.rolePostfix)) &&
 				role == other.role);
 	}
 

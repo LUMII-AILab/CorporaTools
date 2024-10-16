@@ -138,8 +138,9 @@ public class Sentence
 			ArrayList<String> tmp = subj2gov.get(subj);
 			if (tmp == null) tmp = new ArrayList<>();
 			//if (!node.equals(pmlTree.getDescendant(subj).getParent().getId()))
-				tmp.add(govNode);
-			if (!tmp.isEmpty()) subj2gov.put(subj, tmp);
+			tmp.add(govNode);
+			//if (!tmp.isEmpty())
+			subj2gov.put(subj, tmp);
 		}
 
 		for (String subjNode : subj2gov.keySet())
@@ -241,7 +242,7 @@ public class Sentence
 	{
 		if (aNode == null) return;
 		String id = aNode.getId();
-		HashSet<String> eqs = new HashSet<String>(){{add(id);}};
+		HashSet<String> eqs = new HashSet<>(){{add(id);}};
 
 		// Preprocess dependency children.
 		List<PmlANode> dependants = aNode.getChildren();
@@ -348,7 +349,7 @@ public class Sentence
 	 * @param aNodeId				node ID to indicate node
 	 * @param includeSelfCoordParts	should the result include coordPartsUnder
 	 *                              for given node?
-	 * @return
+	 * @return	set of node IDs
 	 */
 	public HashSet<String> getAllAlternatives(String aNodeId, boolean includeSelfCoordParts)
 	{
@@ -376,7 +377,7 @@ public class Sentence
 	 * @param aNodeId				node ID to indicate node
 	 * @param includeSelfCoordParts	should the result include coordPartsUnder
 	 *                              for given node?
-	 * @return
+	 * @return	set of node IDs
 	 */
 	protected HashSet<String> getCoordPartsUnderHeadConstits1Lvl(
 			String aNodeId, boolean includeSelfCoordParts)
@@ -783,7 +784,7 @@ public class Sentence
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
 		for (String altParentKey : altParentKeys) for (String altChildKey : altChildKeys)
 		{
-			PmlANode altParent = null;
+			PmlANode altParent;
 			if (pmlTree.getId().equals(altParentKey)) altParent = pmlTree;
 			else altParent = pmlTree.getDescendant(altParentKey);
 			PmlANode altChild = pmlTree.getDescendant(altChildKey);
@@ -809,7 +810,7 @@ public class Sentence
 				HashSet<String> altChildKeys2 = getAllAlternatives(altChildKey, false);
 				for (String altParentKey2 : altParentKeys2) for (String altChildKey2 : altChildKeys2)
 				{
-					PmlANode altParent2 = null;
+					PmlANode altParent2;
 					if (pmlTree.getId().equals(altParentKey2))
 						altParent2 = pmlTree;
 					else altParent2 = pmlTree.getDescendant(altParentKey2);
@@ -1074,9 +1075,9 @@ public class Sentence
 		}
 		return removed > 0;
 	}
-	protected static enum DepCroslinkParams
+	protected enum DepCroslinkParams
 	{
-		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ;
+		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ
 	}
 
 	/**
@@ -1211,8 +1212,7 @@ public class Sentence
 		ArrayList<Token> result = new ArrayList<>();
 		for (Token t : conll)
 		{
-			if (t.head.second == token || t.head.second != null &&
-					t.head.second.equals(token))
+			if (Objects.equals(t.head.second, token))
 				result.add(t);
 		}
 		return result;

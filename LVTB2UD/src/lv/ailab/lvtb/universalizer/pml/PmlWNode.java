@@ -6,17 +6,17 @@ public interface PmlWNode
 	 * Find ID attribute.
 	 * @return	attribute value
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * Find token.
 	 * @return token value
 	 */
-	public String getToken();
+	String getToken();
 
 	/**
 	 * Find flag value for if there is no space after this token.
 	 * @return true, if there is no space after this token, false otherwise
 	 */
-	public boolean noSpaceAfter();
+	boolean noSpaceAfter();
 }

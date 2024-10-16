@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -204,7 +205,7 @@ public class PmlXmlFileTransformator
 			return false;
 		}
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(conllOut), "UTF8"));
+				new FileOutputStream(conllOut), StandardCharsets.UTF_8));
 		out.write(processed.toString());
 		out.flush();
 		out.close();

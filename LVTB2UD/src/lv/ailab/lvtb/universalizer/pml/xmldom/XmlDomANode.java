@@ -72,7 +72,7 @@ public class XmlDomANode implements PmlANode
 			case "pmcinfo": return Type.PMC;
 			case "trees": return Type.ROOT;
 			case "LM":
-				Node parent = null;
+				Node parent;
 				try
 				{
 					parent = (Node) XPathEngine.get().evaluate(
@@ -213,7 +213,7 @@ public class XmlDomANode implements PmlANode
 				if (tag != null && tag.contains("("))
 					tag = tag.substring(0, tag.indexOf("(")).trim();
 				if (tag != null && tag.length() > 0) return tag;
-				phraseNode = ((XmlDomANode) getPhraseNode()).domNode;
+				phraseNode = getPhraseNode().domNode;
 			} else phraseNode = domNode;
 
 			if (phraseNode == null) return null;
@@ -294,7 +294,7 @@ public class XmlDomANode implements PmlANode
 		try
 		{
 			String red = XPathEngine.get().evaluate("./reduction", domNode);
-			if (red != null && !red.isEmpty() && red.contains("("))
+			if (red != null && red.contains("("))
 				return red.substring(0, red.indexOf('('));
 			return red;
 		} catch (XPathExpressionException e)
@@ -315,7 +315,7 @@ public class XmlDomANode implements PmlANode
 		try
 		{
 			String red = XPathEngine.get().evaluate("./reduction", domNode);
-			if (red == null || red.isEmpty() || !red.contains("("))
+			if (red == null || !red.contains("("))
 				return null;
 			red = red.substring(red.indexOf('(')+1);
 			if (red.endsWith(")")) red = red.substring(0, red.length()-1);
@@ -801,7 +801,10 @@ public class XmlDomANode implements PmlANode
 					|| domNode.isSameNode(castedOther.domNode))
 				return true;
 		}
-		catch (ClassCastException e) {};
+		catch (ClassCastException e)
+		{
+			return false;
+		}
 		return false;
 	}
 

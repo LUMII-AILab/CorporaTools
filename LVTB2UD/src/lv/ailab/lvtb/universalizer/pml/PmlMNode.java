@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Simplified PML-M level interface. As of now, this interface do not require
+ * Simplified PML-M level interface. As of now, this interface does not require
  * node to know which sentence it belongs or who are its siblings
  */
 public interface PmlMNode
@@ -13,38 +13,38 @@ public interface PmlMNode
 	 * Find ID attribute.
 	 * @return	attribute value
 	 */
-	public String getId();
+	String getId();
 	/**
 	 * Find lemma.
 	 * @return	lemma
 	 */
-	public String getLemma();
+	String getLemma();
 	/**
 	 * Find tag.
 	 * @return	tag
 	 */
-	public String getTag();
+	String getTag();
 	/**
 	 * Find wordform.
 	 * @return	wordform
 	 */
-	public String getForm();
+	String getForm();
 	/**
 	 * Get all form_change values.
 	 * @return unordered set of values
 	 */
-	public Set<LvtbFormChange> getFormChange();
+	Set<LvtbFormChange> getFormChange();
 
 	/**
 	 * Get list of all underlying w nodes in the order they occur in the text.
 	 * @return list of w nodes
 	 */
-	public List<PmlWNode> getWs();
+	List<PmlWNode> getWs();
 
 	/**
 	 * Reconstruct source string (before error corrections) from underlying w
 	 * level tokens.
 	 * @return	source string without leading or trailing whitespace
 	 */
-	public String getSourceString();
+	String getSourceString();
 }

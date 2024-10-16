@@ -91,5 +91,5 @@ public class TransformationParams
 	/**
 	 * Get default parameter set.
 	 */
-	public TransformationParams(){};
+	public TransformationParams(){}
 }

@@ -9,8 +9,7 @@ import lv.ailab.lvtb.universalizer.utils.DepStats;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 /**
  * Relations between dependency labeling used in LVTB and UD.
@@ -41,19 +40,6 @@ public class DepRelLogic
 		if (isEligibleForOrphan && canBecomeOrphan(prelaminaryRole))
 			return UDv2Relations.ORPHAN;
 		else return prelaminaryRole;
-
-		/*PmlANode pmlEffParent = node.getEffectiveAncestor();
-		if ((pmlParent.isPureReductionNode() || pmlEffParent.isPureReductionNode())
-				&& (prelaminaryRole.equals(UDv2Relations.NSUBJ)
-					|| prelaminaryRole.equals(UDv2Relations.NSUBJ_PASS)
-					|| prelaminaryRole.equals(UDv2Relations.OBJ)
-					|| prelaminaryRole.equals(UDv2Relations.IOBJ)
-					|| prelaminaryRole.equals(UDv2Relations.CSUBJ)
-					|| prelaminaryRole.equals(UDv2Relations.CSUBJ_PASS)
-					|| prelaminaryRole.equals(UDv2Relations.CCOMP)
-					|| prelaminaryRole.equals(UDv2Relations.XCOMP)))
-			return UDv2Relations.ORPHAN;
-		return prelaminaryRole;*/
 	}
 
 	/**
@@ -456,7 +442,7 @@ public class DepRelLogic
 		if (parentTag.matches("(pp|n|y[np]).*") && chOrd > parOrd && parOrd > 0)
 		{
 			String basElemCase = UDv2Feat.tagToCaseString(basElem.getAnyTag());
-			if ((basElemCase == caseString || basElemCase != null && basElemCase.equals(caseString)) &&
+			if ((Objects.equals(basElemCase, caseString)) &&
 					(basElemPhrase == null || !LvtbXTypes.XPREP.equals(basElemPhrase.getPhraseType())))
 				return Tuple.of(UDv2Relations.APPOS, null);
 			else return Tuple.of(UDv2Relations.ACL, caseString);

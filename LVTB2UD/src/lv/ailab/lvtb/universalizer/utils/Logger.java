@@ -110,18 +110,6 @@ public class Logger
 				"File starts with \"AUTO\" comment, everything is ommited!\n");
 	}
 
-	/*public void finishSentenceNormal(boolean hasFailed)
-	{
-		if (!hasFailed && idMappingOut != null)
-		{
-			for (String s : idMappingDesc)
-				idMappingOut.println(s);
-			if (!idMappingDesc.isEmpty()) idMappingOut.println();
-		}
-		warnings = new HashSet<>();
-		idMappingDesc = new ArrayList<>();
-		flush();
-	}//*/
 	protected void afterSentenceReset()
 	{
 		warnings = new HashSet<>();

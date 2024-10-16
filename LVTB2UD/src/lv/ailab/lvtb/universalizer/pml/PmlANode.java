@@ -23,47 +23,47 @@ public interface PmlANode
 	 * Find ID attribute.
 	 * @return	attribute value
 	 */
-	public String getId();
+	String getId();
 	/**
 	 * Determine node type.
 	 * @return 	type of the node - X, COORD or PMC for ID-less nodes, ROOT for
 	 * 			root of the tree, NODE for others.
 	 */
-	public Type getNodeType();
+	Type getNodeType();
 	/**
 	 * Method for convenience: check, if given node is a phrase node.
 	 * @return	true, if node's type is PmlANode.Type.X or PmlANode.Type.COORD
 	 * 			or PmlANode.Type.PMC
 	 */
-	public boolean isPhraseNode();
+	boolean isPhraseNode();
 	/**
 	 * Find the role of this node.
 	 * @return	role value for NODE, nothing for other node types
 	 */
-	public String getRole();
+	String getRole();
 	/**
 	 * Find pmctype, coordtype or xtype for this node.
 	 * @return	phrase type for X, COORD, PMC, nothing for other node types
 	 */
-	public String getPhraseType();
+	String getPhraseType();
 	/**
 	 * Find pmctype, coordtype, xtype or role for this node.
 	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root
 	 */
-	public String getAnyLabel();
+	String getAnyLabel();
 	/**
 	 * Find the closest ancestor (given node included), whose label is not
 	 * crdPart, crdParts or crdClauses, and return its role, pmctype, coordtype,
 	 * or xtype.
 	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
 	 */
-	public String getEffectiveLabel();
+	String getEffectiveLabel();
 	/**
 	 * Find the phrase tag of this node.
 	 * @return	tag value for X or COORD having a tag value, nothing for other
 	 * 			nodes and node types
 	 */
-	public String getPhraseTag();
+	String getPhraseTag();
 	/**
 	 * Find tag attribute. Use either morphotag or x-word tag or coordination
 	 * tag. For tokenless reduction nodes return reduction tag. For PMC node
@@ -71,39 +71,39 @@ public interface PmlANode
 	 * tag obtained from first coordinated part.
 	 * @return	tag
 	 */
-	public String getAnyTag();
+	String getAnyTag();
 	/**
 	 * Find lemma from morphological layer.
 	 * @return	lemma from morphological layer.
 	 */
-	public boolean isPureReductionNode();
+	boolean isPureReductionNode();
 	/**
 	 * Find reduction field value.
 	 * @return	reduction value
 	 */
-	public String getReduction();
+	String getReduction();
 	/**
 	 * Find reduction field value and cut off the ending part in braces.
 	 * @return	reduction tag
 	 */
-	public String getReductionTagPart();
+	String getReductionTagPart();
 	/**
 	 * Find reduction field value and cut off the begining part before braces
 	 * and braces themselves.
 	 * @return	reduction wordform
 	 */
-	public String getReductionFormPart();
+	String getReductionFormPart();
 	/**
 	 * Find reduction field value, split in tag and lemma, and then induce lemma
 	 * with the help of morphological analyzer.
 	 * @return	reduction lemma
 	 */
-	public String getReductionLemma();
+	String getReductionLemma();
 	/**
 	 * Find ord value for this node, if there is one.
 	 * @return	ord value, or 0, if no ord found, or null if node is null
 	 */
-	public Integer getOrd();
+	Integer getOrd();
 	/**
 	 * Get ord value for given node, if there is one. Otherwise, if this node
 	 * has a phrase node (or is a phrase node), use this function on its
@@ -113,26 +113,26 @@ public interface PmlANode
 	 * @return	ord value, or 0, if ord can't be found (no phrase children with
 	 * 			ord values etc.), or null if node is null
 	 */
-	public Integer getDeepOrd();
+	Integer getDeepOrd();
 	/**
 	 * Find smallest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number
 	 */
-	public Integer getMinDescOrd();
+	Integer getMinDescOrd();
 	/**
 	 * Find biggest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number
 	 */
-	public Integer getMaxDescOrd();
+	Integer getMaxDescOrd();
 
 	//=== Functions to access children, parent, ancestors, etc. ================
 	/**
 	 * Get underlying PML-M level node.
 	 * @return PML-M node or null if such node was not found.
 	 */
-	public PmlMNode getM();
+	PmlMNode getM();
 	/**
 	 * Find PML parent for this node or phrase structure. For a node
 	 * representing a phrase constituent this will return phrase node (Type.X,
@@ -140,58 +140,58 @@ public interface PmlANode
 	 * node (Type.NODE or Type.ROOT) representing phrase in the sentence.
 	 * @return	null for root, otherwise any PML node (can be also phrase node)
 	 */
-	//public <PMLN extends PmlANode> PMLN getParent();
-	public PmlANode getParent();
+	//<PMLN extends PmlANode> PMLN getParent();
+	PmlANode getParent();
 	/**
 	 * If this a normal node (with ID) that has a constituent node, find its
 	 * pmcinfo, coordinfo or xinfo structure.
 	 * @return	phrase, coordination or x-word structure
 	 */
-	public PmlANode getPhraseNode();
+	PmlANode getPhraseNode();
 	/**
 	 * Find all node children in PML sense - for normal node this is returns all
 	 * dependents, for phrase node - all constituents.
 	 * @return	children list with no guaranteed order
 	 */
-	public List<PmlANode> getChildren();
+	List<PmlANode> getChildren();
 	/**
 	 * Find all node children with the given role. For normal node this returns
 	 * all dependents with given role, for phrase node - all constituents.
 	 * @param role	role restriction
 	 * @return	children list with no guaranteed order
 	 */
-	public List<PmlANode> getChildren(String role);
+	List<PmlANode> getChildren(String role);
 	/**
 	 * Find descendant node by given ID (thus, no phrase nodes will be found)
 	 * @param id	an ID to search
 	 * @return	first node found
 	 */
-	public PmlANode getDescendant(String id);
+	PmlANode getDescendant(String id);
 	/**
 	 * Find this or descendant node by given ID (thus, no phrase nodes will be
 	 * found)
 	 * @param id	an ID to search
 	 * @return	first node found
 	 */
-	public PmlANode getThisOrDescendant(String id);
+	PmlANode getThisOrDescendant(String id);
 	/**
 	 * Get any descendants of any type. Root is not included.
 	 * @return	descendant list
 	 */
-	public List<PmlANode> getDescendants();
+	List<PmlANode> getDescendants();
 	/**
 	 * Get any descendants whose role, xtype, coordtype, or pmctype matches
 	 * the given label. Root is not included.
 	 * @param anyLabel	label to restrict search
 	 * @return	list with found descendants
 	 */
-	public List<PmlANode> getDescendants(String anyLabel);
+	List<PmlANode> getDescendants(String anyLabel);
 	/**
 	 * Get all descendants having both morphology and ord value. Root is not
 	 * included.
 	 * @return	descendant list sorted by ord values
 	 */
-	public List<PmlANode> getDescendantsWithOrdAndM();
+	List<PmlANode> getDescendantsWithOrdAndM();
 
 	/**
 	 * Find pure ellipsis (no corresponding token) in the subtree headed by this
@@ -199,7 +199,7 @@ public interface PmlANode
 	 * @param leafsOnly	if true, only leaf nodes are returned
 	 * @return	list of ellipsis nodes in no particular order
 	 */
-	public List<PmlANode> getPureEllipsisDescendants(boolean leafsOnly);
+	List<PmlANode> getPureEllipsisDescendants(boolean leafsOnly);
 	/**
 	 * Find ellipsis nodes with corresponding token in the subtree headed by
 	 * this node. Parameter allows to find either all ellipsis or only leaf
@@ -207,26 +207,26 @@ public interface PmlANode
 	 * @param leafsOnly	if true, only leaf nodes are returned
 	 * @return	list of ellipsis nodes in no particular order
 	 */
-	public List<PmlANode> getMorphoEllipsisDescendants(boolean leafsOnly);
+	List<PmlANode> getMorphoEllipsisDescendants(boolean leafsOnly);
 
 	/**
 	 * Find nodes having m-token, form_change "insert" and no w-token.
 	 * @return list of inserted token nodes in no particular order
 	 */
-	public List<PmlANode> getInsertedMorphoDescendants();
+	List<PmlANode> getInsertedMorphoDescendants();
 
 	/**
 	 * Find parent or the closest ancestor, that is not coordination phrase or
 	 * crdPart node.
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
 	 */
-	public PmlANode getEffectiveAncestor();
+	PmlANode getEffectiveAncestor();
 	/**
 	 * Return this node, parent or the closest ancestor, that is not
 	 * coordination phrase or crdPart node.
 	 * @return	PML a-level node or xinfo, pmcinfo, or coordinfo
 	 */
-	public PmlANode getThisOrEffectiveAncestor();
+	PmlANode getThisOrEffectiveAncestor();
 
 	//=== Comparison ===========================================================
 	/**
@@ -236,45 +236,45 @@ public interface PmlANode
 	 * @param other	the node to test against
 	 * @return	true if the nodes are the same, false otherwise
 	 */
-	public boolean isSameNode(PmlANode other);
+	boolean isSameNode(PmlANode other);
 
 	/**
 	 * Returns the lenght of the shortest path connecting this node and root.
 	 * @return	0 for root node, 1 for root's dependents and constituents, 2 for
 	 * 			for their dependents and constituents, etc.
 	 */
-	public Integer getDepthInTree();
+	Integer getDepthInTree();
 
 	//=== Tree modification ====================================================
 	/**
 	 * Remove this node from tree.
 	 */
-	public void delete();
+	void delete();
 	/**
 	 * Remove this nodes m-node.
 	 */
-	public void deleteM();
+	void deleteM();
 
 	/**
 	 * Set a phraseTag for X or COORD node, return false for other node types.
 	 * @param tag	tag value to set
 	 * @return	true if tag was set
 	 */
-	public boolean setPhraseTag(String tag);
+	boolean setPhraseTag(String tag);
 
 	/**
 	 * Set a reduction tag if there is none, return false otherwise.
 	 * @param tag	tag value to set
 	 * @return	true if tag was set
 	 */
-	public boolean setReductionTag(String tag);
+	boolean setReductionTag(String tag);
 
 	/**
 	 * Set a reduction form, if there is none, return false otherwise.
 	 * @param form	form value to set
 	 * @return	true if form was set
 	 */
-	public boolean setReductionForm(String form);
+	boolean setReductionForm(String form);
 
 	/**
 	 * Split nonempty ellipsis node into empty ellipsis node and dependant
@@ -283,14 +283,14 @@ public interface PmlANode
 	 *                  node.
 	 * @return	if an actual split was done
 	 */
-	public boolean splitMorphoEllipsis(String idPostfix);
+	boolean splitMorphoEllipsis(String idPostfix);
 
 
 	/**
 	 * Distinguished node types. Logic-wise, ROOT is a subtlype of NODE.
 	 */
-	public static enum Type
+	enum Type
 	{
-		ROOT, NODE, X, COORD, PMC;
+		ROOT, NODE, X, COORD, PMC
 	}
 }

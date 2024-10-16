@@ -141,18 +141,6 @@ public class PhraseTransformator
 		return newRoot;
 	}
 
-	/*
-	 * Transformation for subrCl or mainCl PMC that can have either or pred or
-	 * reduced pred - all children goes below first pred, or below first reduced,
-	 * if there is no pred.
-	 * @return PML A-level node: root of the corresponding UD structure.
-	 */
-	/*protected PmlANode clauseToUD(PmlANode pmcNode)
-	{
-		return s.allUnderFirstConstituent(pmcNode, LvtbRoles.PRED, true,
-				params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
-	}*/
-
 	/**
 	 * Transformation for PMC that can have either basElem or pred - all
 	 * children goes below first pred, or below first basElem, if there is no
@@ -166,7 +154,7 @@ public class PhraseTransformator
 
 		// Find the structure root.
 		List<PmlANode> preds = pmcNode.getChildren(LvtbRoles.PRED);
-		PmlANode newRoot = null;
+		PmlANode newRoot;
 		if (preds != null && preds.size() > 1)
 			StandardLogger.l.doInsentenceWarning(String.format(
 					"Sentence \"%s\" has more than one \"%s\" in \"%s\".",
@@ -659,7 +647,7 @@ public class PhraseTransformator
 	public PmlANode xPredToUD(PmlANode xNode)
 	{
 		List<PmlANode> children = xNode.getChildren();
-		PmlANode result = null;
+		PmlANode result;
 		if (children.size() == 1) result = children.get(0);
 		else
 		{
@@ -718,10 +706,6 @@ public class PhraseTransformator
 
 		List<PmlANode> auxes = xNode.getChildren(LvtbRoles.AUXVERB);
 		PmlANode lastAux = PmlANodeListUtils.getLastByDeepOrd(auxes);
-		/*if (lastAux == null)
-			throw new IllegalArgumentException(String.format(
-					"\"%s\" in sentence \"%s\" has neither \"auxVerb\" nor \"mod\"",
-					xNode.getPhraseType(), s.id));*/
 		if (lastAux != null)
 		{
 			if (auxes.size() > 1) for (int i = 0; i < auxes.size(); i++)

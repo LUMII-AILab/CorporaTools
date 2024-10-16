@@ -234,7 +234,7 @@ public class MorphoTransformator {
 		if (noSpaceAfter) res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
-			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);;
+			res.addMisc(MiscKeys.NEW_PAR, MiscValues.YES);
 		//	Add note to misc field if retokenization has been done.
 		// This happens if word is split between rows.
 		if (formChanges.contains(LvtbFormChange.SPACING))

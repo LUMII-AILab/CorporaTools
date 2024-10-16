@@ -98,7 +98,7 @@ public enum UDv2Feat
 		for (UDv2Feat f : feats)
 		{
 			HashSet<String> val = res.get(f.key);
-			if (val == null) val = new HashSet<String>(){{add(f.value);}};
+			if (val == null) val = new HashSet<>(){{add(f.value);}};
 			else val.add(f.value);
 			res.put(f.key, val);
 		}

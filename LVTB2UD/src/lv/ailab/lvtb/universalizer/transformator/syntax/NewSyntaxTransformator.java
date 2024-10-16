@@ -280,7 +280,7 @@ public class NewSyntaxTransformator
 			boolean createsNonproj = s.createsNonprojectivity(t);
 			if (isProjective && !createsNonproj) continue;
 			Token newParent = s.getPrevSurfaceToken(t);
-			if (newParent == null) s.getNextSurfaceToken(t);
+			if (newParent == null) newParent = s.getNextSurfaceToken(t);
 			if (newParent != null)
 			{
 				EnhencedDep oldEnhHead = new EnhencedDep(t.head.second, UDv2Relations.PUNCT);

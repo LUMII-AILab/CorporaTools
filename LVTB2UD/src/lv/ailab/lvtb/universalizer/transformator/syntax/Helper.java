@@ -30,7 +30,7 @@ public class Helper
 		{
 			PmlANode prep = preps.get(0);
 			PmlMNode morpho = prep.getM();
-			String combinedPrepLemma = null;
+			StringBuilder combinedPrepLemma = null;
 			// If there is no morphology, but there is an xFunctor or coordination,
 			// use the lemma of the first basElem or crdPart.
 			PmlANode phraseConj = prep.getPhraseNode();
@@ -40,14 +40,14 @@ public class Helper
 			{
 				if ((phraseType.equals(LvtbXTypes.XFUNCTOR)))
 				{
-					combinedPrepLemma = "";
+					combinedPrepLemma = new StringBuilder();
 					for (PmlANode n : PmlANodeListUtils.asOrderedList(phraseConj.getChildren()))
 						if (n.getM() != null)
-							combinedPrepLemma = combinedPrepLemma + "_" +n.getM().getLemma();
-					combinedPrepLemma = combinedPrepLemma.replaceAll("^_+", "");
-					combinedPrepLemma = combinedPrepLemma.replaceAll("_+$", "");
+							combinedPrepLemma.append("_").append(n.getM().getLemma());
+					combinedPrepLemma = new StringBuilder(combinedPrepLemma.toString().replaceAll("^_+", ""));
+					combinedPrepLemma = new StringBuilder(combinedPrepLemma.toString().replaceAll("_+$", ""));
 				}
-				else if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
+				else //if (phraseType.equals(LvtbCoordTypes.CRDPARTS))
 				{
 					PmlANode firstXBase = PmlANodeListUtils.getFirstByDescOrd(
 							phraseConj.getChildren(LvtbRoles.BASELEM));
@@ -64,8 +64,8 @@ public class Helper
 					}
 				}
 			}
-			if (combinedPrepLemma != null && !combinedPrepLemma.isEmpty())
-				prepLemma = combinedPrepLemma;
+			if (combinedPrepLemma != null && (combinedPrepLemma.length() > 0))
+				prepLemma = combinedPrepLemma.toString();
 			else if (morpho != null) prepLemma = morpho.getLemma();
 
 			String prepRed = prep.getReduction();

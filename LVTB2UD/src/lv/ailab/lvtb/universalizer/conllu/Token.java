@@ -113,16 +113,16 @@ public class Token
 		if (this == o) return true;
 		Token other = (Token) o;
 		return (idBegin == other.idBegin && idSub == other.idSub && idEnd == other.idEnd &&
-				(form == other.form || form != null && form.equals(other.form)) &&
-				(lemma == other.lemma || lemma != null && lemma.equals(other.lemma)) &&
+				(Objects.equals(form, other.form)) &&
+				(Objects.equals(lemma, other.lemma)) &&
 				upostag == other.upostag &&
-				(xpostag == other.xpostag || xpostag != null && xpostag.equals(other.xpostag)) &&
-				(feats == other.feats || feats != null && feats.equals(other.feats)) &&
-				(head == other.head || head != null && head.equals(other.head)) &&
+				(Objects.equals(xpostag, other.xpostag)) &&
+				(Objects.equals(feats, other.feats)) &&
+				(Objects.equals(head, other.head)) &&
 				deprel == other.deprel &&
-				(deps == other.deps || deps != null && deps.equals(other.deps)) &&
-				(depsBackbone == other.depsBackbone || depsBackbone != null && depsBackbone.equals(other.depsBackbone)) &&
-				(misc == other.misc || misc != null && misc.equals(other.misc)));
+				(Objects.equals(deps, other.deps)) &&
+				(Objects.equals(depsBackbone, other.depsBackbone)) &&
+				(Objects.equals(misc, other.misc)));
 	}
 	@Override
 	public int hashCode()
@@ -389,7 +389,7 @@ public class Token
 		// 4
 		res.append("\t");
 		if (upostag == null) res.append("_");
-		else res.append(upostag.toString());
+		else res.append(upostag);
 		// 5
 		res.append("\t");
 		if (xpostag == null || xpostag.length() < 1) res.append("_");

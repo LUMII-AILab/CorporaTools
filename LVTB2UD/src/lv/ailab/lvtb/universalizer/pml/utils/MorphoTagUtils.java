@@ -1,9 +1,5 @@
 package lv.ailab.lvtb.universalizer.pml.utils;
 
-import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
-import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
-import lv.ailab.lvtb.universalizer.utils.Tuple;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

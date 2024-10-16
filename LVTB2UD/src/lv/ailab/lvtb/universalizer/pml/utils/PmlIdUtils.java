@@ -19,9 +19,10 @@ public class PmlIdUtils
 	/**
 	 * Check if the paragraph numbers are different.
 	 * FIXME: Source ID is not checked!
-	 * @param firstId
-	 * @param secondId
-	 * @return
+	 * @param firstId	ID of the first paragraph
+	 * @param secondId	ID of the second paragraph
+	 * @return	true if there should be a paragraph border between tokens with
+	 * 			such IDs
 	 */
 	public static Boolean isParaBorderBetween(String firstId, String secondId)
 	{
