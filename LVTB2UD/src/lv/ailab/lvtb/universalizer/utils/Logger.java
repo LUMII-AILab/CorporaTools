@@ -156,12 +156,6 @@ public class Logger
 		//finishSentenceNormal(true);
 		afterSentenceReset();
 	}
-	public void finishSentenceWithOmit(String treeId)
-	{
-		statusOut.printf("Sentence %s is being omitted.\n", treeId);
-		//finishSentenceNormal(true);
-		afterSentenceReset();
-	}
 
 	public void warnForAnalyzerException(Exception e)
 	{

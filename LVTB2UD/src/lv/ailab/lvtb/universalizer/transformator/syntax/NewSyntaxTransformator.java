@@ -13,6 +13,12 @@ import lv.ailab.lvtb.universalizer.utils.Tuple;
 
 import java.util.List;
 
+/**
+ * This is the reimplemented syntax converter. It creates enhanced dependency
+ * graph together with basic dependency tree, while the first one (created for
+ * first LV UD paper) tried to create enhanced graph as an afterthought from
+ * the basic tree.
+ */
 public class NewSyntaxTransformator
 {
 	/**
