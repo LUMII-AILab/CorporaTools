@@ -108,8 +108,7 @@ public class PhrasePartDepLogic
 		if (phraseType.equals(LvtbXTypes.XAPP) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.NMOD, null);
-		if ((phraseType.equals(LvtbXTypes.XNUM) ||
-				phraseType.equals(LvtbXTypes.COORDANAL)) &&
+		if ((phraseType.equals(LvtbXTypes.XNUM)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.COMPOUND, null);
 		if (phraseType.equals(LvtbXTypes.XFUNCTOR) &&
@@ -117,7 +116,8 @@ public class PhrasePartDepLogic
 			return Tuple.of(UDv2Relations.FIXED, null);
 		if ((phraseType.equals(LvtbXTypes.PHRASELEM) ||
 				phraseType.equals(LvtbPmcTypes.INTERJ) ||
-				phraseType.equals(LvtbPmcTypes.PARTICLE)) &&
+				phraseType.equals(LvtbPmcTypes.PARTICLE) ||
+				phraseType.equals(LvtbXTypes.COORDANAL)) &&
 				lvtbRole.equals(LvtbRoles.BASELEM))
 			return Tuple.of(UDv2Relations.FLAT, null);
 
