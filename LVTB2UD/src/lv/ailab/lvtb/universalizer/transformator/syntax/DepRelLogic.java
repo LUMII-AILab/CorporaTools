@@ -550,16 +550,25 @@ public class DepRelLogic
 		PmlMNode mNode = node.getM();
 		String lemma = mNode == null ? null : mNode.getLemma();
 
-		if (tag.matches("n.*"))
+		// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
+		PmlANode phrase = node.getPhraseNode();
+		String xType = phrase == null ? null : phrase.getPhraseType();
+		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
+				xType.equals(LvtbXTypes.XPREP))
 		{
-			Matcher m = Pattern.compile("n...(.).*").matcher(tag);
-			if (m.matches())
-			{
-				String caseLetter = m.group(1);
-				String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-				if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-					return Tuple.of(UDv2Relations.NMOD, caseString);
-			}
+			String prepLemma = Helper.getXSimileConjOrXPrepPrepLemma(phrase, LvtbRoles.PREP);
+			return Tuple.of(UDv2Relations.NMOD, prepLemma);
+		}
+		if ((tag.matches("n.*")))
+		/*if ((tag.matches("n.*")) ||
+				(xType != null && phrase.getNodeType() == PmlANode.Type.X &&
+					phrase.getPhraseTag().matches(".*\\[vv.*")))*/
+		{
+			String caseLetter = MorphoTagUtils.getCaseLetterFromTag(tag);
+			String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
+			if (caseString != null || caseLetter.equals("0"))
+				return Tuple.of(UDv2Relations.NMOD, caseString);
+			// It is ok to become dep, if the case is not valid, it is an error anyway.
 		}
 		if (tag.matches("y[np].*") || lemma != null && lemma.equals("%"))
 			return Tuple.of(UDv2Relations.NMOD, null);
@@ -593,36 +602,21 @@ public class DepRelLogic
 
 		// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
 		PmlANode phrase = node.getPhraseNode();
-		//String xType = XPathEngine.get().evaluate("./children/xinfo/xtype", node);
 		String xType = phrase == null ? null : phrase.getPhraseType();
 		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
 				xType.equals(LvtbXTypes.XPREP))
 		{
 			String prepLemma = Helper.getXSimileConjOrXPrepPrepLemma(phrase, LvtbRoles.PREP);
-			/*List<PmlANode> preps = phrase.getChildren(LvtbRoles.PREP);
-			if (preps.size() > 1)
-				StandardLogger.l.doInsentenceWarning(String.format(
-						"\"%s\" with ID \"%s\" has multiple \"%s\".",
-						xType, node.getId(), LvtbRoles.PREP));
-			if (!preps.isEmpty())
-			{
-				prepLemma = preps.get(0).getM().getLemma();
-				String prepRed = preps.get(0).getReduction();
-				if (prepRed != null && !prepRed.isEmpty()) prepLemma = null;
-				// TODO: vai ir okei nelietot reducēto lemmu?
-			}*/
 			return Tuple.of(UDv2Relations.OBL, prepLemma);
 		}
+
 		if (tag.matches("n.*|p.*|mo.*"))
 		{
-			Matcher m = Pattern.compile("(n...|p....|mo...)(.).*").matcher(tag);
-			if (m.matches())
-			{
-				String caseLetter = m.group(2);
-				String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-				if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
-					return Tuple.of(UDv2Relations.OBL, caseString);
-			}
+			String caseLetter = MorphoTagUtils.getCaseLetterFromTag(tag);
+			String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
+			if (caseString != null || caseLetter.equals("0"))
+				return Tuple.of(UDv2Relations.OBL, caseString);
+			// It is ok to become dep, if the case is not valid, it is an error anyway.
 		}
 		if (tag.matches("x[fo].*|y[npa].*"))
 			return Tuple.of(UDv2Relations.OBL, null);
@@ -641,13 +635,13 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> detToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
-		Matcher m = Pattern.compile("([na]...|[mp]....|v..pd..)(.).*").matcher(tag);
-		if (m.matches())
+		if (tag.matches("([namp]|v..p).*"))
 		{
-			String caseLetter = m.group(2);
+			String caseLetter = MorphoTagUtils.getCaseLetterFromTag(tag);
 			String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
-			if (caseString != null || caseLetter.equals("0") || caseLetter.equals("_"))
+			if (caseString != null || caseLetter.equals("0"))
 				return Tuple.of(UDv2Relations.OBL, caseString);
+			//It is ok to become dep, if the case is not valid, it is error anyway.
 		}
 		if (tag.matches("x.*|y[npa].*"))
 			return Tuple.of(UDv2Relations.OBL, null);

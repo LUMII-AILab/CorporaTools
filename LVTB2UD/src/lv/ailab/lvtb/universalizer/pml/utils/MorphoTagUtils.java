@@ -1,5 +1,12 @@
 package lv.ailab.lvtb.universalizer.pml.utils;
 
+import lv.ailab.lvtb.universalizer.conllu.UDv2Feat;
+import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.utils.Tuple;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MorphoTagUtils {
 	/**
 	 * For given tag substitutes certain positions with underscores to reduce tag sparsity
@@ -55,5 +62,21 @@ public class MorphoTagUtils {
 		// tag = tag.replaceFirst("^([^\\[]+\\[(?:vv|ipv|skv|set)\\].*)$", "$1"); // Currently an exception where we need everything
 
 		return tag;
+	}
+
+	/**
+	 * In morphological tag find the letter denoting case (5th for nouns and
+	 * adjectives, 6th for numerals and pronouns, 8th for participles).
+	 * @param tag	morphological tag from Latvian tagset
+	 * @return	appropriate letter or null if nothing found
+	 */
+	public static String getCaseLetterFromTag (String tag)
+	{
+		if (tag == null || tag.isEmpty()) return null;
+		Matcher m = Pattern.compile("([na].{3}|[mp].{4}|v..p.{3})(.).*").matcher(tag);
+		String caseLetter = null;
+		if (m.matches())
+			caseLetter = m.group(2);
+		return caseLetter;
 	}
 }
