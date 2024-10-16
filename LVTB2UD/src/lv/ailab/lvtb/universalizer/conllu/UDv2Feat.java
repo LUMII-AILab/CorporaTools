@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Enumeration for Universal Dependencies's mophological FEATs.
+ * Enumeration for Universal Dependencies' morphological FEATs.
  * Only used pairs represented.
  * Created on 2016-04-17.
  *

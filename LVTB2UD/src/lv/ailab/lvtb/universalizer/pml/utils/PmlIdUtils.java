@@ -6,13 +6,13 @@ import java.util.regex.Pattern;
 /**
  * Utility methods for PML node IDs conforming the LVTB ID building conventions,
  * i.e. in one of the following forms:
- *	* a-sourceid-p\d+s\d+w\d+	for A level node ID
- *	* a-sourceid-p\d+s\d+		for A level sentence ID
- *	* m-sourceid-p\d+s\d+w\d+	for M level node ID
- *	* m-sourceid-p\d+s\d+		for M level sentence ID
- *	* w-sourceid-p\d+w\d+		for W level node ID
+ *	* a-sourceId-p\d+s\d+w\d+	for A level node ID
+ *	* a-sourceId-p\d+s\d+		for A level sentence ID
+ *	* m-sourceId-p\d+s\d+w\d+	for M level node ID
+ *	* m-sourceId-p\d+s\d+		for M level sentence ID
+ *	* w-sourceId-p\d+w\d+		for W level node ID
  * It is assumed that CoNLL paragraph ID will be
- *	* a-sourceid-p\d+
+ *	* a-sourceId-p\d+
  */
 public class PmlIdUtils
 {

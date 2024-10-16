@@ -21,7 +21,7 @@ public class EllipsisLogic
 	/**
 	 * Logic how to choose substitute for ellipted nodes.
 	 * @param aNode	node for which child to elevate must be chosen
-	 * @return	tuple of node to elevate and boolean to determin, if a complex
+	 * @return	tuple of node to elevate and boolean to determine, if a complex
 	 * 			ellipsis where children ar eligible for orphan relation (true)
 	 * 			or simple ellipsis where orphan relation can't be used (false)
 	 */
@@ -74,17 +74,17 @@ public class EllipsisLogic
 		String lvtbEffRole = aNode.getEffectiveLabel();
 		String lvtbTag = aNode.getAnyTag();
 
-		// In case of reduced predicte, search if there is an aux or cop.
+		// In case of a reduced predicate, search if there is an aux or cop.
 		if (LvtbRoles.PRED.equals(lvtbEffRole) || lvtbTag.matches("v..[^pn].*"))
 			for (PmlANode n : sortedChildren)
 			{
-				UDv2Relations noRedUDrole = DepRelLogic.depToUDLogic(
+				UDv2Relations noRedUDRole = DepRelLogic.depToUDLogic(
 						n, n.getParent(), n.getRole()).first;
-				if (noRedUDrole == null)
+				if (noRedUDRole == null)
 					throw new IllegalStateException(String.format(
 							"Could not determine potential UD role during ellipsis processing for %s",
 							n.getId()));
-				if (noRedUDrole.equals(UDv2Relations.AUX) || noRedUDrole.equals(UDv2Relations.COP))
+				if (noRedUDRole.equals(UDv2Relations.AUX) || noRedUDRole.equals(UDv2Relations.COP))
 					return Tuple.of(n, false);
 			}
 
@@ -98,13 +98,13 @@ public class EllipsisLogic
 				UDv2Relations.DISLOCATED, UDv2Relations.VOCATIVE};
 		for (UDv2Relations role : priorities) for (PmlANode n : sortedChildren)
 		{
-			UDv2Relations noRedUDrole = DepRelLogic.depToUDLogic(
+			UDv2Relations noRedUDRole = DepRelLogic.depToUDLogic(
 					n, n.getParent(), n.getRole()).first;
-			if (noRedUDrole == null)
+			if (noRedUDRole == null)
 				throw new IllegalStateException(String.format(
 						"Could not determine potential UD role during ellipsis processing for %s",
 						n.getId()));
-			if (noRedUDrole.equals(role)) return Tuple.of(n, true);
+			if (noRedUDRole.equals(role)) return Tuple.of(n, true);
 		}
 		return null;
 	}
@@ -122,13 +122,13 @@ public class EllipsisLogic
 				UDv2Relations.NMOD, UDv2Relations.CASE, UDv2Relations.ACL};
 		for (UDv2Relations role : priorities) for (PmlANode n : sortedChildren)
 		{
-			UDv2Relations noRedUDrole = DepRelLogic.depToUDLogic(
+			UDv2Relations noRedUDRole = DepRelLogic.depToUDLogic(
 					n, n.getParent(), n.getRole()).first;
-			if (noRedUDrole == null)
+			if (noRedUDRole == null)
 				throw new IllegalStateException(String.format(
 						"Could not determine potential UD role during ellipsis processing for %s",
 						n.getId()));
-			if (noRedUDrole.equals(role)) return Tuple.of(n, false);
+			if (noRedUDRole.equals(role)) return Tuple.of(n, false);
 		}
 		return null;
 	}

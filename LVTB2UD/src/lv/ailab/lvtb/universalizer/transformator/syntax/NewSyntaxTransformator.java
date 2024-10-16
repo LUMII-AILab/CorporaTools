@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
+import lv.ailab.lvtb.universalizer.conllu.EnhancedDep;
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
@@ -67,7 +67,7 @@ public class NewSyntaxTransformator
 		// Process root PMC.
 		PmlANode newRoot = pTransf.anyPhraseToUD(pmlPmc);
 		if (newRoot == null) throw new IllegalArgumentException(String.format(
-				"Sentence %s has untransformable root PMC.", s.id));
+				"Sentence %s has non-transformable root PMC.", s.id));
 		s.pmlaToConll.put(s.pmlTree.getId(), s.pmlaToConll.get(newRoot.getId()));
 		if (s.pmlaToEnhConll.containsKey(newRoot.getId()))
 			s.pmlaToEnhConll.put(s.pmlTree.getId(), s.pmlaToEnhConll.get(newRoot.getId()));
@@ -213,9 +213,9 @@ public class NewSyntaxTransformator
 	 * To use this function, previous should have set that conllu tokens who
 	 * correspond old and new parent are the same.
 	 * @param parentANode		node whose dependency children will be processed
-	 * @param newBaseDepRoot	node that will be the root of the coresponding
+	 * @param newBaseDepRoot	node that will be the root of the corresponding
 	 *                  		base UD structure
-	 * @param newEnhDepRoot		node that will be the root of the coresponding
+	 * @param newEnhDepRoot		node that will be the root of the corresponding
 	 *                  		enhanced UD structure (if null, newBaseDepRoot
 	 *                  		used instead)
 	 */
@@ -255,11 +255,11 @@ public class NewSyntaxTransformator
 				{
 					doStuff = true;
 					token.head = parent.head;
-					EnhencedDep oldEnhHead = new EnhencedDep(parent, UDv2Relations.PUNCT);
+					EnhancedDep oldEnhHead = new EnhancedDep(parent, UDv2Relations.PUNCT);
 					if (token.deps.contains(oldEnhHead))
 					{
 						token.deps.remove(oldEnhHead);
-						token.deps.add(new EnhencedDep(parent.head.second, UDv2Relations.PUNCT));
+						token.deps.add(new EnhancedDep(parent.head.second, UDv2Relations.PUNCT));
 					}
 					break;
 				}
@@ -268,7 +268,7 @@ public class NewSyntaxTransformator
 	}
 
 	/**
-	 * Postprocessing: move nonprojecting punctuation to be children of the
+	 * Postprocessing: move non-projective punctuation to be children of the
 	 * previous node.
 	 */
 	protected void fixPunctProjectivity()
@@ -283,11 +283,11 @@ public class NewSyntaxTransformator
 			if (newParent == null) newParent = s.getNextSurfaceToken(t);
 			if (newParent != null)
 			{
-				EnhencedDep oldEnhHead = new EnhencedDep(t.head.second, UDv2Relations.PUNCT);
+				EnhancedDep oldEnhHead = new EnhancedDep(t.head.second, UDv2Relations.PUNCT);
 				if (t.deps.contains(oldEnhHead))
 				{
 					t.deps.remove(oldEnhHead);
-					t.deps.add(new EnhencedDep(newParent, UDv2Relations.PUNCT));
+					t.deps.add(new EnhancedDep(newParent, UDv2Relations.PUNCT));
 				}
 				t.head = Tuple.of(newParent.getFirstColumn(), newParent);
 

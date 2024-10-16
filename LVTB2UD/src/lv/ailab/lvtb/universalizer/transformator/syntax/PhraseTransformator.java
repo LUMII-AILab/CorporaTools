@@ -62,12 +62,12 @@ public class PhraseTransformator
 				phraseType.equals(LvtbPmcTypes.DIRSPPMC) ||
 				phraseType.equals(LvtbPmcTypes.INSPMC) ||
 				phraseType.equals(LvtbPmcTypes.QUOT))
-			return sentencyToUD(phraseNode);
+			return sentenceLikeToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.UTTER))
 			return utterToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.SUBRCL) ||
 				phraseType.equals(LvtbPmcTypes.MAINCL))
-			return sentencyToUD(phraseNode);
+			return sentenceLikeToUD(phraseNode);
 			//return clauseToUD(phraseNode);
 		if (phraseType.equals(LvtbPmcTypes.SPCPMC) ||
 				phraseType.equals(LvtbPmcTypes.ADDRESS))
@@ -147,7 +147,7 @@ public class PhraseTransformator
 	 * pred.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
-	protected PmlANode sentencyToUD(PmlANode pmcNode)
+	protected PmlANode sentenceLikeToUD(PmlANode pmcNode)
 	{
 		String pmcType = pmcNode.getPhraseType();
 		List<PmlANode> children = pmcNode.getChildren();
@@ -189,7 +189,7 @@ public class PhraseTransformator
 
 	/**
 	 * Transformation for PMC that can have either basElem or pred - all
-	 * children goes below first pred, r below forst basElem, if there is no
+	 * children goes below first pred, or below first basElem, if there is no
 	 * pred.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */
@@ -234,7 +234,7 @@ public class PhraseTransformator
 					rootChildren.add(sortedChildren.remove(0));
 				else break;
 			}
-			// Last punctuation aslo is going to be root children.
+			// Last punctuation also is going to be root children.
 			LinkedList<PmlANode> lastPunct = new LinkedList<>();
 			while (sortedChildren.size() > 0)
 			{
@@ -272,9 +272,9 @@ public class PhraseTransformator
 				s.relinkAllConstituents(subroot, nextPart, pmcNode,
 						params.PROPAGATE_CONJUNCTS, params.NO_EDEP_DUPLICATES);
 
-				// Is this really safe that all crosslinks have the same role???
+				// Is this really safe that all cross-links have the same role???
 				if (params.PROPAGATE_CONJUNCTS)
-					s.setLinkAndCorsslinksPhrasal(newRoot, subroot, UDv2Relations.PARATAXIS,
+					s.setLinkAndCrosslinksPhrasal(newRoot, subroot, UDv2Relations.PARATAXIS,
 							Tuple.of(UDv2Relations.PARATAXIS, null), true,
 							true, params.NO_EDEP_DUPLICATES);
 				else s.setLink(newRoot, subroot, UDv2Relations.PARATAXIS,
@@ -328,31 +328,31 @@ public class PhraseTransformator
 		// If semicolon(s) is (are) present, split on semicolon and then process
 		// each part as ordinary coordination.
 		ArrayList<PmlANode> sortedSemicolons = PmlANodeListUtils.asOrderedList(semicolons);
-		int semicOrd = sortedSemicolons.get(0).getOrd();
+		int semicolonOrd = sortedSemicolons.get(0).getOrd();
 		PmlANode newRoot = coordPartsChildListToUD(
-				PmlANodeListUtils.ordSplice(sortedChildren, 0, semicOrd),
+				PmlANodeListUtils.ordSplice(sortedChildren, 0, semicolonOrd),
 				coordNode);
 		for (int i = 1; i < sortedSemicolons.size(); i++)
 		{
-			int nextSemicOrd = sortedSemicolons.get(i).getOrd();
+			int nextSemicolonOrd = sortedSemicolons.get(i).getOrd();
 			PmlANode newSubroot = coordPartsChildListToUD(
-					PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, nextSemicOrd),
+					PmlANodeListUtils.ordSplice(sortedChildren, semicolonOrd, nextSemicolonOrd),
 					coordNode);
 			if (params.PROPAGATE_CONJUNCTS)
-				s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+				s.setLinkAndCrosslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 						Tuple.of(UDv2Relations.PARATAXIS, null), true,
 						true, params.NO_EDEP_DUPLICATES);
 			else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 					Tuple.of(UDv2Relations.PARATAXIS, null), true,
 					true, params.NO_EDEP_DUPLICATES);
-			semicOrd = nextSemicOrd;
+			semicolonOrd = nextSemicolonOrd;
 		}
 		// last
 		PmlANode newSubroot = coordPartsChildListToUD(
-				PmlANodeListUtils.ordSplice(sortedChildren, semicOrd, Integer.MAX_VALUE),
+				PmlANodeListUtils.ordSplice(sortedChildren, semicolonOrd, Integer.MAX_VALUE),
 				coordNode);
 		if (params.PROPAGATE_CONJUNCTS)
-			s.setLinkAndCorsslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
+			s.setLinkAndCrosslinksPhrasal(newRoot, newSubroot, UDv2Relations.PARATAXIS,
 					Tuple.of(UDv2Relations.PARATAXIS, null), true,
 					true, params.NO_EDEP_DUPLICATES);
 		else s.setLink(newRoot, newSubroot, UDv2Relations.PARATAXIS,
@@ -640,7 +640,7 @@ public class PhraseTransformator
 	 * only one basElem and either one mod or some aux'es. In case of mod,
 	 * baseElem is attached as xcomp to it. Otherwise, noModXPredUD() are used.
 	 * Removes the result constituent as potential governor from sentence's
-	 * subject mapping to avoid double linking when adding controled subject
+	 * subject mapping to avoid double linking when adding controlled subject
 	 * links.
 	 * @return PML A-level node: root of the corresponding UD structure.
 	 */

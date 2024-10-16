@@ -55,7 +55,7 @@ public class EllipsisPreprocessor
 	/**
 	 * Remove the childless ellipsis nodes assuming they can be ignored in
 	 * latter processing. Replace empty xPreds with just ellipsis nodes.
-	 * Currently used for UD transformation.
+	 * Currently, used for UD transformation.
 	 * @return	 true if all ellipsis was removed
 	 */
 	public boolean removeAllChildlessEllipsis()

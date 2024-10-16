@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 /**
  * Transformation wrapper for a single file.
  */
-// TODO: make omittWholeOnError class variable and do not process any more
-// TODO  sentences after first error, if omittWholeOnError = true
+// TODO: make omitWholeOnError class variable and do not process any more
+// TODO  sentences after first error, if omitWholeOnError = true
 public class PmlXmlFileTransformator
 {
 	public StringBuilder processed;
@@ -72,7 +72,7 @@ public class PmlXmlFileTransformator
 			String firstComment = XPathEngine.get().evaluate("./comment", pmlTrees.item(0));
 			if (firstComment != null && firstComment.startsWith("AUTO"))
 			{
-				System.out.println("File starts with \"AUTO\" comment, everything is ommited!");
+				System.out.println("File starts with \"AUTO\" comment, everything is omitted!");
 				StandardLogger.l.finishFileWithAUTO();
 				omitted = pmlTrees.getLength();
 				hasAuto = true;
@@ -107,7 +107,7 @@ public class PmlXmlFileTransformator
 		for (int i = 0; i < pmlTrees.getLength(); i++)
 		{
 			// However, there is no use to continue processing, if in case of
-			// an error the whole file will be ommited and there already has
+			// an error the whole file will be omitted and there already has
 			// been an error.
 			if (params.OMIT_WHOLE_FILES && omitted > 0)
 			{
@@ -117,11 +117,11 @@ public class PmlXmlFileTransformator
 				break;
 			}
 
-			// A "FIXME" comment mean unfinished and thus untransformable sentence.
+			// A "FIXME" comment mean unfinished and thus non-transformable sentence.
 			String comment = XPathEngine.get().evaluate("./comment", pmlTrees.item(i));
 			if (comment != null && comment.startsWith("FIXME"))
 			{
-				System.out.println("A sentence with \"FIXME\" ommited.");
+				System.out.println("A sentence with \"FIXME\" omitted.");
 				StandardLogger.l.finishSentenceWithFIXME();
 				omitted++;
 				hasFixme = true;

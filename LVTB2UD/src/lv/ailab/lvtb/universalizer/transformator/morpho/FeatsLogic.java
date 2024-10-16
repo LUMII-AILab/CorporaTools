@@ -7,10 +7,12 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: is the different behaviour if logger is null (console printing) ok?
+
 /**
  * Logic for obtaining Universal Dependency feature information based on LVTB
  * information.
- * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
+ *
  * Created on 2016-04-20.
  * @author Lauma
  */
@@ -50,7 +52,7 @@ public class FeatsLogic
 		if (xpostag.matches("a.....p.*|v..pd......p.*|rp.*|mo.*")) res.add(UDv2Feat.DEGREE_POS);
 		if (xpostag.matches("a.....c.*|v..pd......c.*|rc.*")) res.add(UDv2Feat.DEGREE_CMP);
 		if (xpostag.matches("a.....s.*|v..pd......s.*|rs.*")) res.add(UDv2Feat.DEGREE_SUP);
-		// Patalogical cases like "pirmākais un vispirmākais" are not represented.
+		// Pathological cases like "pirmākais un vispirmākais" are not represented.
 
 		// Inflectional features: verbal
 
@@ -90,7 +92,7 @@ public class FeatsLogic
 		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UDv2Feat.PERSON_3);
 		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UDv2Feat.PERSON_3);
 
-		// Minimal annotations, for nomens manual labor is needed.
+		// Minimal annotations, for nominals manual labor is needed.
 		if (xpostag.matches("v..[^p]......n.*")) res.add(UDv2Feat.POLARITY_POS);
 		if (xpostag.matches("v..p........n.*")) res.add(UDv2Feat.POLARITY_POS);
 		if (xpostag.matches("q.*") && lemma.matches("jā")) res.add(UDv2Feat.POLARITY_POS);
@@ -136,7 +138,7 @@ public class FeatsLogic
 
 		if (xpostag.matches("xf.*")) res.add(UDv2Feat.FOREIGN_YES);
 		if (xpostag.matches("y.*")) res.add(UDv2Feat.ABBR_YES);
-		if (xpostag.matches("px.*|v.y.*")) res.add(UDv2Feat.REFLEX_YES); // Currently it is impossible to split out "reflexive particle" of each verb.
+		if (xpostag.matches("px.*|v.y.*")) res.add(UDv2Feat.REFLEX_YES); // Currently, it is impossible to split out "reflexive particle" of each verb.
 
 		return res;
 	}
@@ -151,8 +153,8 @@ public class FeatsLogic
 	{
 		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
 		if (token.feats.contains(UDv2Feat.TYPO_YES)) res.add(UDv2Feat.TYPO_YES);
-		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
-		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
+		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exception. But should we?
+		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exception. But should we?
 		if (!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene")) &&
 				!xpostag.matches("r0.*"))
 			return res;

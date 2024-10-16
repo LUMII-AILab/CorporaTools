@@ -22,7 +22,7 @@ public class SentenceTransformEngine
 {
 	public Sentence s;
 	protected MorphoTransformator morphoTransf;
-	protected EllipsisPreprocessor ellipPreproc;
+	protected EllipsisPreprocessor ellipsisPreproc;
 	protected NewSyntaxTransformator syntTransf;
 	protected TransformationParams params;
 
@@ -31,7 +31,7 @@ public class SentenceTransformEngine
 	{
 		s = new Sentence(pmlTree);
 		this.params = params;
-		ellipPreproc = new EllipsisPreprocessor(s);
+		ellipsisPreproc = new EllipsisPreprocessor(s);
 		morphoTransf = new MorphoTransformator(s, params);
 		syntTransf = new NewSyntaxTransformator(s, params);
 	}
@@ -49,13 +49,13 @@ public class SentenceTransformEngine
 	{
 		if (params.DEBUG) System.out.printf("Working on sentence \"%s\".\n", s.id);
 
-		if (params.TURN_INSERTED_WORD_ELLIPSIS) ellipPreproc.replaceInsertedWords();
-		if (params.SPLIT_NONEMPTY_ELLIPSIS) ellipPreproc.splitTokenEllipsis();
+		if (params.TURN_INSERTED_WORD_ELLIPSIS) ellipsisPreproc.replaceInsertedWords();
+		if (params.SPLIT_NONEMPTY_ELLIPSIS) ellipsisPreproc.splitTokenEllipsis();
 		morphoTransf.transformTokens();
 		StandardLogger.l.flush();
-		morphoTransf.extractSendenceText();
+		morphoTransf.extractSentenceText();
 		StandardLogger.l.flush();
-		boolean noMoreEllipsis = ellipPreproc.removeAllChildlessEllipsis();
+		boolean noMoreEllipsis = ellipsisPreproc.removeAllChildlessEllipsis();
 		if (params.WARN_ELLIPSIS && !noMoreEllipsis)
 			System.out.printf("Sentence \"%s\" has non-trivial ellipsis.\n", s.id);
 		syntTransf.prepare();
@@ -74,7 +74,7 @@ public class SentenceTransformEngine
 	 * @param params	transformation parameters
 	 * @return 	UD tree in CoNLL-U format or null if tree could not be
 	 * 			transformed paired with stats about dep roles (basic dependency
-	 * 			'dep' first, then ehnhanced dependency 'dep').
+	 * 			'dep' first, then enhanced dependency 'dep').
 	 */
 	public static Tuple<String, Tuple<Integer, Integer>> treeToConll(
 			PmlANode pmlTree, TransformationParams params)

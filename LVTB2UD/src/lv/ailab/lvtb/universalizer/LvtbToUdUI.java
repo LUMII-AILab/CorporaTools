@@ -14,7 +14,7 @@ import java.io.File;
  * should be numbered).
  * Transformation on each tree separately. First a CoNLL-U table containing
  * only tokens and morphological information is built, then syntactic
- * information is added. To bild UD syntax tree, PML syntax tree is traversed
+ * information is added. To build UD syntax tree, PML syntax tree is traversed
  * recursively, starting from the root phrase. For each phrase first its
  * constituents are processed, then phrase itself is transformed to UD
  * substructure, and at last phrase dependents are processed. During the process
@@ -25,8 +25,8 @@ import java.io.File;
  *
  * Transformation is done according to UD v2 guidelines.
  *
- * NB! Transformator ignores files, where first sentence contains comment
- * starting with 'AUTO'. Transformator also ignores files where any sentence
+ * NB! Transformation ignores files, where first sentence contains comment
+ * starting with 'AUTO'. Transformation also ignores files where any sentence
  * contains comment starting with 'FIXME'.
  *
  * Created on 2016-04-17.
@@ -115,13 +115,13 @@ public class LvtbToUdUI
 
 		}
 		if (omittedFiles == 0 && omittedTrees == 0)
-			System.out.println("Everything is finished, nothing was omited.");
+			System.out.println("Everything is finished, nothing was omitted.");
 		else if (omittedFiles == 0)
 			System.out.printf(
-					"Everything is finished, %s trees was omited.\n", omittedTrees);
+					"Everything is finished, %s trees was omitted.\n", omittedTrees);
 		else
 			System.out.printf(
-					"Everything is finished, %s file(s) and %s tree(s) was omited.\n",
+					"Everything is finished, %s file(s) and %s tree(s) was omitted.\n",
 					omittedFiles, omittedTrees);
 		if (autoFiles > 0)
 			System.out.printf("%s file(s) have AUTOs.\n", autoFiles);

@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 /**
- * Enumeration for Universal Dependencies's v2 syntax relations.
+ * Enumeration for Universal Dependencies' v2 syntax relations.
  * Created on 2017-02-02.
  *
  * @author Lauma
@@ -176,7 +176,7 @@ public enum UDv2Relations
 
 	/**
 	 * Checks, if the given role (UD relation type) can be added to enhanced
-	 * dependency liks obtained during conjunct propagation.
+	 * dependency links obtained during conjunct propagation.
 	 * @param role	role to check
 	 * @return	true, if the propagated link with such role can be made
 	 */

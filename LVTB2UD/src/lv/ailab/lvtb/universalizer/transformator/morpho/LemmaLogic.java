@@ -2,10 +2,12 @@ package lv.ailab.lvtb.universalizer.transformator.morpho;
 
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 
+// TODO: is the different behaviour if logger is null (console printing) ok?
+
 /**
  * Logic on obtaining Universal lemmas from Latvian Treebank lemmas.
  * Created on 2018-10-16.
- * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
+ *
  * @author Lauma
  */
 public class LemmaLogic

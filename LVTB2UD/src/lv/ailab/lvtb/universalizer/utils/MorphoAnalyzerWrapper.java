@@ -28,7 +28,7 @@ public class MorphoAnalyzerWrapper
 		{
 			Word analysis = getMorpho().analyze(form);
 			//String tag = postag.contains("_") ? postag.substring(0, postag.indexOf('_')) : postag;
-			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			//TODO: Turn this back on, when morphonalyzer allows to change the output stream for complaining.
 			//return analysis.getMatchingWordform(tag, false);
 			return analysis.getMatchingWordform(postag, false);
 		} catch (Exception e)
@@ -43,7 +43,7 @@ public class MorphoAnalyzerWrapper
 		try
 		{
 			Word analysis = getMorpho().analyze(form);
-			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			//TODO: Turn this back on, when morphonalyzer allows to change the output stream for complaining.
 			return analysis.getMatchingWordform(postag, false).getValue("UD vārdšķira");
 		} catch (Exception e)
 		{
@@ -61,7 +61,7 @@ public class MorphoAnalyzerWrapper
 		{
 			Word w = getMorpho().analyze(form);
 			Wordform wf = w.getMatchingWordform(postag, false);
-			//TODO: Kad Pēteris partaisīs iespēju izvadīt complain uz citu plūsmu, ieslēgt atpakaļ.
+			//TODO: Turn this back on, when morphonalyzer allows to change the output stream for complaining.
 			return wf.getValue(AttributeNames.i_Lemma);
 		} catch (Exception e)
 		{

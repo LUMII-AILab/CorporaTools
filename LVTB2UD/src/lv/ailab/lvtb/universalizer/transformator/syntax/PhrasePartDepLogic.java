@@ -30,8 +30,8 @@ public class PhrasePartDepLogic
 	 * @param phraseNode	phrase in relation to which DEPREL must be
 	 *                      chosen (also used, if information about phrase's
 	 *                      ancestors is needed)
-	 * @return	UD dependency role and enhanced depency role postfix, if such is
-	 * 			needed.
+	 * @return	UD dependency role and enhanced dependency role postfix, if
+	 * 			such is needed.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
 			PmlANode aNode, PmlANode phraseNode)
@@ -196,7 +196,7 @@ public class PhrasePartDepLogic
 		{
 			// For now let us assume, that conjunction can't be coordinated.
 			// Then parent in this situation is the xSimile itself.
-			// TODO FIXME what happens if coordination somewhre?
+			// TODO FIXME what happens if coordination somewhere?
 			PmlANode firstAncestor = phraseNode.getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
 			PmlANode secondAncestor = firstAncestor.getEffectiveAncestor(); // node/xinfo/pmcinfo/phraseinfo
 			String firstAncType = firstAncestor.getAnyLabel();
@@ -239,7 +239,7 @@ public class PhrasePartDepLogic
 			if (lvtbRole.equals(LvtbRoles.AUXVERB))
 			{
 				// Determine properties of this AUXVERB: is it standard aux or no,
-				// is in pasive construction and is it in nominal construction.
+				// is in passive construction and is it in nominal construction.
 				PmlMNode morfo = aNode.getM();
 				String lemma = morfo == null ? null : morfo.getLemma();
 				String redLemma = aNode.getReductionLemma();

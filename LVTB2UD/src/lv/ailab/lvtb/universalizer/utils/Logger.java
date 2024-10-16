@@ -11,7 +11,8 @@ import java.util.Objects;
 
 /**
  * Class for printing out in the log files various kinds of additional
- * information. Currently it does warning logging and ID mapping logging.
+ * information. Currently, it logs warnings, ID mapping and collects `dep`
+ * statistics.
  */
 public class Logger
 {
@@ -30,8 +31,8 @@ public class Logger
 
 	/**
 	 * @param statusOutPath		filename for printing various status messages;
-	 *                          if null, System.out is used (will lead to a bit
-	 *                      	repetative output for file opening/closing
+	 *                          if null, `System.out` is used (will lead to a bit
+	 *                      	repetitive output for file opening/closing
 	 *                      	messages)
 	 * @param idMappingOutPath	filename for printing mapping between PML IDs
 	 *                          and conll token numbers; if null, this info is
@@ -57,7 +58,7 @@ public class Logger
 
 	/**
 	 * @param statusOut		flow for printing various status messages; if null,
-	 *                      System.out is used (will lead to a bit repetative
+	 *                      `System.out` is used (will lead to a bit repetitive
 	 *                      output for file opening/closing messages)
 	 * @param idMappingOut	flow printing mapping between PML IDs and conll
 	 *                      token numbers; if null, this info is not printed
@@ -82,7 +83,7 @@ public class Logger
 
 	public void finishFileNormal(boolean empty)
 	{
-		// Last sentence should have ended in a emptied idMappingDesc.
+		// Last sentence should have ended in an emptied idMappingDesc.
 		if (!idMappingDesc.isEmpty())
 			throw new IllegalArgumentException(
 					"Even if file ends in a normal way, Logger.idMappingDesc is not empty!");
@@ -107,7 +108,7 @@ public class Logger
 	public void finishFileWithAUTO()
 	{
 		statusOut.printf(
-				"File starts with \"AUTO\" comment, everything is ommited!\n");
+				"File starts with \"AUTO\" comment, everything is omitted!\n");
 	}
 
 	protected void afterSentenceReset()
@@ -140,7 +141,7 @@ public class Logger
 	}
 	public void finishSentenceWithFIXME()
 	{
-		statusOut.printf("A sentence with \"FIXME\" ommited.\n");
+		statusOut.printf("A sentence with \"FIXME\" omitted.\n");
 		//finishSentenceNormal(true);
 		afterSentenceReset();
 	}
@@ -175,13 +176,13 @@ public class Logger
 			int depEnhRoleSent, int depEnhRoleSum)
 	{
 		if (omittedFiles == 0 && omittedTrees == 0)
-			statusOut.printf("Everything is finished, nothing was omited.\n");
+			statusOut.printf("Everything is finished, nothing was omitted.\n");
 		else if (omittedFiles == 0)
 			statusOut.printf(
-					"Everything is finished, %s tree(s) was omited.\n", omittedTrees);
+					"Everything is finished, %s tree(s) was omitted.\n", omittedTrees);
 		else
 			statusOut.printf(
-					"Everything is finished, %s file(s) and at least %s tree(s) was omited.\n",
+					"Everything is finished, %s file(s) and at least %s tree(s) was omitted.\n",
 					omittedFiles, omittedTrees);
 		if (autoFiles > 0) statusOut.printf("%s file(s) have AUTOs.\n", autoFiles);
 		if (fixmeFiles > 0) statusOut.printf("%s file(s) have FIXMEs.\n", fixmeFiles);
@@ -215,7 +216,7 @@ public class Logger
 
 		missingDepOut.println ("Enhanced Dependencies");
 		missingDepOut.println ("---------------------");
-		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurances");
+		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurrences");
 		for (Map.Entry<DepStats.LocalTreeConfig, HashSet<String>> e : missingEnhancedRoles.data.entrySet().stream().sorted(byCountThenConf).toList())
 		{
 			missingDepOut.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
@@ -227,7 +228,7 @@ public class Logger
 
 		missingDepOut.println ("Basic Dependencies");
 		missingDepOut.println ("------------------");
-		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurances");
+		missingDepOut.println ("Role\tParent role\tTag\tParent tag\tCount\tOccurrences");
 		for (Map.Entry<DepStats.LocalTreeConfig, HashSet<String>> e : missingBasicRoles.data.entrySet().stream().sorted(byCountThenConf).toList())
 		{
 			missingDepOut.printf("%s\t%s\t%s\t%s\t%s\t%s\n",

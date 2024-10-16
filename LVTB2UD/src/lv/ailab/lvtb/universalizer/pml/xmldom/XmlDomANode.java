@@ -58,8 +58,9 @@ public class XmlDomANode implements PmlANode
 
 	/**
 	 * Determine node type.
-	 * @return 	type of the node - Type.X, Type.COORD or Type.PMC for ID-less
-	 *			nodes, Type. ROOT for root of the tree, Type.NODE for others.
+	 * @return 	type of the node - `Type.X`, `Type.COORD` or `Type.PMC` for
+	 *			 ID-less nodes, Type. ROOT for root of the tree, `Type.NODE`
+	 *			 for others.
 	 */
 	@Override
 	public Type getNodeType()
@@ -158,7 +159,8 @@ public class XmlDomANode implements PmlANode
 	/**
 	 * Find the closest ancestor (given node included), whose label is not
 	 * crdPart, crdParts or crdClauses, and return its role or phrase label.
-	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
+	 * @return	phrase type or dependency role or `LVtbHelperRoles.ROOT` for
+	 * root.
 	 */
 	@Override
 	public String getEffectiveLabel()
@@ -191,7 +193,7 @@ public class XmlDomANode implements PmlANode
 
 	/**
 	 * Find tag attribute. Use either morphotag or x-word tag or coordination
-	 * tag. For tokenless reduction nodes return reduction tag. For PMC node
+	 * tag. For token-less reduction nodes return reduction tag. For PMC node
 	 * return first basElem's tag. For coordinations with no given tag return
 	 * tag obtained from first coordinated part.
 	 * Based on assumption, that single node has no more than one phrase-child.
@@ -304,7 +306,7 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Find reduction field value and cut off the begining part before braces
+	 * Find reduction field value and cut off the beginning part before braces
 	 * and braces themselves.
 	 * @return	reduction wordform
 	 */
@@ -395,7 +397,7 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Find smallest ord number found in the subtree rooted in this node.
+	 * Find the smallest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number.
 	 */
@@ -425,7 +427,7 @@ public class XmlDomANode implements PmlANode
 		}
 	}
 	/**
-	 * Find biggest ord number found in the subtree rooted in this node.
+	 * Find the biggest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number.
 	 */
@@ -481,9 +483,10 @@ public class XmlDomANode implements PmlANode
 
 	/**
 	 * Find PML parent for this node or phrase structure. For a node
-	 * representing a phrase constituent this will return phrase node (Type.X,
-	 * Type.COORD or Type.PMC) containing it. For a phrase node this will return
-	 * node (Type.NODE or Type.ROOT) representing phrase in the sentence.
+	 * representing a phrase constituent this will return phrase node
+	 * (`Type.X`, `Type.COORD` or `Type.PMC`) containing it. For a phrase node
+	 * this will return node (`Type.NODE` or `Type.ROOT`) representing phrase
+	 * in the sentence.
 	 * @return	null for root, otherwise any PML node (can be also phrase node)
 	 */
 	@Override
@@ -809,7 +812,7 @@ public class XmlDomANode implements PmlANode
 	}
 
 	/**
-	 * Returns the lenght of the shortest path connecting this node and root.
+	 * Returns the length of the shortest path connecting this node and root.
 	 * @return	0 for root node, 1 for root's dependents and constituents, 2 for
 	 * 			for their dependents and constituents, etc.
 	 */
@@ -973,17 +976,17 @@ public class XmlDomANode implements PmlANode
 				parentToAppend = this;
 			Document ownerDoc = domNode.getOwnerDocument();
 			// Children container
-			Node childenNode = (Node) XPathEngine.get().evaluate(
+			Node childrenNode = (Node) XPathEngine.get().evaluate(
 					"./children", parentToAppend.domNode, XPathConstants.NODE);
-			if (childenNode == null)
+			if (childrenNode == null)
 			{
-				childenNode = ownerDoc.createElement("children");
-				parentToAppend.domNode.appendChild(childenNode);
+				childrenNode = ownerDoc.createElement("children");
+				parentToAppend.domNode.appendChild(childrenNode);
 			}
 
 			// Node itself
 			Element newTokenNode = ownerDoc.createElement("node");
-			childenNode.appendChild(newTokenNode);
+			childrenNode.appendChild(newTokenNode);
 
 			// id attribute
 			String newId = getId() + idPostfix;
@@ -1018,7 +1021,7 @@ public class XmlDomANode implements PmlANode
 
 	/**
 	 * Transform NodeList to ArrayList of PmlANode.
-	 * @param nodes	list to tranform
+	 * @param nodes	list to transform
 	 * @return	transformed list (original node ordering is preserved)
 	 * TODO: is there a more optimal implementation?
 	 */

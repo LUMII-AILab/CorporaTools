@@ -15,7 +15,7 @@ public class XPosLogic
 	/**
 	 * Logic for obtaining XPOSTAG from tag given in LVTB.
 	 * @param lvtbTag	tag given in LVTB
-	 * @return XPOSTAG or _ if tag from LVTB is not meaningfull
+	 * @return XPOSTAG or _ if tag from LVTB is not meaningful
 	 */
 	public static String getXpostag (String lvtbTag)
 	{
@@ -25,7 +25,7 @@ public class XPosLogic
 	 * Logic for obtaining XPOSTAG from tag given in LVTB.
 	 * @param lvtbTag	tag given in LVTB
 	 * @param ending	postfix to be added to the tag
-	 * @return XPOSTAG or _ if tag from LVTB is not meaningfull
+	 * @return XPOSTAG or _ if tag from LVTB is not meaningful
 	 */
 	public static String getXpostag (String lvtbTag, String ending)
 	{

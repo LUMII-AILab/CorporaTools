@@ -1,7 +1,7 @@
 package lv.ailab.lvtb.universalizer.conllu;
 
 /**
- * Enumeration for Universal Dependencies's POS tags.
+ * Enumeration for Universal Dependencies' POS tags.
  * Created on 2016-04-17.
  *
  * @author Lauma

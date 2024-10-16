@@ -6,15 +6,17 @@ import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.utils.MorphoAnalyzerWrapper;
 
+// TODO: is the different behaviour if logger is null (console printing) ok?
+
 /**
  * Logic on obtaining Universal POS tags from Latvian Treebank tags.
  * Created on 2016-04-20.
- * TODO: atšķirīga uzvedība, ja logger ir null - izdrukā konsolē. Kāpēc?
+ *
  * @author Lauma
  */
 public class UPosLogic
 {
-	/* TODO: izcelt no SentenceTransformEngine ārā arī sadalāmo tokenu POS loģiku.*/
+	/* TODO: take out of SentenceTransformEngine the parts which process POS of the split tokens.*/
 
 	/**
 	 * Use this to obtain UPOSTAG.
@@ -85,8 +87,8 @@ public class UPosLogic
 	@Deprecated
 	public static UDv2PosTag getPostsyntUPosTag (Token token)
 	{
-		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exeption. But should we?
-		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exeption. But should we?
+		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exception. But should we?
+		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exception. But should we?
 		UDv2Relations deprel = token.deprel;
 		if (xpostag.matches("a.*"))
 		{

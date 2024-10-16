@@ -1,6 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator;
 
-import lv.ailab.lvtb.universalizer.conllu.EnhencedDep;
+import lv.ailab.lvtb.universalizer.conllu.EnhancedDep;
 import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
 import lv.ailab.lvtb.universalizer.conllu.Token;
 import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
@@ -62,14 +62,14 @@ public class Sentence
 	public HashMap<String, HashSet<String>> coordPartsUnder = new HashMap<>();
 
 	/**
-	 * Mapping from PML phrase node ID to constituent node ID that is root foor
+	 * Mapping from PML phrase node ID to constituent node ID that is root for
 	 * corresponding dependency subtree (head constituent). Populated during
 	 * transformation.
 	 */
 	public HashMap<String, String> phraseHeadConstituents = new HashMap<>();
 
 	/**
-	 * Mapping (multimap) between controled and rised subjects and nodes they
+	 * Mapping (multimap) between controlled and raised subjects and nodes they
 	 * should be linked to. Indexed by subject node IDs. Governor nodes are
 	 * sorted by the depth in the tree, starting with deepest, then by deep ord
 	 * descending. Includes standard subject links, i.e. cases when subject is
@@ -80,8 +80,8 @@ public class Sentence
 
 	/**
 	 * Set containing currently known ellipted predicates for which core
-	 * argument or adjunct is elevated and, thus, some of dependants might need
-	 * orphan role. Populated during transformation.
+	 * argument or adjunct is elevated and, thus, some dependants might
+	 * need orphan role. Populated during transformation.
 	 */
 	public HashSet<String> ellipsisWithOrphans = new HashSet<>();
 
@@ -170,7 +170,7 @@ public class Sentence
 		if (resultAccumulator == null) resultAccumulator = new HashMap<>();
 		String id = aNode.getId();
 
-		// Update coresponding subject list with dependant subjects.
+		// Update corresponding subject list with dependant subjects.
 		HashSet<String> collectedSubjs = resultAccumulator.get(id);
 		if (collectedSubjs == null) collectedSubjs = new HashSet<>();
 		List<PmlANode> subjs = aNode.getChildren(LvtbRoles.SUBJ);
@@ -200,7 +200,7 @@ public class Sentence
 						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(partLemma, partTag))
 							|| MorphoTransformator.isTrueAux(partRedLemma, partTag)))
 					continue;
-				// Do not add coordination conjuctions and punctuation.
+				// Do not add coordination conjunctions and punctuation.
 				if (LvtbCoordTypes.CRDPARTS.equals(phraseType) && !LvtbRoles.CRDPART.equals(partRole))
 					continue;
 				// Do not add split ellipsis nodes.
@@ -285,7 +285,7 @@ public class Sentence
 			/*HashSet<String> goodEnhDepHeads = new HashSet<>(t.deps.stream()
 					.filter(d -> (d.role != UDv2Relations.DEP))
 					.map(d -> d.headID).collect(Collectors.toSet()));
-			HashSet<EnhencedDep> noRoleEnhDepsToDelete = new HashSet<>(t.deps.stream()
+			HashSet<EnhancedDep> noRoleEnhDepsToDelete = new HashSet<>(t.deps.stream()
 					.filter(d -> (d.role == UDv2Relations.DEP && goodEnhDepHeads.contains(d.headID)
 							&& (d.rolePostfix == null || d.rolePostfix.isEmpty())))
 					.collect(Collectors.toSet()));
@@ -316,7 +316,7 @@ public class Sentence
 	 * represents (if this node is coordination) or node's ID otherwise. In case
 	 * a part is a coordination itself, its coordinated parts are included in
 	 * the result instead of part itself.
-	 * @param aNodeId	Id of node whose coordination parts are needed
+	 * @param aNodeId	ID of node whose coordination parts are needed
 	 * @return	IDs of coordinated parts or node itself
 	 */
 	public HashSet<String> getCoordPartsUnderOrNode (String aNodeId)
@@ -354,7 +354,7 @@ public class Sentence
 	public HashSet<String> getAllAlternatives(String aNodeId, boolean includeSelfCoordParts)
 	{
 		if (aNodeId == null) return null;
-		HashSet<String> result = getCoordPartsUnderHeadConstits1Lvl(aNodeId, includeSelfCoordParts);
+		HashSet<String> result = getCoordPartsUnderHeadConstituents1Lvl(aNodeId, includeSelfCoordParts);
 		if (!includeSelfCoordParts)
 			result.remove(aNodeId);
 		int oldSize = 1;
@@ -363,7 +363,7 @@ public class Sentence
 			oldSize = result.size();
 			HashSet<String> newResult = new HashSet<>();
 			for (String tmpId : result)
-				newResult.addAll(getCoordPartsUnderHeadConstits1Lvl(tmpId, true));
+				newResult.addAll(getCoordPartsUnderHeadConstituents1Lvl(tmpId, true));
 			result = newResult;
 		}
 		result.add(aNodeId);
@@ -379,7 +379,7 @@ public class Sentence
 	 *                              for given node?
 	 * @return	set of node IDs
 	 */
-	protected HashSet<String> getCoordPartsUnderHeadConstits1Lvl(
+	protected HashSet<String> getCoordPartsUnderHeadConstituents1Lvl(
 			String aNodeId, boolean includeSelfCoordParts)
 	{
 		if (aNodeId == null) return null;
@@ -398,7 +398,7 @@ public class Sentence
 	 * with the first given node and then all head constituents further found.
 	 * @param aNodeId	node whose head constituent (or constituent list) should
 	 *                  be found
-	 * @return	null, if argument is null; other wise list with given node, its
+	 * @return	null, if argument is null; otherwise list with given node, its
 	 * 			head constituent, its head constituent etc...
 	 */
 	public ArrayList<String> getHeadConstituentList(String aNodeId)
@@ -475,16 +475,16 @@ public class Sentence
 	// ===== Simple link setting. ==============================================
 
 	/**
-	 * Set both base and enhanced dependency links for tokens coressponding to
+	 * Set both base and enhanced dependency links for tokens corresponding to
 	 * the given PML nodes, but do not set circular dependencies. It is expected
 	 * that pmlaToEnhConll (if needed) and pmlaToConll contains links from given
-	 * PML nodes's IDs to corresponding tokens.
+	 * PML nodes' IDs to corresponding tokens.
 	 * Return silently, if there was no token for given child node. Fail, if
 	 * there was no token for given parent node. This asymmetry is done because
 	 * inserted nodes have no corresponding UD token, and childless nodes should
 	 * just be ignored, while missing node in the middle of the tree, is a major
 	 * error.
-	 * TODO Maybe we should keep ignore-node list and check agains that?
+	 * TODO Maybe we should keep ignore-node list and check again that?
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param baseDep		label to be used for base dependency
@@ -522,10 +522,10 @@ public class Sentence
 	}
 
 	/**
-	 * Set enhanced dependency link for tokens coressponding to the given PML
+	 * Set enhanced dependency link for tokens corresponding to the given PML
 	 * nodes, but do not set circular dependencies. It is expected that
 	 * pmlaToEnhConll (if needed) and pmlaToConll contains links from given
-	 * PML nodes's IDs to corresponding tokens.
+	 * PML nodes' IDs to corresponding tokens.
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
 	 * @param enhancedDep	label to be used for enhanced dependency
@@ -553,10 +553,10 @@ public class Sentence
 	}
 
 	/**
-	 * Set basic dependency link for tokens coressponding to the given PML
+	 * Set basic dependency link for tokens corresponding to the given PML
 	 * nodes, but do not set circular dependencies and do not set anything as a
 	 * parent to decimal node. It is expected that pmlaToConll contains links
-	 * from given PML nodes's IDs to corresponding
+	 * from given PML nodes' IDs to corresponding
 	 * tokens.
 	 * @param parent 		PML node describing parent
 	 * @param child			PML node describing child
@@ -593,7 +593,7 @@ public class Sentence
 	 * @param forbidHeadDuplicates	should multiple enhanced links with the same
 	 *                              head be allowed
 	 */
-	public void setLinkAndCorsslinksPhrasal(
+	public void setLinkAndCrosslinksPhrasal(
 			PmlANode parent, PmlANode child, UDv2Relations baseDep,
 			Tuple<UDv2Relations, String> enhancedDep, boolean setBackbone,
 			boolean cleanOldDeps, boolean forbidHeadDuplicates)
@@ -605,8 +605,8 @@ public class Sentence
 
 	/**
 	 * Set both base and enhanced dependency links as root for token(s)
-	 * coressponding to the given PML node. It is expecte that pmlaToEnhConll
-	 * (if needed) and pmlaToConll contains links from given PML nodes's IDs to
+	 * corresponding to the given PML node. It is expected that pmlaToEnhConll
+	 * (if needed) and pmlaToConll contains links from given PML nodes' IDs to
 	 * corresponding tokens. This dependency is set as backbone by default.
 	 * @param node 			PML node to be made root
 	 * @param cleanOldDeps	whether previous contents from deps field should be
@@ -634,8 +634,8 @@ public class Sentence
 
 	/*
 	 * Changes the heads for all dependencies set (both base and enhanced) for
-	 * given childnode. It is expected that pmlaToEnhConll (if needed) and
-	 * pmlaToConll contains links from given PML nodes's IDs to corresponding
+	 * given child node. It is expected that pmlaToEnhConll (if needed) and
+	 * pmlaToConll contains links from given PML nodes' IDs to corresponding
 	 * tokens.
 	 * @param newParent	new parent
 	 * @param child		child node whose attachment should be changed
@@ -657,12 +657,12 @@ public class Sentence
 		// Set enhanced dependencies, but avoid circular.
 		if (!childEnhToken.equals(rootEnhToken) && !childEnhToken.deps.isEmpty())
 		{
-			HashSet<EnhencedDep> newDeps = new HashSet<>();
-			for (EnhencedDep ed : childEnhToken.deps)
-				newDeps.add(new EnhencedDep(rootEnhToken, ed.role));
+			HashSet<EnhancedDep> newDeps = new HashSet<>();
+			for (EnhancedDep ed : childEnhToken.deps)
+				newDeps.add(new EnhancedDep(rootEnhToken, ed.role));
 			childEnhToken.deps = newDeps;
 			if (childEnhToken.depsBackbone != null)childEnhToken.depsBackbone =
-					new EnhencedDep(rootEnhToken, childEnhToken.depsBackbone.role);
+					new EnhancedDep(rootEnhToken, childEnhToken.depsBackbone.role);
 		}
 	}//*/
 
@@ -674,7 +674,7 @@ public class Sentence
 	 * deprel, deps and deps backbone for each child. If designated parent is
 	 * included in child list node, circular dependency is not made, role is not
 	 * set.
-	 * Use for relinking depdenencies.
+	 * Use for relinking dependencies.
 	 * @param parent	PML parent node in the hybrid tree (in case of
 	 * 	 *              phrase nodes, corresponding tokens must be set correctly)
 	 * @param children	list of child nodes
@@ -685,7 +685,7 @@ public class Sentence
 	 */
 	public void relinkAllDependants(
 			PmlANode parent, List<PmlANode> children,
-			boolean addCoordPropCrosslinks, boolean addControledSubjects,
+			boolean addCoordPropCrosslinks, boolean addControlledSubjects,
 			boolean forbidHeadDuplicates)
 	{
 		if (children == null || children.isEmpty()) return;
@@ -694,26 +694,26 @@ public class Sentence
 		{
 			Tuple<UDv2Relations, String> role = relinkSingleDependant(parent, child,
 					addCoordPropCrosslinks, forbidHeadDuplicates);
-			if (addControledSubjects && (
+			if (addControlledSubjects && (
 					role.first == UDv2Relations.NSUBJ || role.first == UDv2Relations.NSUBJ_PASS))
-				addSubjectsControlers(child, false, addCoordPropCrosslinks, forbidHeadDuplicates);
-			if (addControledSubjects && (
+				addSubjectsControllers(child, false, addCoordPropCrosslinks, forbidHeadDuplicates);
+			if (addControlledSubjects && (
 					role.first == UDv2Relations.CSUBJ || role.first == UDv2Relations.CSUBJ_PASS))
-				addSubjectsControlers(child, true, addCoordPropCrosslinks, forbidHeadDuplicates);
+				addSubjectsControllers(child, true, addCoordPropCrosslinks, forbidHeadDuplicates);
 		}
 	}
 
 	/**
 	 * Based on previously populated subject map add propagated subjects
 	 * for given node.
-	 * @param subject		subject node from which controll links sould be made
+	 * @param subject		subject node from which control links should be made
 	 * @param isClausal		clausal subject (true) or ordinary (false)
 	 * @param addCoordPropCrosslinks    should also coordination propagation be
 	 * 									done?
 	 * @param forbidHeadDuplicates		should multiple enhanced links with the
 	 *                              	same head be allowed
 	 */
-	public void addSubjectsControlers(
+	public void addSubjectsControllers(
 			PmlANode subject, boolean isClausal, boolean addCoordPropCrosslinks,
 			boolean forbidHeadDuplicates)
 	{
@@ -730,7 +730,7 @@ public class Sentence
 			setEnhLink(parent, subject, enhRole, false, false, forbidHeadDuplicates);
 			if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
 				addDependencyCrosslinks(parent, subject, forbidHeadDuplicates,
-						(isClausal ? DepCroslinkParams.CLAUSE_CRSUBJ : DepCroslinkParams.NORMAL_CRSUBJ));
+						(isClausal ? DepCrosslinkParams.CLAUSE_CRSUBJ : DepCrosslinkParams.NORMAL_CRSUBJ));
 			//System.out.println(pmlaToConll.get(subject.getId()).toConllU());
 		}
 	}
@@ -739,7 +739,7 @@ public class Sentence
 	 * Make a given node a child of the designated parent. Set UD role for the
 	 * child. Set enhanced dependency and deps backbone. If designated parent is
 	 * the same as child node, circular dependency is not made, role is not set.
-	 * Use for relinking depdenencies.
+	 * Use for relinking dependencies.
 	 * @param parent	PML parent node in the hybrid tree (in case of
 	 *                  phrase nodes, corresponding tokens must be set correctly)
 	 * @param child		designated child
@@ -759,7 +759,7 @@ public class Sentence
 		setBaseLink(parent, child, baseRole);
 		setEnhLink(parent, child, enhRole, true, true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(enhRole.first))
-			addDependencyCrosslinks(parent, child, forbidHeadDuplicates, DepCroslinkParams.NO_CRSUBJ);
+			addDependencyCrosslinks(parent, child, forbidHeadDuplicates, DepCrosslinkParams.NO_CRSUBJ);
 		return enhRole;
 	}
 
@@ -778,7 +778,7 @@ public class Sentence
 	 */
 	protected void addDependencyCrosslinks (
 			PmlANode parent, PmlANode child, boolean forbidHeadDuplicates,
-			DepCroslinkParams croslinkParam)
+			DepCrosslinkParams crosslinkParam)
 	{
 		HashSet<String> altParentKeys = coordPartsUnder.get(parent.getId());
 		HashSet<String> altChildKeys = coordPartsUnder.get(child.getId());
@@ -788,11 +788,11 @@ public class Sentence
 			if (pmlTree.getId().equals(altParentKey)) altParent = pmlTree;
 			else altParent = pmlTree.getDescendant(altParentKey);
 			PmlANode altChild = pmlTree.getDescendant(altChildKey);
-			// Role for ehnanced link is obtained by actual parent,
+			// Role for enhanced link is obtained by actual parent,
 			// actual child, but by "place-holder" role obtained
 			// from the original child.
 			Tuple<UDv2Relations, String> childDeprel = null;
-			switch (croslinkParam)
+			switch (crosslinkParam)
 			{
 				case NO_CRSUBJ:
 					childDeprel = DepRelLogic.depToUDEnhanced(altChild, altParent, child.getRole());
@@ -974,7 +974,7 @@ public class Sentence
 	}
 
 	/**
-	 * Utility function for phrase transformation. When phrase phrase is
+	 * Utility function for phrase transformation. When phrase is
 	 * transformed to UD and a dependency link between two constituents is
 	 * established, this can be used to add enhanced links (conjunct propagation)
 	 * between nodes that are coordinated with parent or child.
@@ -1010,7 +1010,7 @@ public class Sentence
 			}
 	}
 
-	// ===== Utility for both donstituency and dependency related linking &
+	// ===== Utility for both constituency and dependency related linking &
 	// relinking. ==============================================================
 
 	/**
@@ -1075,7 +1075,7 @@ public class Sentence
 		}
 		return removed > 0;
 	}
-	protected enum DepCroslinkParams
+	protected enum DepCrosslinkParams
 	{
 		NO_CRSUBJ, CLAUSE_CRSUBJ, NORMAL_CRSUBJ
 	}
@@ -1084,7 +1084,7 @@ public class Sentence
 	 * Check if given token is linked to the tree with projective dependency.
 	 * Algorithm from https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
 	 * @param token	token to analyze
-	 * @return false if the link is nonprojective
+	 * @return false if the link is non-projective
 	 */
 	public boolean isProjective(Token token)
 	{
@@ -1096,7 +1096,7 @@ public class Sentence
 		// Then check if these nodes are punctuation parents descendants.
 		for (Token otherTok : conll)
 		{
-			// Process begining and the end of the gap.
+			// Process beginning and the end of the gap.
 			if (otherTok.equals(token) || otherTok.equals(parent))
 			{
 				if (hasStartedGap) break;
@@ -1111,7 +1111,8 @@ public class Sentence
 				while (tmpParent != null && !tmpParent.equals(parent))
 					tmpParent = tmpParent.head.second;
 				// Null means root. If the root is reached without meeting
-				// punctuation nodes parent, then there is non-projectivity.
+				// punctuation nodes parent, then node's attachment is
+				// non-projective.
 				if (tmpParent == null) nonproj.add(otherTok);
 			}
 		}
@@ -1119,13 +1120,13 @@ public class Sentence
 	}
 
 	/**
-	 *  Checks whether a node is in a gap of a nonprojective edge. Report true
+	 *  Checks whether a node is in a gap of a non-projective edge. Report true
 	 *  only if the node's parent is not in the same gap. Used to check that a
-	 *  punctuation node does not cause nonprojectivity. But if it has been
+	 *  punctuation node does not cause non-projectivity. But if it has been
 	 *  dragged to the gap with a larger subtree, then it itself is not blamed.
 	 *  Algorithm from https://github.com/UniversalDependencies/tools/blob/1a47bf7324ba0ec8256ef7986e8533f99869939c/validate.py
 	 * @param token token to analyze
-	 * @return true if this node creates some nonprojectivity
+	 * @return true if this node creates some non-projectivity
 	 */
 	public boolean createsNonprojectivity(Token token)
 	{
@@ -1233,7 +1234,7 @@ public class Sentence
 		int result = 0;
 		for (Token token : conll)
 			if (token != null && token.deps != null && !token.deps.isEmpty())
-				for (EnhencedDep dep : token.deps)
+				for (EnhancedDep dep : token.deps)
 					if (dep != null && dep.role != null && dep.role.equals(role)) result ++;
 		return result;
 	}

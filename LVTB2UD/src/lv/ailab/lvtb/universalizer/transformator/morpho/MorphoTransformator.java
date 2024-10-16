@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * This is the part of transformation where tokens for CoNLL-U table is created
  * and information form morphology fields is obtained.
- * Transformator relies on w level tokens being smaller than m level units.
+ * Transformation relies on w level tokens being smaller than m level units.
  */
 public class MorphoTransformator {
 	/**
@@ -108,7 +108,7 @@ public class MorphoTransformator {
 	 * node, make links between and fill in necessary fields.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -123,7 +123,7 @@ public class MorphoTransformator {
 		String lvtbTag = mNode.getTag();
 		String lvtbAId = aNode.getId();
 
-		// Starting from UD v2 numbers and certain abbrieavations are allowed to
+		// Starting from UD v2 numbers and certain abbreviations are allowed to
 		// be tokens with spaces.
 		if ((mForm.contains(" ") || mLemma.contains(" ")) &&
 				!lvtbTag.matches("x[no].*") &&
@@ -205,10 +205,10 @@ public class MorphoTransformator {
 
 	/**
 	 * Helper method: Create necessary CoNLL table entries for mNode where
-	 * source text from w level matches the wordworm.
+	 * source text from w level matches the wordform.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -248,11 +248,11 @@ public class MorphoTransformator {
 
 	/**
 	 * Helper method: Create necessary CoNLL table entries for mNode where
-	 * source text from w level does not match the wordworm, but the form_change
+	 * source text from w level does not match the wordform, but the form_change
 	 * is empty.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -300,18 +300,18 @@ public class MorphoTransformator {
 
 	/**
 	 * Helper method: Create necessary CoNLL table entries for mNode where
-	 * source text from w level does not match the wordworm and the only
+	 * source text from w level does not match the wordform and the only
 	 * form_change is "spell".
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
 	 * @return last token made
 	 */
 	protected Token transfOnSpellOnly(PmlANode aNode, Token previousToken,
-									  boolean paragraphChange, boolean missingSpacAfter)
+									  boolean paragraphChange, boolean missingSpaceAfter)
 	{
 		String lvtbAId = aNode.getId();
 		PmlMNode mNode = aNode.getM();
@@ -332,11 +332,11 @@ public class MorphoTransformator {
 		if (noSpaceAfter)
 		{
 			res.addMisc(MiscKeys.SPACE_AFTER, MiscValues.NO);
-			if (missingSpacAfter) res.addMisc(MiscKeys.CORRECT_SPACE_AFTER, MiscValues.YES);
+			if (missingSpaceAfter) res.addMisc(MiscKeys.CORRECT_SPACE_AFTER, MiscValues.YES);
 		}
-		else if (missingSpacAfter)
+		else if (missingSpaceAfter)
 			StandardLogger.l.doInsentenceWarning(String.format(
-					"Node \"%s\" with form \"%s\" and source \"%s\" has ignoded form_change=spacing",
+					"Node \"%s\" with form \"%s\" and source \"%s\" has ignored form_change=spacing",
 					lvtbAId, mForm, source));
 		if (paragraphChange || wNodes != null && wNodes.size() > 1 &&
 				hasParaChange(wNodes.get(0), wNodes.get(wNodes.size() -1)))
@@ -349,7 +349,7 @@ public class MorphoTransformator {
 	 * punctuation mNode. Warn, if there are links to w level nodes.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -384,7 +384,7 @@ public class MorphoTransformator {
 	 * hat is not punctuation. Warn, as this is not supposed to happen in data.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -425,7 +425,7 @@ public class MorphoTransformator {
 	 * errors.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -477,7 +477,7 @@ public class MorphoTransformator {
 	 * is not the prefix of the original string.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -531,7 +531,7 @@ public class MorphoTransformator {
 			return nextToken;
 		}
 		else
-		// TODO togerther with spacing error
+		// TODO together with spacing error
 		{
 			throw new IllegalArgumentException(String.format(
 					"Don't know what to do with node \"%s\" with form \"%s\", w-text \"%s\", and form_change \"%s\"",
@@ -545,7 +545,7 @@ public class MorphoTransformator {
 	 * consists of multiple wrongly separated (with spaces!!!) tokens.
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -615,7 +615,7 @@ public class MorphoTransformator {
 	 * Is this used?
 	 * @param aNode				PML A-level node for which CoNLL entry must be
 	 *                          created
-	 * @param previousToken		the token after which should follow all newmade
+	 * @param previousToken		the token after which should follow all new-made
 	 *                          tokens
 	 * @param paragraphChange	paragraph border detected right before this
 	 *                          token.
@@ -711,7 +711,7 @@ public class MorphoTransformator {
 	 * Currently extracted from pre-made CoNLL table.
 	 * TODO: use PML tree instead?
 	 */
-	public void extractSendenceText()
+	public void extractSentenceText()
 	{
 		s.text = s.conll.stream()
 				.filter(t -> t.idSub <= 0)

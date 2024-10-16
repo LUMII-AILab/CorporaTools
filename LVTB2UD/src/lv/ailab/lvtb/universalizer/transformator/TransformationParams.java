@@ -11,7 +11,7 @@ public class TransformationParams
 	 */
 	public Boolean DEBUG = false;
 	/**
-	 * Print warning when ellipis is encoutered.
+	 * Print warning when ellipsis is encountered.
 	 */
 	public Boolean WARN_ELLIPSIS = false;
 	/**
@@ -24,14 +24,14 @@ public class TransformationParams
 	 */
 	public Boolean INDUCE_PHRASE_TAGS = true;
 	/**
-	 * What to when a file contains an untransformable tree? For true - whole
+	 * What to when a file contains a non-transformable tree? For true - whole
 	 * file is omitted; for false - only specific tree.
 	 */
 	public Boolean OMIT_WHOLE_FILES = false;
 
 	/**
 	 * If true, inserted words ar converted to ellipsis and then processed
-	 * according UD ellipsis guidelines. Otherwise transformator just crash on
+	 * according UD ellipsis guidelines. Otherwise, transformer just crash on
 	 * them.
 	 */
 	public Boolean TURN_INSERTED_WORD_ELLIPSIS = true;
@@ -39,7 +39,7 @@ public class TransformationParams
 	// ===== For fitting UD standard.
 	/**
 	 * To fit UD standard, this must be true. If this is false, enhanced graph
-	 * will contain empty nodes for inserted commas and nonpredicative empty
+	 * will contain empty nodes for inserted commas and non-predicative empty
 	 * nodes.
 	 */
 	public Boolean UD_STANDARD_NULLNODES = true; // NB! Check this before each UD release!
@@ -52,13 +52,13 @@ public class TransformationParams
 	public Boolean SPLIT_NONEMPTY_ELLIPSIS = true; // NB! Check this before each UD release!
 
 	/**
-	 * To fit UD standard this must be true. When true, preprocessind is done to
+	 * To fit UD standard this must be true. When true, preprocessing is done to
 	 * rise punct dependants of other punct.
 	 */
 	public Boolean NORMALIZE_PUNCT_ATTACHMENT = true; // NB! Check this before each UD release!
 
 	/**
-	 * To fit UD standard this must be true. When true, nonprojective
+	 * To fit UD standard this must be true. When true, non-projective
 	 * punctuation is relinked.
 	 */
 	public Boolean NORMALIZE_NONPROJ_PUNCT = true; // NB! Check this before each UD release!
@@ -72,13 +72,13 @@ public class TransformationParams
 	public Boolean NO_EDEP_DUPLICATES = true; // NB! Check this before each UD release!
 
 	/**
-	 * Should transformators add controlled/raised subject links in enhanced
+	 * Should transformation add controlled/raised subject links in enhanced
 	 * graph?
 	 */
 	public Boolean ADD_CONTROL_SUBJ = true; // NB! Check this before each UD release!
 
 	/**
-	 * Should transformators add coordination propagation links in enhanced
+	 * Should transformation add coordination propagation links in enhanced
 	 * graph?
 	 */
 	public Boolean PROPAGATE_CONJUNCTS = true; // NB! Check this before each UD release!

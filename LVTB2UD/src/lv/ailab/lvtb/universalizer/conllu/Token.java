@@ -5,7 +5,7 @@ import lv.ailab.lvtb.universalizer.utils.Tuple;
 import java.util.*;
 
 /**
- * Format definition: http://universaldependencies.org/format.html
+ * CoNLL format definition: http://universaldependencies.org/format.html
  * Created on 2016-04-17.
  *
  * @author Lauma
@@ -81,9 +81,9 @@ public class Token
 	 * 9th column.
 	 * DEPS: List of secondary dependencies (head-deprel pairs).
 	 */
-	public HashSet<EnhencedDep> deps = new HashSet<>();
+	public HashSet<EnhancedDep> deps = new HashSet<>();
 
-	public EnhencedDep depsBackbone = null;
+	public EnhancedDep depsBackbone = null;
 	/**
 	 * 10th column.
 	 * MISC: Any other annotation.
@@ -213,10 +213,10 @@ public class Token
 		// Set dependencies, but avoid circular dependencies.
 		if (!equals(parent))
 		{
-			// Set base dependency.
+			// Set the base dependency.
 			head = Tuple.of(parent.getFirstColumn(), parent);
 			deprel = baseDep;
-			// Set enhanced dependencie.
+			// Set the enhanced dependency.
 			if (enhancedDep != null)
 			{
 				setEnhancedHead(parent, enhancedDep, setBackbone, cleanOldDeps, forbidHeadDuplicates);
@@ -268,7 +268,7 @@ public class Token
 	{
 		if (equals(parent)) return; // No circulars.
 
-		EnhencedDep dep = new EnhencedDep(parent, role, rolePostfix);
+		EnhancedDep dep = new EnhancedDep(parent, role, rolePostfix);
 		if (cleanOldDeps) deps.clear();
 
 		if (!forbidHeadDuplicates)
@@ -277,8 +277,8 @@ public class Token
 			if (setBackbone) depsBackbone = dep;
 			return;
 		}
-		EnhencedDep[] previous = deps.stream()
-				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhencedDep[]::new);
+		EnhancedDep[] previous = deps.stream()
+				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhancedDep[]::new);
 		if (previous.length == 0)
 		{
 			deps.add(dep);
@@ -330,44 +330,22 @@ public class Token
 	{
 		boolean forbidHeadDuplicates = false; // TODO make this parameter
 		if (cleanOldDeps) deps.clear();
-		EnhencedDep dep = EnhencedDep.root();
+		EnhancedDep dep = EnhancedDep.root();
 		if (!forbidHeadDuplicates)
 		{
 			deps.add(dep);
 			if (setBackbone) depsBackbone = dep;
 			return;
 		}
-		EnhencedDep[] previous = deps.stream()
-				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhencedDep[]::new);
+		EnhancedDep[] previous = deps.stream()
+				.filter(a -> a.headID.equals(dep.headID)).toArray(EnhancedDep[]::new);
 		if (previous.length > 0)
 			deps.removeAll(Arrays.asList(previous)); //if (UDv2Relations.DEP != dep.role) - // LOL, this is root.
 		deps.add(dep);
 		if (setBackbone) depsBackbone = dep;
-		// TODO is there realy something that tries to set dependency other than root to headID 0?
+		// TODO is there really something that tries to set dependency other than root to headID 0?
 	}
 
-
-/*	public void setSimpleHead(Token token, UDv2Relations role)
-	{
-		head = token.getFirstColumn();
-		deprel = role;
-	}
-	public void setBothHeads(Token token, UDv2Relations role)
-	{
-		setSimpleHead(token, role);
-		setEnhencedHead(token, role);
-	}
-
-	public void setSimpleHeadRoot()
-	{
-		head = "0";
-		deprel = UDv2Relations.ROOT;
-	}
-	public void setBothHeadsRoot()
-	{
-		setSimpleHeadRoot();
-		setEnhencedHeadRoot();
-	}*/
 	/**
 	 * Transforms token to a CoNLL-U format line. Newline is added.
 	 */
@@ -419,7 +397,7 @@ public class Token
 		else {
 
 			res.append(deps.stream().sorted(Comparator.comparingDouble(d -> d.sortValue))
-					.map(EnhencedDep::toConllU)	.reduce((s1, s2) -> s1 + "|" + s2)
+					.map(EnhancedDep::toConllU)	.reduce((s1, s2) -> s1 + "|" + s2)
 					.orElse("_"));
 		}
 		// 10

@@ -34,21 +34,22 @@ public class DepRelLogic
 	{
 		PmlANode pmlParent = node.getParent();
 		String lvtbRole = node.getRole();
-		UDv2Relations prelaminaryRole = depToUDLogic(node, pmlParent, lvtbRole).first;
-		if (prelaminaryRole == UDv2Relations.DEP)
+		UDv2Relations preliminaryRole = depToUDLogic(node, pmlParent, lvtbRole).first;
+		if (preliminaryRole == UDv2Relations.DEP)
 			warnOnRole(node, pmlParent, lvtbRole, false);
-		if (isEligibleForOrphan && canBecomeOrphan(prelaminaryRole))
+		if (isEligibleForOrphan && canBecomeOrphan(preliminaryRole))
 			return UDv2Relations.ORPHAN;
-		else return prelaminaryRole;
+		else return preliminaryRole;
 	}
 
 	/**
-	 * Enhanced relation between LVTB dependency roles and UD enhanced dependency
-	 * role. Orphan roles are not assigned, warnings on DEP roles are given.
+	 * Enhanced relation between LVTB dependency roles and UD enhanced
+	 * dependency role. Orphan roles are not assigned, warnings on DEP roles
+	 * are given.
 	 * @param node		node for which UD relation should be obtained (use this
 	 *                  node's placement, role, tag and lemma)
-	 * @return	UD dependency role and enhanced depency role postfix, if such is
-	 * 			needed.
+	 * @return	UD dependency role and enhanced dependency role postfix, if
+	 * 			such is needed.
 	 */
 	public static Tuple<UDv2Relations, String> depToUDEnhanced(PmlANode node)
 	{
@@ -57,14 +58,15 @@ public class DepRelLogic
 	}
 
 	/**
-	 * Enhanced relation between LVTB dependency roles and UD enhanced dependency
-	 * role. Orphan roles are not assigned, warnings on DEP roles are given.
+	 * Enhanced relation between LVTB dependency roles and UD enhanced
+	 * dependency role. Orphan roles are not assigned, warnings on DEP roles
+	 * are given.
 	 * @param node		node for which UD dependency should be obtained (use
 	 *             		this node's lemma, morphology, etc.)
 	 * @param parent	node which represents UD or enhanced UD parent for the
 	 *                  node to be labeled
-	 * @return	UD dependency role and enhanced depency role postfix, if such is
-	 * 			needed.
+	 * @return	UD dependency role and enhanced dependency role postfix, if
+	 * 			such is needed.
 	 */
 	public static Tuple<UDv2Relations, String> depToUDEnhanced(
 			PmlANode node, PmlANode parent, String lvtbRole)
@@ -83,8 +85,8 @@ public class DepRelLogic
 	 *             		this node's lemma, morphology, etc.)
 	 * @param parent	node which represents UD or enhanced UD parent for the
 	 *                  node to be labeled
-	 * @return	UD dependency role and enhanced depency role postfix, if such is
-	 * 			needed.
+	 * @return	UD dependency role and enhanced dependency role postfix, if
+	 * 			such is needed.
 	 */
 	public static Tuple<UDv2Relations, String> depToUDLogic(
 			PmlANode node, PmlANode parent, String lvtbRole)
@@ -139,18 +141,18 @@ public class DepRelLogic
 	{
 		String tag = node.getAnyTag();
 		UDv2Relations resRoleActive;
-		UDv2Relations resRolePasive;
+		UDv2Relations resRolePassive;
 
 		// First: is this nominal or clausal subject?
 		if (tag.matches("[nampxy].*|v..pd.*|[rci].*|y[npa].*]"))
 		{
 			resRoleActive = UDv2Relations.NSUBJ;
-			resRolePasive = UDv2Relations.NSUBJ_PASS;
+			resRolePassive = UDv2Relations.NSUBJ_PASS;
 		}
 		else if (tag.matches("v..n.*"))
 		{
 			resRoleActive = UDv2Relations.CSUBJ;
-			resRolePasive = UDv2Relations.CSUBJ_PASS;
+			resRolePassive = UDv2Relations.CSUBJ_PASS;
 		}
 		else return Tuple.of(UDv2Relations.DEP, null);
 
@@ -167,7 +169,7 @@ public class DepRelLogic
 		PmlANode ancXChild = pmlEffAncestor.getPhraseNode();
 		String ancXChildType = ancXChild == null ? null : ancXChild.getPhraseType();
 
-		// But if parent is basElem, we need to know, if grandparent is spc
+		// But if parent is basElem, we need to know if grandparent is spc
 		PmlANode pmlEffAncestor2 = pmlEffAncestor.getThisOrEffectiveAncestor();
 		String effAncestorType2 = pmlEffAncestor2.getEffectiveLabel();
 
@@ -185,14 +187,14 @@ public class DepRelLogic
 				LvtbXTypes.XPRED.equals(ancXChildType))
 		{
 			if (parentTag.matches("v..[^p].....p.*|v..pd...p.*|v[^\\[]*\\[pas.*"))
-				return Tuple.of(resRolePasive, null);
+				return Tuple.of(resRolePassive, null);
 			if (parentTag.matches("v.*") && isParentRealVerbal ||
 					parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*"))
 				return Tuple.of(resRoleActive, null);
 
 			String ancestorTag = pmlEffAncestor.getAnyTag();
 			if (ancestorTag.matches("v..[^p].....p.*|v..pd...p.*|v[^\\[]*\\[pas.*"))
-				return Tuple.of(resRolePasive, null);
+				return Tuple.of(resRolePassive, null);
 			if (ancestorTag.matches("v.*") && isParentRealVerbal ||
 					parentTag.matches("v..[^pn].....a.*|v[^\\[]+\\[(act|subst|ad[jv]|pronom).*"))
 				return Tuple.of(resRoleActive, null);
@@ -202,7 +204,7 @@ public class DepRelLogic
 		else
 		{
 			if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
-				return Tuple.of(resRolePasive, null);
+				return Tuple.of(resRolePassive, null);
 			//if (parentTag.matches("v..[^p].....a.*|v..pd...a.*|v..pu.*|v..n.*"))
 			if (parentTag.matches("v.*"))
 				return Tuple.of(resRoleActive, null);
@@ -211,7 +213,7 @@ public class DepRelLogic
 			if (reduction != null && !reduction.isEmpty())
 			{
 				if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
-					return Tuple.of(resRolePasive, null);
+					return Tuple.of(resRolePassive, null);
 				if (reduction.matches("v.*"))
 					return Tuple.of(resRoleActive, null);
 			}
@@ -260,7 +262,7 @@ public class DepRelLogic
 				? null
 				: phrase.getPhraseType();
 
-		// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
+		// NB! Order is important. Simple nominals can't go before this!
 		// prepositional SPC (without PMC)
 		if (xType != null && xType.equals(LvtbXTypes.XPREP))
 			return noPunctXPrepSpcToUD(node, phrase, parentTag, parentEffRole);
@@ -270,7 +272,7 @@ public class DepRelLogic
 
 		// Infinitive SPC (+/- PMC)
 		if (tag.matches("v..n.*")) return infSpcToUD(parent, parentTag);
-		// Participal SPC (both with and without PMC)
+		// Participle SPC (both with and without PMC)
 		if (tag.matches("v..pp.*")) return Tuple.of(UDv2Relations.XCOMP, null);
 		if (tag.matches("v..pu.*")) return Tuple.of(UDv2Relations.ADVCL, null);
 
@@ -297,7 +299,7 @@ public class DepRelLogic
 					&& LvtbXTypes.XSIMILE.equals(basElemXType))
 				return pmcXSimileSpcToUD(basElems.get(0), basElemPhrase);
 
-			// Participal SPC, adverbs in commas
+			// Participle SPC, adverbs in commas
 			//if (basElemTag.matches("v..p[pu].*|r.*|yr.*")) // participles are duplicated from above
 			if (basElemTag.matches("r.*|yr.*"))
 				return Tuple.of(UDv2Relations.ADVCL, null);
@@ -326,7 +328,7 @@ public class DepRelLogic
 		PmlANode pmlEfParent = parent.getThisOrEffectiveAncestor();
 		String effParentType = pmlEfParent.getAnyLabel();
 		if (parentTag.matches("v..([^p]|p[^d]).*") || LvtbXTypes.XPRED.equals(effParentType))
-			return Tuple.of(UDv2Relations.CCOMP, null); // It is impposible safely to distinguish xcomp for now.
+			return Tuple.of(UDv2Relations.CCOMP, null); // It is impossible safely to distinguish xcomp for now.
 		if (parentTag.matches("v..pd.*")) return Tuple.of(UDv2Relations.XCOMP, null);
 		if (parentTag.matches("[nampx].*|y[npa].*")) return Tuple.of(UDv2Relations.ACL, null);
 		return Tuple.of(UDv2Relations.DEP, null);
@@ -425,7 +427,7 @@ public class DepRelLogic
 	{
 		String caseString = UDv2Feat.tagToCaseString(tag);
 
-		// Vebal parent
+		// Verbal parent
 		if (parentTag.matches("v..([^p]|p[^d]).*"))
 			return Tuple.of(UDv2Relations.OBL, caseString);
 
@@ -458,7 +460,7 @@ public class DepRelLogic
 	protected static Tuple<UDv2Relations, String> noPunctNominalSpcToUD(
 			PmlANode node, PmlANode parent, String tag, String parentTag)
 	{
-		// viens otru, cits citu
+		// "viens otru", "cits citu"
 		// SPC lemma
 		PmlMNode nodeM = node.getM();
 		String lemma = nodeM == null ? null : nodeM.getLemma();
@@ -536,7 +538,7 @@ public class DepRelLogic
 		PmlMNode mNode = node.getM();
 		String lemma = mNode == null ? null : mNode.getLemma();
 
-		// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
+		// NB! Order is important. Simple nominals can't go before this!
 		PmlANode phrase = node.getPhraseNode();
 		String xType = phrase == null ? null : phrase.getPhraseType();
 		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
@@ -586,7 +588,7 @@ public class DepRelLogic
 		if (tag.matches("mc.*|xn.*"))
 			return Tuple.of(UDv2Relations.NUMMOD, null);
 
-		// NB! Secība ir svarīga. Nevar pirms šī likt parastos nomenus!
+		// NB! Order is important. Simple nominals can't go before this!
 		PmlANode phrase = node.getPhraseNode();
 		String xType = phrase == null ? null : phrase.getPhraseType();
 		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
@@ -673,7 +675,7 @@ public class DepRelLogic
 
 	public static Tuple<UDv2Relations, String> subjClToUD(PmlANode node, PmlANode parent)
 	{
-		// Effective ancestor is predicate
+		// Effective ancestor is the predicate
 		if (LvtbRoles.PRED.equals(parent.getEffectiveLabel()))
 		{
 			String parentTag = parent.getAnyTag();
@@ -769,7 +771,7 @@ public class DepRelLogic
 	}
 
 	/**
-	 * Print out the warning that role was not tranformed.
+	 * Print out the warning that role was not transformed.
 	 * @param node		node for which UD dependency should be obtained (use
 	 *             		this node's lemma, morphology, etc.)
 	 * @param parent	node which represents UD or enhanced UD parent for the
@@ -792,15 +794,15 @@ public class DepRelLogic
 	}
 
 	/**
-	 * Relation betwen LVTB roles and UD deprel customised for processing
+	 * Relation between LVTB roles and UD deprel customised for processing
 	 * controlled and raised subject links
 	 * @param node		node for which UD dependency should be obtained (use
 	 *             		this node's lemma, morphology, etc.)
 	 * @param parent	node which represents UD or enhanced UD parent for the
 	 *                  node to be labeled
 	 * @param isClausal	clausal subject (true) or ordinary (false)
-	 * @return	UD dependency role and enhanced depency role postfix, if such is
-	 * 			needed.
+	 * @return	UD dependency role and enhanced dependency role postfix, if
+	 * 			such is needed.
 	 */
 	// TODO:: customise better!
 	public static Tuple<UDv2Relations, String> cRSubjToUD(
@@ -809,7 +811,7 @@ public class DepRelLogic
 		String tag = node.getAnyTag();
 		UDv2Relations resRoleActive = isClausal
 				? UDv2Relations.CSUBJ : UDv2Relations.NSUBJ;
-		UDv2Relations resRolePasive = isClausal
+		UDv2Relations resRolePassive = isClausal
 				? UDv2Relations.CSUBJ_PASS : UDv2Relations.NSUBJ_PASS;
 		// Nominal++ subject
 		if (tag.matches("[nampxy].*|v..pd.*|[rci].*|y[npa].*]"))
@@ -827,7 +829,7 @@ public class DepRelLogic
 			if (LvtbXTypes.XPRED.equals(parentXChildType))// || LvtbXTypes.XPRED.equals(ancXChildType))
 			{
 				if (parentTag.matches("v..[^p].....p.*|v[^\\[]*\\[pas.*|v..pd...p.*"))
-					return Tuple.of(resRolePasive, null);
+					return Tuple.of(resRolePassive, null);
 				if (parentTag.matches("v.*"))
 					return Tuple.of(resRoleActive, null);
 			}
@@ -835,7 +837,7 @@ public class DepRelLogic
 			else
 			{
 				if (parentTag.matches("v..[^p].....p.*|v..pd...p.*"))
-					return Tuple.of(resRolePasive, null);
+					return Tuple.of(resRolePassive, null);
 				if (parentTag.matches("v.*|[nampxy].*|[rci].*|y[npa].*]"))
 					return Tuple.of(resRoleActive, null);
 
@@ -843,7 +845,7 @@ public class DepRelLogic
 				if (reduction != null && !reduction.isEmpty())
 				{
 					if (reduction.matches("v..[^p].....p.*|v..pd...p.*"))
-						return Tuple.of(resRolePasive, null);
+						return Tuple.of(resRolePassive, null);
 					if (reduction.matches("v.*|[nampxy].*|[rci].*|y[npa].*]"))
 						return Tuple.of(resRoleActive, null);
 				}
@@ -864,7 +866,7 @@ public class DepRelLogic
 	 * however, discussion https://github.com/UniversalDependencies/docs/issues/643
 	 * narrowed the scope down.
 	 * @param role	role to check
-	 * @return	wheather it should be orphan when becomes dependant of
+	 * @return	whether it should be orphan when becomes dependant of
 	 * 			something lifted instead of predicate
 	 */
 	public static boolean canBecomeOrphan(UDv2Relations role)

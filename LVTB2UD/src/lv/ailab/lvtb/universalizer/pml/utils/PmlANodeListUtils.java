@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 /**
  * Utility methods for processing PML-A node lists.
- * Created on 2016-04-22. Splited in multiple classes on 2018-01-12.
+ * Created on 2016-04-22. Split in multiple classes on 2018-01-12.
  *
  * @author Lauma
  */
@@ -19,7 +19,7 @@ public class PmlANodeListUtils
 	 * begin <= ord < end.
 	 * @param nodes	list of nodes to splice
 	 * @param begin smallest index (inclusive)
-	 * @param end	largest index (excluse)
+	 * @param end	largest index (exclusive)
 	 * @return	list with all elements satisfying the criterion, ordered in the
 	 * 			same order as in input data
 	 */

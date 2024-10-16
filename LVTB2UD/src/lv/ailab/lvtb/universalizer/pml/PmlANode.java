@@ -3,14 +3,14 @@ package lv.ailab.lvtb.universalizer.pml;
 import java.util.List;
 
 /**
- * PML a-level node inteface. The ID-less xinfo, pmcinfo and coordinfo
+ * PML a-level node interface. The ID-less xinfo, pmcinfo and coordinfo
  * structures also are considered to be a PML nodes in the understanding of this
  * class. Thus, node with ID representing complex predicate has a xinfo as a
  * child.
- * Currently this design choice reflect the organization of the PML XML
+ * Currently, this design choice reflect the organization of the PML XML
  * representation, where xinfo, pmcinfo and coordinfo nodes are included in the
  * childlist of the "normal" node representing phrase's position in the sentence
- * structure. Maybe this should be reconsidered later, as it might be unsensible
+ * structure. Maybe this should be reconsidered later, as it might be insensible
  * for other representations.
  *
  * Created on 2018-01-24.
@@ -48,14 +48,14 @@ public interface PmlANode
 	String getPhraseType();
 	/**
 	 * Find pmctype, coordtype, xtype or role for this node.
-	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root
+	 * @return	phrase type or dependency role or `LVtbHelperRoles.ROOT` for root
 	 */
 	String getAnyLabel();
 	/**
 	 * Find the closest ancestor (given node included), whose label is not
 	 * crdPart, crdParts or crdClauses, and return its role, pmctype, coordtype,
 	 * or xtype.
-	 * @return	phrase type or dependency role or LVtbHelperRoles.ROOT for root.
+	 * @return	phrase type or dependency role or `LVtbHelperRoles.ROOT` for root.
 	 */
 	String getEffectiveLabel();
 	/**
@@ -66,7 +66,7 @@ public interface PmlANode
 	String getPhraseTag();
 	/**
 	 * Find tag attribute. Use either morphotag or x-word tag or coordination
-	 * tag. For tokenless reduction nodes return reduction tag. For PMC node
+	 * tag. For token-less reduction nodes return reduction tag. For PMC node
 	 * return first basElem's tag. For coordinations with no given tag return
 	 * tag obtained from first coordinated part.
 	 * @return	tag
@@ -88,7 +88,7 @@ public interface PmlANode
 	 */
 	String getReductionTagPart();
 	/**
-	 * Find reduction field value and cut off the begining part before braces
+	 * Find reduction field value and cut off the beginning part before braces
 	 * and braces themselves.
 	 * @return	reduction wordform
 	 */
@@ -115,13 +115,13 @@ public interface PmlANode
 	 */
 	Integer getDeepOrd();
 	/**
-	 * Find smallest ord number found in the subtree rooted in this node.
+	 * Find the smallest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number
 	 */
 	Integer getMinDescOrd();
 	/**
-	 * Find biggest ord number found in the subtree rooted in this node.
+	 * Find the biggest ord number found in the subtree rooted in this node.
 	 * @return	ord number or null if none of the nodes in the subtree has an
 	 *			ord number
 	 */
@@ -135,9 +135,10 @@ public interface PmlANode
 	PmlMNode getM();
 	/**
 	 * Find PML parent for this node or phrase structure. For a node
-	 * representing a phrase constituent this will return phrase node (Type.X,
-	 * Type.COORD or Type.PMC) containing it. For a phrase node this will return
-	 * node (Type.NODE or Type.ROOT) representing phrase in the sentence.
+	 * representing a phrase constituent this will return phrase node
+	 * (`Type.X`, `Type.COORD` or `Type.PMC`) containing it. For a phrase node
+	 * this will return node (`Type.NODE` or `Type.ROOT`) representing phrase
+	 * in the sentence.
 	 * @return	null for root, otherwise any PML node (can be also phrase node)
 	 */
 	//<PMLN extends PmlANode> PMLN getParent();
@@ -232,14 +233,14 @@ public interface PmlANode
 	/**
 	 * Returns whether this node is the same node as the given one. This is used
 	 * to determine if no circular dependencies are drawn etc. If two objects
-	 * are equal according to Object.equals function, they must return true.
+	 * are equal according to Object.equals() function, they must return true.
 	 * @param other	the node to test against
 	 * @return	true if the nodes are the same, false otherwise
 	 */
 	boolean isSameNode(PmlANode other);
 
 	/**
-	 * Returns the lenght of the shortest path connecting this node and root.
+	 * Returns the length of the shortest path connecting this node and root.
 	 * @return	0 for root node, 1 for root's dependents and constituents, 2 for
 	 * 			for their dependents and constituents, etc.
 	 */
@@ -287,7 +288,7 @@ public interface PmlANode
 
 
 	/**
-	 * Distinguished node types. Logic-wise, ROOT is a subtlype of NODE.
+	 * Distinguished node types. Logic-wise, ROOT is a subtype of NODE.
 	 */
 	enum Type
 	{

@@ -28,7 +28,7 @@ public class PmlXmlLoader
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(pmlFile);
-		// This sorts out splitted text:
+		// This sorts out split text:
 		// https://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 		return doc;

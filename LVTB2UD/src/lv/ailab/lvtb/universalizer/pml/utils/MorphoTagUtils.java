@@ -13,16 +13,16 @@ public class MorphoTagUtils {
 	{
 		if (tag == null || tag.isEmpty()) return tag;
 
-		//// Wordtags and first parts of phrase tags
+		//// Word tags and first parts of phrase tags
 		// Nouns: POS+, Type+, Gender-, Number-, Case+, Declension-
 		tag = tag.replaceFirst("^(n.)..(.).(.*)$", "$1__$2_$3");
 		// Verbs: POS+, Type+, Reflexive-, Mood+, Tense+, Transitivity-, Conjugation-, Person-, Number-, Voice+, Negation-
 		tag = tag.replaceFirst("^(v.).([^p].)....(.).(.*)$", "$1_$2____$3_$4");
-		// Participles: POS+, Type+, Reflexive-, Mood+, Declinability+, Gender-, Number-, Case+, Voice+, Tense+, Definitness-, Degree-, Negation-
+		// Participles: POS+, Type+, Reflexive-, Mood+, Declinability+, Gender-, Number-, Case+, Voice+, Tense+, Definiteness-, Degree-, Negation-
 		tag = tag.replaceFirst("^(v.).(p.)..(...)...(.*)$", "$1_$2__$3___$4");
-		// Adjectives: POS+, Type-, Gender-, Number-, Case+, Definitness-, Degree-
+		// Adjectives: POS+, Type-, Gender-, Number-, Case+, Definiteness-, Degree-
 		tag = tag.replaceFirst("^(a)...(.)..(.*)$", "$1___$2__$3");
-		// Numerals: POS+, Type+, Compositon-, Gender-, Number-, Case+
+		// Numerals: POS+, Type+, Composition-, Gender-, Number-, Case+
 		tag = tag.replaceFirst("^(m.)...(.*)$", "$1___$2");
 		// Pronouns: POS+, Type+, Person, Gender, Number, Case, Negation-
 		tag = tag.replaceFirst("^(p.)...(.).(.*)$", "$1___$2_$3");

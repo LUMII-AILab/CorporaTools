@@ -11,7 +11,8 @@ public class Helper
 	//TODO is there any problem to use this for xParticle?
 	/** Get conj lemma from xSimile or prepLemma from xPrep.
 	 * @param phrase		phrase where to search conj/prep
-	 * @param prepRole		what to look for - LvtbRoles.PREP or LvtbRoles.CONJ
+	 * @param prepRole		what to look for - `LvtbRoles.PREP` or
+	 *                      `LvtbRoles.CONJ`
 	 * @return	lemma or null, if nothing found.
 	 */
 	public static String getXSimileConjOrXPrepPrepLemma(
