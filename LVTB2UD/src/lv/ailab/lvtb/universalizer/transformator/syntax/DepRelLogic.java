@@ -268,7 +268,7 @@ public class DepRelLogic
 			return noPunctXPrepSpcToUD(node, phrase, parentTag, parentEffRole);
 		// SPC with comparison (without PMC)
 		if (xType != null && xType.equals(LvtbXTypes.XSIMILE))
-			return noPunctXSimileSpcToUD(node, phrase, tag, parentTag);
+			return xSimileSpcToUD(phrase, parentTag);
 
 		// Infinitive SPC (+/- PMC)
 		if (tag.matches("v..n.*")) return infSpcToUD(parent, parentTag);
@@ -294,10 +294,10 @@ public class DepRelLogic
 					&& LvtbXTypes.XPREP.equals(basElemXType))
 				return pmcXPrepSpcToUD(basElems.get(0), basElemPhrase, parentTag);
 
-			// SPC with pmc-ed comparison
+			// SPC with pmc-ed xSimile
 			if (basElemPhrase != null && basElemPhrase.getNodeType() == PmlANode.Type.X
 					&& LvtbXTypes.XSIMILE.equals(basElemXType))
-				return pmcXSimileSpcToUD(basElems.get(0), basElemPhrase);
+				return xSimileSpcToUD(basElemPhrase, parentTag);
 
 			// Participle SPC, adverbs in commas
 			//if (basElemTag.matches("v..p[pu].*|r.*|yr.*")) // participles are duplicated from above
@@ -385,7 +385,7 @@ public class DepRelLogic
 	protected static Tuple<UDv2Relations, String> pmcXPrepSpcToUD(
 			PmlANode basElem, PmlANode basElemPhrase, String parentTag)
 	{
-		String basElemXType = basElem.getPhraseType();
+		String basElemXType = basElemPhrase.getPhraseType();
 		List<PmlANode> preps = basElemPhrase.getChildren(LvtbRoles.PREP);
 		if (preps.size() > 1)
 			StandardLogger.l.doInsentenceWarning(String.format(
@@ -402,24 +402,14 @@ public class DepRelLogic
 		return Tuple.of(UDv2Relations.OBL, prepLemma);
 	}
 
-	protected static Tuple<UDv2Relations, String> noPunctXSimileSpcToUD (
-			PmlANode node, PmlANode phrase, String tag, String parentTag)
+	protected static Tuple<UDv2Relations, String> xSimileSpcToUD(
+			PmlANode phrase, String parentTag)
 	{
 		String conjLemma = Helper.getXSimileConjOrXPrepPrepLemma(phrase, LvtbRoles.CONJ);
-		if (parentTag.matches("n.*|y[np].*") && tag.matches("[nampx].*|y[npa].*|v..pd.*"))
-			return Tuple.of(UDv2Relations.NMOD, conjLemma);
-		return Tuple.of(UDv2Relations.OBL, conjLemma);
-	}
-
-	protected static Tuple<UDv2Relations, String> pmcXSimileSpcToUD (
-			PmlANode basElem, PmlANode basElemPhrase
-	)
-	{
-		String conjLemma = Helper.getXSimileConjOrXPrepPrepLemma(basElemPhrase, LvtbRoles.CONJ);
+		if (parentTag.matches("[np].*|y[np].*") )
+			return Tuple.of(UDv2Relations.ACL, conjLemma);
 		return Tuple.of(UDv2Relations.ADVCL, conjLemma);
 	}
-
-
 
 	protected static Tuple<UDv2Relations, String> pmcNominalSpcToUD (
 			PmlANode node, PmlANode parent, PmlANode basElem, PmlANode basElemPhrase,

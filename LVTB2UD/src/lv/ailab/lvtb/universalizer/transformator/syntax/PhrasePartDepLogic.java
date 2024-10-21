@@ -218,25 +218,16 @@ public class PhrasePartDepLogic
 			}
 			// In generic SPC (without PMC) case use case.
 			if (LvtbRoles.SPC.equals(firstAncType))
-				return Tuple.of(UDv2Relations.CASE, null);
-
-			// NO adv + xSimile instances in data! Is this old?
-			//if (LvtbRoles.ADV.equals(firstAncType))
-			//	return Tuple.of(UDv2Relations.DISCOURSE, null);
-			
-			PmlANode effAncestor = secondAncestor;
-			if (LvtbXTypes.XPARTICLE.equals(effAncestor.getAnyLabel()))
-				effAncestor = effAncestor.getEffectiveAncestor();
-			String effAncLabel = effAncestor.getAnyLabel();
-
-			// What to do ith this? Do we even need it?
-			//if (LvtbRoles.SPC.equals(effAncLabel))
-			if (LvtbPmcTypes.SPCPMC.equals(effAncLabel))
 				return Tuple.of(UDv2Relations.MARK, null);
 
-			// NO adv + xSimile instances in data! Is this old?
-			//if (LvtbRoles.ADV.equals(effAncLabel))
-			//	return Tuple.of(UDv2Relations.DISCOURSE, null);
+			// Old. No instances found at 2024-10-21.
+			// Probably was workaround for gramaticalized xSimiles.
+			//PmlANode effAncestor = secondAncestor;
+			//if (LvtbXTypes.XPARTICLE.equals(effAncestor.getAnyLabel()))
+			//	effAncestor = effAncestor.getEffectiveAncestor();
+			//String effAncLabel = effAncestor.getAnyLabel();
+
+			return Tuple.of(UDv2Relations.CASE, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
