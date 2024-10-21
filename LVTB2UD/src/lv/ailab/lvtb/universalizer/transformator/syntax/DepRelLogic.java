@@ -639,6 +639,7 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> noToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
+		String parentTag = parent.getAnyTag();
 		PmlMNode mNode = node.getM();
 		String lemma = mNode == null ? "" : mNode.getLemma();
 		PmlANode phrase = node.getPhraseNode();
@@ -652,6 +653,9 @@ public class DepRelLogic
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 		if (lemma.matches("utt\\.|u\\.t\\.jpr\\.|u\\.c\\.|u\\.tml\\.|v\\.tml\\."))
 			return Tuple.of(UDv2Relations.CONJ, null);
+		if (tag != null && tag.matches("q.*")
+				&& parentTag != null && parentTag.matches("[np].*|y[np].*"))
+			return Tuple.of(UDv2Relations.ADVMOD_EMPH, null);
 		if (tag != null && tag.matches("[qi].*|yd.*|xx.*"))
 			return Tuple.of(UDv2Relations.DISCOURSE, null);
 

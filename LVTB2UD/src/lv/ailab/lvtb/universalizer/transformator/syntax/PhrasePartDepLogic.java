@@ -185,7 +185,12 @@ public class PhrasePartDepLogic
 			return Tuple.of(UDv2Relations.CASE, null);
 		if (phraseType.equals(LvtbXTypes.XPARTICLE) &&
 				lvtbRole.equals(LvtbRoles.NO))
-			return Tuple.of(UDv2Relations.DISCOURSE, null);
+		{
+			if (subTag.matches("aff.*"))
+				return Tuple.of(UDv2Relations.ADVMOD_EMPH, null);
+			if (subTag.matches("neg.*"))
+				return Tuple.of(UDv2Relations.DISCOURSE, null);
+		}
 
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&
 				subTag.matches("(sim|comp)y.*"))
