@@ -226,8 +226,6 @@ public class PhrasePartDepLogic
 			//if (LvtbXTypes.XPARTICLE.equals(effAncestor.getAnyLabel()))
 			//	effAncestor = effAncestor.getEffectiveAncestor();
 			//String effAncLabel = effAncestor.getAnyLabel();
-
-			return Tuple.of(UDv2Relations.CASE, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XPRED))
