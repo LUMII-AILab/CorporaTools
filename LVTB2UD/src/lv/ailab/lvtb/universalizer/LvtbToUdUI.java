@@ -3,6 +3,7 @@ package lv.ailab.lvtb.universalizer;
 import lv.ailab.lvtb.universalizer.transformator.PmlXmlFileTransformator;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
 import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
+import lv.ailab.lvtb.universalizer.utils.MorphoAnalyzerWrapper;
 
 import java.io.File;
 
@@ -78,6 +79,7 @@ public class LvtbToUdUI
 			String fileName = f.getName();
 			if (f.isDirectory() || f.getName().startsWith("~")) continue;
 			PmlXmlFileTransformator ft = new PmlXmlFileTransformator(params);
+			MorphoAnalyzerWrapper.init(params.LATGALIAN);
 			if (fileName.endsWith(".pml")) try
 			{
 				System.out.printf("Processing file \"%s\", ", fileName);
@@ -224,6 +226,8 @@ public class LvtbToUdUI
 						if (!isBool) logPath = valueStr;
 						else return false;
 						break;
+					case "latgalian":
+						if (isBool) params.LATGALIAN = value;
 					default:
 						return false;
 				}

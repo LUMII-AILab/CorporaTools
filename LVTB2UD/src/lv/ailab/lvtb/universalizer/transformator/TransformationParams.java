@@ -89,6 +89,11 @@ public class TransformationParams
 	public Boolean CLEANUP_UNLABELED_EDEPS = false;
 
 	/**
+	 * Use Latgalian morphoanalyzer (in future) and Latgalian exceptions.
+	 */
+	public Boolean LATGALIAN = false;
+
+	/**
 	 * Get default parameter set.
 	 */
 	public TransformationParams(){}
