@@ -228,6 +228,8 @@ public class LvtbToUdUI
 						break;
 					case "latgalian":
 						if (isBool) params.LATGALIAN = value;
+						else return false;
+						break;
 					default:
 						return false;
 				}
@@ -263,6 +265,7 @@ public class LvtbToUdUI
 				"                                   on node chosen as substructure root.\n" +
 				"  omit_whole_files [bool, false by default] - omit all trees in the file if\n" +
 				"                                   at least one fails.\n" +
+				"  latgalian  [bool, false by default] - assume the treebank is Latgalian.\n" +
 				"  input  [string, ./data/pml/     by default] - input data folder.\n" +
 				"  output [string, ./data/log/     by default] - log folder.\n" +
 				"  log    [string, ./data/conll-u/ by default] - output folder.\n" +
