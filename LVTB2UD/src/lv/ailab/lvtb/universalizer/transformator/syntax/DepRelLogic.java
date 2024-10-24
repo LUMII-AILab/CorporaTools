@@ -528,6 +528,14 @@ public class DepRelLogic
 		PmlMNode mNode = node.getM();
 		String lemma = mNode == null ? null : mNode.getLemma();
 
+		int chOrd = node.getDeepOrd();
+		int parOrd = parent.getOrd();
+		if (parOrd < 1)
+		{
+			PmlANode parPhrase = parent.getPhraseNode();
+			if (parPhrase != null) parOrd = parPhrase.getDeepOrd();
+		}
+
 		// NB! Order is important. Simple nominals can't go before this!
 		PmlANode phrase = node.getPhraseNode();
 		String xType = phrase == null ? null : phrase.getPhraseType();
@@ -548,7 +556,8 @@ public class DepRelLogic
 				return Tuple.of(UDv2Relations.NMOD, caseString);
 			// It is ok to become dep, if the case is not valid, it is an error anyway.
 		}
-		if (tag.matches("y[np].*") || lemma != null && lemma.equals("%"))
+		if (tag.matches("y[np].*") || lemma != null && lemma.equals("%")
+			|| tag.matches("p.*") && chOrd > parOrd && parOrd > 0)
 			return Tuple.of(UDv2Relations.NMOD, null);
 		if (tag.matches("r.*|yr.*"))
 			return Tuple.of(UDv2Relations.ADVMOD, null);
