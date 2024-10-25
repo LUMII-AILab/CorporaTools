@@ -168,8 +168,8 @@ public class PhrasePartDepLogic
 			else if (LvtbXTypes.XSIMILE.equals(subXType) && subTag.matches("(ipv|sal).*"))
 				return Tuple.of(UDv2Relations.DET, null);
 
-			else if (tag.matches("p.*") && subTag.startsWith("vv"))
-				return Tuple.of(UDv2Relations.OBL, null);
+			else if (subTag.startsWith("vv"))
+				return Tuple.of(UDv2Relations.FIXED, null);
 			else if (tag.matches("p.*") && subTag.startsWith("ipv"))
 				return Tuple.of(UDv2Relations.DET, null);
 			else if (tag.matches("p.*") && subTag.startsWith("skv"))
