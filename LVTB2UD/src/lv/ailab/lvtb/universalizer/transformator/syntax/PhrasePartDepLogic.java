@@ -189,7 +189,7 @@ public class PhrasePartDepLogic
 			if (subTag.matches("aff.*"))
 				return Tuple.of(UDv2Relations.ADVMOD_EMPH, null);
 			if (subTag.matches("neg.*"))
-				return Tuple.of(UDv2Relations.DISCOURSE, null);
+				return Tuple.of(UDv2Relations.ADVMOD_NEG, null);
 		}
 
 		if (phraseType.equals(LvtbXTypes.XSIMILE) &&

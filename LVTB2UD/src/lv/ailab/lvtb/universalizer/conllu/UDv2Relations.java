@@ -22,6 +22,7 @@ public enum UDv2Relations
 	 */
 	ADVMOD ("advmod"),
 	ADVMOD_EMPH ("advmod:emph"),
+	ADVMOD_NEG ("advmod:neg"),
 	/**
 	 * amod: adjectival modifier
 	 */
