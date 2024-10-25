@@ -557,7 +557,8 @@ public class DepRelLogic
 			// It is ok to become dep, if the case is not valid, it is an error anyway.
 		}
 		if (tag.matches("y[np].*") || lemma != null && lemma.equals("%")
-			|| tag.matches("p.*") && chOrd > parOrd && parOrd > 0)
+			|| tag.matches("p.*") && chOrd > parOrd && parOrd > 0
+			|| tag.matches("pp.*"))
 			return Tuple.of(UDv2Relations.NMOD, null);
 		if (tag.matches("r.*|yr.*"))
 			return Tuple.of(UDv2Relations.ADVMOD, null);
