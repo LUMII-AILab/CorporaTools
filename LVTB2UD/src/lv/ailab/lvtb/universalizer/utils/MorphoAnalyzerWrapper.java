@@ -67,6 +67,7 @@ public class MorphoAnalyzerWrapper
 		if (latgalian)
 		{
 			// TODO: take from LTG Tēzaurs
+			if (lemma == null || lemma.isEmpty()) return null;
 			if (postag.matches("p.*"))
 			{
 				if (ltgDET.contains(lemma.toLowerCase())) return UDv2PosTag.DET.toString();
@@ -76,12 +77,12 @@ public class MorphoAnalyzerWrapper
 		}
 		else
 		{
+			if (form == null || form.isEmpty()) return null;
 			try
 			{
-
-					Word analysis = getMorpho().analyze(form);
-					//TODO: Turn this back on, when morphonalyzer allows to change the output stream for complaining.
-					return analysis.getMatchingWordform(postag, false).getValue("UD vārdšķira");
+				Word analysis = getMorpho().analyze(form);
+				//TODO: Turn this back on, when morphonalyzer allows to change the output stream for complaining.
+				return analysis.getMatchingWordform(postag, false).getValue("UD vārdšķira");
 			} catch (Exception e)
 			{
 				StandardLogger.l.warnForAnalyzerException(e);
