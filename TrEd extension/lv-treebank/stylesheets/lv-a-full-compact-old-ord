@@ -18,7 +18,7 @@ node:#{darkblue}<?
     if (LV_A::has_nondep_child($this)->attr('#name') eq 'pmcinfo')
   ?>
 node:#{black}${m/form}
-node:#{dimgray}${m/tag}<?
+node:#{darkgreen}${m/tag}<?
   (LV_A::has_nondep_child($this)->attr('#name') eq 'xinfo'
    or LV_A::has_nondep_child($this)->attr('#name') eq 'coordinfo')
   ?
@@ -43,15 +43,12 @@ style: #{Node-shape:oval}
     '#{Node-hide:1}'
   } elsif ((($this->parent)->attr('#name')eq 'xinfo')) {
     '#{Oval-fill:orange}
-	 #{Line-dash:20,3,}
      #{Line-fill:DarkGreen}'
   } elsif ((($this->parent)->attr('#name')eq 'coordinfo')) {
     '#{Oval-fill:orange}
-	 #{Line-dash:20,3,}
      #{Line-fill:blue3}'
   } elsif ((($this->parent)->attr('#name')eq 'pmcinfo')) {
     '#{Oval-fill:orange}
-	 #{Line-dash:20,3,}
      #{Line-fill:DarkOrchid4}'} ?>
 
 hint:<? $${m/lemma} ? 'm/lemma: ${m/lemma} ' : '' ?><?
