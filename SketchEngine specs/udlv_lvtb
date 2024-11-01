@@ -1,4 +1,4 @@
-NAME "UD_Latvian-LVTB"
+NAME "UD_Latvian-LVTB (v2.15)"
 PATH /corpora/data/udlv_lvtb
 VERTICAL /corpora/vert/udlv_lvtb.vert
 ENCODING "UTF-8"
