@@ -729,7 +729,7 @@ public class MorphoTransformator {
 		for (Token t : s.conll)
 		{
 			//t.upostag = UPosLogic.getPostsyntUPosTag(t); // Not needed since UPOS comes from analyzer/Tēzaurs now
-			t.feats = FeatsLogic.getPostsyntUPosTag(t, s.conll);
+			t.feats = FeatsLogic.getPostsyntUFeats(t, s.conll);
 		}
 	}
 

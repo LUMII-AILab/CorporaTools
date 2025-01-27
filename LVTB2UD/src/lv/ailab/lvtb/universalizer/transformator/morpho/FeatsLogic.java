@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Logic for obtaining Universal Dependency feature information based on LVTB
- * information.
+ * information for a single token node.
  *
  * Created on 2016-04-20.
  * @author Lauma
@@ -148,43 +148,47 @@ public class FeatsLogic
 	 * @param sentence	conll table with tokens in this sentence - this will be
 	 *                  used to find children of the given token
 	 */
-	public static ArrayList<UDv2Feat> getPostsyntUPosTag(
+	public static ArrayList<UDv2Feat> getPostsyntUFeats(
 			Token token, List<Token> sentence)
 	{
-		ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
-		if (token.feats.contains(UDv2Feat.TYPO_YES)) res.add(UDv2Feat.TYPO_YES);
+		//ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
+		//if (token.feats.contains(UDv2Feat.TYPO_YES)) res.add(UDv2Feat.TYPO_YES);
+		ArrayList<UDv2Feat> res = new ArrayList<>();
+		res.addAll(token.feats);
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exception. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exception. But should we?
-		if (!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene")) &&
-				!xpostag.matches("r0.*"))
+		if (!(xpostag.matches("n.*")
+				&& lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene"))
+				&& !xpostag.matches("r0.*"))
 			return res;
-		ArrayList<Token> selDiscCh = new ArrayList<>();
-		ArrayList<Token> caseCh = new ArrayList<>();
+		ArrayList<Token> someDiscourseChildren = new ArrayList<>();
+		ArrayList<Token> caseChildren = new ArrayList<>();
 		if (sentence != null) for (Token sentTok : sentence)
 		{
 			if (sentTok.head != null && sentTok.head.second != null &&
 					sentTok.head.second.equals(token))
 			{
+				// Here we analize dependents of the node, whose feats we want to update
 				if (sentTok.deprel == UDv2Relations.DISCOURSE
 						&& sentTok.lemma != null
 						&& sentTok.lemma.matches("kaut|diez(in)?|nez(in)?"))
-					selDiscCh.add(sentTok);
+					someDiscourseChildren.add(sentTok);
 				if (sentTok.deprel == UDv2Relations.CASE)
-					caseCh.add(sentTok);
+					caseChildren.add(sentTok);
 			}
 		}
 
-		if (xpostag.matches("r0.*") && !selDiscCh.isEmpty())
+		if (xpostag.matches("r0.*") && !someDiscourseChildren.isEmpty())
 		{
 			res.add(UDv2Feat.PRONTYPE_IND);
 			res.remove(UDv2Feat.PRONTYPE_INT);
 		}
-		else if (xpostag.matches("n.*") && !caseCh.isEmpty())
+		else if (xpostag.matches("n.*") && !caseChildren.isEmpty())
 		{
 			switch (lemma)
 			{
 				case "kuriene" :
-					if (selDiscCh.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
+					if (someDiscourseChildren.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
 					else res.add(UDv2Feat.PRONTYPE_IND);
 					break;
 				case "turiene" :

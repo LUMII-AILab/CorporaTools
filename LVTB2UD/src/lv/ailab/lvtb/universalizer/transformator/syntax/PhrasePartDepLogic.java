@@ -169,7 +169,7 @@ public class PhrasePartDepLogic
 				return Tuple.of(UDv2Relations.DET, null);
 
 			else if (subTag.startsWith("vv"))
-				return Tuple.of(UDv2Relations.FIXED, null);
+				return Tuple.of(UDv2Relations.FLAT, null);
 			else if (tag.matches("p.*") && subTag.startsWith("ipv"))
 				return Tuple.of(UDv2Relations.DET, null);
 			else if (tag.matches("p.*") && subTag.startsWith("skv"))

@@ -1,9 +1,6 @@
 package lv.ailab.lvtb.universalizer.transformator.syntax;
 
-import lv.ailab.lvtb.universalizer.conllu.EnhancedDep;
-import lv.ailab.lvtb.universalizer.conllu.MiscKeys;
-import lv.ailab.lvtb.universalizer.conllu.Token;
-import lv.ailab.lvtb.universalizer.conllu.UDv2Relations;
+import lv.ailab.lvtb.universalizer.conllu.*;
 import lv.ailab.lvtb.universalizer.pml.PmlANode;
 import lv.ailab.lvtb.universalizer.transformator.Sentence;
 import lv.ailab.lvtb.universalizer.transformator.StandardLogger;
@@ -11,6 +8,7 @@ import lv.ailab.lvtb.universalizer.transformator.TransformationParams;
 import lv.ailab.lvtb.universalizer.transformator.morpho.XPosLogic;
 import lv.ailab.lvtb.universalizer.utils.Tuple;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,7 +93,7 @@ public class NewSyntaxTransformator
 		List<PmlANode> children = aNode.getChildren();
 		PmlANode phraseNode = aNode.getPhraseNode();
 		// If no children, nothing to do.
-		if (phraseNode == null && (children == null || children.size() < 1))
+		if (phraseNode == null && (children == null || children.isEmpty()))
 			return;
 
 		// Bottom-up: process dependency children.
@@ -120,19 +118,26 @@ public class NewSyntaxTransformator
 				throw new IllegalStateException(
 						"Algorithmic error: phrase transformation returned \"null\" root in sentence " + s.id);
 
+			String phraseTag = aNode.getAnyTag();
+
 			// Fill in empty phrase tags if set to do so.
 			if (params.INDUCE_PHRASE_TAGS)
 			{
-				String phraseTag = aNode.getAnyTag();
 				String newRootTag = newBasicRoot.getAnyTag();
-				if ((phraseTag == null || phraseTag.length() < 1 || phraseTag.matches("N/[Aa]")) &&
-						newRootTag != null && newRootTag.length() > 0)
+				if ((phraseTag == null || phraseTag.isEmpty() || phraseTag.matches("N/[Aa]")) &&
+						newRootTag != null && !newRootTag.isEmpty())
 				{
 					PmlANode.Type type = phraseNode.getNodeType();
 					if (type == PmlANode.Type.X || type == PmlANode.Type.COORD)
 						phraseNode.setPhraseTag(newRootTag + "[INDUCED]");
 				}
 			}
+			ArrayList<UDv2Feat> syntFeats = FeatsLogic.getUFeatsFromPhraseNode(
+					phraseNode.getPhraseType(), phraseTag);
+			s.pmlaToConll.get(newBasicRoot.getId()).feats.addAll(syntFeats);
+			// In this spot both roots should be the same.
+			//if (newBasicRoot != newEnhancedRoot)
+			//	s.pmlaToConll.get(newEnhancedRoot.getId()).feats.addAll(syntFeats);
 		}
 
 		//// Process reduction nodes.

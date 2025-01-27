@@ -76,6 +76,25 @@ public enum UDv2Feat
     VOICE_PASS("Voice", "Pass"),
 
     TYPO_YES("Typo", "Yes"),
+
+	// This has to be changed, if more UPOS are introduced
+    EXTPOS_ADJ("ExtPos",UDv2PosTag.ADJ.strRep),
+    EXTPOS_ADP("ExtPos",UDv2PosTag.ADP.strRep),
+    EXTPOS_ADV("ExtPos",UDv2PosTag.ADV.strRep),
+    EXTPOS_AUX("ExtPos",UDv2PosTag.AUX.strRep),
+    EXTPOS_CCONJ("ExtPos", UDv2PosTag.CCONJ.strRep),
+    EXTPOS_DET("ExtPos", UDv2PosTag.DET.strRep),
+    EXTPOS_INTJ("ExtPos", UDv2PosTag.INTJ.strRep),
+    EXTPOS_NOUN("ExtPos", UDv2PosTag.NOUN.strRep),
+    EXTPOS_NUM("ExtPos", UDv2PosTag.NUM.strRep),
+    EXTPOS_PART("ExtPos", UDv2PosTag.PART.strRep),
+    EXTPOS_PRON("ExtPos", UDv2PosTag.PRON.strRep),
+    EXTPOS_PROPN("ExtPos", UDv2PosTag.PROPN.strRep),
+    EXTPOS_PUNCT("ExtPos", UDv2PosTag.PUNCT.strRep),
+    EXTPOS_SCOJ("ExtPos", UDv2PosTag.SCONJ.strRep),
+    EXTPOS_SYM("ExtPos", UDv2PosTag.SYM.strRep),
+    EXTPOS_VERB("ExtPos", UDv2PosTag.VERB.strRep),
+    EXTPOS_X("ExtPos", UDv2PosTag.X.strRep),
 	;
 
 	public final String key;
@@ -114,18 +133,44 @@ public enum UDv2Feat
 		return UDv2Feat.caseLetterToLCString(caseLetter);
 	}
 
+	public static UDv2Feat uposToExtPos (UDv2PosTag upos)
+	{
+		if (upos == null) return null;
+		return switch (upos) {
+			case ADJ -> UDv2Feat.EXTPOS_ADJ;
+			case ADP -> UDv2Feat.EXTPOS_ADP;
+			case ADV -> UDv2Feat.EXTPOS_ADV;
+			case AUX -> UDv2Feat.EXTPOS_AUX;
+			case CCONJ -> UDv2Feat.EXTPOS_CCONJ;
+			case DET -> UDv2Feat.EXTPOS_DET;
+			case INTJ -> UDv2Feat.EXTPOS_INTJ;
+			case NOUN -> UDv2Feat.EXTPOS_NOUN;
+			case NUM -> UDv2Feat.EXTPOS_NUM;
+			case PART -> UDv2Feat.EXTPOS_PART;
+			case PRON -> UDv2Feat.EXTPOS_PRON;
+			case PROPN -> UDv2Feat.EXTPOS_PROPN;
+			case PUNCT -> UDv2Feat.EXTPOS_PUNCT;
+			case SCONJ -> UDv2Feat.EXTPOS_SCOJ;
+			case SYM -> UDv2Feat.EXTPOS_SYM;
+			case VERB -> UDv2Feat.EXTPOS_VERB;
+			case X -> UDv2Feat.EXTPOS_X;
+			default -> throw new UnsupportedOperationException(
+					"Missing ExtPos feat for UPOS value " + upos +
+							"! Probably you need to add missing value to UDv2Feat enum.");
+		};
+	}
+
 	public static String caseLetterToLCString(String ch)
 	{
 		if (ch == null) return null;
-		switch (ch)
-		{
-			case "n": return UDv2Feat.CASE_NOM.value.toLowerCase();
-			case "g": return UDv2Feat.CASE_GEN.value.toLowerCase();
-			case "d": return UDv2Feat.CASE_DAT.value.toLowerCase();
-			case "a": return UDv2Feat.CASE_ACC.value.toLowerCase();
-			case "l": return UDv2Feat.CASE_LOC.value.toLowerCase();
-			case "v": return UDv2Feat.CASE_VOC.value.toLowerCase();
-			default: return null;
-		}
+		return switch (ch) {
+			case "n" -> UDv2Feat.CASE_NOM.value.toLowerCase();
+			case "g" -> UDv2Feat.CASE_GEN.value.toLowerCase();
+			case "d" -> UDv2Feat.CASE_DAT.value.toLowerCase();
+			case "a" -> UDv2Feat.CASE_ACC.value.toLowerCase();
+			case "l" -> UDv2Feat.CASE_LOC.value.toLowerCase();
+			case "v" -> UDv2Feat.CASE_VOC.value.toLowerCase();
+			default -> null;
+		};
 	}
 }
