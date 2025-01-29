@@ -27,7 +27,7 @@ public class FeatsLogic
 			if (phraseTag.matches("[^\\[]*\\[compy.*")) res.add(UDv2Feat.EXTPOS_ADV);
 			else if (phraseTag.matches("[^\\[]*\\[simy.*")) res.add(UDv2Feat.EXTPOS_PART);
 		}
-		else if (phraseTag.equals(LvtbXTypes.XFUNCTOR))
+		else if (phraseType.equals(LvtbXTypes.XFUNCTOR))
 		{
 			UDv2PosTag upos = UPosLogic.getUPosTag("", "", phraseTag);
 			res.add(UDv2Feat.uposToExtPos(upos));
