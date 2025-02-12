@@ -25,7 +25,7 @@ public class FeatsLogic
 		if (phraseType.equals(LvtbXTypes.XSIMILE))
 		{
 			if (phraseTag.matches("[^\\[]*\\[compy.*")) res.add(UDv2Feat.EXTPOS_ADV);
-			else if (phraseTag.matches("[^\\[]*\\[simy.*")) res.add(UDv2Feat.EXTPOS_PART);
+			else if (phraseTag.matches("[^\\[]*\\[simy.*")) res.add(UDv2Feat.EXTPOS_DET);
 		}
 		else if (phraseType.equals(LvtbXTypes.XFUNCTOR))
 		{
