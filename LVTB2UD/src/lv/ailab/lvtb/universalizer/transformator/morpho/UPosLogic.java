@@ -62,6 +62,7 @@ public class UPosLogic
 		else if (xpostag.matches("yr.*")) return UDv2PosTag.ADV;
 		else if (xpostag.matches("yd.*")) return UDv2PosTag.SYM;
 		else if (xpostag.matches("xf.*")) return UDv2PosTag.X; // Or sometimes PROPN/NOUN
+		else if (xpostag.matches("xd.*")) return UDv2PosTag.PROPN;
 		else if (xpostag.matches("xn.*")) return UDv2PosTag.NUM;
 		else if (xpostag.matches("xo.*")) return UDv2PosTag.ADJ;
 		else if (xpostag.matches("xu.*")) return UDv2PosTag.PROPN; //https://github.com/UniversalDependencies/docs/issues/973#issuecomment-1859447774
