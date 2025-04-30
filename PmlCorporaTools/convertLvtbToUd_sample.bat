@@ -24,6 +24,15 @@ REM Step by step sample on how to convert LVTB to UD and how to prepare UD relea
 ::perl LvCorporaTools/UIs/TreeTransformatorUI.pm --dir data/conll-u --fold p=1 name=lv_lvtb-ud-everything
 :: File for statistics (includes only sentences to be published) is made by concatenating tran, test, dev: lv_lvtb-ud-tb = lv_lvtb-ud-train + lv_lvtb-ud-test + lv_lvtb-ud-dev
 
+:: Collect folded files
+::move .\data\conll-u\fold .\data\fold >nul
+::move .\data\train\fold\* .\data\fold >nul
+::rmdir .\data\train\fold /Q /S >nul
+::move .\data\dev\fold\* .\data\fold >nul
+::rmdir .\data\dev\fold /Q /S >nul
+::move .\data\test\fold\* .\data\fold >nul
+::rmdir .\data\test\fold /Q /S >nul
+
 :: Convert everything to Linux line endings
 :: Rename files from .conll to .conllu
 :: Copy lv_lvtb-ud-train.conll, lv_lvtb-ud-test.conll, lv_lvtb-ud-dev.conll to ../../UD_Latvian-LVTB
