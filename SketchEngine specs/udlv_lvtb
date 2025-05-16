@@ -3,6 +3,10 @@ PATH /corpora/data/udlv_lvtb
 VERTICAL /corpora/vert/udlv_lvtb.vert
 ENCODING "UTF-8"
 LANGUAGE "Latvian"
+INFOHREF "https://sintakse.korpuss.lv/"
+INFO "Latviešu valodas sintaktiski marķētais korpuss"
+MAINTAINER "lauma@ailab.lv"
+TAGSETDOC "https://sintakse.korpuss.lv/docs/v2-16/SemTi-Kamols_morphotags.ods"
 
 
 ATTRIBUTE word {
