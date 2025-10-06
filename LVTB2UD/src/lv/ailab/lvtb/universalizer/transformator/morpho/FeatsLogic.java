@@ -104,7 +104,7 @@ public class FeatsLogic
 
 		// Lexical features
 		if (xpostag.matches("p[psx].*")) res.add(UDv2Feat.PRONTYPE_PRS);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ējs"))
 			res.add(UDv2Feat.PRONTYPE_PRS);
 		//if (xpostag.matches("px.*")) res.add(UDv2Feat.PRONTYPE_RCP);
 		if (xpostag.matches("pq.*")) res.add(UDv2Feat.PRONTYPE_INT);
@@ -125,6 +125,8 @@ public class FeatsLogic
 			res.add(UDv2Feat.PRONTYPE_NEG);
 
 		if (xpostag.matches("pi.*")) res.add(UDv2Feat.PRONTYPE_IND);
+		if (xpostag.matches("a.*") && lemma.matches("(daudz|vairāk)(i|as)"))
+			res.add(UDv2Feat.PRONTYPE_IND);
 
 		if (xpostag.matches("mc.*|xn.*")) res.add(UDv2Feat.NUMTYPE_CARD); // Nouns like "simts", "desmits" are not marked.
 		if (xpostag.matches("mo.*|xo.*")) res.add(UDv2Feat.NUMTYPE_ORD);
