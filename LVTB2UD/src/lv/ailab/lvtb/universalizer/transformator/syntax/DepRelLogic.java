@@ -585,17 +585,22 @@ public class DepRelLogic
 	public static Tuple<UDv2Relations, String> advSitToUD(PmlANode node, PmlANode parent)
 	{
 		String tag = node.getAnyTag();
+		String parentTag = parent.getAnyTag();
 		if (tag.matches("mc.*|xn.*"))
 			return Tuple.of(UDv2Relations.NUMMOD, null);
 
-		// NB! Order is important. Simple nominals can't go before this!
+		// NB! Order is important. Simple nodes can't go before this, if they don't override this.
 		PmlANode phrase = node.getPhraseNode();
 		String xType = phrase == null ? null : phrase.getPhraseType();
 		if (xType != null && phrase.getNodeType() == PmlANode.Type.X &&
 				xType.equals(LvtbXTypes.XPREP))
 		{
 			String prepLemma = Helper.getXSimileConjOrXPrepPrepLemma(phrase, LvtbRoles.PREP);
-			return Tuple.of(UDv2Relations.OBL, prepLemma);
+			// Noun attached to noun is nmod, other cases are obl
+			if (tag.matches("n.*|y[np]") && parentTag.matches("n.*|y[np]"))
+				return Tuple.of(UDv2Relations.NMOD, prepLemma);
+			else
+				return Tuple.of(UDv2Relations.OBL, prepLemma);
 		}
 
 		if (tag.matches("n.*|p.*|mo.*"))
@@ -603,10 +608,18 @@ public class DepRelLogic
 			String caseLetter = MorphoTagUtils.getCaseLetterFromTag(tag);
 			String caseString = UDv2Feat.caseLetterToLCString(caseLetter);
 			if (caseString != null || caseLetter.equals("0"))
-				return Tuple.of(UDv2Relations.OBL, caseString);
+			{
+				if (tag.matches("n.*|y[np]") && parentTag.matches("n.*|y[np]"))
+					return Tuple.of(UDv2Relations.NMOD, caseString);
+				else
+					return Tuple.of(UDv2Relations.OBL, caseString);
+			}
 			// It is ok to become dep, if the case is not valid, it is an error anyway.
 		}
-		if (tag.matches("x[fo].*|y[npa].*"))
+
+		if (tag.matches("y[np]") && parentTag.matches("n.*|y[np]"))
+			return Tuple.of(UDv2Relations.NMOD, null);
+		if (tag.matches("x[fo].*|ya.*"))
 			return Tuple.of(UDv2Relations.OBL, null);
 
 		PmlMNode mNode = node.getM();
