@@ -29,7 +29,7 @@ public class SentenceTransformEngine
 	public SentenceTransformEngine(
 			PmlANode pmlTree, TransformationParams params)
 	{
-		s = new Sentence(pmlTree);
+		s = new Sentence(pmlTree, params.LATGALIAN);
 		this.params = params;
 		ellipsisPreproc = new EllipsisPreprocessor(s);
 		morphoTransf = new MorphoTransformator(s, params);

@@ -34,6 +34,11 @@ public class Sentence
 	 * Original text.
 	 */
 	public String text;
+
+	/**
+	 * Is this a latgalian sentence
+	 */
+	public final boolean IS_LATGALIAN;
 	/**
 	 * LVTB PML representation of the tree.
 	 */
@@ -91,8 +96,9 @@ public class Sentence
 	 */
 	public static final String ID_POSTFIX = "-SPLIT";
 
-	public Sentence(PmlANode pmlTree)
+	public Sentence(PmlANode pmlTree, boolean isLatgalian)
 	{
+		IS_LATGALIAN = isLatgalian;
 		this.pmlTree = pmlTree;
 		id = pmlTree.getId();
 	}
@@ -197,8 +203,8 @@ public class Sentence
 				String partRedLemma = phrasePart.getReductionLemma();
 				String partTag = phrasePart.getAnyTag();
 				if (LvtbXTypes.XPRED.equals(phraseType) && LvtbRoles.AUXVERB.equals(partRole)
-						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(partLemma, partTag))
-							|| MorphoTransformator.isTrueAux(partRedLemma, partTag)))
+						&& ((phrasePart.getM() != null && MorphoTransformator.isTrueAux(partLemma, partTag, IS_LATGALIAN))
+							|| MorphoTransformator.isTrueAux(partRedLemma, partTag, IS_LATGALIAN)))
 					continue;
 				// Do not add coordination conjunctions and punctuation.
 				if (LvtbCoordTypes.CRDPARTS.equals(phraseType) && !LvtbRoles.CRDPART.equals(partRole))
@@ -455,9 +461,9 @@ public class Sentence
 				assumedLvtbLemma = MorphoAnalyzerWrapper.getLemma(
 						decimalToken.form, decimalToken.xpostag);
 			decimalToken.upostag = UPosLogic.getUPosTag(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag);
+					assumedLvtbLemma, decimalToken.xpostag, IS_LATGALIAN);
 			decimalToken.feats = FeatsLogic.getUFeats(decimalToken.form,
-					assumedLvtbLemma, decimalToken.xpostag);
+					assumedLvtbLemma, decimalToken.xpostag, IS_LATGALIAN);
 			decimalToken.lemma = LemmaLogic.getULemma(assumedLvtbLemma, redXPostag);
 		}
 		if (addNodeId && nodeId != null && !nodeId.isEmpty())
@@ -966,7 +972,7 @@ public class Sentence
 		if (child == null || child.isSameNode(parent)) return;
 
 		Tuple<UDv2Relations, String> childDeprel =
-				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode, IS_LATGALIAN);
 		setLink(parent, child, childDeprel.first, childDeprel, true,
 				true, forbidHeadDuplicates);
 		if (addCoordPropCrosslinks && UDv2Relations.canPropagatePrecheck(childDeprel.first))
@@ -993,7 +999,7 @@ public class Sentence
 	{
 		if (parent == null || child == null) return;
 		Tuple<UDv2Relations, String> childDeprel =
-				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode);
+				PhrasePartDepLogic.phrasePartRoleToUD(child, phraseNode, IS_LATGALIAN);
 		if (!UDv2Relations.canPropagatePrecheck(childDeprel.first)) return;
 		if (!UDv2Relations.canPropagateAftercheck(childDeprel.first)) return;
 

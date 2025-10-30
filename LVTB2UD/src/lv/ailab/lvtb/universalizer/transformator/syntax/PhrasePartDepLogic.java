@@ -34,7 +34,7 @@ public class PhrasePartDepLogic
 	 * 			such is needed.
 	 */
 	public static Tuple<UDv2Relations, String> phrasePartRoleToUD(
-			PmlANode aNode, PmlANode phraseNode)
+			PmlANode aNode, PmlANode phraseNode, boolean isLatgalian)
 	{
 		String nodeId = aNode.getId();
 		String lvtbRole = aNode.getRole();
@@ -238,8 +238,8 @@ public class PhrasePartDepLogic
 				String lemma = morfo == null ? null : morfo.getLemma();
 				String redLemma = aNode.getReductionLemma();
 				String tag = aNode.getAnyTag();
-				boolean ultimateAux = MorphoTransformator.isTrueAux(lemma, tag) ||
-						MorphoTransformator.isTrueAux(redLemma, tag);
+				boolean ultimateAux = MorphoTransformator.isTrueAux(lemma, tag, isLatgalian) ||
+						MorphoTransformator.isTrueAux(redLemma, tag, isLatgalian);
 				boolean nominal = false;
 				boolean passive = false;
 				if (subTag.startsWith("pass"))

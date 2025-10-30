@@ -677,8 +677,8 @@ public class MorphoTransformator {
 		}
 		if (resTok.xpostag != null)
 		{
-			resTok.upostag = UPosLogic.getUPosTag(resTok.form, lvtbLemma, resTok.xpostag);
-			resTok.feats = FeatsLogic.getUFeats(resTok.form, lvtbLemma, resTok.xpostag);
+			resTok.upostag = UPosLogic.getUPosTag(resTok.form, lvtbLemma, resTok.xpostag, params.LATGALIAN);
+			resTok.feats = FeatsLogic.getUFeats(resTok.form, lvtbLemma, resTok.xpostag, params.LATGALIAN);
 		}
 		s.conll.add(resTok);
 		if (representative) s.pmlaToConll.put(pmlId, resTok);
@@ -729,7 +729,7 @@ public class MorphoTransformator {
 		for (Token t : s.conll)
 		{
 			//t.upostag = UPosLogic.getPostsyntUPosTag(t); // Not needed since UPOS comes from analyzer/Tēzaurs now
-			t.feats = FeatsLogic.getPostsyntUFeats(t, s.conll);
+			t.feats = FeatsLogic.getPostsyntUFeats(t, s.conll, params.LATGALIAN);
 		}
 	}
 
@@ -738,11 +738,14 @@ public class MorphoTransformator {
 	 * būt, tikt, tapt.
 	 * Since 2021-01-27 (prep for UDv2.8) "kļūt" is excluded.
 	 */
-	public static boolean isTrueAux (String lemma, String tag)
+	public static boolean isTrueAux (String lemma, String tag, boolean isLatgalian)
 	{
 		if (lemma == null || tag == null) return false;
 		//return lemma.matches("(ne)?(būt|tikt|tapt|kļūt)"); // From UDv2.8 "kļūt" is not true aux
-		return (lemma.matches("būt") && tag.matches("vc.*")) ||
+		if (isLatgalian)
+			return (lemma.matches("byut") && tag.matches("vc.*")) ||
+					(lemma.matches("tikt") && tag.matches("va.*"));
+		else return (lemma.matches("būt") && tag.matches("vc.*")) ||
 				(lemma.matches("(tikt|tapt)") && tag.matches("va.*"));
 	}
 }

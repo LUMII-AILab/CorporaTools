@@ -22,7 +22,7 @@ public class UPosLogic
 	 * Use this to obtain UPOSTAG.
 	 */
 	public static UDv2PosTag getUPosTag(
-			String form, String lemma, String xpostag)
+			String form, String lemma, String xpostag, boolean isLatgalian)
 	{
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
 		if (xpostag.matches("N/[Aa]|_+")) return UDv2PosTag.X; // Not given.
@@ -30,9 +30,11 @@ public class UPosLogic
 		if (uposFromTez != null && !uposFromTez.isEmpty()) return UDv2PosTag.valueOf(uposFromTez);
 		else if (xpostag.matches("nc.*")) return UDv2PosTag.NOUN; // Or sometimes SCONJ
 		else if (xpostag.matches("np.*")) return UDv2PosTag.PROPN;
-		else if (xpostag.matches("v[c].*") && lemma.matches("būt")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[c].*") && !isLatgalian && lemma.matches("būt")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[c].*") && isLatgalian && lemma.matches("byut")) return UDv2PosTag.AUX;
 		//else if (xpostag.matches("v[t].*") && lemma.matches("(ne)?(kļūt|tikt|tapt)")) return UDv2PosTag.AUX; // for UDv2.8 "kļūt" is not AUX anymore
-		else if (xpostag.matches("v[a].*") && lemma.matches("(tikt|tapt)")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[a].*") && !isLatgalian && lemma.matches("(tikt|tapt)")) return UDv2PosTag.AUX;
+		else if (xpostag.matches("v[a].*") && isLatgalian && lemma.matches("tikt")) return UDv2PosTag.AUX;
 		else if (xpostag.matches("v.*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..[^p].*")) return UDv2PosTag.VERB;
 			//else if (xpostag.matches("v..p[dpu].*")) return UDv2PosTag.VERB;
@@ -86,15 +88,15 @@ public class UPosLogic
 	 * @deprecated everything about UPOS is now based on morphological analyzer data.
 	 */
 	@Deprecated
-	public static UDv2PosTag getPostsyntUPosTag (Token token)
+	public static UDv2PosTag getPostsyntUPosTag (Token token, boolean isLatgalian)
 	{
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exception. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exception. But should we?
 		UDv2Relations deprel = token.deprel;
 		if (xpostag.matches("a.*"))
 		{
-			if (lemma.matches("(manējais|tavējais|mūsējais|jūsējais|viņējais|savējais|daudzi|vairāki)") ||
-					lemma.matches("(manējā|tavējā|mūsējā|jūsējā|viņējā|savējā|daudzas|vairākas)"))
+			if (!isLatgalian && lemma.matches("(man|tav|mūs|jūs|viņ|sav)ēj(s|ais)|daudzi|vairāki") ||
+					isLatgalian && lemma.matches("(mun|tov|myus|jius|vin|sov)ejs|(daudz|vairuok|daudzej)i"))
 			{
 				if (deprel == UDv2Relations.DET) return UDv2PosTag.DET;
 				else return UDv2PosTag.PRON;
@@ -109,7 +111,7 @@ public class UPosLogic
 		if (token.xpostag == null)
 			System.out.println(token.toConllU());
 		if (token.upostag == null)
-			return getUPosTag(token.form, token.lemma, token.xpostag);
+			return getUPosTag(token.form, token.lemma, token.xpostag, isLatgalian);
 		return token.upostag;
 	}
 }

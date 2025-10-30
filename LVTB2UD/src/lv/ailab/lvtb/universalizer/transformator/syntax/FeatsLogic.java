@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class FeatsLogic
 {
 	public static ArrayList<UDv2Feat> getUFeatsFromPhraseNode(
-			String phraseType, String phraseTag)
+			String phraseType, String phraseTag, boolean isLatgalian)
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
 		if (phraseTag == null) phraseTag = ""; // To avoid null pointer exceptions.
@@ -30,7 +30,7 @@ public class FeatsLogic
 		}
 		else if (phraseType.equals(LvtbXTypes.XFUNCTOR))
 		{
-			UDv2PosTag upos = UPosLogic.getUPosTag("", "", phraseTag);
+			UDv2PosTag upos = UPosLogic.getUPosTag("", "", phraseTag, isLatgalian);
 			res.add(UDv2Feat.uposToExtPos(upos));
 		}
 		return res;

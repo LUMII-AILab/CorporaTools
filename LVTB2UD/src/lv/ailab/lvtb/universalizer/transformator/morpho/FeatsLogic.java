@@ -22,7 +22,7 @@ public class FeatsLogic
 	 * Use this to obtain FEATS, if no syntactic information is available.
 	 */
 	public static ArrayList<UDv2Feat> getUFeats(
-			String form, String lemma, String xpostag)
+			String form, String lemma, String xpostag, boolean isLatgalian)
 	{
 		ArrayList<UDv2Feat> res = new ArrayList<>();
 		if (lemma == null) lemma = ""; // To avoid null pointer exceptions.
@@ -44,9 +44,17 @@ public class FeatsLogic
 		if (xpostag.matches("[na]...v.*|v..p...v.*")) res.add(UDv2Feat.CASE_VOC);
 
 		if (xpostag.matches("a....n.*|v..p......n.*")) res.add(UDv2Feat.DEFINITE_IND);
-		if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_IND);
+		if (isLatgalian &&
+				xpostag.matches("mo.*") && lemma.matches("(treš|catūrt|pīkts|sasts|septeits|ostoit|deveit)[sa]"))
+			res.add(UDv2Feat.DEFINITE_IND);
+		else if (xpostag.matches("mo.*") && lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]"))
+			res.add(UDv2Feat.DEFINITE_IND);
 		if (xpostag.matches("a....y.*|v..p......y.*")) res.add(UDv2Feat.DEFINITE_DEF);
-		if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]")) res.add(UDv2Feat.DEFINITE_DEF);
+		if (isLatgalian &&
+				xpostag.matches("mo.*") && !lemma.matches("(treš|catūrt|pīkts|sasts|septeits|ostoit|deveit)[sa]"))
+			res.add(UDv2Feat.DEFINITE_DEF);
+		else if (xpostag.matches("mo.*") && !lemma.matches("(treš|ceturt|piekt|sest|septīt|astot|devīt)[sa]"))
+			res.add(UDv2Feat.DEFINITE_DEF);
 
 		//if (xpostag.matches("a.....p.*|rp.*|v.ypd.*")) res.add(UDv2Feat.DEGREE_POS);
 		if (xpostag.matches("a.....p.*|v..pd......p.*|rp.*|mo.*")) res.add(UDv2Feat.DEGREE_POS);
@@ -60,10 +68,16 @@ public class FeatsLogic
 		if (xpostag.matches("v..[^pn].*")) res.add(UDv2Feat.VERBFORM_FIN); // According to UD rule of thumb.
 		if (xpostag.matches("v..n.*")) res.add(UDv2Feat.VERBFORM_INF);
 		if (xpostag.matches("v..pd.*")) res.add(UDv2Feat.VERBFORM_PART);
-		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches(".*?ūš[sa]")) res.add(UDv2Feat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
+		else if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VERBFORM_PART); // Some deverbal adjectives slip unmarked.
 		if (xpostag.matches("v..p[pu].*")) res.add(UDv2Feat.VERBFORM_CONV);
-		if (xpostag.matches("n.....4.*") && lemma.endsWith("šana")) res.add(UDv2Feat.VERBFORM_VNOUN);
-		if (xpostag.matches("n.....r.*") && lemma.endsWith("šanās")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		if (isLatgalian &&
+				xpostag.matches("n.....4.*") && lemma.endsWith("šona")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		else if (xpostag.matches("n.....4.*") && lemma.endsWith("šana")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		if (isLatgalian &&
+				xpostag.matches("n.....r.*") && lemma.endsWith("šonuos")) res.add(UDv2Feat.VERBFORM_VNOUN);
+		else if (xpostag.matches("n.....r.*") && lemma.endsWith("šanās")) res.add(UDv2Feat.VERBFORM_VNOUN);
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.MOOD_IND);
 		if (xpostag.matches("v..m.*")) res.add(UDv2Feat.MOOD_IMP);
@@ -79,45 +93,85 @@ public class FeatsLogic
 		if (xpostag.matches("v..pd....s.*")) res.add(UDv2Feat.ASPECT_PERF);
 
 		if (xpostag.matches("v..[^p].....a.*|v..p....a.*")) res.add(UDv2Feat.VOICE_ACT);
-		if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]")) res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches(".*?ūš[sa]"))
+			res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
+		else if (xpostag.matches("a.*") && lemma.matches(".*?oš[sa]"))
+			res.add(UDv2Feat.VOICE_ACT); // Some deverbal adjectives slip unmarked.
 		if (xpostag.matches("v..[^p].....p.*|v..p....p.*")) res.add(UDv2Feat.VOICE_PASS); // Some deverbal adjectives slip unmarked.
 
 		if (xpostag.matches("v..i.*")) res.add(UDv2Feat.EVIDENT_FH);
 		if (xpostag.matches("v..r.*")) res.add(UDv2Feat.EVIDENT_NFH);
 
 		if (xpostag.matches("p.1.*|v..[^p]...1.*")) res.add(UDv2Feat.PERSON_1);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_1);
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("(mun|myus)ejs"))
+			res.add(UDv2Feat.PERSON_1);
+		else if (xpostag.matches("a.*") && lemma.matches("(man|mūs)ēj(s|ais)"))
+			res.add(UDv2Feat.PERSON_1);
 		if (xpostag.matches("p.2.*|v..[^p]...2.*")) res.add(UDv2Feat.PERSON_2);
-		if (xpostag.matches("a.*") && lemma.matches("(tav|jūs)ēj(ais|ā)")) res.add(UDv2Feat.PERSON_2);
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("(tov|jius)ejs"))
+			res.add(UDv2Feat.PERSON_2);
+		else if (xpostag.matches("a.*") && lemma.matches("(tav|jūs)ēj(s|ais)"))
+			res.add(UDv2Feat.PERSON_2);
 		if (xpostag.matches("p.3.*|v..[^p]...3.*")) res.add(UDv2Feat.PERSON_3);
-		if (xpostag.matches("a.*") && lemma.matches("viņēj(ais|ā)")) res.add(UDv2Feat.PERSON_3);
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("vinejs"))
+			res.add(UDv2Feat.PERSON_3);
+		else if (xpostag.matches("a.*") && lemma.matches("viņēj(s|ais)"))
+			res.add(UDv2Feat.PERSON_3);
 
 		// Minimal annotations, for nominals manual labor is needed.
 		if (xpostag.matches("v..[^p]......n.*")) res.add(UDv2Feat.POLARITY_POS);
 		if (xpostag.matches("v..p........n.*")) res.add(UDv2Feat.POLARITY_POS);
-		if (xpostag.matches("q.*") && lemma.matches("jā")) res.add(UDv2Feat.POLARITY_POS);
+		if (isLatgalian &&
+				xpostag.matches("q.*") && lemma.matches("nui|jā|da"))
+			res.add(UDv2Feat.POLARITY_POS);
+		else if (xpostag.matches("q.*") && lemma.matches("jā"))
+			res.add(UDv2Feat.POLARITY_POS);
 		if (xpostag.matches("v..[^p]......y.*")) res.add(UDv2Feat.POLARITY_NEG);
 		if (xpostag.matches("v..p........y.*")) res.add(UDv2Feat.POLARITY_NEG);
-		if (xpostag.matches("q.*") && lemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
-		if (xpostag.matches("cc.*") && lemma.matches("ne")) res.add(UDv2Feat.POLARITY_NEG);
+		if (isLatgalian &&
+				xpostag.matches("q.*") && lemma.matches("n[āa]"))
+			res.add(UDv2Feat.POLARITY_NEG);
+		else if (xpostag.matches("q.*") && lemma.matches("n[eē]"))
+			res.add(UDv2Feat.POLARITY_NEG);
+		if (isLatgalian &&
+				xpostag.matches("cc.*") && lemma.matches("ni"))
+			res.add(UDv2Feat.POLARITY_NEG);
+		else if (xpostag.matches("cc.*") && lemma.matches("ne"))
+			res.add(UDv2Feat.POLARITY_NEG);
 		//if (xpostag.matches("is.*") && lemma.matches("n[eē]")) res.add(UDv2Feat.POLARITY_NEG);
 
 		// Lexical features
 		if (xpostag.matches("p[psx].*")) res.add(UDv2Feat.PRONTYPE_PRS);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ējs"))
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("(mun|tov|myus|jius|vin|sov)ejs"))
+			res.add(UDv2Feat.PRONTYPE_PRS);
+		else if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(s|ais)"))
 			res.add(UDv2Feat.PRONTYPE_PRS);
 		//if (xpostag.matches("px.*")) res.add(UDv2Feat.PRONTYPE_RCP);
 		if (xpostag.matches("pq.*")) res.add(UDv2Feat.PRONTYPE_INT);
-		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
+		if (isLatgalian &&
+				xpostag.matches("r0.*") && lemma.matches("(ni)?(cik|kod|kai|kur)|(kam|parkū|deļkuo)"))
+			res.add(UDv2Feat.PRONTYPE_INT); //
+		else if (xpostag.matches("r0.*") && lemma.matches("(ne)?(cik|kad|kā|kurp?|kāpēc|kādēļ|kālab(ad)?)"))
 			res.add(UDv2Feat.PRONTYPE_INT);
 
 		if (xpostag.matches("pr.*")) res.add(UDv2Feat.PRONTYPE_REL);
 		if (xpostag.matches("pd.*")) res.add(UDv2Feat.PRONTYPE_DEM);
-		if (xpostag.matches("r0.*") && lemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
+		if (isLatgalian &&
+				xpostag.matches("r0.*") && lemma.matches("te|ite|tī|tod|niu|niule|tik|tai"))
+			res.add(UDv2Feat.PRONTYPE_DEM);
+		else if (xpostag.matches("r0.*") && lemma.matches("(ne)?(te|tur|šeit|tad|tagad|tik|tā)"))
 			res.add(UDv2Feat.PRONTYPE_DEM);
 
 		if (xpostag.matches("pg.*")) res.add(UDv2Feat.PRONTYPE_TOT);
-		if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
+		if (isLatgalian &&
+				xpostag.matches("r0.*") && lemma.matches("vysod|vysur|vīnmār"))
+			res.add(UDv2Feat.PRONTYPE_TOT);
+		else if (xpostag.matches("r0.*") && lemma.matches("vienmēr|visur|visad(iņ)?"))
 			res.add(UDv2Feat.PRONTYPE_TOT);
 
 		if (xpostag.matches("p.....y.*")) res.add(UDv2Feat.PRONTYPE_NEG);
@@ -125,17 +179,26 @@ public class FeatsLogic
 			res.add(UDv2Feat.PRONTYPE_NEG);
 
 		if (xpostag.matches("pi.*")) res.add(UDv2Feat.PRONTYPE_IND);
-		if (xpostag.matches("a.*") && lemma.matches("(daudz|vairāk)(i|as)"))
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("(daudz|vairuok|daudzej)i"))
+			res.add(UDv2Feat.PRONTYPE_IND);
+		else if (xpostag.matches("a.*") && lemma.matches("(daudz|vairāk)i"))
 			res.add(UDv2Feat.PRONTYPE_IND);
 
 		if (xpostag.matches("mc.*|xn.*")) res.add(UDv2Feat.NUMTYPE_CARD); // Nouns like "simts", "desmits" are not marked.
 		if (xpostag.matches("mo.*|xo.*")) res.add(UDv2Feat.NUMTYPE_ORD);
-		if (xpostag.matches("r0.*") && lemma.matches("(vien|div|trīs|četr|piec|seš|septiņ|astoņ|deviņ|desmit|pusotr)reiz"))
+		if (isLatgalian &&
+				xpostag.matches("r0.*") && lemma.matches("(vīn|div)reiz"))
+			res.add(UDv2Feat.NUMTYPE_MULT); // Rare
+		else if (xpostag.matches("r0.*") && lemma.matches("(vien|div|trīs|četr|piec|seš|septiņ|astoņ|deviņ|desmit|pusotr)reiz"))
 			res.add(UDv2Feat.NUMTYPE_MULT); // Incomplete list.
 		if (xpostag.matches("mf.*")) res.add(UDv2Feat.NUMTYPE_FRAC); // Nouns like "desmitdaļa" are not marked.
 
 		if (xpostag.matches("ps.*")) res.add(UDv2Feat.POSS_YES);
-		if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(ais|ā)"))
+		if (isLatgalian &&
+				xpostag.matches("a.*") && lemma.matches("(mun|tov|myus|jius|vin|sov)ejs"))
+			res.add(UDv2Feat.POSS_YES);
+		else if (xpostag.matches("a.*") && lemma.matches("(man|mūs|tav|jūs|viņ|sav)ēj(s|ais)"))
 			res.add(UDv2Feat.POSS_YES);
 
 		if (xpostag.matches("xf.*")) res.add(UDv2Feat.FOREIGN_YES);
@@ -151,7 +214,7 @@ public class FeatsLogic
 	 *                  used to find children of the given token
 	 */
 	public static ArrayList<UDv2Feat> getPostsyntUFeats(
-			Token token, List<Token> sentence)
+			Token token, List<Token> sentence, boolean isLatgalian)
 	{
 		//ArrayList<UDv2Feat> res = getUFeats(token.form, token.lemma, token.xpostag);
 		//if (token.feats.contains(UDv2Feat.TYPO_YES)) res.add(UDv2Feat.TYPO_YES);
@@ -159,8 +222,11 @@ public class FeatsLogic
 		res.addAll(token.feats);
 		String xpostag = token.xpostag == null ? "" : token.xpostag; // To avoid null pointer exception. But should we?
 		String lemma = token.lemma == null ? "" : token.lemma; // To avoid null pointer exception. But should we?
-		if (!(xpostag.matches("n.*")
-				&& lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene"))
+		if (isLatgalian &&
+				!(xpostag.matches("n.*") && lemma.matches("kuriene|t(ur|ej)iene|vis(ur|ad)iene|nek(ur|ad)iene"))
+				&& !xpostag.matches("r0.*"))
+			return res;
+		else if (!(xpostag.matches("n.*") && lemma.matches("kurīne|tīnīne|itejīne|vysurīne|nakurīne"))
 				&& !xpostag.matches("r0.*"))
 			return res;
 		ArrayList<Token> someDiscourseChildren = new ArrayList<>();
@@ -171,7 +237,11 @@ public class FeatsLogic
 					sentTok.head.second.equals(token))
 			{
 				// Here we analize dependents of the node, whose feats we want to update
-				if (sentTok.deprel == UDv2Relations.DISCOURSE
+				if (isLatgalian && sentTok.deprel == UDv2Relations.DISCOURSE
+						&& sentTok.lemma != null
+						&& sentTok.lemma.matches("koč|kazyn|naz(yn)?|naviņ|nakod"))
+					someDiscourseChildren.add(sentTok);
+				else if (sentTok.deprel == UDv2Relations.DISCOURSE
 						&& sentTok.lemma != null
 						&& sentTok.lemma.matches("kaut|diez(in)?|nez(in)?"))
 					someDiscourseChildren.add(sentTok);
@@ -187,24 +257,44 @@ public class FeatsLogic
 		}
 		else if (xpostag.matches("n.*") && !caseChildren.isEmpty())
 		{
-			switch (lemma)
+			if (isLatgalian)
 			{
-				case "kuriene" :
-					if (someDiscourseChildren.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
-					else res.add(UDv2Feat.PRONTYPE_IND);
-					break;
-				case "turiene" :
-				case "tejiene" :
-					res.add(UDv2Feat.PRONTYPE_DEM);
-					break;
-				case "visuriene" :
-				case "visadiene" :
-					res.add(UDv2Feat.PRONTYPE_TOT);
-					break;
-				case "nekuriene":
-				case "nekadiene":
-					res.add(UDv2Feat.PRONTYPE_NEG);
-					break;
+				switch (lemma) {
+					case "kurīne":
+						if (someDiscourseChildren.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
+						else res.add(UDv2Feat.PRONTYPE_IND);
+						break;
+					case "tīnīne":
+					case "itejīne":
+						res.add(UDv2Feat.PRONTYPE_DEM);
+						break;
+					case "vysurīne":
+						res.add(UDv2Feat.PRONTYPE_TOT);
+						break;
+					case "nakurīne":
+						res.add(UDv2Feat.PRONTYPE_NEG);
+						break;
+				}
+			}
+			else {
+				switch (lemma) {
+					case "kuriene":
+						if (someDiscourseChildren.isEmpty()) res.add(UDv2Feat.PRONTYPE_INT);
+						else res.add(UDv2Feat.PRONTYPE_IND);
+						break;
+					case "turiene":
+					case "tejiene":
+						res.add(UDv2Feat.PRONTYPE_DEM);
+						break;
+					case "visuriene":
+					case "visadiene":
+						res.add(UDv2Feat.PRONTYPE_TOT);
+						break;
+					case "nekuriene":
+					case "nekadiene":
+						res.add(UDv2Feat.PRONTYPE_NEG);
+						break;
+				}
 			}
 		}
 		return res;

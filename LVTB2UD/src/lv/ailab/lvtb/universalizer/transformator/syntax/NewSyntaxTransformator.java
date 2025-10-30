@@ -133,7 +133,7 @@ public class NewSyntaxTransformator
 				}
 			}
 			ArrayList<UDv2Feat> syntFeats = FeatsLogic.getUFeatsFromPhraseNode(
-					phraseNode.getPhraseType(), phraseTag);
+					phraseNode.getPhraseType(), phraseTag, params.LATGALIAN);
 			s.pmlaToConll.get(newBasicRoot.getId()).feats.addAll(syntFeats);
 			// In this spot both roots should be the same.
 			//if (newBasicRoot != newEnhancedRoot)
